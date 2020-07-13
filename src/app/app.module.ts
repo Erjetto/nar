@@ -9,8 +9,8 @@ import { StoreModule } from '@ngrx/store';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 
-import { metaReducers } from './app.reducer';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { metaReducers } from './app.reducer';
 
 
 @NgModule({

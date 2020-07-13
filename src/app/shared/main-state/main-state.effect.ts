@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 
+import { GenerationService } from '../services/generation.service';
 import * as MainStateAction from './main-state.action';
 import * as fromMainState from './main-state.reducer';
 // import { GenerationService } from '../services/generation.service';
@@ -15,17 +16,17 @@ export class MainStateEffects {
 		private actions$: Actions,
 		private store: Store<fromMainState.MainState>,
 		private genService: GenerationService
-  ) {}
-  
-  // @Effect()
-  // getGenerations: Observable<Action> = this.actions$.pipe(
-  //   ofType(MainStateAction.ChangeGeneration)
-  // )
-  // @Effect()
-  // changeGeneration: Observable<Action> = this.actions$.pipe(
-  //   ofType(MainStateAction.ChangeGeneration),
-  //   switchMap(() => {
-  //     let res = this.genService.
-  //   })    
-  // )
+	) {}
+
+	// @Effect()
+	// getGenerations: Observable<Action> = this.actions$.pipe(
+	//   ofType(MainStateAction.ChangeGeneration)
+	// )
+	// @Effect()
+	// changeGeneration: Observable<Action> = this.actions$.pipe(
+	//   ofType(MainStateAction.ChangeGeneration),
+	//   switchMap(() => {
+	//     let res = this.genService.
+	//   })
+	// )
 }

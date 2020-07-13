@@ -1,2 +1,28 @@
-<p>dashboard works!</p>
-<router-outlet></router-outlet>
+<header>
+  <div class="container">
+      <img src="../../assets/images/ribbon.png" />
+      <img src="../../assets/images/CI NAR.png" height="100" />
+
+      <div class="pull-right text-right" ng-cloak>
+          <b>
+              <span class="cursor" random-salutation></span>
+              <span ng-cloak class="blue">{{ user.Name }}</span>
+          </b>
+
+          <div ng-if="user.Role == 'AssistantSupervisor'">
+              <select ng-model="user.ActiveRole"
+                  ng-options="role for role in validRoles" ng-change="changeRole()">
+              </select>
+          </div>
+          <div ng-if="user.Role == 'AssistantSupervisor'">
+              <select ng-model="selectedGeneration.GenerationId"
+                  ng-options="generation.GenerationId as generation.Description for generation in generations" ng-change="changeGeneration()">
+              </select>
+          </div>
+
+          <div id="serverTime"></div>
+      </div>
+      <!-- .pull-right.text-right -->
+  </div>
+  <!-- .container -->
+</header>
