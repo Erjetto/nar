@@ -1,7 +1,8 @@
-// import { createAction, props } from '@ngrx/store';
-import {  } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
-export const ChangeRole        = createAction('[MainState] CHANGE_ROLE', props<{payload:string}>());
+
+export const ChangeRole        = createAction('[MainState] CHANGE_ROLE', props<{payload: number}>());
+export const ChangeGeneration  = createAction('[MainState] CHANGE_GENERATION', props<{payload: string}>());
 
 // export const SetFilter        = createAction('[Category] SET_FILTER', props<{payload:string}>());
 // export const SetSort          = createAction('[Category] SET_SORT', props<{payload:Sort}>());

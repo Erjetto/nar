@@ -16,5 +16,5 @@ export class GenerationService {
 
 	public getGenerations(): Observable<any> {
 		return this.httpClient.get(this.baseUrl + 'GetGenerations');
-	}
+  }
 }
