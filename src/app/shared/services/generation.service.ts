@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
-import { Observable } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ClientGeneration } from '../models';
@@ -10,11 +10,19 @@ import { ClientGeneration } from '../models';
 	providedIn: 'root',
 })
 export class GenerationService {
-	private baseUrl = environment.apiUrl + 'Leader.svc/';
+  private baseUrl = environment.apiUrl + 'Leader.svc/';
+  
+  private mockData = [
+    new ClientGeneration('asdf', '20-1', '2020', 2020),
+    new ClientGeneration('asdf', '20-2', '2020', 2021),
+    new ClientGeneration('asdf', '21-1', '2020', 2021),
+    new ClientGeneration('asdf', '22-1', '2020', 2021),
+  ]
 
 	constructor(protected httpClient: HttpClient) {}
-
+  
 	public getGenerations(): Observable<any> {
-		return this.httpClient.get(this.baseUrl + 'GetGenerations');
+    // return this.httpClient.get(this.baseUrl + 'GetGenerations');
+    return from([this.mockData])
   }
 }

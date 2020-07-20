@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { RoleConstant } from '../../shared/constants/role.constant';
+import { Role, User } from '../models';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class UserService {
-	public currentUser: any;
+	public currentUser: User;
 
 	private baseUrl = environment.apiUrl + 'General.svc/';
 
@@ -18,7 +18,8 @@ export class UserService {
 		return this.httpClient.get(this.baseUrl + 'LogIn');
   }
 
-	public tryGetUserRole(): number {
-		return this.currentUser?.role ?? 0;
+	public tryGetUserRole(): Role {
+    return Role.allRoles[0];
+		// return this.currentUser?.Role;
 	}
 }
