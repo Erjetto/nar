@@ -1,0 +1,40 @@
+:host {
+	display: flex;
+	margin: 15px auto;
+	padding: unset;
+	background-color: white;
+	box-shadow: 1px 2px 2px 0px rgba(0, 0, 0, 0.2);
+	flex-flow: column;
+
+	.card__title {
+		padding: 12px;
+		// margin-bottom: 10px;
+		font-weight: bold;
+		border-bottom: 1px solid lightgrey;
+		display: flex;
+
+		// > .card__badge{
+		//   flex: 0 0 40px;
+		//   justify-self: end;
+		// }
+	}
+
+	.card__body {
+		padding: 15px;
+		flex: 1 1 0px;
+
+		display: flex;
+		flex-flow: column;
+		align-items: flex-start;
+  }
+  
+}
+// Collapse animation use title as button
+:host(.card-collapsible){
+  > .card__title {
+    cursor: pointer;
+    &:hover {
+      background-color: #eeeeee;
+    }
+  }
+}
