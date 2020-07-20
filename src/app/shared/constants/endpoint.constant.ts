@@ -1,3 +1,10 @@
-export class EndpointConstant {
-	public static readonly TEST = 'TEST';
+export class Endpoints {
+	public static readonly EMPTY = '';
+	public static readonly HOME = 'home';
+	public static readonly DASHBOARD = 'dashboard';
+}
+
+export class PathMatchings{
+  public static readonly FULL = 'full';
+  public static readonly PREFIX = 'prefix';
 }

@@ -1,28 +1,105 @@
 <header>
-  <div class="container">
-      <img src="../../assets/images/ribbon.png" />
-      <img src="../../assets/images/CI NAR.png" height="100" />
+	<div class="container">
+		<div class="row justify-content-between">
+			<div class="col">
+				<img src="../../assets/images/ribbon.png" />
+				<img src="../../assets/images/CI NAR.png" height="100" />
+			</div>
+			<div class="col text-right align-self-end pt-4">
+				<div class="row justify-content-end pt-1">
+					<b>
+						<span class="cursor" random-salutation>Hi, </span>
+						<span class="text-primary">(user.Name)</span>
+					</b>
+				</div>
+				<div class="row justify-content-end pt-1">
+					<ng-container *ngIf="user.Role.is(constant.role.AssistantSupervisor)">
+						<select
+							[ngModel]="selectedRole$ | async"
+							(change)="onChangeRole($event)"
+						>
+							<option
+								*ngFor="let role of roleList$ | async"
+								[value]="role.roleName"
+							>
+								{{ role.roleName }}
+							</option>
+						</select>
+						<select
+							[ngModel]="selectedGen$ | async"
+							(change)="onChangeGen($event)"
+						>
+							<option
+								*ngFor="let gen of genList$ | async"
+								[value]="gen.Description"
+							>
+								{{ gen.Description }}
+							</option>
+						</select>
+					</ng-container>
+				</div>
 
-      <div class="pull-right text-right" ng-cloak>
-          <b>
-              <span class="cursor" random-salutation></span>
-              <span ng-cloak class="blue">{{ user.Name }}</span>
-          </b>
+				<rd-clock
+					class="row justify-content-end pt-1 text-dark font-weight-bold"
+				></rd-clock>
 
-          <div ng-if="user.Role == 'AssistantSupervisor'">
-              <select ng-model="user.ActiveRole"
-                  ng-options="role for role in validRoles" ng-change="changeRole()">
-              </select>
-          </div>
-          <div ng-if="user.Role == 'AssistantSupervisor'">
-              <select ng-model="selectedGeneration.GenerationId"
-                  ng-options="generation.GenerationId as generation.Description for generation in generations" ng-change="changeGeneration()">
-              </select>
-          </div>
-
-          <div id="serverTime"></div>
-      </div>
-      <!-- .pull-right.text-right -->
-  </div>
-  <!-- .container -->
+				<div class="row justify-content-end pt-1">
+					<!-- <span>
+            <fa-icon class="btn btn-sm hover-text-blue" [icon]="['far', 'bell']"></fa-icon>
+          </span> -->
+					<span
+						class="btn btn-sm text-black-50 hover-text-blue"
+						(click)="signOut()"
+					>
+						<b>Sign Out</b> &nbsp;
+						<fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<nav class="navbar">
+		<div class="container">
+			<div class="menu-list">
+				<div *ngFor="let menu of menuList">
+					<ng-container [ngSwitch]="menu.children == undefined">
+						<!-- No Submenu -->
+						<a
+							*ngSwitchCase="true"
+							class="hover-text-blue menu-item"
+							[class.menu-active]="isMenuActive(menu)"
+							[routerLink]="'/' + menu.path"
+						>
+							{{ menu.data.name }}
+						</a>
+						<!-- Has submenu -->
+						<a
+							*ngSwitchCase="false"
+							class="hover-text-blue menu-item"
+							[class.menu-active]="isMenuActive(menu)"
+						>
+							{{ menu.data.name }}
+							<div class="sub-menu">
+								<a
+									class="hover-text-blue menu-item sub-menu__item"
+									*ngFor="let submenu of menu.children"
+									[routerLink]="['/', menu.path, submenu.path]"
+								>
+									{{ submenu.data.name }}
+								</a>
+							</div>
+						</a>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+	</nav>
 </header>
+<div class="content flex-fill">
+	<router-outlet></router-outlet>
+	<footer class="page-footer font-small text-center text-black-50">
+		<span>Copyright &copy; 2020 - Research and Development Team</span>
+		<br />
+		<span>Software Laboratory Center</span>
+	</footer>
+</div>

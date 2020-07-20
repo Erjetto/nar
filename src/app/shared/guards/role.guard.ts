@@ -26,7 +26,7 @@ export class RoleGuard implements CanActivate, CanActivateChild {
 		| UrlTree {
 		return (
 			next.data?.roles &&
-			(next.data.roles & this.userService.tryGetUserRole()) !== 0
+			this.userService.tryGetUserRole().is(next.data.roles)
 		);
 	}
 
