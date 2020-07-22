@@ -9,6 +9,13 @@ export class Pair<T, U> {
 	}
 }
 
+export class Toast {
+	constructor(
+		public messageType: 'info' | 'warning' | 'success' | 'danger' = 'info',
+		public message = ''
+	) {}
+}
+
 export class BaseModel {}
 
 export class Role {
@@ -137,14 +144,14 @@ export class ClientSchedule extends BaseModel {
 		public ScheduleDates: Date[] = []
 	) {
 		super();
-  }
-  static fromJson(data: any): ClientSchedule{
-    return Object.assign(new ClientSchedule(), data, {
-      Start: DateHelper.fromCSharpDate(data.Start),
-      End: DateHelper.fromCSharpDate(data.End),
-      ScheduleDates: map(data.ScheduleDates, DateHelper.fromCSharpDate)
-    })
-  }
+	}
+	static fromJson(data: any): ClientSchedule {
+		return Object.assign(new ClientSchedule(), data, {
+			Start: DateHelper.fromCSharpDate(data.Start),
+			End: DateHelper.fromCSharpDate(data.End),
+			ScheduleDates: map(data.ScheduleDates, DateHelper.fromCSharpDate),
+		});
+	}
 }
 
 export class ClientSubject extends BaseModel {
