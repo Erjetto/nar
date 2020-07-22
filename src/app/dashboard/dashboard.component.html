@@ -58,43 +58,43 @@
 			</div>
 		</div>
 	</div>
-	<nav class="navbar">
-		<div class="container">
-			<div class="menu-list">
-				<div *ngFor="let menu of menuList">
-					<ng-container [ngSwitch]="menu.children == undefined">
-						<!-- No Submenu -->
-						<a
-							*ngSwitchCase="true"
-							class="hover-text-blue menu-item"
-							[class.menu-active]="isMenuActive(menu)"
-							[routerLink]="'/' + menu.path"
-						>
-							{{ menu.data.name }}
-						</a>
-						<!-- Has submenu -->
-						<a
-							*ngSwitchCase="false"
-							class="hover-text-blue menu-item"
-							[class.menu-active]="isMenuActive(menu)"
-						>
-							{{ menu.data.name }}
-							<div class="sub-menu">
-								<a
-									class="hover-text-blue menu-item sub-menu__item"
-									*ngFor="let submenu of menu.children"
-									[routerLink]="['/', menu.path, submenu.path]"
-								>
-									{{ submenu.data.name }}
-								</a>
-							</div>
-						</a>
-					</ng-container>
-				</div>
+</header>
+<nav class="navbar sticky-top">
+	<div class="container">
+		<div class="menu-list">
+			<div *ngFor="let menu of menuList">
+				<ng-container [ngSwitch]="menu.children == undefined">
+					<!-- No Submenu -->
+					<a
+						*ngSwitchCase="true"
+						class="hover-text-blue menu-item"
+						[class.menu-active]="isMenuActive(menu)"
+						[routerLink]="'/' + menu.path"
+					>
+						{{ menu.data.name }}
+					</a>
+					<!-- Has submenu -->
+					<a
+						*ngSwitchCase="false"
+						class="hover-text-blue menu-item"
+						[class.menu-active]="isMenuActive(menu)"
+					>
+						{{ menu.data.name }}
+						<div class="sub-menu">
+							<a
+								class="hover-text-blue menu-item sub-menu__item"
+								*ngFor="let submenu of menu.children"
+								[routerLink]="['/', menu.path, submenu.path]"
+							>
+								{{ submenu.data.name }}
+							</a>
+						</div>
+					</a>
+				</ng-container>
 			</div>
 		</div>
-	</nav>
-</header>
+	</div>
+</nav>
 <div class="content flex-fill">
 	<router-outlet></router-outlet>
 	<footer class="page-footer font-small text-center text-black-50">

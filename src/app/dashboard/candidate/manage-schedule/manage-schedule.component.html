@@ -3,14 +3,13 @@
 		<div class="col">
 			<rd-card
 				[title]="'Manage Schedules for (generation 1 year lower)'"
-				[collapsible]="true"
 			>
-				<div class="col v-flex-m-8">
+				<div class="row v-flex-m-8">
 					<b>Add Schedule</b>
 					<textarea class="form-control">{{ addSchedulePlaceholder }}</textarea>
 					<button class="btn btn-primary">Save Schedule(s)</button>
 				</div>
-				<div class="col mt-2">
+				<div class="row mt-2">
 					<table
 						class="table table-sm table-striped table-hover text-center"
 						[style.width]="'500px'"
@@ -45,7 +44,7 @@
     <div class="col">
       <rd-card
           [title]="'Answer Details'"
-          [collapsible]="true"
+          [collapsible]="false"
           [expanded]="(selectedSchedule$|async)"
         >
         <div class="col">

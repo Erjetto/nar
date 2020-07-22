@@ -1,8 +1,10 @@
 <div class="container">
 	<div class="row">
-		<div class="col">
-			<!-- <div class="card"> -->
-			<rd-card title="Trainee Statistic" [collapsible]="true">
+    <rd-card class="col-3" title="Recent Trainee Comments">
+		</rd-card>
+		<div class="col flex-grow-1">
+			<div class="row">
+				<rd-card title="Trainee Statistic" class="col">
 					<div class="row mb-2">
 						<span>Phase</span> &nbsp;
 						<select [(ngModel)]="selectedPhase" (change)="reloadView()">
@@ -12,11 +14,11 @@
 						</select>
 					</div>
 					<div class="row">
-						<table class="col-2 mr-2" *ngFor="let stat of statistics">
+						<table class="mr-2" *ngFor="let stat of statistics">
 							<thead>
 								<tr>
 									<td>{{ stat.Type }}</td>
-									<td>Total</td>
+									<td></td>
 								</tr>
 							</thead>
 							<tbody>
@@ -33,9 +35,11 @@
 							</tfoot>
 						</table>
 					</div>
-			</rd-card>
-      <!-- </div> -->
-			<rd-card title="Announcements" [collapsible]="true">
-			</rd-card>
+				</rd-card>
+			</div>
+			<div class="row">
+				<rd-card title="Announcements" class="col"> </rd-card>
+			</div>
 		</div>
+	</div>
 </div>
