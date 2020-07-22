@@ -4,28 +4,25 @@
 	padding: unset;
 	background-color: white;
 	box-shadow: 1px 2px 2px 0px rgba(0, 0, 0, 0.2);
-	flex-flow: column;
+  flex-flow: column;
+  overflow-y: hidden;
 
 	.card__title {
 		padding: 12px;
 		// margin-bottom: 10px;
 		font-weight: bold;
 		border-bottom: 1px solid lightgrey;
-		display: flex;
-
-		// > .card__badge{
-		//   flex: 0 0 40px;
-		//   justify-self: end;
-		// }
+    text-overflow: ellipsis;
+    white-space: nowrap;
 	}
 
 	.card__body {
-		padding: 15px;
+    padding: 15px;
 		flex: 1 1 0px;
 
 		display: flex;
 		flex-flow: column;
-		align-items: flex-start;
+    align-items: flex-start;
   }
   
 }
@@ -36,5 +33,41 @@
     &:hover {
       background-color: #eeeeee;
     }
+  }
+}
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  margin: 6px;
+  border: 6px solid #0069d9;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #0069d9 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

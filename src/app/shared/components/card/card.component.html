@@ -1,6 +1,22 @@
 <div class="card__title" (click)="toggleMinimize()">
 	{{ cardTitle }}
 </div>
-<div class="card__body col" [@dropdown]="dropdownState">
-  <ng-content></ng-content>
+<div class="card__body col" [@dropdown]="expanded ? 'expand' : 'collapse'">
+	<ng-content></ng-content>
+	<!-- <div class="card__loader"> -->
+	<div
+		class="size-cover bg-white z-index-10"
+    [@faderAnimation]="isLoading ? 'shown' : 'hidden'"
+	></div>
+</div>
+
+<div class="absolute-center z-index-15">
+  <span [@swipeAnimation]="isLoading ? 'shown' : 'hidden'">
+    <div class="lds-ring">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </span>
 </div>
