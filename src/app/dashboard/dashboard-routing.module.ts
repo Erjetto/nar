@@ -11,6 +11,7 @@ import {
 } from '../shared/constants/endpoint.constant';
 import { ManageQuestionsComponent } from './candidate/manage-questions/manage-questions.component';
 import { ManageScheduleComponent } from './candidate/manage-schedule/manage-schedule.component';
+import { ManageCaseComponent } from './manage/case/manage-case.component';
 
 export const routes: Routes = [
 	{
@@ -123,15 +124,15 @@ export const routes: Routes = [
 			// 		},
 			// 	],
 			// },
-			// {
-			// 	path: 'manage',
-			// 	data: { name: 'Manage' },
-			// 	children: [
-			// 		{
-			// 			path: 'case',
-			// 			component: null,
-			// 			data: { roles: RoleGroups.SENIOR_ROLES, name: 'Case' },
-			// 		},
+			{
+				path: 'manage',
+				data: { name: 'Manage' },
+				children: [
+					{
+						path: 'case',
+						component: ManageCaseComponent,
+						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Case' },
+					},
 			// 		{
 			// 			path: 'top-bottom-vote',
 			// 			component: null,
@@ -145,8 +146,8 @@ export const routes: Routes = [
 			// 			component: null,
 			// 			data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee' },
 			// 		},
-			// 	],
-			// },
+				],
+			},
 			// {
 			// 	path: 'correction',
 			// 	data: {

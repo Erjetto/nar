@@ -1,6 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	ViewChild,
+	ChangeDetectionStrategy,
+} from '@angular/core';
 import { IAppState } from 'src/app/app.reducer';
-import { Store, select } from '@ngrx/store';
+import { Store, select, ActionsSubject } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import {
@@ -14,14 +19,17 @@ import { DatePipe, registerLocaleData } from '@angular/common';
 import localeID from '@angular/common/locales/id';
 import { take, takeUntil } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
+import { DashboardContentBase } from '../../dashboard-content-base.component';
 
 @Component({
 	selector: 'rd-manage-schedule',
 	templateUrl: './manage-schedule.component.html',
 	styleUrls: ['./manage-schedule.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageScheduleComponent implements OnInit {
-  @ViewChild('form') form: NgForm;
+export class ManageScheduleComponent extends DashboardContentBase
+	implements OnInit {
+	@ViewChild('form') form: NgForm;
 
 	public addSchedulePlaceholder = '';
 
@@ -32,7 +40,8 @@ export class ManageScheduleComponent implements OnInit {
 	public trainerSchedule$: Observable<SubcoCandidateAnswerModel[]>;
 	public selectedSchedule$: Observable<SubcoCandidateAnswerModel>;
 
-	constructor(private store: Store<IAppState>) {
+	constructor(actionsSubject: ActionsSubject, private store: Store<IAppState>) {
+		super(actionsSubject);
 		registerLocaleData(localeID);
 		const pipe = new DatePipe('ID');
 		const today = pipe.transform(Date.now(), this.dateFormat);
@@ -48,15 +57,21 @@ export class ManageScheduleComponent implements OnInit {
 		);
 		this.store
 			.pipe(select(fromCandidateState.getQuestionModel), take(2))
-			.subscribe(res => {this.questionModel = res; console.log(res)});
+			.subscribe((res) => {
+				this.questionModel = res;
+				console.log(res);
+			});
 
-    this.trainerSchedule$.subscribe(console.log);
-    
-    // this.form.valueChanges.pipe(
-    //   // takeUntil(this.destoryed$),
-      
+		this.trainerSchedule$.subscribe(console.log);
+
+		// this.form.valueChanges.pipe(
+		//   // takeUntil(this.destoryed$),
+
     // ).subscribe((evt) => this.store.dispatch())
+    this.reloadView();
+	}
 
+	reloadView() {
 		this.store.dispatch(CandidateStateAction.FetchQuestions());
 		this.store.dispatch(CandidateStateAction.FetchAnswers());
 	}
@@ -71,10 +86,10 @@ export class ManageScheduleComponent implements OnInit {
 	}
 
 	deleteSchedule(form) {
-    console.log(form)
-  }
-  
-  saveSchedule(form){
-    console.log(form)
-  }
+		console.log(form);
+	}
+
+	saveSchedule(form) {
+		console.log(form);
+	}
 }

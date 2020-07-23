@@ -1,12 +1,23 @@
 import { createAction, props } from '@ngrx/store';
-import { ClientGeneration, Role } from '../../models';
+import { ClientGeneration, Role, ClientPhase, ClientSubject, ClientSchedule } from '../../models';
 
 
-export const ChangeRole        = createAction('[MainState] CHANGE_ROLE', props<{payload: string}>());
-export const ChangeGeneration  = createAction('[MainState] CHANGE_GENERATION', props<{payload: string}>());
+export const ChangeRole        = createAction('[MainState] ChangeRole', props<{name: string}>());
+export const ChangeGeneration  = createAction('[MainState] ChangeGeneration', props<{name: string}>());
 
-export const FetchRoles        = createAction('[MainState] FETCH_ROLES');
-export const FetchGenerations  = createAction('[MainState] FETCH_GENERATION');
+export const SetPhase      = createAction('[MainState] SetPhase', props<{phaseId: string}>());
+export const SetSubject    = createAction('[MainState] SetSubject', props<{subjectId: string}>());
+export const SetSchedule   = createAction('[MainState] SetSchedule', props<{scheduleId: string}>());
 
-export const FetchRolesSuccess        = createAction('[MainState] FETCH_ROLES_SUCCESS', props<{payload: Role[]}>());
-export const FetchGenerationsSuccess  = createAction('[MainState] FETCH_GENERATION_SUCCESS', props<{payload: ClientGeneration[]}>());
+export const FetchRoles        = createAction('[MainState] FetchRoles');
+export const FetchGenerations  = createAction('[MainState] FetchGenerations');
+export const FetchPhases       = createAction('[MainState] FetchPhases');
+export const FetchSubjects     = createAction('[MainState] FetchSubjects', props<{phaseId: string}>());
+export const FetchSchedules    = createAction('[MainState] FetchSchedules', props<{subjectId: string}>());
+
+export const FetchRolesSuccess        = createAction('[MainState] FetchRolesSuccess', props<{payload: Role[]}>());
+export const FetchGenerationsSuccess  = createAction('[MainState] FetchGenerationsSuccess', props<{payload: ClientGeneration[]}>());
+export const FetchPhasesSuccess       = createAction('[MainState] FetchPhasesSuccess', props<{payload: ClientPhase[]}>());
+export const FetchSubjectsSuccess     = createAction('[MainState] FetchSubjectsSuccess', props<{payload: ClientSubject[]}>());
+export const FetchSchedulesSuccess    = createAction('[MainState] FetchSchedulesSuccess', props<{payload: ClientSchedule[]}>());
+

@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -23,7 +20,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
 		BrowserModule,
     AppRoutingModule,
     DashboardModule,
-		HttpClientModule,
 		StoreModule.forRoot(metaReducers, {
 			runtimeChecks: {
 				strictStateImmutability: true, // disallow property mutation, use {...obj}

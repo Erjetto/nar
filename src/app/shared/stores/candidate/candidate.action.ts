@@ -4,39 +4,39 @@ import {
 	SubcoCandidateAnswerModel,
 } from '../../models';
 
-export const FetchQuestions = createAction('[CandidateState] FETCH_QUESTIONS');
-export const FetchAnswers = createAction('[CandidateState] FETCH_ANSWERS');
+export const FetchQuestions = createAction('[CandidateState] FetchQuestions');
+export const FetchAnswers = createAction('[CandidateState] FetchAnswers');
 
 export const FetchQuestionsSuccess = createAction(
-	'[CandidateState] FETCH_QUESTIONS_SUCCESS',
+	'[CandidateState] FetchQuestionsSuccess',
 	props<{ payload: SubcoCandidateQuestionModel }>()
 );
 export const FetchAnswersSuccess = createAction(
-	'[CandidateState] FETCH_ANSWERS_SUCCESS',
+	'[CandidateState] FetchAnswersSuccess',
 	props<{ payload: SubcoCandidateAnswerModel[] }>()
 );
 
 export const SaveQuestions = createAction(
-	'[CandidateState] SAVE_QUESTIONS',
+	'[CandidateState] SaveQuestions',
 	props<{ payload: string[] }>()
 );
 
 export const CreateSchedule = createAction(
-	'[CandidateState] CREATE_SCHEDULE',
+	'[CandidateState] CreateSchedule',
 	props<{ payload: string[] }>()
 );
 export const ViewSchedule = createAction(
-	'[CandidateState] VIEW_SCHEDULE',
+	'[CandidateState] ViewSchedule',
 	props<{ payload: SubcoCandidateAnswerModel }>()
 );
 export const UpdateSchedule = createAction(
-	'[CandidateState] UPDATE_SCHEDULE',
+	'[CandidateState] UpdateSchedule',
 	props<{ payload: SubcoCandidateAnswerModel }>()
 );
 
 export const SaveQuestionSuccess = createAction(
-	'[CandidateState] SAVE_QUESTIONS_SUCCESS'
+	'[CandidateState] SaveQuestionSuccess'
 );
 export const UpdateScheduleSuccess = createAction(
-	'[CandidateState] UPDATE_SCHEDULE_SUCCESS'
+	'[CandidateState] UpdateScheduleSuccess'
 );

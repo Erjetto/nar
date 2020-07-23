@@ -1,4 +1,12 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 import {
 	FontAwesomeModule,
@@ -6,20 +14,17 @@ import {
 } from '@fortawesome/angular-fontawesome';
 
 import { farIcons, fasIcons } from './icons';
-
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 import { ClockComponent } from './components/clock/clock.component';
 import { CardComponent } from './components/card/card.component';
-import { ToasterComponent } from './components/toast/toaster.component';
+import { ToasterComponent } from './components/toaster/toaster.component';
+import { ModalComponent } from './components/modal/modal.component';
 
 const SHARED_DECLARATIONS = [
 	// Shared components, pipes, and directives, ex: SearchComponent, CurrencyPipe
 	ClockComponent,
 	CardComponent,
-	ToasterComponent,
+  ToasterComponent,
+  ModalComponent
 ];
 
 @NgModule({
@@ -29,14 +34,18 @@ const SHARED_DECLARATIONS = [
 		CommonModule,
 		FormsModule,
 		HttpClientModule,
-		RouterModule,
+    RouterModule,
+    NgSelectModule,
+		NgbModule,
 	],
 	exports: [
-		HttpClientModule,
-		RouterModule,
 		FontAwesomeModule,
 		CommonModule,
 		FormsModule,
+		HttpClientModule,
+		RouterModule,
+    NgSelectModule,
+		NgbModule,
 		...SHARED_DECLARATIONS,
 	],
 })

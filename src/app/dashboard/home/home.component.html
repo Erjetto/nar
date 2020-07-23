@@ -1,14 +1,16 @@
 <div class="container">
 	<div class="row">
-    <rd-card class="col-3" title="Recent Trainee Comments">
-		</rd-card>
+    <div class="col-3">
+      <rd-card [cardTitle]="'Recent Trainee Comments'">
+      </rd-card>
+    </div>
 		<div class="col flex-grow-1">
 			<div class="row">
-				<rd-card title="Trainee Statistic" class="col">
+				<rd-card [cardTitle]="'Trainee Statistic'" class="col">
 					<div class="row mb-2">
 						<span>Phase</span> &nbsp;
 						<select [(ngModel)]="selectedPhase" (change)="reloadView()">
-							<option *ngFor="let phase of phases" [value]="phase.Description">
+							<option *ngFor="let phase of (phases$|async)" [value]="phase.Description">
 								{{ phase.Description }}
 							</option>
 						</select>
@@ -38,7 +40,7 @@
 				</rd-card>
 			</div>
 			<div class="row">
-				<rd-card title="Announcements" class="col"> </rd-card>
+				<rd-card [cardTitle]="'Announcements'" class="col"> </rd-card>
 			</div>
 		</div>
 	</div>

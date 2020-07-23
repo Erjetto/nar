@@ -5,11 +5,10 @@
 	background-color: white;
 	box-shadow: 1px 2px 2px 0px rgba(0, 0, 0, 0.2);
   flex-flow: column;
-  overflow-y: hidden;
+  position: relative;
 
 	.card__title {
 		padding: 12px;
-		// margin-bottom: 10px;
 		font-weight: bold;
 		border-bottom: 1px solid lightgrey;
     text-overflow: ellipsis;
@@ -17,6 +16,7 @@
 	}
 
 	.card__body {
+    position: relative;
     padding: 15px;
 		flex: 1 1 0px;
 

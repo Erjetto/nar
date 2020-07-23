@@ -6,28 +6,27 @@ import * as MainStateAction from '../shared/stores/main/main.action';
 import { takeUntil } from 'rxjs/operators';
 import { OnDestroy} from '@angular/core';
 
-export class RefreshOnChange implements OnDestroy{
+export class DashboardContentBase implements OnDestroy{
 
   protected destroyed$: Subject<any> = new Subject();
 
   constructor(
     protected actionsSubject: ActionsSubject
   ){
-		// this.actionsSubject
-    // .pipe(
-    //   ofType(MainStateAction.ChangeGeneration, MainStateAction.ChangeRole),
-    //   takeUntil(this.destroyed$)
-    // )
-    // .subscribe((o) => this.reloadView(o.payload));
+		this.actionsSubject
+    .pipe(
+      ofType(MainStateAction.ChangeGeneration, MainStateAction.ChangeRole),
+      takeUntil(this.destroyed$)
+    )
+    .subscribe((o) => this.reloadView());
   }
 
   ngOnDestroy(): void{
-
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
-  reloadView(input:any){
-    // Overrided in derived class
-
-    // console.log('ReloadView from BaseComponent');
+  reloadView(){
+    // get gen & role in MainState
   }
 }

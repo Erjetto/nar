@@ -21,7 +21,6 @@ import { first, take } from 'rxjs/operators';
 import {
 	swipeAnimation,
 	faderAnimation,
-	scaleAnimation,
 } from '../../angular-animations';
 
 @Component({
@@ -122,30 +121,25 @@ export class CardComponent implements OnInit {
 	// @Input('hiddable') doesScale = false;
 	// @HostBinding('@scaleAnimation') scaleState = 'shown';
 
-	@ViewChild('content')
-	contentElement: ElementRef;
-
-	// tslint:disable-next-line: no-input-rename
-	@Input('title') cardTitle = '';
+	@Input() cardTitle = '';
 
 	@HostBinding('class.card-collapsible') @Input() collapsible = true;
 
 	@Input() expanded = true;
-	@Input() isLoading = true;
-	// public dropdownState = 'expand';
+	@Input() isLoading = false;
 
 	constructor() {}
 
 	ngOnInit(): void {
 		// this.dropdownState = this.expanded ? 'expand' : 'collapse';
-		interval(1500)
-			.pipe(take(10))
-			.subscribe((val) => {
-				this.isLoading = !this.isLoading;
-				// this.doesScale = !this.doesScale;
-				// if (this.doesScale)
-					// this.scaleState = this.scaleState === 'shown' ? 'hidden' : 'shown';
-			});
+		// interval(1500)
+		// 	.pipe(take(10))
+		// 	.subscribe((val) => {
+		// 		this.isLoading = !this.isLoading;
+		// 		// this.doesScale = !this.doesScale;
+		// 		// if (this.doesScale)
+		// 			// this.scaleState = this.scaleState === 'shown' ? 'hidden' : 'shown';
+		// 	});
 	}
 
 	toggleMinimize() {

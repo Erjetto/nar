@@ -58,23 +58,23 @@ export function faderAnimation(opacity: number, duration: number) {
 
 // Kinda fail, review later
 // tslint:disable-next-line: only-arrow-functions
-export function scaleAnimation(
-	// Scale in percent
-	scales: { x: number; y: number; offset: number }[],
-	anchor: string = 'top',
-	duration: number = 500
-) {
-	return trigger('scaleAnimation', [
-		state('hidden', style({ transform: 'scale(0%,0%)' })),
-		transition( 'hidden => shown', animate( duration + 'ms ease-out', keyframes(
-      map(scales, (s) =>
-        style({ transform: `scale(${s.x}%,${s.y}%)`, offset: s.offset })
-      ).sort((a,b) => a.styles['offset'] - b.styles['offset'])))
-    ),
-    transition( 'shown => hidden', animate( duration + 'ms ease-out', keyframes(
-      map(scales, (s) =>
-        style({ transform: `scale(${s.x}%,${s.y}%)`, offset: 1 - s.offset })
-      ).sort((a,b) => a.styles['offset'] - b.styles['offset'])))
-		),
-	]);
-}
+// export function scaleAnimation(
+// 	// Scale in percent
+// 	scales: { x: number; y: number; offset: number }[],
+// 	anchor: string = 'top',
+// 	duration: number = 500
+// ) {
+// 	return trigger('scaleAnimation', [
+// 		state('hidden', style({ transform: 'scale(0%,0%)' })),
+// 		transition( 'hidden => shown', animate( duration + 'ms ease-out', keyframes(
+//       map(scales, (s) =>
+//         style({ transform: `scale(${s.x}%,${s.y}%)`, offset: s.offset })
+//       ).sort((a,b) => a.styles['offset'] - b.styles['offset'])))
+//     ),
+//     transition( 'shown => hidden', animate( duration + 'ms ease-out', keyframes(
+//       map(scales, (s) =>
+//         style({ transform: `scale(${s.x}%,${s.y}%)`, offset: 1 - s.offset })
+//       ).sort((a,b) => a.styles['offset'] - b.styles['offset'])))
+// 		),
+// 	]);
+// }

@@ -1,0 +1,62 @@
+<div class="container">
+	<div class="row">
+		<div class="col-3">
+      <rd-card 
+        #viewCaseCard
+        [cardTitle]="'View Cases'"
+        [isLoading]="manageCaseLoading$ | async"
+      >
+				<div class="col v-list-m-12 v-list-bordered px-0">
+					<div class="row">
+						<ng-select
+							class="col"
+							[items]="phases$ | async"
+              [clearable]="false"
+							bindLabel="PhaseType"
+							bindValue="PhaseId"
+              placeholder="Phase"
+              [ngModel]="selectedPhase"
+							(change)="onChangePhase($event)"
+            ></ng-select>
+					</div>
+					<div class="row">
+						<ng-select
+							class="col"
+							[items]="subjects$ | async"
+              [clearable]="false"
+							bindLabel="Name"
+							bindValue="SubjectId"
+							placeholder="Subject"
+              [ngModel]="selectedSubject"
+							(change)="onChangeSubject($event)"
+						></ng-select>
+					</div>
+					<div class="row">
+						<ng-select
+							class="col"
+							[items]="schedules$ | async"
+              [clearable]="false"
+							bindLabel="ScheduleName"
+							bindValue="ScheduleId"
+							placeholder="Schedule"
+              [ngModel]="selectedSchedule"
+							(change)="onChangeSchedule($event)"
+						></ng-select>
+					</div>
+				</div>
+			</rd-card>
+      <rd-card 
+        #insertCaseCard
+        [cardTitle]="'Insert New Case'" 
+        [expanded]="false">
+
+      </rd-card>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'Case List'" [expanded]="caseList$|async">
+
+      </rd-card>
+		</div>
+	</div>
+	<div class="row"></div>
+</div>

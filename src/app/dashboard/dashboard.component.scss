@@ -1,69 +1,69 @@
+:host {
+	background-color: #f1f1f1;
+	min-height: 100vh;
+	width: auto; // 100vw cause scroll-x exists when scroll-y exists
 
-:host{
-  background-color: #f1f1f1;
-  min-height: 100vh;
-  width: auto; // 100vw cause scroll-x exists when scroll-y exists
+	header,
+	.navbar {
+		background-color: white;
+	}
 
-  header, .navbar{
-    background-color: white;
-  }
-  
-  .navbar{
-    min-height: 40px;
-    border-top: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
-    box-shadow: 0px 1px 1px 1px #ddd;
-    // display: inline-block;
-    padding: 0;
-  }
+	.navbar {
+		min-height: 40px;
+		border-top: 1px solid lightgray;
+		border-bottom: 1px solid lightgray;
+		box-shadow: 0px 1px 1px 1px #ddd;
+		padding: 0;
+	}
 
-  .menu-list{
-    margin: 0;
-    padding: 0;
+	.menu-list {
+		margin: 0;
+		padding: 0;
     display: flex;
-  }
+	}
 
-  .menu-item{
-    display: inline-block;
-    
-    // > a{
-      color: #777;
-      padding: 10px 20px 10px 0;
-      font-weight: bold;
-      text-decoration: none;
-      cursor: pointer;
+	.menu-item {
+    position: relative;
+		display: inline-block;
 
-      &.menu-active, &:hover{
-        color: #00a9e2;
-      }
+		color: #777;
+		padding: 10px;
+		font-weight: bold;
+		text-decoration: none;
+		cursor: pointer;
 
-      &:hover .sub-menu{
-        display: block;
-      }
-    // }
-  }
+		&.menu-active,
+		&:hover {
+			color: #00a9e2;
+		}
 
-  .sub-menu{
-    position: absolute;
-    top: 100%;
-    left: 0;
-    display: none;
-    background-color: white;
-    border: 1px solid lightgrey;
-    border-top: none;
-    z-index: 1;
-    box-shadow: 0px 2px 3px 0px #ddd;
-    
+		&:hover .sub-menu {
+			display: block;
+		}
+	}
 
-    &__item{
-      display: block;
-      cursor: pointer;
-      padding: 12px;
-      white-space: nowrap;  
+	.sub-menu {
+		min-width: 200px;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		display: none;
+		background-color: white;
+		border: 1px solid lightgrey;
+		border-top: none;
+		z-index: 1;
+		box-shadow: 0px 2px 3px 0px #ddd;
 
-      // &:last-child{
-      //   padding-top: 0;
-      // }
-    }
-  }
+		&__item {
+			display: block;
+			cursor: pointer;
+
+			padding: 8px 16px;
+			white-space: nowrap;
+
+			// &:last-child{
+			//   padding-top: 0;
+			// }
+		}
+	}
 }

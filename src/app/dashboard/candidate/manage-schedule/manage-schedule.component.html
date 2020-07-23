@@ -1,53 +1,74 @@
 <div class="container">
 	<div class="row">
+		<div class="col-5">
+			<div class="row">
+				<div class="col">
+					<rd-card
+						[cardTitle]="'Manage Schedules for (generation 1 year lower)'"
+					>
+						<div class="row"></div>
+						<div class="row mt-2">
+							<table
+								class="table table-sm table-striped table-hover text-center"
+							>
+								<thead>
+									<tr>
+										<th width="100px">Name</th>
+										<th width="250px">Date</th>
+										<!-- <th width="100px">Actions</th> -->
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngIf="(trainerSchedule$ | async)?.length === 0">
+										<td colspan="2">No schedules yet</td>
+									</tr>
+									<tr
+										*ngFor="let schedule of trainerSchedule$ | async"
+										(click)="onSelectSchedule(schedule)"
+										class="cursor-pointer"
+									>
+										<td>{{ schedule.TrainerName }}</td>
+										<td>
+											{{ schedule.StartDate | date: viewDateFormat }} -
+											{{ schedule.EndDate | date: viewDateFormat }}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</rd-card>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<rd-card
+						[cardTitle]="'Add Schedules for (gen 1 lower)'"
+						[expanded]="false"
+					>
+						<div class="col v-list-m-12">
+							<div class="row">
+								<b>Add Schedule</b>
+							</div>
+							<div class="row">
+								<textarea class="form-control">{{
+									addSchedulePlaceholder
+								}}</textarea>
+							</div>
+							<div class="row">
+								<button class="btn btn-primary">Save Schedule(s)</button>
+							</div>
+						</div>
+					</rd-card>
+				</div>
+			</div>
+		</div>
 		<div class="col">
 			<rd-card
-				[title]="'Manage Schedules for (generation 1 year lower)'"
+				[cardTitle]="'Answer Details'"
+				[collapsible]="false"
+				[expanded]="selectedSchedule$ | async"
 			>
-				<div class="row v-flex-m-8">
-					<b>Add Schedule</b>
-					<textarea class="form-control">{{ addSchedulePlaceholder }}</textarea>
-					<button class="btn btn-primary">Save Schedule(s)</button>
-				</div>
-				<div class="row mt-2">
-					<table
-						class="table table-sm table-striped table-hover text-center"
-						[style.width]="'500px'"
-					>
-						<thead>
-							<tr>
-								<th width="100px">Name</th>
-								<th width="250px">Date</th>
-								<!-- <th width="100px">Actions</th> -->
-							</tr>
-						</thead>
-						<tbody>
-							<tr *ngIf="(trainerSchedule$ | async)?.length === 0">
-								<td colspan="2">No schedules yet</td>
-							</tr>
-							<tr
-								*ngFor="let schedule of trainerSchedule$ | async"
-								(click)="onSelectSchedule(schedule)"
-								class="cursor-pointer"
-							>
-								<td>{{ schedule.TrainerName }}</td>
-								<td>
-									{{ schedule.StartDate | date: viewDateFormat }} -
-									{{ schedule.EndDate | date: viewDateFormat }}
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</rd-card>
-		</div>
-    <div class="col">
-      <rd-card
-          [title]="'Answer Details'"
-          [collapsible]="false"
-          [expanded]="(selectedSchedule$|async)"
-        >
-        <div class="col">
+				<div class="col">
 					<form #form="ngForm">
 						<div class="form-group row">
 							<label class="col-3 col-form-label" for="trainer-name"
@@ -105,7 +126,7 @@
 						<p>{{ ((selectedSchedule$ | async)?.Answers)[i] }}</p>
 					</ng-container>
 				</div>
-      </rd-card>
-    </div>
-  </div>
+			</rd-card>
+		</div>
+	</div>
 </div>
