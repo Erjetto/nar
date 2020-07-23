@@ -22,4 +22,10 @@ export class UserService {
     return Role.allRoles[0];
 		// return this.currentUser?.Role;
 	}
+
+  // For SPV changing role
+	public tryGetUserCurrentRole(): Role {
+    return Role.allRoles[0];
+		// return this.currentUser?.Role;
+	}
 }

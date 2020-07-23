@@ -21,7 +21,7 @@ export class HomeService {
 
 	constructor(protected httpClient: HttpClient) {}
 
-	public getTraineeStatistics(): Observable<any> {
+	public getTraineeStatistics(phaseId: string): Observable<any> {
     return of(this.mockData)
 		// return this.httpClient.get(this.baseUrl + 'GetStatisticTrainee');
 	}

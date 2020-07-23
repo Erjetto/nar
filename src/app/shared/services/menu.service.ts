@@ -22,7 +22,7 @@ export class MenuService {
 
 	public getMenuForRole(role: number): Route[] {
 		// if (role === this.currentRole) return this.currentMenus;
-		console.log(this.dashboardRoute);
+		// console.log(this.dashboardRoute);
 
 		this.currentRole = role;
 		this.currentMenus = this.filterMenu(cloneDeep(this.dashboardRoute));

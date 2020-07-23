@@ -21,8 +21,11 @@ export class GenerationService {
 
 	constructor(protected httpClient: HttpClient) {}
   
+	public getCurrentGeneration(): Observable<any> {
+    return of(new ClientGeneration('asdf', '22-1', '2020', 2021))
+  }
 	public getGenerations(): Observable<any> {
     // return this.httpClient.get(this.baseUrl + 'GetGenerations');
-    return from([this.mockData])
+    return of(this.mockData)
   }
 }
