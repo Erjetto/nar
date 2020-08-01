@@ -1,0 +1,45 @@
+:host {
+	.trainee-list .tooltip:after {
+		left: 100px;
+		transform: translateY(30px);
+	}
+	.trainee-list trainee-details {
+		left: 0;
+		right: 0;
+	}
+	.list-thumbnail {
+		display: flex;
+		flex-wrap: wrap;
+    justify-content: center;
+    
+    .card {
+      width: 100px;
+      margin: 0.25em;
+      padding: 0.15em;
+      text-align: center;
+      position: relative;
+      box-shadow: 1px 1px 2px 0px #ccc;
+      border: 1px solid #bbb;
+      color: inherit;
+      text-decoration: none;
+      
+      img {
+        border: none;
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .inactive-trainee {
+      background: #a5a5a5;
+      color: black;
+    }
+    .inactive-trainee:hover {
+      color: #333;
+    }
+  }
+  
+	.grayscale {
+		filter: grayscale(100%);
+	}
+}

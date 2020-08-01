@@ -1,0 +1,97 @@
+:host {
+	#evalNote {
+		margin: initial;
+	}
+
+	#evalNote li .noteText {
+		white-space: pre-wrap;
+	}
+
+	#evalNote .savedBy {
+		font-size: x-small;
+		color: #555;
+	}
+
+	.eval-attendance .Early {
+		background-color: blue;
+		color: white;
+	}
+
+	.eval-attendance .notDone {
+		background-color: red;
+		color: white;
+	}
+
+	.eval-attendance .Late {
+		background-color: blue;
+		color: white;
+	}
+
+	.eval-attendance .Permission {
+		background-color: yellow;
+		color: black;
+	}
+
+	.eval-attendance .Neglects {
+		background-color: orange;
+		color: white;
+	}
+
+	.eval-attendance .Present {
+		background-color: limegreen;
+		color: black;
+	}
+
+	.eval-attendance .Absent {
+		background-color: red;
+		color: white;
+	}
+
+	.eval-attendance .legend {
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		color: black;
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		margin: 0 4px 0 10px;
+	}
+
+	.eval-attendance table thead th {
+		vertical-align: middle;
+		text-align: center;
+		background: #eee;
+	}
+
+	.eval-attendance table th,
+	.eval-attendance table td {
+		border: 1px solid #666;
+	}
+
+	.eval-trainee-comments .table > tbody + tbody {
+		border-top: 1px solid #ddd;
+	}
+
+	.eval-trainee-comments td,
+	.eval-trainee-comments th {
+		vertical-align: middle;
+	}
+
+	[readonly='readonly'] {
+		cursor: pointer !important;
+		background-color: #fff !important;
+	}
+
+	.badge-delete {
+		background-color: rgba(183, 28, 28, 0.8);
+		color: #fff;
+		cursor: pointer;
+	}
+
+	.sortorder:after {
+		content: '\25b2';
+	}
+
+	.sortorder.reverse:after {
+		content: '\25bc';
+	}
+}

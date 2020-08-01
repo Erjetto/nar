@@ -1,0 +1,352 @@
+<div class="container-lg">
+	<div class="row">
+		<div class="col-3">
+			<rd-card
+				[cardTitle]="
+					'View Evaluation - ' + (currentDate | date: viewDateFormat)
+				"
+			>
+				Datepicker here...
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Evaluation'" [expanded]="false">
+				<div class="row">
+					<div class="col border-lightgrey border-right">
+						<span class="row justify-content-end pr-2"><b>Filter</b></span>
+						<div class="row form-group">
+							<div class="col-4">
+								<label
+									for="evalTypeSearch"
+									class="col-form-label font-weight-bold"
+								>
+									Evaluation Type
+								</label>
+							</div>
+							<div class="col">
+								<ng-select
+									id="evalTypeSearch"
+									name="evalTypeSearch"
+									[items]="evalType"
+									[clearable]="false"
+									placeholder="All"
+								></ng-select>
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-4">
+								<label
+									for="evalTypeSearch"
+									class="col-form-label font-weight-bold"
+								>
+									Search
+								</label>
+							</div>
+							<div class="col">
+								<input name="textSearch" id="textSearch" class="form-control" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-3">
+								<label class="col-form-label font-weight-bold">
+									Sort By
+								</label>
+							</div>
+							<div class="col-1">
+								<button class="btn btn-primary">
+									&nabla;
+								</button>
+							</div>
+							<div class="col">
+								<button class="btn btn-primary">Date</button>
+								<button class="btn btn-primary">Author</button>
+								<button class="btn btn-primary">Type</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-7 col-flex">
+						<span class="row justify-content-end pr-2"
+							><b>Insert new Evaluation</b></span
+						>
+						<!-- <b class="row">Insert new Evaluation</b> -->
+						<form class="row flex-grow-1">
+							<div class="col">
+								<textarea
+									name="evalNote"
+									id="evalNote"
+									class="form-control h-100"
+									style="resize: none;"
+									placeholder="Notes"
+								></textarea>
+							</div>
+							<div class="col-4 v-list-m-12 col-flex justify-content-center">
+								<div class="row">
+									<ng-select
+										id="evalType"
+										name="evalType"
+										class="col"
+                    [items]="evalType"
+										[clearable]="false"
+										placeholder="Evaluation Type"
+									></ng-select>
+								</div>
+								<div class="row">
+									<button type="submit" class="btn btn-block btn-primary">
+										Insert New Evaluation
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="row pt-2">
+					<div
+						class="col v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8"
+					>
+						<div class="row" *ngFor="let note of evaluations.EvaluationNote">
+							<!-- Need extra col-row due to v-list-m-6 styling 
+                prevents >1 child element -->
+							<div class="col">
+								<div class="row p-2">
+									<div class="col">
+										<div
+											[innerHTML]="
+												note.Notes.substring(note.Notes.indexOf('-') + 2)
+											"
+										></div>
+										<div class="pl-4 pt-1">
+											<span class="font-weight-bold">- {{ note.SavedBy }}</span>
+											at {{ note.SavedAt | date: detailedViewDateFormat }}
+										</div>
+									</div>
+									<div class="col-auto col-flex v-list-m-6">
+										<div class="row">
+                      <div class="col text-right">
+                        <span class="badge badge-secondary badge-pill w-auto">
+                          {{
+                            note.Notes.substring(1, note.Notes.indexOf('-') - 2)
+                          }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <!-- *ngIf="note.IsDeleteAble" -->
+                        <rd-confirmable-button
+                          [color]="'#dc3545'"
+                          *ngIf="note.IsDeleteAble"
+                        >
+                          <!-- (confirm)="deleteNote(note)" -->
+                          <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+                        </rd-confirmable-button>
+                      </div>
+                    </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-7">
+			<rd-card [cardTitle]="'Today\'s Presentation'" [expanded]="false">
+				<div class="row justify-content-between">
+					<span class="font-weight-bold">Session 1</span>
+					<span>Passed: (3) Not Passed: (1)</span>
+				</div>
+				<table class="table table-sm table-striped table-hover text-center">
+					<thead>
+						<tr>
+							<th>Trainee</th>
+							<th>Date</th>
+							<th>No</th>
+							<th>Final Score</th>
+							<th>Status</th>
+							<th>PIC</th>
+							<!-- <th width="100px">Actions</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="todaysPresentation.length === 0">
+							<td colspan="6">No votes yet</td>
+						</tr>
+						<tr
+							*ngFor="let presentation of todaysPresentation"
+							(click)="onSelectPresentation(presentation)"
+							class="cursor-pointer"
+						>
+							<td>{{ presentation.traineeName }}</td>
+							<td>{{ presentation.savedAt | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
+							<td>{{ presentation.presentationNo }}</td>
+							<td>{{ presentation.score }}</td>
+							<td>{{ presentation.status }}</td>
+							<td>{{ presentation.savedBy }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="row justify-content-between">
+					<span class="font-weight-bold">Session 2</span>
+					<span>Passed: (3) Not Passed: (1)</span>
+				</div>
+				<table class="table table-sm table-striped table-hover text-center">
+					<thead>
+						<tr>
+							<th>Trainee</th>
+							<th>Date</th>
+							<th>No</th>
+							<th>Final Score</th>
+							<th>Status</th>
+							<th>PIC</th>
+							<!-- <th width="100px">Actions</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="todaysPresentation.length === 0">
+							<td colspan="6">No votes yet</td>
+						</tr>
+						<tr
+							*ngFor="let presentation of todaysPresentation"
+							(click)="onSelectPresentation(presentation)"
+							class="cursor-pointer"
+						>
+							<td>{{ presentation.traineeName }}</td>
+							<td>{{ presentation.savedAt | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
+							<td>{{ presentation.presentationNo }}</td>
+							<td>{{ presentation.score }}</td>
+							<td>{{ presentation.status }}</td>
+							<td>{{ presentation.savedBy }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+		<div class="col-5">
+			<rd-card [cardTitle]="'Presentation Detail'" [expanded]="false">
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Attendance'" class="eval-attendance">
+				<div class="row mb-3">
+					<b>Legends: </b>
+					<span class="Present legend"></span> OK
+					<span class="Late legend"></span> Late / Early
+					<span class="notDone legend"></span> Absent
+					<span class="Permission legend"></span> Permission
+					<span class="Neglects legend"></span> Neglects attendance
+				</div>
+				<table class="table table-sm table-striped text-center">
+					<thead>
+						<tr>
+							<th rowspan="3">Trainee</th>
+							<th colspan="4">Secretariat</th>
+							<th colspan="4">Room</th>
+							<th colspan="4">Rest</th>
+							<th rowspan="3">Permission</th>
+						</tr>
+						<tr>
+							<th colspan="2">Scheduled</th>
+							<th colspan="2">Registered</th>
+							<th colspan="2">Scheduled</th>
+							<th colspan="2">Registered</th>
+							<th colspan="2">Scheduled</th>
+							<th colspan="2">Registered</th>
+						</tr>
+						<tr>
+							<th>In</th>
+							<th>Out</th>
+							<th>In</th>
+							<th>Out</th>
+							<th>In</th>
+							<th>Out</th>
+							<th>In</th>
+							<th>Out</th>
+							<th>Out</th>
+							<th>In</th>
+							<th>Out</th>
+							<th>In</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="attendanceReport.Attendances.length === 0">
+							<td colspan="14">No data yet</td>
+						</tr>
+						<tr *ngFor="let at of attendanceReport.Attendances">
+							<td
+								[ngClass]="{ Permission: at.FulldayPermission }"
+								class="trainee-details-hotspot"
+							>
+								<a
+									[routerLink]="['#View/Trainee', at.TraineeId, 'false']"
+									class="pointer relative"
+								>
+									{{ at.TraineeCode }}
+								</a>
+							</td>
+							<td>{{ at.Secretariat.TimeIn || '-' }}</td>
+							<td>{{ at.Secretariat.TimeOut || '-' }}</td>
+							<td
+								[ngClass]="{ tooltip: !!at.Secretariat.NoteIn }"
+								class="{{ at.Secretariat.StatusAbsentIn || 'Absent' }}"
+								title="{{ at.Secretariat.NoteIn }}"
+							>
+								{{ (at.Secretariat.TraineeIn | date: 'HH:mm:ss') || '-' }}
+							</td>
+							<td
+								class="{{ at.Secretariat.StatusAbsentOut || 'Absent' }}"
+								[ngClass]="{ tooltip: !!at.Secretariat.NoteOut }"
+								title="{{ at.Secretariat.NoteOut }}"
+							>
+								{{ (at.Secretariat.TraineeOut | date: 'HH:mm:ss') || '-' }}
+							</td>
+							<td>{{ at.Room.TimeIn || '-' }}</td>
+							<td>{{ at.Room.TimeOut || '-' }}</td>
+							<td
+								class="{{ at.Room.StatusAbsentIn || 'Absent' }}"
+								[ngClass]="{ tooltip: !!at.Secretariat.NoteIn }"
+								title="{{ at.Room.NoteIn }}"
+							>
+								{{ (at.Room.TraineeIn | date: 'HH:mm:ss') || '-' }}
+							</td>
+							<td
+								class="{{ at.Room.StatusAbsentOut || 'Absent' }}"
+								[ngClass]="{ tooltip: !!at.Secretariat.NoteOut }"
+								title="{{ at.Room.NoteOut }}"
+							>
+								{{ (at.Room.TraineeOut | date: 'HH:mm:ss') || '-' }}
+							</td>
+							<td>{{ at.Rest.TimeOut || '-' }}</td>
+							<td>{{ at.Rest.TimeIn || '-' }}</td>
+							<td
+								class="{{ at.Rest.StatusAbsentOut || 'Absent' }}"
+								[ngClass]="{ tooltip: !!at.Secretariat.NoteOut }"
+								title="{{ at.Rest.NoteOut }}"
+							>
+								{{ (at.Rest.TraineeOut | date: 'HH:mm:ss') || '-' }}
+							</td>
+							<td
+								class="{{ at.Rest.StatusAbsentIn || 'Absent' }}"
+								[ngClass]="{ tooltip: !!at.Secretariat.NoteIn }"
+								title="{{ at.Rest.NoteIn }}"
+							>
+								{{ (at.Rest.TraineeIn | date: 'HH:mm:ss') || '-' }}
+							</td>
+							<td>
+								<div *ngFor="let permission of at.AttendanceTimePermission">
+									{{ permission.AttendanceDate | date: 'HH:mm:ss' }} -
+									{{ permission.Reason }}
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+</div>
