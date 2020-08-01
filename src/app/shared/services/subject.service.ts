@@ -12,13 +12,14 @@ export class SubjectService {
   private baseUrl = environment.apiUrl + 'General.svc/';
   
   private mockData = [
-    new ClientSubject(false, 'Java', null, 'asdf')
+    new ClientSubject(false, 'Java', null, 'asdf'),
+    new ClientSubject(false, 'DB', null, 'fads'),
   ]
 
 	constructor(protected httpClient: HttpClient) {}
 
 	public getSubjects(phaseId: string): Observable<any> {
-    return of(this.mockData).pipe(delay(500));
+    return of(this.mockData);
 		// return this.httpClient.get(this.baseUrl + 'GetSubjects');
 	}
 }

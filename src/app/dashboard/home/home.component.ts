@@ -16,14 +16,14 @@ import {
 	take,
 	first,
 	filter,
+  map,
 } from 'rxjs/operators';
 
 import { ClientPhase, ClientStatistic } from 'src/app/shared/models';
 import * as MainStateAction from 'src/app/shared/stores/main/main.action';
 import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, interval } from 'rxjs';
 import { HomeService } from 'src/app/shared/services/home.service';
-import { PhaseService } from 'src/app/shared/services/phase.service';
 import { DashboardContentBase } from '../dashboard-content-base.component';
 import { isEmpty } from 'lodash';
 
@@ -41,31 +41,35 @@ export class HomeComponent extends DashboardContentBase
 	public statistics: ClientStatistic[] = [];
 
 	public isLoading$: Observable<boolean>;
+	// public isLoading = {isLoading: true};
 	public destroyed$: Subject<any> = new Subject();
 
 	constructor(
 		actionsSubject: ActionsSubject,
 		private store: Store<IAppState>,
 		private homeService: HomeService,
-		private phaseService: PhaseService
 	) {
 		super(actionsSubject);
 	}
 
 	ngOnInit(): void {
     this.phases$ = this.store.pipe(select(fromMainState.getPhases));
-    this.phases$.pipe(take(4)).subscribe(console.log);
+    // this.phases$.pipe(take(4)).subscribe(console.log);
 
 		// this.phases$.pipe(
 		//   first(), // === take(1)
 		//   filter(res => isEmpty(res)), // if null, then continue to tap()
 		//   tap(() => this.store.dispatch(MainStateAction.FetchPhases()))
-		// ).subscribe();
-
-		this.isLoading$ = of(false);
+    // ).subscribe();
+    
+    // this.isLoading$ = interval(1500).pipe(
+    //   take(20),
+    //   map(val => val%2===0)
+    // );
+    
 
     
-		// this.reloadView();
+		this.reloadView();
 	}
 
 	reloadView() {

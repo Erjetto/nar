@@ -3,8 +3,27 @@
 	width: 100%;
 	margin-left: unset;
 	margin-right: unset;
-	align-items: flex-start;
+  // align-items: flex-start;
+  
+  // &:last-child{
+  //   margin-bottom: 0;
+  // }
 }
+
+.row-flex{
+  display: flex;
+  flex-flow: row;
+}
+
+.col-flex{
+  display: flex;
+  flex-flow: column;
+}
+
+.justify-content-evenly{
+  justify-content: space-evenly !important;
+}
+
 
 .col,
 .col-1,
@@ -29,4 +48,9 @@
 	&:last-child {
 		padding-right: 0;
 	}
+}
+
+// ng-bootstrap
+.ngb-highlight{
+  background-color: yellow;
 }

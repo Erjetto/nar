@@ -31,9 +31,9 @@ import { swipeAnimation } from '../../angular-animations';
 export class ToasterComponent implements OnInit, OnDestroy {
 	public messages: Toast[] = [
 		new Toast('info', 'Fetch data failed 1 Fetch data failed 1 Fetch data failed 1 Fetch data failed 1 Fetch data failed 1'),
-		new Toast('success', 'Fetch data success 2'),
-		new Toast('warning', 'Fetch data failed 3'),
-		new Toast('danger', 'Fetch data failed 4'),
+		// new Toast('success', 'Fetch data success 2'),
+		// new Toast('warning', 'Fetch data failed 3'),
+		// new Toast('danger', 'Fetch data failed 4'),
   ];
   
 	private decayTimer$: Observable<any>;

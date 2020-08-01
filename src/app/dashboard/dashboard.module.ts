@@ -32,6 +32,16 @@ import { HomeComponent } from './home/home.component';
 import { ManageScheduleComponent } from './candidate/manage-schedule/manage-schedule.component';
 import { ManageCaseComponent } from './manage/case/manage-case.component';
 import { ManageQuestionsComponent } from './candidate/manage-questions/manage-questions.component';
+import { ManageTopBottomVoteComponent } from './manage/manage-top-bottom-vote/manage-top-bottom-vote.component';
+import { ViewTraineeComponent } from './view/view-trainee/view-trainee.component';
+import { ViewEvaluationComponent } from './view/view-evaluation/view-evaluation.component';
+import { ViewTraineeDetailComponent } from './view/view-trainee-detail/view-trainee-detail.component';
+import { ManageGenerationComponent } from './master/manage-generation/manage-generation.component';
+import { ManagePhaseComponent } from './master/manage-phase/manage-phase.component';
+import { ManageSubjectComponent } from './master/manage-subject/manage-subject.component';
+import { ManageInterviewQuestionComponent } from './master/manage-interview-question/manage-interview-question.component';
+import { ManageUserRoleComponent } from './master/manage-user-role/manage-user-role.component';
+import { ManageAttendanceIpListComponent } from './master/manage-attendance-ip-list/manage-attendance-ip-list.component';
 
 @NgModule({
 	declarations: [
@@ -40,6 +50,16 @@ import { ManageQuestionsComponent } from './candidate/manage-questions/manage-qu
 		ManageQuestionsComponent,
 		ManageScheduleComponent,
 		ManageCaseComponent,
+		ManageTopBottomVoteComponent,
+		ViewTraineeComponent,
+		ViewEvaluationComponent,
+		ViewTraineeDetailComponent,
+		ManageGenerationComponent,
+		ManagePhaseComponent,
+		ManageSubjectComponent,
+		ManageInterviewQuestionComponent,
+		ManageUserRoleComponent,
+		ManageAttendanceIpListComponent,
 	],
 	imports: [
 		SharedModule,

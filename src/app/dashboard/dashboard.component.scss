@@ -26,14 +26,13 @@
     position: relative;
 		display: inline-block;
 
-		color: #777;
+    color: #777777;
 		padding: 10px;
 		font-weight: bold;
 		text-decoration: none;
 		cursor: pointer;
 
-		&.menu-active,
-		&:hover {
+		&.menu-active{
 			color: #00a9e2;
 		}
 
@@ -66,4 +65,17 @@
 			// }
 		}
 	}
+}
+
+::ng-deep .dark-theme{
+
+  color: white !important;
+
+  header, nav{
+    background-color: #1d455d !important;
+  }
+
+  .dashboard__content{
+    background-color: #1d455d !important;
+  }
 }

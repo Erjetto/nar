@@ -18,6 +18,7 @@ import {
 	share,
 	tap,
   pluck,
+  delay,
 } from 'rxjs/operators';
 import { Case, ClientPhase, ClientSubject, ClientCaseTrainer } from '../../models';
 import { map } from 'lodash';
@@ -37,7 +38,7 @@ export class CaseStateEffects {
 
 	@Effect()
 	getCases$: Observable<Action> = this.actions$.pipe(
-		ofType(CaseStateAction.FetchCases),
+		ofType(CaseStateAction.FetchCases), delay(500),
     pluck('scheduleId'),
 		switchMap((scheduleId: string) => {
 			return this.caseService.getCases(scheduleId).pipe(
@@ -51,7 +52,7 @@ export class CaseStateEffects {
   
 	@Effect()
 	getClientCaseTrainers$: Observable<Action> = this.actions$.pipe(
-		ofType(CaseStateAction.FetchClientCaseTrainers),
+		ofType(CaseStateAction.FetchClientCaseTrainers), delay(500),
 		switchMap(() => {
 			return this.caseService.getClientCaseTrainers().pipe(
 				mergeMap((results: any) => {

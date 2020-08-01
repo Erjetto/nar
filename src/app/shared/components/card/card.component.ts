@@ -7,6 +7,10 @@ import {
 	ElementRef,
 	OnChanges,
 	SimpleChanges,
+	Output,
+	EventEmitter,
+	ChangeDetectorRef,
+	ChangeDetectionStrategy,
 } from '@angular/core';
 import {
 	trigger,
@@ -18,10 +22,7 @@ import {
 } from '@angular/animations';
 import { interval } from 'rxjs';
 import { first, take } from 'rxjs/operators';
-import {
-	swipeAnimation,
-	faderAnimation,
-} from '../../angular-animations';
+import { swipeAnimation, faderAnimation } from '../../angular-animations';
 
 @Component({
 	selector: 'rd-card',
@@ -52,7 +53,7 @@ import {
 				animate(
 					'500ms ease-out',
 					keyframes([
-						style({ opacity: 0, offset: 0.3 }),
+						style({ opacity: 0, offset: 0.4 }),
 						style({
 							'padding-top': 0,
 							'padding-bottom': 0,
@@ -123,26 +124,36 @@ export class CardComponent implements OnInit {
 
 	@Input() cardTitle = '';
 
+	// Create hover effect
 	@HostBinding('class.card-collapsible') @Input() collapsible = true;
 
+	@Output() toggleExpand = new EventEmitter<boolean>(); // Is it needed?
 	@Input() expanded = true;
 	@Input() isLoading = false;
 
-	constructor() {}
+	constructor(private cdr: ChangeDetectorRef) {}
 
 	ngOnInit(): void {
-		// this.dropdownState = this.expanded ? 'expand' : 'collapse';
-		// interval(1500)
+
+    // For loading test...
+		// interval(1000)
 		// 	.pipe(take(10))
 		// 	.subscribe((val) => {
 		// 		this.isLoading = !this.isLoading;
-		// 		// this.doesScale = !this.doesScale;
-		// 		// if (this.doesScale)
-		// 			// this.scaleState = this.scaleState === 'shown' ? 'hidden' : 'shown';
+		// 		this.cdr.markForCheck();
 		// 	});
 	}
 
-	toggleMinimize() {
-		if (this.collapsible) this.expanded = !this.expanded;
+	toggleMinimized(to?: boolean) {
+		if (!this.collapsible) return;
+
+		if (to !== undefined) this.expanded = !to;
+		else this.expanded = !this.expanded;
+
+		this.toggleExpand.emit(this.expanded);
+	}
+
+	onBadgeClick($event: Event) {
+		$event.stopPropagation();
 	}
 }

@@ -1,5 +1,5 @@
 <header>
-	<div class="container">
+	<div class="container-lg">
 		<div class="row justify-content-between">
 			<div class="col">
 				<img src="../../assets/images/ribbon.png" />
@@ -40,7 +40,7 @@
 				</div>
 
 				<rd-clock
-					class="row justify-content-end pt-1 text-dark font-weight-bold"
+					class="row justify-content-end pt-1 font-weight-bold"
 				></rd-clock>
 
 				<div class="row justify-content-end pt-1">
@@ -60,7 +60,7 @@
 	</div>
 </header>
 <nav class="navbar sticky-top">
-	<div class="container">
+	<div class="container-lg">
 		<div class="menu-list">
 			<div *ngFor="let menu of menuList">
 				<ng-container [ngSwitch]="menu.children == undefined">
@@ -76,7 +76,7 @@
 					<!-- Has submenu -->
 					<a
 						*ngSwitchCase="false"
-						class="hover-text-blue menu-item"
+						class="menu-item"
 						[class.menu-active]="isMenuActive(menu)"
 					>
 						{{ menu.data.name }}
@@ -95,7 +95,7 @@
 		</div>
 	</div>
 </nav>
-<div class="content flex-fill">
+<div class="dashboard__content flex-fill">
 	<router-outlet></router-outlet>
 	<footer class="page-footer font-small text-center text-black-50">
 		<span>Copyright &copy; 2020 - Research and Development Team</span>

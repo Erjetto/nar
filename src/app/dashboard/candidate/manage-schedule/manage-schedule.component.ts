@@ -3,6 +3,7 @@ import {
 	OnInit,
 	ViewChild,
 	ChangeDetectionStrategy,
+  OnDestroy,
 } from '@angular/core';
 import { IAppState } from 'src/app/app.reducer';
 import { Store, select, ActionsSubject } from '@ngrx/store';
@@ -28,7 +29,7 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageScheduleComponent extends DashboardContentBase
-	implements OnInit {
+	implements OnInit, OnDestroy {
 	@ViewChild('form') form: NgForm;
 
 	public addSchedulePlaceholder = '';
@@ -82,6 +83,7 @@ export class ManageScheduleComponent extends DashboardContentBase
 	}
 
 	closeViewSchedule() {
+    // Bad practice? : use null to close card
 		this.store.dispatch(CandidateStateAction.ViewSchedule({ payload: null }));
 	}
 

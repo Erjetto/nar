@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { IAppState } from 'src/app/app.reducer';
 import { Store, select, ActionsSubject } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -18,7 +18,7 @@ import { takeUntil } from 'rxjs/operators';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageQuestionsComponent extends DashboardContentBase
-	implements OnInit {
+	implements OnInit, OnDestroy {
 
 	public questions: string[] = []; // For flexible input
 

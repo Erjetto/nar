@@ -1,6 +1,7 @@
 export class Endpoints {
 	public static readonly EMPTY = '';
 	public static readonly HOME = 'home';
+	public static readonly MASTER = 'master';
 	public static readonly DASHBOARD = 'dashboard';
 }
 

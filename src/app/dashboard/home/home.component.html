@@ -1,16 +1,21 @@
-<div class="container">
+<div class="container-lg">
 	<div class="row">
-    <div class="col-3">
-      <rd-card [cardTitle]="'Recent Trainee Comments'">
-      </rd-card>
-    </div>
+		<!-- <div class="col-3">
+			<rd-card
+				[cardTitle]="'Recent Trainee Comments'"
+			>
+			</rd-card>
+		</div> -->
 		<div class="col flex-grow-1">
 			<div class="row">
 				<rd-card [cardTitle]="'Trainee Statistic'" class="col">
 					<div class="row mb-2">
 						<span>Phase</span> &nbsp;
 						<select [(ngModel)]="selectedPhase" (change)="reloadView()">
-							<option *ngFor="let phase of (phases$|async)" [value]="phase.Description">
+							<option
+								*ngFor="let phase of phases$ | async"
+								[value]="phase.Description"
+							>
 								{{ phase.Description }}
 							</option>
 						</select>

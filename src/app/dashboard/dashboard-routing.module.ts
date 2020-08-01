@@ -12,6 +12,16 @@ import {
 import { ManageQuestionsComponent } from './candidate/manage-questions/manage-questions.component';
 import { ManageScheduleComponent } from './candidate/manage-schedule/manage-schedule.component';
 import { ManageCaseComponent } from './manage/case/manage-case.component';
+import { ManageTopBottomVoteComponent } from './manage/manage-top-bottom-vote/manage-top-bottom-vote.component';
+import { ViewEvaluationComponent } from './view/view-evaluation/view-evaluation.component';
+import { ViewTraineeComponent } from './view/view-trainee/view-trainee.component';
+import { ViewTraineeDetailComponent } from './view/view-trainee-detail/view-trainee-detail.component';
+import { ManageGenerationComponent } from './master/manage-generation/manage-generation.component';
+import { ManagePhaseComponent } from './master/manage-phase/manage-phase.component';
+import { ManageSubjectComponent } from './master/manage-subject/manage-subject.component';
+import { ManageInterviewQuestionComponent } from './master/manage-interview-question/manage-interview-question.component';
+import { ManageUserRoleComponent } from './master/manage-user-role/manage-user-role.component';
+import { ManageAttendanceIpListComponent } from './master/manage-attendance-ip-list/manage-attendance-ip-list.component';
 
 export const routes: Routes = [
 	{
@@ -31,6 +41,52 @@ export const routes: Routes = [
 				path: Endpoints.HOME,
 				component: HomeComponent,
 				data: { roles: RoleGroups.ALL, name: 'Home' },
+			},
+			{
+				path: Endpoints.MASTER,
+        data: { name: 'Master' },
+        children: [
+          {
+            path: 'generation',
+            component: ManageGenerationComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Generation' },
+          },
+          // {
+          //   path: 'trainee',
+          //   component: managetr,
+          //   data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee' },
+          // },
+          {
+            path: 'phase',
+            component: ManagePhaseComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Phase' },
+          },
+          {
+            path: 'subject',
+            component: ManageSubjectComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Subject' },
+          },
+          {
+            path: 'schedule',
+            component: ManageScheduleComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Schedule' },
+          },
+          {
+            path: 'interview-questions',
+            component: ManageInterviewQuestionComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Interview Questions' },
+          },
+          {
+            path: 'user-roles',
+            component: ManageUserRoleComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'User Roles' },
+          },
+          {
+            path: 'attendance-ip-list',
+            component: ManageAttendanceIpListComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Attendance IP List' },
+          },
+        ]
 			} ,
 			// {
 			// 	path: 'my-data',
@@ -133,14 +189,14 @@ export const routes: Routes = [
 						component: ManageCaseComponent,
 						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Case' },
 					},
-			// 		{
-			// 			path: 'top-bottom-vote',
-			// 			component: null,
-			// 			data: {
-			// 				roles: RoleFlags.AssistantSupervisor,
-			// 				name: 'Top Bottom Vote',
-			// 			},
-			// 		},
+					{
+						path: 'top-bottom-vote',
+						component: ManageTopBottomVoteComponent,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Top Bottom Vote',
+						},
+					},
 			// 		{
 			// 			path: 'trainee',
 			// 			component: null,
@@ -218,35 +274,35 @@ export const routes: Routes = [
 			// 		},
 			// 	],
 			// },
-			// {
-			// 	path: 'view',
-			// 	data: { name: 'View' },
-			// 	children: [
-			// 		{
-			// 			path: 'score',
-			// 			component: null,
-			// 			data: { roles: RoleGroups.SENIOR_ROLES, name: 'Score' },
-			// 		},
-			// 		{
-			// 			path: 'trainee',
-			// 			component: null,
-			// 			data: {
-			// 				roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
-			// 				name: 'Trainee',
-			// 			},
-			// 		},
-			// 		{
-			// 			path: 'trainee/:traineeId/:isEval',
-			// 			component: null,
-			// 			data: { roles: RoleGroups.SENIOR_ROLES },
-			// 		},
-			// 		{
-			// 			path: 'evaluation',
-			// 			component: null,
-			// 			data: { roles: RoleGroups.SENIOR_ROLES, name: 'Evaluation' },
-			// 		},
-			// 	],
-			// },
+			{
+				path: 'view',
+				data: { name: 'View' },
+				children: [
+					// {
+					// 	path: 'score',
+					// 	component: null,
+					// 	data: { roles: RoleGroups.SENIOR_ROLES, name: 'Score' },
+					// },
+					{
+						path: 'trainee',
+						component: ViewTraineeComponent,
+						data: {
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
+							name: 'Trainee',
+						},
+					},
+					{
+						path: 'trainee/:traineeId/:isEval',
+						component: ViewTraineeDetailComponent,
+						data: { roles: RoleGroups.SENIOR_ROLES },
+					},
+					{
+						path: 'evaluation',
+						component: ViewEvaluationComponent,
+						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Evaluation' },
+					},
+				],
+			},
 			// {
 			// 	path: 'attendance',
 			// 	data: { name: 'Attendance' },

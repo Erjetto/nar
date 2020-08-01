@@ -45,6 +45,7 @@ export const getCaseStateBy = (fn: (_: ICaseState) => any) =>
 	createSelector(getCaseState, fn);
 
 export const getCases = getCaseStateBy((s) => s.cases);
+export const getCasesLoading = getCaseStateBy((s) => s.loadingCases);
 export const getClientCaseTrainers = getCaseStateBy(
 	(s) => s.clientCaseTrainers
 );

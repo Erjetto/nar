@@ -1,7 +1,15 @@
-<div class="card__title" (click)="toggleMinimize()">
-	{{ cardTitle }}
+<div class="card__title" (click)="toggleMinimized()" >
+  <span>{{ cardTitle }}</span>
+  <div class="badges" rdClickStopPropagation>
+    <ng-content select="[rdCardBadges]"></ng-content>
+    
+    <!-- <button class="btn btn-sm btn-secondary" >
+      <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Cancel
+    </button> -->
+  </div>
 </div>
 <div class="card__body row" [@dropdown]="expanded ? 'expand' : 'collapse'">
+<!-- <div class="card__body row"> -->
   <div class="col">
     <ng-content></ng-content>
   </div>
@@ -12,7 +20,7 @@
 	></div>
 </div>
 
-<div class="absolute-center z-index-15">
+<div class="click-through absolute-center z-index--1" [class.z-index-15]="isLoading">
   <span [@swipeAnimation]="isLoading ? 'shown' : 'hidden'">
     <div class="lds-ring">
       <div></div>

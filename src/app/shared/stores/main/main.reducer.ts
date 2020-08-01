@@ -78,7 +78,7 @@ export const MainStateReducer = createReducer(
 	})),
 	on(MainStateAction.FetchSchedules, (state) => ({
 		...state,
-		loadingScheFetchSchedules: true,
+		loadingSchedules: true,
 	})),
 
 	on(MainStateAction.FetchPhasesSuccess, (state, { payload }) => ({

@@ -19,16 +19,24 @@ import { CardComponent } from './components/card/card.component';
 import { ToasterComponent } from './components/toaster/toaster.component';
 import { ModalComponent } from './components/modal/modal.component';
 
+import { ClickStopPropagationDirective } from './directives/click-stop-propagation.directive';
+import { ConfirmableButtonComponent } from './components/confirmable-button/confirmable-button.component';
+import { ContrastTextColorDirective } from './directives/contrast-text-color.directive';
+
 const SHARED_DECLARATIONS = [
 	// Shared components, pipes, and directives, ex: SearchComponent, CurrencyPipe
 	ClockComponent,
 	CardComponent,
   ToasterComponent,
-  ModalComponent
+  ModalComponent, 
+  ConfirmableButtonComponent,
+
+  ClickStopPropagationDirective,
+  ContrastTextColorDirective,
 ];
 
 @NgModule({
-	declarations: [...SHARED_DECLARATIONS],
+	declarations: [...SHARED_DECLARATIONS, ],
 	imports: [
 		FontAwesomeModule,
 		CommonModule,

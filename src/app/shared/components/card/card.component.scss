@@ -10,7 +10,13 @@
 	.card__title {
 		padding: 12px;
 		font-weight: bold;
-		border-bottom: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+    
     text-overflow: ellipsis;
     white-space: nowrap;
 	}
@@ -24,6 +30,12 @@
 		flex-flow: column;
     align-items: flex-start;
   }
+
+  .badges button{
+    font-size: 0.8rem;
+    padding: 2px 4px;
+  }
+
   
 }
 // Collapse animation use title as button

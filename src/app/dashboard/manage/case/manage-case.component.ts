@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Store, select, ActionsSubject } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable } from 'rxjs';
+import { Observable, interval } from 'rxjs';
 import {
 	ClientPhase,
 	ClientSubject,
@@ -12,11 +12,12 @@ import * as MainStateAction from 'src/app/shared/stores/main/main.action';
 import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
 import * as CaseStateAction from 'src/app/shared/stores/case/case.action';
 import * as fromCaseState from 'src/app/shared/stores/case/case.reducer';
-import { take, filter, tap, first, switchMap } from 'rxjs/operators';
+import { take, filter, tap, first, switchMap, takeUntil } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { isEmpty } from 'lodash';
 import { ObservableHelper } from 'src/app/shared/utilities/observable-helper';
 import { ofType } from '@ngrx/effects';
+import { CardComponent } from 'src/app/shared/components/card/card.component';
 
 @Component({
 	selector: 'rd-manage-case',
@@ -25,20 +26,23 @@ import { ofType } from '@ngrx/effects';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageCaseComponent extends DashboardContentBase
-	implements OnInit {
+	implements OnInit, OnDestroy {
+  @ViewChild('insertCaseCard') insertCaseCard: CardComponent;
+
+	public viewDateFormat = 'HH:mm, dd MMM yyyy';
+
 	public phases$: Observable<ClientPhase[]>;
 	public subjects$: Observable<ClientSubject[]>;
 	public schedules$: Observable<ClientSchedule[]>;
-
-	public selectedPhase: string;
-	public selectedSubject: string;
-	public selectedSchedule: string;
-
-	public caseList$: Observable<Case[]>;
-
 	public manageCaseLoading$: Observable<boolean>;
+  
+	public caseList$: Observable<Case[]>;
+	public caseListLoading$: Observable<boolean>;
 
-	constructor(private store: Store<IAppState>, action: ActionsSubject) {
+  public isEditing = false;
+  public caseForm: Case = new Case();
+
+	constructor(private store: Store<IAppState>, action: ActionsSubject, private cdr: ChangeDetectorRef) {
 		super(action);
 	}
 
@@ -46,26 +50,37 @@ export class ManageCaseComponent extends DashboardContentBase
 		this.phases$ = this.store.pipe(select(fromMainState.getPhases));
 		this.subjects$ = this.store.pipe(select(fromMainState.getSubjects));
 		this.schedules$ = this.store.pipe(select(fromMainState.getSchedules));
-		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
 		this.manageCaseLoading$ = this.store.pipe(
-			select(fromMainState.getManageCaseLoading)
-		);
+      select(fromMainState.getManageCaseLoading)
+      );
+    this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
+    this.caseListLoading$ = this.store.pipe(select(fromCaseState.getCasesLoading));
+      
+		//#region auto fetch new subject,schedule & case in first fetch
+		this.phases$
+			.pipe(
+				filter((res) => !isEmpty(res)),
+				tap((res) => this.onChangePhase(res[0])),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe();
 
-		ObservableHelper.tapFirstUnEmpty(this.phases$, (res: ClientPhase[]) => {
-			this.selectedPhase = res[0].PhaseId;
-			this.onChangePhase(this.selectedPhase);
-		}).subscribe();
+		this.subjects$
+			.pipe(
+				filter((res) => !isEmpty(res)),
+				tap((res) => this.onChangeSubject(res[0])),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe();
 
-		ObservableHelper.tapFirstUnEmpty(this.subjects$, (res: ClientSubject[]) => {
-			this.selectedSchedule = res[0].SubjectId;
-			this.onChangePhase(this.selectedPhase);
-		}).subscribe();
-
-		ObservableHelper.tapFirstUnEmpty(this.phases$, (res: ClientSchedule[]) => {
-			this.selectedSchedule = res[0].ScheduleId;
-			this.onChangePhase(this.selectedPhase);
-			console.log(this.selectedPhase);
-		}).subscribe();
+		this.schedules$
+			.pipe(
+				filter((res) => !isEmpty(res)),
+				tap((res) => this.onChangeSchedule(res[0])),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe();
+		//#endregion
 
 		this.reloadView();
 	}
@@ -74,14 +89,41 @@ export class ManageCaseComponent extends DashboardContentBase
 		this.store.dispatch(MainStateAction.FetchPhases());
 	}
 
-	onChangePhase($event) {
-		// $event -> selected value
-		this.store.dispatch(MainStateAction.FetchSubjects({ phaseId: $event }));
+	onChangePhase($event: ClientPhase) {
+		this.store.dispatch(
+			MainStateAction.FetchSubjects({ phaseId: $event.PhaseId })
+		);
 	}
-	onChangeSubject($event) {
-		this.store.dispatch(MainStateAction.FetchSchedules({ subjectId: $event }));
+	onChangeSubject($event: ClientSubject) {
+		this.store.dispatch(
+			MainStateAction.FetchSchedules({ subjectId: $event.SubjectId })
+		);
 	}
-	onChangeSchedule($event) {
-		this.store.dispatch(CaseStateAction.FetchCases({ scheduleId: $event }));
-	}
+	onChangeSchedule($event: ClientSchedule) {
+		this.store.dispatch(
+			CaseStateAction.FetchCases({ scheduleId: $event.ScheduleId })
+		);
+  }
+
+  onSelectCase(row: Case){
+    this.isEditing = true;
+    this.caseForm = row;
+    this.insertCaseCard.cardTitle = 'Edit/View Case';
+    this.insertCaseCard.toggleMinimized(false);
+  }
+
+  onCancelEdit(){
+    this.insertCaseCard.toggleMinimized(true);
+    this.insertCaseCard.cardTitle = 'Insert New Case';
+    this.isEditing = false;
+    this.caseForm = new Case();
+    // interval(300).pipe(first()).subscribe(() => {
+    // })
+    // setTimeout(() => {
+    //   this.isEditing = false;
+    //   this.caseForm = new Case();
+    // },600)
+  }
+  
+  onClick(){}
 }

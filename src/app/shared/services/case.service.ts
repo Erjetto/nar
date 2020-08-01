@@ -11,7 +11,7 @@ export class CaseService {
   private baseUrl = environment.apiUrl + 'Leader.svc/';
   
   private mockCase = [
-    new Case('1','JavaH1', ['RZ8-1'], '1', 'Soal.pdf', new Date(), 'asdf', new Date(), new Date()),
+    new Case('1','JavaH1', ['RZ8-1', 'RZ8-1'], '1', 'Soal.pdf', new Date(), 'asdf', new Date(), new Date()),
     new Case('2','JavaH2', ['RZ8-2'], '2', 'Soal.pdf', new Date(), 'asdf', new Date(), new Date()),
     new Case('3','JavaH3', ['RZ8-3'], '3', 'Soal.pdf', new Date(), 'asdf', new Date(), new Date()),
   ]

@@ -1,27 +1,26 @@
 import {
 	faSignOutAlt,
-	faPencilAlt,
 	faTrash,
 	faCompactDisc,
   faPlus,
-  faTimes
+  faPen,
+  faDownload,
+  faUndoAlt,
 } from '@fortawesome/free-solid-svg-icons';
-
 export const fasIcons = [
 	faSignOutAlt,
-	faPencilAlt,
 	faTrash,
 	faCompactDisc,
   faPlus,
-  faTimes
+  faPen,
+  faDownload,
+  faUndoAlt,
 ];
 
 import {
 	faBell,
 	// faSignOutAlt,
 	// faPencilAlt,
-	faTrashAlt,
-	// faCompactDisc,
+  faTrashAlt,
 } from '@fortawesome/free-regular-svg-icons';
-
 export const farIcons = [faBell, faTrashAlt];
