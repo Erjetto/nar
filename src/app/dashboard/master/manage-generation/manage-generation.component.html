@@ -1,0 +1,123 @@
+<div class="container">
+	<div class="row">
+		<div class="col-6">
+			<rd-card
+				[cardTitle]="editForm ? 'Edit Generation' : 'Insert New Generation'"
+				[collapsible]="false"
+			>
+				<div rdCardBadges class="" *ngIf="editForm">
+					<button
+						class="btn btn-sm btn-secondary mr-1"
+						(click)="onCancelEdit()"
+					>
+						<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Cancel
+					</button>
+				</div>
+				<form>
+					<div class="row form-group">
+						<label for="genName" class="col-3 col-form-label">Name</label>
+						<div class="col">
+							<input
+								type="text"
+								class="form-control"
+								name="genName"
+								[ngModel]="editForm?.Description"
+							/>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-3 col-form-label">Semester</label>
+						<div class="col">
+							<div class="custom-control custom-radio">
+								<input
+									type="radio"
+									id="oddSemRadio"
+									name="semesterRadio"
+									class="custom-control-input"
+									[checked]="editForm?.Semester === 'Odd'"
+								/>
+								<label class="custom-control-label" for="oddSemRadio"
+									>Odd</label
+								>
+							</div>
+							<div class="custom-control custom-radio">
+								<input
+									type="radio"
+									id="eventSemRadio"
+									name="semesterRadio"
+									class="custom-control-input"
+									[checked]="editForm?.Semester === 'Event'"
+								/>
+								<label class="custom-control-label" for="eventSemRadio"
+									>Even</label
+								>
+							</div>
+							<div class="custom-control custom-radio">
+								<input
+									type="radio"
+									id="compactSemRadio"
+									name="semesterRadio"
+									class="custom-control-input"
+									[checked]="editForm?.Semester === 'Compact'"
+								/>
+								<label class="custom-control-label" for="compactSemRadio"
+									>Compact</label
+								>
+							</div>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="lastYear" class="col-3 col-form-label">Last Year</label>
+						<div class="col">
+							<input
+								type="number"
+								class="form-control"
+								name="lastYear"
+								[ngModel]="editForm?.Year"
+							/>
+						</div>
+					</div>
+					<div class="row justify-content-around">
+						<button class="btn btn-primary" *ngIf="!editForm">
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Generation
+						</button>
+						<button class="btn btn-primary" *ngIf="editForm">
+							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Change(s)
+						</button>
+						<rd-confirmable-button [color]="'#dc3545'" *ngIf="editForm">
+							<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+							Generation
+						</rd-confirmable-button>
+					</div>
+				</form>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'Generation List'" [collapsible]="false">
+				<table class="table table-sm table-striped table-hover text-center">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Semester</th>
+							<th>Year</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="generations?.length === 0">
+							<td colspan="3">No cases yet</td>
+						</tr>
+						<tr
+							*ngFor="let gen of generations"
+							class="cursor-pointer"
+							(click)="onSelectGeneration(gen)"
+						>
+							<td>{{ gen.Description }}</td>
+							<td>{{ gen.Semester }}</td>
+							<td>{{ gen.yearRange }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+</div>

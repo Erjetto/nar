@@ -1,0 +1,213 @@
+<div class="container-lg">
+	<div class="row">
+		<div class="col-5">
+			<div class="row">
+				<div class="col">
+					<rd-card [cardTitle]="'Top/Bottom Vote'">
+						<table class="table table-sm table-striped table-hover text-center">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Date</th>
+									<!-- <th width="100px">Actions</th> -->
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngIf="(voteSchedules$ | async)?.length === 0">
+									<td colspan="2">No votes yet</td>
+								</tr>
+								<tr
+									*ngFor="let schedule of voteSchedules$ | async"
+									(click)="onSelectSchedule(schedule)"
+									class="cursor-pointer"
+								>
+									<td>{{ schedule.ScheduleName }}</td>
+									<td>
+										{{ schedule.StartDate | date: viewDateFormat }} -
+										{{ schedule.EndDate | date: viewDateFormat }}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</rd-card>
+					<rd-card
+						#insertVoteCard
+						[cardTitle]="'Insert New Vote Schedule'"
+						[expanded]="false"
+					>
+						<div rdCardBadges class="" *ngIf="isEditing">
+							<button
+								class="btn btn-sm btn-secondary mr-1"
+								(click)="onCancelEdit()"
+							>
+								<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Cancel
+							</button>
+						</div>
+						<form>
+							<div class="row">
+								<div class="col">
+									<div class="row form-group">
+										<label for="selectSubject">Name</label>
+										<input
+											type="text"
+											name="ScheduleName"
+											id="ScheduleName"
+											class="form-control"
+										/>
+									</div>
+								</div>
+								<div class="col-3">
+									<div class="row form-group">
+										<label for="selectSubject"># of votes</label>
+										<input
+											type="number"
+											name="AmountVote"
+											id="AmountVote"
+											class="form-control"
+										/>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<div class="row form-group">
+										<label for="selectSubject">Start</label>
+										<input
+											type="text"
+											name="StartDate"
+											id="StartDate"
+											class="form-control"
+										/>
+									</div>
+								</div>
+								<div class="col">
+									<div class="row form-group">
+										<label for="selectSubject">End</label>
+										<input
+											type="text"
+											name="EndDate"
+											id="EndDate"
+											class="form-control"
+										/>
+									</div>
+								</div>
+							</div>
+							<div
+								class="row justify-content-around mt-2"
+								[ngSwitch]="isEditing"
+							>
+								<ng-container *ngSwitchCase="false">
+									<button type="submit" class="btn btn-primary">
+										<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create
+									</button>
+								</ng-container>
+								<ng-container *ngSwitchDefault>
+									<rd-confirmable-button
+										[color]="'#007bff'"
+										(confirm)="onClick()"
+									>
+										<!-- <button class="btn btn-primary" (click)="onClick()"> -->
+										<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
+										<!-- </button> -->
+									</rd-confirmable-button>
+									<rd-confirmable-button
+										[color]="'#dc3545'"
+										(confirm)="onClick()"
+									>
+										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+										Schedule
+									</rd-confirmable-button>
+									<!-- <button class="btn btn-danger" (click)="onClick()">
+                    <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Schedule
+                  </button> 
+                  <div class="confirm bg-danger text-white border-danger">
+                    <button class="btn">Yes</button>
+                    <div class="confirm__body col">Are you sure?</div>
+                    <button class="btn">No</button>
+                  </div> -->
+								</ng-container>
+							</div>
+						</form>
+					</rd-card>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'Vote Result'" [expanded]="true">
+				<div class="row">
+					<div class="col">
+						<ul class="nav nav-tabs">
+							<li class="nav-item cursor-pointer">
+								<a
+									class="nav-link"
+									[class.active]="currentVote === 'trainee'"
+									(click)="currentVote = 'trainee'"
+									>Trainee</a
+								>
+							</li>
+							<li class="nav-item cursor-pointer">
+								<a
+									class="nav-link"
+									[class.active]="currentVote === 'trainer'"
+									(click)="currentVote = 'trainer'"
+									>Trainer</a
+								>
+							</li>
+						</ul>
+					</div>
+					<div class="col-4">
+						<input
+							type="text"
+							class="form-control"
+							id="searchTrainee"
+							placeholder="Search"
+							[ngbTypeahead]="onTypeSearch"
+							[(ngModel)]="searchText"
+              />
+					</div>
+				</div>
+				<div class="content">
+					<div class="vote-list row">
+						<div
+							class="vote-item row border-bottom"
+							*ngFor="let voter of traineeVotesFiltered$ | async"
+						>
+							<div class="col">
+								<h5 class="row text-dark vote-item__voter">
+									<ngb-highlight
+										[result]="getTrainee(voter.TraineeId).codeAndName"
+										[term]="searchText"
+									></ngb-highlight>
+									<!-- {{ getTrainee(voter.TraineeId).codeAndName }} -->
+								</h5>
+								<div class="pl-4 row">
+									<div class="col">
+										<h6 class="row">Top {{ voter.TopVotes.length }}</h6>
+										<div class="pl-4 row" *ngFor="let vote of voter.TopVotes">
+											<div class="col">
+												<span class="text-dark">
+													<ngb-highlight
+														[result]="getTrainee(voter.TraineeId).codeAndName"
+														[term]="searchText"
+													></ngb-highlight>
+													<!-- {{getTrainee(vote.TraineeId).codeAndName}} -->
+                        </span>
+                        <p style="font-size: small;">
+													<ngb-highlight
+														[result]="vote.Reason"
+														[term]="searchText"
+													></ngb-highlight>
+                          <!-- {{ vote.Reason }} -->
+                        </p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

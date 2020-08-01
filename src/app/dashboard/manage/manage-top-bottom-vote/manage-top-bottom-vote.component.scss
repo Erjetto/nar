@@ -1,0 +1,11 @@
+
+:host{
+
+  .vote-list{
+    overflow-y: scroll;
+    max-height: 500px;
+  }
+  .vote-item{
+    padding: 15px;
+  }
+}
