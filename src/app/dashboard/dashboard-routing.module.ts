@@ -9,8 +9,8 @@ import {
 	Endpoints,
 	PathMatchings,
 } from '../shared/constants/endpoint.constant';
-import { ManageQuestionsComponent } from './candidate/manage-questions/manage-questions.component';
-import { ManageScheduleComponent } from './candidate/manage-schedule/manage-schedule.component';
+import { CandidateQuestionsComponent } from './candidate/candidate-questions/candidate-questions.component';
+import { AnswerScheduleComponent } from './candidate/answer-schedule/answer-schedule.component';
 import { ManageCaseComponent } from './manage/case/manage-case.component';
 import { ManageTopBottomVoteComponent } from './manage/manage-top-bottom-vote/manage-top-bottom-vote.component';
 import { ViewEvaluationComponent } from './view/view-evaluation/view-evaluation.component';
@@ -22,6 +22,7 @@ import { ManageSubjectComponent } from './master/manage-subject/manage-subject.c
 import { ManageInterviewQuestionComponent } from './master/manage-interview-question/manage-interview-question.component';
 import { ManageUserRoleComponent } from './master/manage-user-role/manage-user-role.component';
 import { ManageAttendanceIpListComponent } from './master/manage-attendance-ip-list/manage-attendance-ip-list.component';
+import { ManageScheduleComponent } from './master/manage-schedule/manage-schedule.component';
 
 export const routes: Routes = [
 	{
@@ -379,16 +380,16 @@ export const routes: Routes = [
 					// 	data: { roles: RoleFlags.Trainer, name: 'Fill Answer' },
 					// },
 					{
-						path: 'manage-questions',
-						component: ManageQuestionsComponent,
+						path: 'candidate-questions',
+						component: CandidateQuestionsComponent,
 						data: {
 							roles: RoleGroups.ALL,
 							name: 'Manage Questions',
 						},
 					},
 					{
-						path: 'manage-schedule',
-						component: ManageScheduleComponent,
+						path: 'answer-schedule',
+						component: AnswerScheduleComponent,
 						data: {
 							roles: RoleFlags.AssistantSupervisor,
 							name: 'Manage Schedule',

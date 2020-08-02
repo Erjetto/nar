@@ -29,9 +29,9 @@ const effects = [MainStateEffects, CandidateStateEffects, CaseStateEffects]
 
 import { DashboardComponent } from './dashboard.component';
 import { HomeComponent } from './home/home.component';
-import { ManageScheduleComponent } from './candidate/manage-schedule/manage-schedule.component';
+import { AnswerScheduleComponent } from './candidate/answer-schedule/answer-schedule.component';
 import { ManageCaseComponent } from './manage/case/manage-case.component';
-import { ManageQuestionsComponent } from './candidate/manage-questions/manage-questions.component';
+import { CandidateQuestionsComponent } from './candidate/candidate-questions/candidate-questions.component';
 import { ManageTopBottomVoteComponent } from './manage/manage-top-bottom-vote/manage-top-bottom-vote.component';
 import { ViewTraineeComponent } from './view/view-trainee/view-trainee.component';
 import { ViewEvaluationComponent } from './view/view-evaluation/view-evaluation.component';
@@ -42,13 +42,14 @@ import { ManageSubjectComponent } from './master/manage-subject/manage-subject.c
 import { ManageInterviewQuestionComponent } from './master/manage-interview-question/manage-interview-question.component';
 import { ManageUserRoleComponent } from './master/manage-user-role/manage-user-role.component';
 import { ManageAttendanceIpListComponent } from './master/manage-attendance-ip-list/manage-attendance-ip-list.component';
+import { ManageScheduleComponent } from './master/manage-schedule/manage-schedule.component';
 
 @NgModule({
 	declarations: [
 		DashboardComponent,
 		HomeComponent,
-		ManageQuestionsComponent,
-		ManageScheduleComponent,
+		CandidateQuestionsComponent,
+		AnswerScheduleComponent,
 		ManageCaseComponent,
 		ManageTopBottomVoteComponent,
 		ViewTraineeComponent,
@@ -57,6 +58,7 @@ import { ManageAttendanceIpListComponent } from './master/manage-attendance-ip-l
 		ManageGenerationComponent,
 		ManagePhaseComponent,
 		ManageSubjectComponent,
+		ManageScheduleComponent,
 		ManageInterviewQuestionComponent,
 		ManageUserRoleComponent,
 		ManageAttendanceIpListComponent,
