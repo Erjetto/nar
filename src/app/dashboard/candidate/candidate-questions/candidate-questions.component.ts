@@ -12,12 +12,12 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-	selector: 'rd-manage-questions',
-	templateUrl: './manage-questions.component.html',
-	styleUrls: ['./manage-questions.component.scss'],
+	selector: 'rd-candidate-questions',
+	templateUrl: './candidate-questions.component.html',
+	styleUrls: ['./candidate-questions.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageQuestionsComponent extends DashboardContentBase
+export class CandidateQuestionsComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {
 
 	public questions: string[] = []; // For flexible input

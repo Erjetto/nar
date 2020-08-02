@@ -23,12 +23,12 @@ import { NgForm } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 
 @Component({
-	selector: 'rd-manage-schedule',
-	templateUrl: './manage-schedule.component.html',
-	styleUrls: ['./manage-schedule.component.scss'],
+	selector: 'rd-answer-schedule',
+	templateUrl: './answer-schedule.component.html',
+	styleUrls: ['./answer-schedule.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageScheduleComponent extends DashboardContentBase
+export class AnswerScheduleComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {
 	@ViewChild('form') form: NgForm;
 
