@@ -40,7 +40,7 @@
 								class="btn btn-sm btn-secondary mr-1"
 								(click)="onCancelEdit()"
 							>
-								<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Cancel
+								<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 							</button>
 						</div>
 						<form>
@@ -102,20 +102,16 @@
 									</button>
 								</ng-container>
 								<ng-container *ngSwitchDefault>
-									<rd-confirmable-button
-										[color]="'#007bff'"
-										(confirm)="onClick()"
-									>
-										<!-- <button class="btn btn-primary" (click)="onClick()"> -->
-										<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
-										<!-- </button> -->
+									<rd-confirmable-button (confirm)="onClick()">
+										<button class="btn btn-primary">
+											<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
+										</button>
 									</rd-confirmable-button>
-									<rd-confirmable-button
-										[color]="'#dc3545'"
-										(confirm)="onClick()"
-									>
+									<rd-confirmable-button (confirm)="onClick()">
+										<button class="btn btn-danger">
 										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
-										Schedule
+                    Schedule
+                    </button>
 									</rd-confirmable-button>
 									<!-- <button class="btn btn-danger" (click)="onClick()">
                     <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Schedule
@@ -163,7 +159,7 @@
 							placeholder="Search"
 							[ngbTypeahead]="onTypeSearch"
 							[(ngModel)]="searchText"
-              />
+						/>
 					</div>
 				</div>
 				<div class="content">
@@ -191,14 +187,14 @@
 														[term]="searchText"
 													></ngb-highlight>
 													<!-- {{getTrainee(vote.TraineeId).codeAndName}} -->
-                        </span>
-                        <p style="font-size: small;">
+												</span>
+												<p style="font-size: small;">
 													<ngb-highlight
 														[result]="vote.Reason"
 														[term]="searchText"
 													></ngb-highlight>
-                          <!-- {{ vote.Reason }} -->
-                        </p>
+													<!-- {{ vote.Reason }} -->
+												</p>
 											</div>
 										</div>
 									</div>

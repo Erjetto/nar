@@ -10,7 +10,7 @@
 						class="btn btn-sm btn-secondary mr-1"
 						(click)="onCancelEdit()"
 					>
-						<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Cancel
+						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
 				<form>
@@ -84,9 +84,10 @@
 						<button class="btn btn-primary" *ngIf="editForm">
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Change(s)
 						</button>
-						<rd-confirmable-button [color]="'#dc3545'" *ngIf="editForm">
-							<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
-							Generation
+						<rd-confirmable-button *ngIf="editForm">
+              <button class="btn btn-danger">
+                <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Generation
+              </button>
 						</rd-confirmable-button>
 					</div>
 				</form>

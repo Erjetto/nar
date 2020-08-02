@@ -12,6 +12,7 @@
 									[items]="phases$ | async"
 									[clearable]="false"
 									bindLabel="PhaseType"
+									[searchable]="false"
 									placeholder="Phase"
 									[ngModel]="(phases$ | async)[0]"
 									(change)="onChangePhase($event)"
@@ -33,10 +34,13 @@
 						<div class="row justify-content-end">
 							<!-- <div class="col-auto"> -->
 							<div class="btn-group">
-								<button class="btn btn-primary" (click)="viewMode='thumbnail'">
+								<button
+									class="btn btn-primary"
+									(click)="viewMode = 'thumbnail'"
+								>
 									Thumbnail
 								</button>
-								<button class="btn btn-primary" (click)="viewMode='list'">
+								<button class="btn btn-primary" (click)="viewMode = 'list'">
 									List
 								</button>
 							</div>
@@ -46,30 +50,48 @@
 				</div>
 				<div class="row" [ngSwitch]="viewMode">
 					<div class="col list-thumbnail" *ngSwitchCase="'thumbnail'">
-            
 						<a
-              *ngFor="let trainee of filteredTrainees$ | async"
-              [ngClass]="{'inactive-trainee': !trainee.IsActive }"
-              class="hoverCell pointer clean-link card trainee-details-hotspot"
+							*ngFor="let trainee of filteredTrainees$ | async"
+							[ngClass]="{ 'inactive-trainee': !trainee.IsActive }"
+							class="hoverCell pointer clean-link card trainee-details-hotspot"
 							[routerLink]="[trainee.TraineeId, false]"
-            >
-            <p style="margin: 2px"><b>{{trainee.TraineeCode}}{{ trainee.IsVeteran ? '- V' : '' }}</b></p>
-            <img alt="{{trainee.TraineeCode}} - {{trainee.TraineeName}}"
-            src="../../../../assets/images/mock-trainee-pic.jpg"
-            [ngClass]="{'grayscale': !trainee.IsActive}"
-            class="mb-2"/>
-            <!-- [src]="['File.svc/GetThumbnail',trainee.PictureId,'95']" -->
-            <span style="position: relative" *ngIf="!trainee.IsActive">
-                <img src="Assets/rose-icon.png" width="30" style="position: absolute; top: -30px; left: 30px;" />
-            </span>
-            <div class="row text-center justify-content-evenly">
-              <span [ngClass]="{'text-success': trainee.IsActive}"><b>{{trainee.Plus}}</b></span>&nbsp;
-              <span [ngClass]="{'text-secondary': trainee.IsActive}"><b>{{trainee.Neutral}}</b></span>&nbsp;
-              <span [ngClass]="{'text-danger': trainee.IsActive}"><b>{{trainee.Minus}}</b></span><br />
-            </div>
-            {{trainee.TraineeNumber}}
-            <br />
-            <small style="word-wrap: break-word">{{trainee.TraineeName}}</small>
+						>
+							<p style="margin: 2px;">
+								<b
+									>{{ trainee.TraineeCode
+									}}{{ trainee.IsVeteran ? '- V' : '' }}</b
+								>
+							</p>
+							<img
+								alt="{{ trainee.TraineeCode }} - {{ trainee.TraineeName }}"
+								src="../../../../assets/images/mock-trainee-pic.jpg"
+								[ngClass]="{ grayscale: !trainee.IsActive }"
+								class="mb-2"
+							/>
+							<!-- [src]="['File.svc/GetThumbnail',trainee.PictureId,'95']" -->
+							<span style="position: relative;" *ngIf="!trainee.IsActive">
+								<img
+									src="Assets/rose-icon.png"
+									width="30"
+									style="position: absolute; top: -30px; left: 30px;"
+								/>
+							</span>
+							<div class="row text-center justify-content-evenly">
+								<span [ngClass]="{ 'text-success': trainee.IsActive }"
+									><b>{{ trainee.Plus }}</b></span
+								>&nbsp;
+								<span [ngClass]="{ 'text-secondary': trainee.IsActive }"
+									><b>{{ trainee.Neutral }}</b></span
+								>&nbsp;
+								<span [ngClass]="{ 'text-danger': trainee.IsActive }"
+									><b>{{ trainee.Minus }}</b></span
+								><br />
+							</div>
+							{{ trainee.TraineeNumber }}
+							<br />
+							<small style="word-wrap: break-word;">{{
+								trainee.TraineeName
+							}}</small>
 						</a>
 					</div>
 					<table class="table table-hover text-center" *ngSwitchCase="'list'">

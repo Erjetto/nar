@@ -1,1 +1,184 @@
-<p>manage-schedule works!</p>
+<div class="container">
+	<div class="row">
+		<div class="col-4">
+			<rd-card [cardTitle]="editForm ? 'Edit Schedule' : 'Insert New Schedule'">
+				<form>
+					<div class="row form-group">
+						<label for="phaseType" class="col-4 col-form-label"
+							>Phase Type</label
+						>
+						<div class="col">
+							<ng-select
+								id="selectPhaseType"
+								name="selectPhaseType"
+								[items]="phaseTypes"
+								[clearable]="false"
+								[bindLabel]="'val'"
+								[bindValue]="'key'"
+              [searchable]="false"
+								[ngModel]="phaseTypes[0].key"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="phaseType" class="col-4 col-form-label">Phase</label>
+						<div class="col">
+							<ng-select
+								id="selectPhase"
+								name="selectPhase"
+								[items]="phases"
+								[clearable]="false"
+								[bindLabel]="'Description'"
+								[bindValue]="'PhaseId'"
+              [searchable]="false"
+								[ngModel]="phases[0].PhaseId"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="phaseType" class="col-4 col-form-label">Subject</label>
+						<div class="col">
+							<ng-select
+								id="selectSubject"
+								name="selectSubject"
+								[items]="subjects"
+								[clearable]="false"
+								[bindLabel]="'Name'"
+								[bindValue]="'SubjectId'"
+              [searchable]="false"
+								[ngModel]="subjects[0].SubjectId"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="phaseType" class="col-4 col-form-label"
+							>Schedule Type</label
+						>
+						<div class="col">
+							<div class="custom-control custom-radio">
+								<input
+									type="radio"
+									id="dailyRadio"
+									name="scheduleTypeRadio"
+									class="custom-control-input"
+								/>
+								<label class="custom-control-label" for="dailyRadio"
+									>Daily</label
+								>
+							</div>
+							<div class="custom-control custom-radio">
+								<input
+									type="radio"
+									id="specificRadio"
+									name="scheduleTypeRadio"
+									class="custom-control-input"
+								/>
+								<label class="custom-control-label" for="specificRadio"
+									>Specific</label
+								>
+							</div>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="endDate" class="col-4 col-form-label">Schedule Name</label>
+						<div class="col">
+							<input
+								type="text"
+								class="form-control"
+								name="scheduleName"
+							/>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="endDate" class="col-4 col-form-label">Schedule Count</label>
+						<div class="col">
+							<input
+								type="number"
+								class="form-control"
+								name="scheduleCount"
+							/>
+						</div>
+					</div>
+					<div class="row justify-content-around">
+						<button class="btn btn-primary">
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert Schedule
+						</button>
+					</div>
+				</form>
+			</rd-card>
+    </div>
+    <div class="col">
+      <rd-card [cardTitle]="'Trainee In Phase'">
+				<div class="row form-group">
+					<div class="col">
+						<ng-select
+							id="selectPhaseType"
+							name="selectPhaseType"
+							[items]="phaseTypes"
+							[clearable]="false"
+							[bindLabel]="'val'"
+							[bindValue]="'key'"
+              [searchable]="false"
+							[ngModel]="phaseTypes[0].key"
+						></ng-select>
+					</div>
+					<div class="col">
+						<ng-select
+							id="selectPhase"
+							name="selectPhase"
+							[items]="phases"
+							[clearable]="false"
+							[bindLabel]="'Description'"
+							[bindValue]="'PhaseId'"
+              [searchable]="false"
+							[ngModel]="phases[0].PhaseId"
+						></ng-select>
+					</div>
+					<div class="col">
+						<ng-select
+							id="selectSubject"
+							name="selectSubject"
+							[items]="subjects"
+							[clearable]="false"
+							[bindLabel]="'Name'"
+              [bindValue]="'SubjectId'"
+              [searchable]="false"
+							[ngModel]="subjects[0].SubjectId"
+						></ng-select>
+					</div>
+				</div>
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Type</th>
+								<th>Schedule Date</th>
+								<th>Self Register</th>
+								<th>Start Registration</th>
+								<th>End Registration</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="schedules?.length === 0">
+								<td colspan="4">No cases yet</td>
+							</tr>
+							<tr
+								*ngFor="let schedule of schedules"
+								class="cursor-pointer"
+								(click)="onSelectSchedule(schedule)"
+							>
+								<td>{{ schedule.ScheduleName }}</td>
+								<td>{{ schedule.scheduleType }}</td>
+								<td>{{ schedule.ScheduleDates[0] | date: viewDateFormat }}</td>
+								<td>{{ schedule.CanSelfRegister || '-' }}</td>
+								<td>{{ (schedule.Start | date: viewDateFormat) || '-'}}</td>
+								<td>{{ (schedule.End | date: viewDateFormat) || '-' }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+    </div>
+	</div>
+</div>

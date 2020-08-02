@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ClientPhase } from 'src/app/shared/models';
+import { ClientPhase, ClientTrainee } from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
 
 @Component({
@@ -9,7 +9,9 @@ import { MockData } from 'src/app/shared/mock-data';
 })
 export class ManagePhaseComponent implements OnInit {
 	public editDateFormat = 'dd-MM-yyyy';
-	public viewDateFormat = 'EEEE, MMM dd yyyy';
+  public viewDateFormat = 'EEEE, MMM dd yyyy';
+  
+  public traineeInPhase: ClientTrainee[];
 
 	public phases: ClientPhase[];
 	public phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];
@@ -19,7 +21,8 @@ export class ManagePhaseComponent implements OnInit {
 	constructor() {}
 
 	ngOnInit(): void {
-		this.phases = MockData.GetPhasesCurrentGeneration.map(ClientPhase.fromJson);
+    this.phases = MockData.GetPhasesCurrentGeneration.map(ClientPhase.fromJson);
+    this.traineeInPhase = MockData.GetTraineesByPhase.map(ClientTrainee.fromJson);
 	}
 
 	getPhaseType(key) {
@@ -28,6 +31,9 @@ export class ManagePhaseComponent implements OnInit {
 
 	onSelectPhase(phase) {
 		this.editForm = phase;
+	}
+
+	onDeleteTrainee(trainee) {
 	}
 
 	onCancelEdit() {

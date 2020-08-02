@@ -31,6 +31,7 @@
 									name="evalTypeSearch"
 									[items]="evalType"
 									[clearable]="false"
+									[searchable]="false"
 									placeholder="All"
 								></ng-select>
 							</div>
@@ -87,8 +88,9 @@
 										id="evalType"
 										name="evalType"
 										class="col"
-                    [items]="evalType"
+										[items]="evalType"
 										[clearable]="false"
+										[searchable]="false"
 										placeholder="Evaluation Type"
 									></ng-select>
 								</div>
@@ -123,26 +125,26 @@
 									</div>
 									<div class="col-auto col-flex v-list-m-6">
 										<div class="row">
-                      <div class="col text-right">
-                        <span class="badge badge-secondary badge-pill w-auto">
-                          {{
-                            note.Notes.substring(1, note.Notes.indexOf('-') - 2)
-                          }}
-                        </span>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col">
-                        <!-- *ngIf="note.IsDeleteAble" -->
-                        <rd-confirmable-button
-                          [color]="'#dc3545'"
-                          *ngIf="note.IsDeleteAble"
-                        >
-                          <!-- (confirm)="deleteNote(note)" -->
-                          <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
-                        </rd-confirmable-button>
-                      </div>
-                    </div>
+											<div class="col text-right">
+												<span class="badge badge-secondary badge-pill w-auto">
+													{{
+														note.Notes.substring(1, note.Notes.indexOf('-') - 2)
+													}}
+												</span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col">
+												<!-- *ngIf="note.IsDeleteAble" -->
+												<rd-confirmable-button *ngIf="note.IsDeleteAble">
+													<!-- (confirm)="deleteNote(note)" -->
+													<button class="btn btn-danger">
+														<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+														Delete
+													</button>
+												</rd-confirmable-button>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>

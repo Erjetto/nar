@@ -1,10 +1,10 @@
-<ng-container [ngSwitch]="isConfirming">
+<!-- <ng-container [ngSwitch]="isConfirming">
 	<button
 		class="btn"
 		(click)="isConfirming = true"
 		*ngSwitchCase="false"
 	>
-		<ng-content></ng-content>
+		<ng-content class="test"></ng-content>
 	</button>
 
 	<div class="btn-sm confirm" *ngSwitchCase="true">
@@ -14,4 +14,19 @@
 		<div class="confirm__body col">Are you sure?</div>
 		<button class="btn" (click)="isConfirming = false">No</button>
 	</div>
-</ng-container>
+</ng-container> -->
+<ng-template #popContent>
+  <div class="row p-2" *ngIf="description !== ''">
+    <!-- <ng-content select=".description"></ng-content> -->
+    {{description}}
+  </div>
+	<div class="btn-group w-100">
+		<button class="btn btn-sm btn-primary rounded-0" (click)="this.confirm.emit()">Yes</button>
+		<button class="btn btn-sm btn-secondary rounded-0">No</button>
+	</div>
+</ng-template>
+<ng-template #popTitle>Are you sure?</ng-template>
+
+<div [ngbPopover]="popContent" [popoverTitle]="popTitle">
+	<ng-content></ng-content>
+</div>

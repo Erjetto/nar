@@ -68,12 +68,12 @@
 				<div class="row">
 					<div
 						class="col-7 v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8 py-2"
-          >
-            <div class="row" *ngIf="traineeDetail.Notes.length === 0">
-              <div class="col align-items-center justify-content-center">
-                <i>No notes yet</i>
-              </div>
-            </div>
+					>
+						<div class="row" *ngIf="traineeDetail.Notes.length === 0">
+							<div class="col align-items-center justify-content-center">
+								<i>No notes yet</i>
+							</div>
+						</div>
 						<div class="row" *ngFor="let note of traineeDetail.Notes">
 							<!-- Need extra col-row due to v-list-m-6 styling 
                 prevents > 1 child element -->
@@ -92,11 +92,10 @@
 										</div>
 									</div>
 									<div class="col-auto">
-										<rd-confirmable-button
-											[color]="'#dc3545'"
-											(confirm)="deleteNote(note)"
-										>
-											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+										<rd-confirmable-button (confirm)="deleteNote(note)">
+											<button class="btn btn-danger">
+												<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+											</button>
 										</rd-confirmable-button>
 									</div>
 								</div>
@@ -124,7 +123,8 @@
 										id="evalType"
 										name="evalType"
 										class="col"
-                    [clearable]="false"
+										[searchable]="false"
+										[clearable]="false"
 									></ng-select>
 								</div>
 								<div class="row">

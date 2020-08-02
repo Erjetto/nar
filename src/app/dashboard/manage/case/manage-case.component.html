@@ -14,6 +14,7 @@
 							[clearable]="false"
 							bindLabel="PhaseType"
 							placeholder="Phase"
+              [searchable]="false"
 							[ngModel]="(phases$ | async)[0]"
 							(change)="onChangePhase($event)"
 						></ng-select>
@@ -25,6 +26,7 @@
 							[clearable]="false"
 							bindLabel="Name"
 							placeholder="Subject"
+              [searchable]="false"
 							[ngModel]="(subjects$ | async)[0]"
 							(change)="onChangeSubject($event)"
 						></ng-select>
@@ -36,6 +38,7 @@
 							[clearable]="false"
 							bindLabel="ScheduleName"
 							placeholder="Schedule"
+              [searchable]="false"
 							[ngModel]="(schedules$ | async)[0]"
 							(change)="onChangeSchedule($event)"
 						></ng-select>
@@ -91,7 +94,7 @@
 						class="btn btn-sm btn-secondary mr-1"
 						(click)="onCancelEdit()"
 					>
-						<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Cancel
+						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
 				<form>
@@ -107,6 +110,7 @@
 									class="col"
 									[items]="subjects$ | async"
 									[clearable]="false"
+              [searchable]="false"
 									bindLabel="Name"
 									placeholder="Subject"
 									[ngModel]="(subjects$ | async)[0]"
@@ -175,6 +179,7 @@
 									class="col"
 									[items]="schedules$ | async"
 									[clearable]="false"
+              [searchable]="false"
 									bindLabel="ScheduleName"
 									placeholder="Schedule"
 									[ngModel]="(schedules$ | async)[0]"
