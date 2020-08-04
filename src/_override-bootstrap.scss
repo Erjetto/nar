@@ -1,52 +1,55 @@
 // bootstrap
 
-.btn-xs{
-  padding: 0.1rem 0.3rem;
-  font-size: 0.75rem;
-  /* line-height: 1.5; */
-  border-radius: 0.2rem;
+.text-grey{
+  
+}
+
+.btn-xs {
+	padding: 0.1rem 0.3rem;
+	font-size: 0.75rem;
+	/* line-height: 1.5; */
+	border-radius: 0.2rem;
 }
 
 .row {
 	width: 100%;
 	margin-left: unset;
 	margin-right: unset;
-  // align-items: flex-start;
-  
-  // &:last-child{
-  //   margin-bottom: 0;
-  // }
+	// align-items: flex-start;
+
+	// &:last-child{
+	//   margin-bottom: 0;
+	// }
 }
 
-.row-flex{
-  display: flex;
-  flex-flow: row;
+.row-flex {
+	display: flex;
+	flex-flow: row;
 }
 
-.col-flex{
-  display: flex;
-  flex-flow: column;
+.col-flex {
+	display: flex;
+	flex-flow: column;
 }
 
-.justify-content-evenly{
-  justify-content: space-evenly !important;
+.justify-content-evenly {
+	justify-content: space-evenly !important;
 }
 
+@for $i from 1 through 12 {
+	.col-#{$i} {
+		padding-left: 0.5rem;
+		padding-right: 0.5rem;
 
-.col,
-.col-1,
-.col-2,
-.col-3,
-.col-4,
-.col-5,
-.col-6,
-.col-7,
-.col-8,
-.col-9,
-.col-10,
-.col-11,
-.col-12
- {
+		&:first-child {
+			padding-left: 0;
+		}
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+}
+.col {
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
 
@@ -59,6 +62,6 @@
 }
 
 // ng-bootstrap
-.ngb-highlight{
-  background-color: yellow;
+.ngb-highlight {
+	background-color: yellow;
 }

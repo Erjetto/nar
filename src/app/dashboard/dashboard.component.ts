@@ -20,6 +20,7 @@ import { MenuService } from '../shared/services/menu.service';
 import { Route, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter, takeUntil, delay, tap } from 'rxjs/operators';
 import { UserService } from '../shared/services/user.service';
+import { NgSelectConfig } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'rd-dashboard',
@@ -30,6 +31,8 @@ import { UserService } from '../shared/services/user.service';
 export class DashboardComponent implements OnInit, OnDestroy {
 	@HostBinding('class') hostClass = 'd-flex flex-column';
 
+  @HostBinding('class.dark-theme') isDark = true;
+  
 	public destroyed$ = new Subject<void>();
 
 	public menuList: Route[];
@@ -53,7 +56,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		private menuService: MenuService,
 		private router: Router,
 		private route: ActivatedRoute,
-		private store: Store<IAppState>
+    private store: Store<IAppState>,
 	) {
 		// Temporary
 		// Get user from user service later
