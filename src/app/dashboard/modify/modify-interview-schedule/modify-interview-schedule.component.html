@@ -1,0 +1,115 @@
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Insert/Update Interview Schedule'">
+				<div class="row form-group">
+					<label for="selectInterview" class="col-2 col-form-label"
+						>Title</label
+					>
+					<div class="col-4">
+						<ng-select
+							name="selectInterview"
+							[items]="[]"
+							[bindLabel]="''"
+							[bindValue]="''"
+							[searchable]="false"
+							[clearable]="false"
+						></ng-select>
+					</div>
+					<div class="col"></div>
+				</div>
+				<div class="row form-group">
+					<div class="col-6">
+						<div class="row">
+							<label for="schedules" class="col-4 col-form-label">
+								Insert multiple schedules
+							</label>
+							<div class="col">
+								<textarea
+									name="schedules"
+									class="form-control"
+									style="height: 120px;"
+								></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<span>Note:</span>
+						<p>(Put input format here....)</p>
+					</div>
+				</div>
+				<div class="row justify-content-around">
+					<button class="btn btn-primary">
+						<fa-icon [icon]="['fas', 'plus']"></fa-icon>Insert New Announcement
+					</button>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Interview Schedules'">
+				<div class="row pb-2">
+					<b>Legends: </b>
+					<span class="reject legend"></span> Rej ({{ interviewScheduleReport.StatusTotal.Rej }})
+					<span class="pos legend"></span> Pos ({{ interviewScheduleReport.StatusTotal.Pos }})
+					<span class="acc legend"></span> Acc ({{ interviewScheduleReport.StatusTotal.Acc }})
+				</div>
+				<div class="row">
+					<table
+						class="table table-sm table-hover table-striped table-bordered text-center"
+					>
+						<thead>
+							<tr>
+								<th>Traiee Code</th>
+								<th>Trainee Name</th>
+								<th>Interview Date</th>
+								<th>Time</th>
+								<th>Location</th>
+								<th>Main Interviewer</th>
+								<th>Co-Interviewer</th>
+								<th>Interview Score</th>
+								<th>Status</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="interviewScheduleReport.Schedules.length === 0">
+								<td colspan="10">
+									No schedules yet
+								</td>
+							</tr>
+							<tr
+								*ngFor="let interview of interviewScheduleReport.Schedules"
+								class="cursor-pointer"
+							>
+								<td>{{ interview.TraineeCode }}</td>
+								<td>{{ interview.TraineeName }}</td>
+								<td>{{ interview.InterviewDate | date: 'EEEE, MMM dd' }}</td>
+								<td>{{ interview.startToEndTime }}</td>
+								<td>{{ interview.Location }}</td>
+								<td>{{ interview.MainInterviewer }}</td>
+								<td>{{ interview.CoInterviewer }}</td>
+								<td>{{ interview.InterviewScore }}</td>
+								<td [class]="statusClass[interview.Result]">
+									{{ interview.Result }}
+								</td>
+								<td>
+									<rd-confirmable-button
+										[description]="
+											'Delete interview for ' + interview.TraineeName + '?'
+										"
+									>
+										<button class="btn btn-danger btn-sm">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+										</button>
+									</rd-confirmable-button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>
