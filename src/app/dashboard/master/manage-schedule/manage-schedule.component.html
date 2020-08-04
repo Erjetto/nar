@@ -15,7 +15,7 @@
 								[clearable]="false"
 								[bindLabel]="'val'"
 								[bindValue]="'key'"
-              [searchable]="false"
+								[searchable]="false"
 								[ngModel]="phaseTypes[0].key"
 							></ng-select>
 						</div>
@@ -30,7 +30,7 @@
 								[clearable]="false"
 								[bindLabel]="'Description'"
 								[bindValue]="'PhaseId'"
-              [searchable]="false"
+								[searchable]="false"
 								[ngModel]="phases[0].PhaseId"
 							></ng-select>
 						</div>
@@ -45,7 +45,7 @@
 								[clearable]="false"
 								[bindLabel]="'Name'"
 								[bindValue]="'SubjectId'"
-              [searchable]="false"
+								[searchable]="false"
 								[ngModel]="subjects[0].SubjectId"
 							></ng-select>
 						</div>
@@ -80,23 +80,19 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="endDate" class="col-4 col-form-label">Schedule Name</label>
+						<label for="endDate" class="col-4 col-form-label"
+							>Schedule Name</label
+						>
 						<div class="col">
-							<input
-								type="text"
-								class="form-control"
-								name="scheduleName"
-							/>
+							<input type="text" class="form-control" name="scheduleName" />
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="endDate" class="col-4 col-form-label">Schedule Count</label>
+						<label for="endDate" class="col-4 col-form-label"
+							>Schedule Count</label
+						>
 						<div class="col">
-							<input
-								type="number"
-								class="form-control"
-								name="scheduleCount"
-							/>
+							<input type="number" class="form-control" name="scheduleCount" />
 						</div>
 					</div>
 					<div class="row justify-content-around">
@@ -106,9 +102,97 @@
 					</div>
 				</form>
 			</rd-card>
-    </div>
-    <div class="col">
-      <rd-card [cardTitle]="'Trainee In Phase'">
+			<rd-card [cardTitle]="'Trainee in Schedule'">
+				<form>
+					<div class="row form-group">
+						<label for="selectphaseType" class="col-4 col-form-label"
+							>Phase Type</label
+						>
+						<div class="col">
+							<ng-select
+								id="selectPhaseType"
+								name="selectPhaseType"
+								[items]="phaseTypes"
+								[clearable]="false"
+								[bindLabel]="'val'"
+								[bindValue]="'key'"
+								[searchable]="false"
+								[ngModel]="phaseTypes[0].key"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="selectPhase" class="col-4 col-form-label">Phase</label>
+						<div class="col">
+							<ng-select
+								id="selectPhase"
+								name="selectPhase"
+								[items]="phases"
+								[clearable]="false"
+								[bindLabel]="'Description'"
+								[bindValue]="'PhaseId'"
+								[searchable]="false"
+								[ngModel]="phases[0].PhaseId"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="selectSubject" class="col-4 col-form-label"
+							>Subject</label
+						>
+						<div class="col">
+							<ng-select
+								id="selectSubject"
+								name="selectSubject"
+								[items]="subjects"
+								[clearable]="false"
+								[bindLabel]="'Name'"
+								[bindValue]="'SubjectId'"
+								[searchable]="false"
+								[ngModel]="subjects[0].SubjectId"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="selectSchedule" class="col-4 col-form-label"
+							>Schedule</label
+						>
+						<div class="col">
+							<ng-select
+								id="selectSchedule"
+								name="selectSchedule"
+								[items]="schedules"
+								[clearable]="false"
+								[bindLabel]="'ScheduleName'"
+								[bindValue]="'ScheduleId'"
+								[searchable]="false"
+								[ngModel]="schedules[0].ScheduleId"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="traineeText" class="col-4 col-form-label"
+							>Trainee</label
+						>
+						<div class="col">
+							<textarea
+								name="traineeText"
+								id="traineeText"
+								class="form-control"
+								style="resize: vertical; width: 100%;"
+							></textarea>
+						</div>
+					</div>
+					<div class="row justify-content-around">
+						<button class="btn btn-primary">
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert Trainee(s)
+						</button>
+					</div>
+				</form>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'Trainee In Phase'">
 				<div class="row form-group">
 					<div class="col">
 						<ng-select
@@ -118,7 +202,7 @@
 							[clearable]="false"
 							[bindLabel]="'val'"
 							[bindValue]="'key'"
-              [searchable]="false"
+							[searchable]="false"
 							[ngModel]="phaseTypes[0].key"
 						></ng-select>
 					</div>
@@ -130,7 +214,7 @@
 							[clearable]="false"
 							[bindLabel]="'Description'"
 							[bindValue]="'PhaseId'"
-              [searchable]="false"
+							[searchable]="false"
 							[ngModel]="phases[0].PhaseId"
 						></ng-select>
 					</div>
@@ -141,8 +225,8 @@
 							[items]="subjects"
 							[clearable]="false"
 							[bindLabel]="'Name'"
-              [bindValue]="'SubjectId'"
-              [searchable]="false"
+							[bindValue]="'SubjectId'"
+							[searchable]="false"
 							[ngModel]="subjects[0].SubjectId"
 						></ng-select>
 					</div>
@@ -161,7 +245,7 @@
 						</thead>
 						<tbody>
 							<tr *ngIf="schedules?.length === 0">
-								<td colspan="4">No cases yet</td>
+								<td colspan="4">No schedules yet</td>
 							</tr>
 							<tr
 								*ngFor="let schedule of schedules"
@@ -172,13 +256,97 @@
 								<td>{{ schedule.scheduleType }}</td>
 								<td>{{ schedule.ScheduleDates[0] | date: viewDateFormat }}</td>
 								<td>{{ schedule.CanSelfRegister || '-' }}</td>
-								<td>{{ (schedule.Start | date: viewDateFormat) || '-'}}</td>
+								<td>{{ (schedule.Start | date: viewDateFormat) || '-' }}</td>
 								<td>{{ (schedule.End | date: viewDateFormat) || '-' }}</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</rd-card>
-    </div>
+			<rd-card [cardTitle]="'Trainee In Phase'">
+				<div class="row form-group">
+					<div class="col">
+						<ng-select
+							id="selectPhaseType"
+							name="selectPhaseType"
+							[items]="phaseTypes"
+							[clearable]="false"
+							[bindLabel]="'val'"
+							[bindValue]="'key'"
+							[searchable]="false"
+							[ngModel]="phaseTypes[0].key"
+						></ng-select>
+					</div>
+					<div class="col">
+						<ng-select
+							id="selectPhase"
+							name="selectPhase"
+							[items]="phases"
+							[clearable]="false"
+							[bindLabel]="'Description'"
+							[bindValue]="'PhaseId'"
+							[searchable]="false"
+							[ngModel]="phases[0].PhaseId"
+						></ng-select>
+					</div>
+					<div class="col">
+						<ng-select
+							id="selectSubject"
+							name="selectSubject"
+							[items]="subjects"
+							[clearable]="false"
+							[bindLabel]="'Name'"
+							[bindValue]="'SubjectId'"
+							[searchable]="false"
+							[ngModel]="subjects[0].SubjectId"
+						></ng-select>
+					</div>
+					<div class="col">
+						<ng-select
+							id="selectSchedule"
+							name="selectSchedule"
+							[items]="schedules"
+							[clearable]="false"
+							[bindLabel]="'ScheduleName'"
+							[bindValue]="'ScheduleId'"
+							[searchable]="false"
+							[ngModel]="schedules[0].ScheduleId"
+						></ng-select>
+					</div>
+				</div>
+				<div class="row">
+					<table class="table table-sm table-striped text-center">
+						<thead>
+							<tr>
+								<th width="70">Trainee</th>
+								<th width="150">Binusian Number</th>
+								<th>Name</th>
+								<th width="80">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="traineeInSchedule?.length === 0">
+								<td colspan="4">No trainees in this schedule</td>
+							</tr>
+							<tr *ngFor="let trainee of traineeInSchedule">
+								<td>{{ trainee.TraineeCode }}</td>
+								<td>{{ trainee.TraineeNumber }}</td>
+								<td>{{ trainee.TraineeName }}</td>
+								<td>
+									<rd-confirmable-button
+										[description]="'Delete ' + trainee.TraineeName + '?'"
+										(confirm)="onDeleteTrainee(trainee)"
+									>
+										<button class="btn btn-xs btn-danger">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+										</button>
+									</rd-confirmable-button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+		</div>
 	</div>
 </div>

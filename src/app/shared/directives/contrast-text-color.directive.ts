@@ -8,6 +8,7 @@ export class ContrastTextColorDirective implements AfterViewInit{
 
   // Requirement: the element must have the background-color element
   // Not working on inherited css color
+  
 	constructor(private el: ElementRef, private renderer: Renderer2) {
 		
   }

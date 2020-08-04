@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ClientPhase, ClientSubject, ClientSchedule } from 'src/app/shared/models';
+import { ClientPhase, ClientSubject, ClientSchedule, ClientTrainee } from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
+import { throwIfEmpty } from 'rxjs/operators';
 
 @Component({
   selector: 'rd-manage-schedule',
@@ -10,6 +11,8 @@ import { MockData } from 'src/app/shared/mock-data';
 export class ManageScheduleComponent implements OnInit {
 
   public viewDateFormat = 'EEEE, dd MMM yyyy';
+
+  public traineeInSchedule: ClientTrainee[];
 
 	public schedules: ClientSchedule[];
 	public subjects: ClientSubject[];
@@ -24,12 +27,16 @@ export class ManageScheduleComponent implements OnInit {
     this.phases = MockData.GetPhasesCurrentGeneration.map(ClientPhase.fromJson);
     this.subjects = MockData.GetSubjectListByPhase.map(ClientSubject.fromJson);
     this.schedules = MockData.GetSchedules.map(ClientSchedule.fromJson);
+
+    this.traineeInSchedule = MockData.GetTraineesBySchedule.map(ClientTrainee.fromJson);
 	}
 
 	getPhaseType(key) {
 		return this.phaseTypes.find((p) => p.key === key).val;
 	}
 
+	onDeleteTrainee(trainee){}
+  
 	onSelectSchedule(schedule){
 		this.editForm = schedule;
 	}

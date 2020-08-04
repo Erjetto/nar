@@ -18,13 +18,22 @@ export class Toast {
 
 export class BaseModel {}
 
+// ClientRole -> Role
 export class Role {
 	public static readonly allRoles = map(
 		RoleFlags,
 		(val: number, key) => new Role(key, val)
 	);
 
-	constructor(public roleName = '', public roleNumber = 0) {}
+	constructor(
+		public roleName = '',
+		public roleNumber = 0,
+		public roleId = ''
+	) {}
+
+	static fromJson(data: any) {
+		return new Role(data.Name, RoleFlags[data.Name], data.UserRoleId);
+	}
 
 	static fromName(input: string | number): Role {
 		// name/flag to Role
@@ -40,6 +49,20 @@ export class Role {
 			return roleFlags.some(
 				(role) => (role.roleNumber & this.roleNumber) !== 0
 			);
+	}
+}
+
+export class ClientUserInRoles extends BaseModel {
+	constructor(
+		public Role = '',
+		public UserInRoleId = '',
+		public UserName = ''
+	) {
+		super();
+	}
+
+	static fromJson(data: any) {
+		return Object.assign(new ClientUserInRoles(), data);
 	}
 }
 
@@ -135,7 +158,8 @@ export class ClientSubject extends BaseModel {
 		public HasPresentation = false,
 		public Name = '',
 		public Phase: ClientPhase = null,
-		public SubjectId = ''
+		public SubjectId = '',
+		public MaxFileSize = 1 // in bytes
 	) {
 		super();
 	}
@@ -829,6 +853,11 @@ export class Message extends BaseModel {
 	) {
 		super();
 	}
+	public get contentAndAttachment() {
+		return (
+			this.Note + (this.HasFile ? '\n\nAttachments:\n' + this.FileName : '')
+		);
+	}
 	static fromJson(data?: any): Message {
 		return Object.assign(new Message(), data, {
 			InsertBy: Binusian.fromJson(data?.InsertBy),
@@ -1012,6 +1041,88 @@ export class TopBottomVoteSchedule extends BaseModel {
 		return Object.assign(new TopBottomVoteSchedule(), data, {
 			StartDate: DateHelper.fromCSharpDate(data?.StartDate),
 			EndDate: DateHelper.fromCSharpDate(data?.EndDate),
+		});
+	}
+}
+
+//#endregion
+
+//#region Interview Question
+export class ClientInterviewQuestion extends BaseModel {
+	constructor(
+		public InterviewQuestionId = '',
+		public InterviewQuestionName = ''
+	) {
+		super();
+	}
+	static fromJson(data: any) {
+		return Object.assign(new ClientInterviewQuestion(), data);
+	}
+}
+
+export class InterviewQuestionDetail extends BaseModel {
+	constructor(
+		public DescriptionEnglish = '',
+		public DescriptionIndonesia = '',
+		public Number = 0,
+		public Weight = 0
+	) {
+		super();
+	}
+	static fromJson(data: any) {
+		return Object.assign(new InterviewQuestionDetail(), data);
+	}
+}
+
+export class ClientInterviewReport extends BaseModel {
+	constructor(
+		public DescriptionEnglish = '',
+		public DescriptionIndonesia = '',
+		public Number = 0,
+		public Weight = 0,
+		public StatusTotal: {Acc, Rej, Pos} = null,
+		public Schedules: ClientInterviewSchedule[] = []
+	) {
+		super();
+	}
+
+	static fromJson(data: any) {
+		return Object.assign(new ClientInterviewReport(), data, {
+			Schedules: map(data.Schedules, ClientInterviewSchedule.fromJson),
+			StatusTotal: data.Schedules.reduce(
+				(c, s) => {
+					c[s.Result]++;
+					return c;
+				},
+				{ Acc: 0, Rej: 0, Pos: 0 }
+			),
+    });
+    
+	}
+}
+
+export class ClientInterviewSchedule extends BaseModel {
+	constructor(
+		public MainInterviewer = '',
+		public CoInterviewer = '',
+		public InterviewDate: Date = null,
+		public InterviewScheduleId = '',
+		public InterviewScore = '',
+		public Location = '',
+		public Result = '',
+		public StartTime = '',
+		public EndTime = '',
+		public TraineeCode = '',
+		public TraineeName = ''
+	) {
+		super();
+	}
+	public get startToEndTime() {
+		return this.StartTime + ' - ' + this.EndTime;
+	}
+	static fromJson(data: any) {
+		return Object.assign(new ClientInterviewSchedule(), data, {
+			InterviewDate: DateHelper.fromCSharpDate(data.InterviewDate),
 		});
 	}
 }

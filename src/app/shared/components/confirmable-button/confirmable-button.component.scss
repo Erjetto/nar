@@ -1,9 +1,6 @@
 :host {
   
-}
-
-:host{
-  
+  display: inline-block;
 }
 
 .popover-header{
@@ -12,5 +9,4 @@
 
 ::ng-deep .popover-body{
   padding: 0;
-
 }

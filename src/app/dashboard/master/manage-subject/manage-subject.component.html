@@ -1,1 +1,143 @@
-<p>manage-subject works!</p>
+<div class="container">
+	<div class="row">
+		<div class="col-4">
+			<rd-card [cardTitle]="editForm ? 'Edit Subject' : 'Insert New Subject'">
+				<div rdCardBadges class="" *ngIf="editForm">
+					<button
+						class="btn btn-sm btn-secondary mr-1"
+						(click)="onCancelEdit()"
+					>
+						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
+					</button>
+				</div>
+				<form>
+					<div class="row form-group">
+						<label for="subjectName" class="col-4 col-form-label">
+							Subject
+						</label>
+						<div class="col">
+							<input
+								type="text"
+								class="form-control"
+								name="subjectName"
+								[ngModel]="editForm?.Name"
+							/>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="maxFileSize" class="col-4 col-form-label">
+							Max File Size
+						</label>
+						<div class="col">
+							<input
+								type="text"
+								class="form-control"
+								name="maxFileSize"
+                [ngModel]="editForm?.MaxFileSize"
+							/>
+						</div>
+						<div class="col">
+							<ng-select
+								id="selectFileSize"
+								name="selectFileSize"
+								[items]="size"
+								[bindLabel]="'key'"
+                [searchable]="false"
+                [clearable]="false"
+                [ngModel]="currentSize"
+                (change)="convertFileSize($event)"
+                ></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="endDate" class="col-4 col-form-label">Phase</label>
+						<div class="col">
+							<ng-select
+								id="selectPhase"
+								name="selectPhase"
+								[items]="phases"
+								[clearable]="false"
+								[bindLabel]="'Description'"
+								[bindValue]="'PhaseId'"
+								[searchable]="false"
+								[ngModel]="phases[0].PhaseId"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="endDate" class="col-4 col-form-label">Phase Type</label>
+						<div class="col">
+							<ng-select
+								id="selectPhaseType"
+								name="selectPhaseType"
+								[items]="phaseTypes"
+								[clearable]="false"
+								[bindLabel]="'val'"
+								[bindValue]="'key'"
+								[searchable]="false"
+								[ngModel]="phaseTypes[0].key"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-4"></div>
+						<div class="col">
+							<div class="custom-control custom-checkbox">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="hasPresentation"
+                  name="hasPresentation"
+                  [checked]="editForm?.HasPresentation"
+								/>
+								<label class="custom-control-label" for="hasPresentation">
+									Has Presentation
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row justify-content-around">
+						<button class="btn btn-primary" *ngIf="!editForm">
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Subject
+						</button>
+						<button class="btn btn-primary" *ngIf="editForm">
+							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
+						</button>
+						<rd-confirmable-button *ngIf="editForm">
+							<button class="btn btn-danger">
+								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+							</button>
+						</rd-confirmable-button>
+					</div>
+				</form>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'Subject List'">
+				<table class="table table-sm table-striped table-hover text-center">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Has Presentation</th>
+							<th>Max. Upload File Size</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="subjects?.length === 0">
+							<td colspan="4">No subject yet</td>
+						</tr>
+						<tr
+							*ngFor="let subject of subjects"
+							class="cursor-pointer"
+							(click)="onSelectSubject(subject)"
+						>
+							<td>{{ subject.Name }}</td>
+							<td>{{ subject.HasPresentation ? '&#x2611;' : '&#x2610;'}}</td>
+							<td>{{ subject.MaxFileSize }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+</div>

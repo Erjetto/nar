@@ -1,1 +1,24 @@
-<p>manage-attendance-ip-list works!</p>
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Insert Secretariat Attendance IP List'">
+				<form>
+					<div class="row form-group">
+						<textarea
+							name="ipListText"
+							class="form-control w-100"
+							placeholder="ex: 10.22.64.100"
+							>{{ ipList.join('\n') }}</textarea
+						>
+					</div>
+					<div class="row">
+						<p>Note: Each IP is separated by new line</p>
+					</div>
+					<div class="row">
+						<button class="btn btn-primary">Update</button>
+					</div>
+				</form>
+			</rd-card>
+		</div>
+	</div>
+</div>

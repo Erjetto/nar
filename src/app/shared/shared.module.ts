@@ -22,6 +22,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { ClickStopPropagationDirective } from './directives/click-stop-propagation.directive';
 import { ConfirmableButtonComponent } from './components/confirmable-button/confirmable-button.component';
 import { ContrastTextColorDirective } from './directives/contrast-text-color.directive';
+import { EasyHorizontalSrollDirective } from './directives/easy-horizontal-sroll.directive';
 
 const SHARED_DECLARATIONS = [
 	// Shared components, pipes, and directives, ex: SearchComponent, CurrencyPipe
@@ -33,6 +34,7 @@ const SHARED_DECLARATIONS = [
 
   ClickStopPropagationDirective,
   ContrastTextColorDirective,
+  EasyHorizontalSrollDirective,
 ];
 
 @NgModule({

@@ -13469,7 +13469,39 @@ export const MockData = {
 	// subjectId: "ac349105-3eb5-ea11-abcb-d8d385fcda38"
 	GetMaximumFileSize: 50000,
 
-  
+  GetRoles: [
+    {
+      "__type": "ClientRoles:#BPlusTraining.Logic",
+      "Name": "Interviewer",
+      "UserRoleId": "50fb8fe2-8c78-e111-8777-d8d385fcda38"
+    },
+    {
+      "__type": "ClientRoles:#BPlusTraining.Logic",
+      "Name": "Dummy",
+      "UserRoleId": "6dd5a569-cb94-e411-95ce-d8d385fcda38"
+    },
+    {
+      "__type": "ClientRoles:#BPlusTraining.Logic",
+      "Name": "SubjectCoordinator",
+      "UserRoleId": "cacb28a9-4bdd-e611-96ef-d8d385fcda38"
+    },
+    {
+      "__type": "ClientRoles:#BPlusTraining.Logic",
+      "Name": "AssistantSupervisor",
+      "UserRoleId": "e93e057f-6ffc-e011-9918-d8d385fcda38"
+    },
+    {
+      "__type": "ClientRoles:#BPlusTraining.Logic",
+      "Name": "Trainer",
+      "UserRoleId": "ea3e057f-6ffc-e011-9918-d8d385fcda38"
+    },
+    {
+      "__type": "ClientRoles:#BPlusTraining.Logic",
+      "Name": "JuniorTrainer",
+      "UserRoleId": "19bfdebd-0f2f-e811-a322-d8d385fcda38"
+    }
+  ],
+
   GetUserInRoles: [
     {
       "__type": "ClientUserInRoles:#BPlusTraining.Logic",
@@ -14200,5 +14232,626 @@ export const MockData = {
   ],
   GetGeneralAssistantRole: false,
 
+  //#endregion
+
+  //#region Interview.svc
+  GetInterviewSchedules: {
+    "__type": "ClientInterviewReport:#BPlusTraining.Logic",
+    "Details": [
+      {
+        "__type": "ClientInterviewReportDetail:#BPlusTraining.Logic",
+        "Status": "Rej",
+        "Total": 3
+      },
+      {
+        "__type": "ClientInterviewReportDetail:#BPlusTraining.Logic",
+        "Status": "Pos",
+        "Total": 10
+      },
+      {
+        "__type": "ClientInterviewReportDetail:#BPlusTraining.Logic",
+        "Status": "Acc",
+        "Total": 22
+      }
+    ],
+    "Schedules": [
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "DL18-2",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1591549200000+0700)/",
+        "InterviewScheduleId": "d839505e-2729-4366-bc7b-3873aecfde70",
+        "InterviewScore": 69,
+        "Location": "https://binus.zoom.us/j/94274781436?pwd=THcwWWNoRThtMENwTnRyMElHeng1UT09",
+        "MainInterviewer": "AO18-1",
+        "Result": "Pos",
+        "StartTime": "11:20",
+        "TraineeCode": "T026",
+        "TraineeName": "Eric Pangiawan"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "DN17-1",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1591549200000+0700)/",
+        "InterviewScheduleId": "7d2b2b5d-c27d-442d-8d33-091c15ca747c",
+        "InterviewScore": 61,
+        "Location": "https://binus.zoom.us/j/94592904646?pwd=cUVWZWdreC90NGRueDkzQzhreUJZZz09",
+        "MainInterviewer": "FN17-1",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T046",
+        "TraineeName": "Vlarancia"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "AP18-2",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1591549200000+0700)/",
+        "InterviewScheduleId": "cf182dea-b980-4db6-b600-26cb2365307f",
+        "InterviewScore": 42,
+        "Location": "https://binus.zoom.us/j/98073020154?pwd=aGRXeHU0SUpGQWpYSkdzRnVkSkc4dz09",
+        "MainInterviewer": "LV18-2",
+        "Result": "Pos",
+        "StartTime": "13:20",
+        "TraineeCode": "T027",
+        "TraineeName": "Andre Antolis"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "NS17-1",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1591549200000+0700)/",
+        "InterviewScheduleId": "f88703bd-55a4-4c5d-8abb-4374fc9a243f",
+        "InterviewScore": 90,
+        "Location": "https://binus.zoom.us/j/94163065601?pwd=MWFjbFc4OUNKTVNvWVQyZmMvWnlLQT09",
+        "MainInterviewer": "if11-2",
+        "Result": "Acc",
+        "StartTime": "13:20",
+        "TraineeCode": "T127",
+        "TraineeName": "Levina Niolana"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "CY19-1",
+        "EndTime": "17:00",
+        "InterviewDate": "/Date(1591549200000+0700)/",
+        "InterviewScheduleId": "40efd63d-6070-42f8-859f-206534abe1b1",
+        "InterviewScore": 74,
+        "Location": "https://binus.zoom.us/j/93578131438?pwd=ZFJxMDQ4alRpOW50QmoxbmtnNDFGQT09",
+        "MainInterviewer": "EZ17-1",
+        "Result": "Pos",
+        "StartTime": "15:20",
+        "TraineeCode": "T030",
+        "TraineeName": "Wilton Pangestu"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "LW18-2",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1591635600000+0700)/",
+        "InterviewScheduleId": "cc168ab6-fb6d-4250-b15f-590938c1c2ff",
+        "InterviewScore": 75,
+        "Location": "https://binus.zoom.us/j/92408957761?pwd=ZXVoalc0R0lnRG52cDU0ZFFId1ZZZz09",
+        "MainInterviewer": "KI14-0",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T024",
+        "TraineeName": "Vincent"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "HY18-2",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1591635600000+0700)/",
+        "InterviewScheduleId": "ecc5c06f-e6b5-4a19-9c2d-dab0180a59e1",
+        "InterviewScore": 48,
+        "Location": "https://binus.zoom.us/j/93420808484?pwd=RndKd2tVVFgrbHJCZkVsS0JWUkVZUT09",
+        "MainInterviewer": "if11-2",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T126",
+        "TraineeName": "Denies"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "LW18-2",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1591635600000+0700)/",
+        "InterviewScheduleId": "02f7cf17-55ca-4661-9b75-c884ad470a35",
+        "InterviewScore": 57,
+        "Location": "https://binus.zoom.us/j/98654679628?pwd=ckJGYTBUUldDcnFNZEh0cldzN1FvZz09",
+        "MainInterviewer": "ss04-2",
+        "Result": "Acc",
+        "StartTime": "13:20",
+        "TraineeCode": "T044",
+        "TraineeName": "Erwin"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "DA17-1",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1591635600000+0700)/",
+        "InterviewScheduleId": "b8ebcee2-32ec-44dc-89e1-6983755b6455",
+        "InterviewScore": 55,
+        "Location": "https://binus.zoom.us/j/99918379775?pwd=SjV2YWUyVHprSjlZSjkwMUNYTkRFUT09",
+        "MainInterviewer": "NS17-1",
+        "Result": "Pos",
+        "StartTime": "13:20",
+        "TraineeCode": "T052",
+        "TraineeName": "Bestyvincen Kartika"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "CL18-2",
+        "EndTime": "11:00",
+        "InterviewDate": "/Date(1591722000000+0700)/",
+        "InterviewScheduleId": "e8480b73-d9fc-4ef8-ac2a-ae1823ad73b8",
+        "InterviewScore": 54,
+        "Location": "https://binus.zoom.us/j/93477840268?pwd=VUZNcEUzTVdoQ2JGQUxIQUV6cklWdz09",
+        "MainInterviewer": "NP17-2",
+        "Result": "Acc",
+        "StartTime": "09:20",
+        "TraineeCode": "T048",
+        "TraineeName": "Felix Novando"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "HY18-2",
+        "EndTime": "11:00",
+        "InterviewDate": "/Date(1591722000000+0700)/",
+        "InterviewScheduleId": "7e2706b2-d6e3-4e24-b4ec-9c9d19ce4eda",
+        "InterviewScore": 44,
+        "Location": "https://binus.zoom.us/j/94532543202?pwd=WFJvN3VyVzBWVy8rZTE5clBldEZkUT09",
+        "MainInterviewer": "if11-2",
+        "Result": "Pos",
+        "StartTime": "09:20",
+        "TraineeCode": "T129",
+        "TraineeName": "Gianni Fiesta Dewi"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "LW18-2",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1591722000000+0700)/",
+        "InterviewScheduleId": "4950a6a5-1af4-4810-9f54-b9426e47e0fc",
+        "InterviewScore": 73,
+        "Location": "https://binus.zoom.us/j/91393743410?pwd=RXlTNlFmU2VPQVdnTGRoTTFhRmVnZz09",
+        "MainInterviewer": "KI14-0",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T035",
+        "TraineeName": "Jonathan Ronald Honggo"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "DL18-2",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1591722000000+0700)/",
+        "InterviewScheduleId": "9ad4c594-c9ad-4f72-85cc-7976dd5a61b7",
+        "InterviewScore": 66,
+        "Location": "https://binus.zoom.us/j/99194078381?pwd=V1lML1BoeE1Qa0xxY0Nid1M3SWFoZz09",
+        "MainInterviewer": "TO16-2",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T117",
+        "TraineeName": "Veronica"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "AP18-2",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1591722000000+0700)/",
+        "InterviewScheduleId": "88993962-616b-4575-99d6-2839cedf0a8f",
+        "InterviewScore": 70,
+        "Location": "https://binus.zoom.us/j/92587052961?pwd=ZHh0MzNHUnhMTE5PWlI1VmVjTld0Zz09",
+        "MainInterviewer": "dr05-2",
+        "Result": "Pos",
+        "StartTime": "13:20",
+        "TraineeCode": "T057",
+        "TraineeName": "Johanes Peter Vincentius"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "LI19-1",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1591808400000+0700)/",
+        "InterviewScheduleId": "08c13b02-1357-4b18-97a6-a80287e7713f",
+        "InterviewScore": 59,
+        "Location": "https://binus.zoom.us/j/91517168059?pwd=WnBqQ0FRS282NnBSeDJUMWJiU2w1QT09",
+        "MainInterviewer": "LV18-2",
+        "Result": "Pos",
+        "StartTime": "11:20",
+        "TraineeCode": "T116",
+        "TraineeName": "Clarissa Chuardi"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "EZ17-1",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1591808400000+0700)/",
+        "InterviewScheduleId": "94e768e7-efd7-4bce-91ae-432e15ef4ffb",
+        "InterviewScore": 72,
+        "Location": "https://binus.zoom.us/j/91936224990?pwd=WFlXRWNkdk43b2tkeVlHKzdqVWJvUT09",
+        "MainInterviewer": "NP17-2",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T124",
+        "TraineeName": "Yoshua Aron Nainggolan"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "CY19-1",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1591808400000+0700)/",
+        "InterviewScheduleId": "0187f2e4-9c60-4764-a35d-54cb91c05958",
+        "InterviewScore": 74,
+        "Location": "https://binus.zoom.us/j/91047285120?pwd=eHk4a1M3TmcvRFp5L2ZLaHA1T1lzUT09",
+        "MainInterviewer": "DA17-1",
+        "Result": "Acc",
+        "StartTime": "13:20",
+        "TraineeCode": "T031",
+        "TraineeName": "Lionel Ritchie"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "DN17-1",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1591808400000+0700)/",
+        "InterviewScheduleId": "73c71a63-e38c-4d7c-b5ed-f2d04044a263",
+        "InterviewScore": 45,
+        "Location": "https://binus.zoom.us/j/91700499809?pwd=NVY4ZGFzSWFDVEh2c1ZjY1FTeDZHdz09",
+        "MainInterviewer": "TO16-2",
+        "Result": "Acc",
+        "StartTime": "13:20",
+        "TraineeCode": "T036",
+        "TraineeName": "Kelvin"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "AW18-2",
+        "EndTime": "17:00",
+        "InterviewDate": "/Date(1591808400000+0700)/",
+        "InterviewScheduleId": "c3132879-019b-4c54-b311-d4a803d88387",
+        "InterviewScore": 76,
+        "Location": "https://binus.zoom.us/j/95471061964?pwd=UjBTeXVMYmVmOVV3RE0rejBrMGpOZz09",
+        "MainInterviewer": "ss04-2",
+        "Result": "Acc",
+        "StartTime": "15:20",
+        "TraineeCode": "T097",
+        "TraineeName": "Muladi Muhamad"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "CL18-2",
+        "EndTime": "11:00",
+        "InterviewDate": "/Date(1591894800000+0700)/",
+        "InterviewScheduleId": "fb642eea-e231-47d1-a625-96a0f6e06242",
+        "InterviewScore": 34,
+        "Location": "https://binus.zoom.us/j/91892323694?pwd=QjNJbFpNYWRPbmU0K2NrQW9vakhIUT09",
+        "MainInterviewer": "DN17-1",
+        "Result": "Acc",
+        "StartTime": "09:20",
+        "TraineeCode": "T101",
+        "TraineeName": "Lius Aprian Hartono"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "AW18-2",
+        "EndTime": "17:00",
+        "InterviewDate": "/Date(1591894800000+0700)/",
+        "InterviewScheduleId": "fe23c323-6cdb-41da-b100-a85bb1756651",
+        "InterviewScore": 76,
+        "Location": "https://binus.zoom.us/j/97029617514?pwd=NUNUL1drRGpOOWNQdkoySmd5ZmJ1QT09",
+        "MainInterviewer": "FN17-1",
+        "Result": "Rej",
+        "StartTime": "15:20",
+        "TraineeCode": "T121",
+        "TraineeName": "Clarence Matthew Satria"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "CY19-1",
+        "EndTime": "17:00",
+        "InterviewDate": "/Date(1591894800000+0700)/",
+        "InterviewScheduleId": "882a4093-b477-4f09-8ae1-fb6cb8ce1b15",
+        "InterviewScore": 81,
+        "Location": "https://binus.zoom.us/j/97167096533?pwd=TTlmS2tyakVja04zbERqM2Q1elNzQT09",
+        "MainInterviewer": "dr05-2",
+        "Result": "Acc",
+        "StartTime": "15:20",
+        "TraineeCode": "T123",
+        "TraineeName": "Raka Nurul Fikri"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "CY19-1",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1591981200000+0700)/",
+        "InterviewScheduleId": "f9fafabd-0c73-4597-a5ff-e6706c0c0914",
+        "InterviewScore": 68,
+        "Location": "https://binus.zoom.us/j/99127222658?pwd=cDZ4OUp5bnlUMFA5bXhWZ1BNNFlSZz09",
+        "MainInterviewer": "AH18-1",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T089",
+        "TraineeName": "Skolastika Gabriella Theresandia Prasetyo"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "DL18-2",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1592154000000+0700)/",
+        "InterviewScheduleId": "5d9b2b44-a781-4e2f-a3cb-1307c31af1c3",
+        "InterviewScore": 56,
+        "Location": "https://binus.zoom.us/j/99991030293?pwd=T2xNd2U1Y1RaZ3J4NGdiMDQxRm1IUT09",
+        "MainInterviewer": "AO18-1",
+        "Result": "Pos",
+        "StartTime": "11:20",
+        "TraineeCode": "T080",
+        "TraineeName": "Bryan Takari"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "NP17-2",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1592154000000+0700)/",
+        "InterviewScheduleId": "fd369fb7-ef57-46ed-891c-eee344d61709",
+        "InterviewScore": 91,
+        "Location": "https://binus.zoom.us/j/97022677379?pwd=VksySG9OVDgrYk43dWNna0xsQjZmUT09",
+        "MainInterviewer": "FN17-1",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T130",
+        "TraineeName": "Andi Suryo Laksono"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "AW18-2",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1592154000000+0700)/",
+        "InterviewScheduleId": "463ec89b-7c62-40cc-91dc-d43c34c867f9",
+        "InterviewScore": 98,
+        "Location": "https://binus.zoom.us/j/99394787720?pwd=d2JTcG44SWtzYk9nSm9BeHZjZkNCUT09",
+        "MainInterviewer": "NS17-1",
+        "Result": "Acc",
+        "StartTime": "13:20",
+        "TraineeCode": "T131",
+        "TraineeName": "Stefany Chrisdayanty"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "AO18-1",
+        "EndTime": "17:00",
+        "InterviewDate": "/Date(1592154000000+0700)/",
+        "InterviewScheduleId": "55b7f646-0516-48f1-9f10-5d09441feea8",
+        "InterviewScore": 58,
+        "Location": "https://binus.zoom.us/j/94719768097?pwd=TGNIQXEwWDZIZTRQeHpjS2xrRUZ2QT09",
+        "MainInterviewer": "NS17-1",
+        "Result": "Rej",
+        "StartTime": "15:20",
+        "TraineeCode": "T113",
+        "TraineeName": "Muhammad Kharisma Azhari"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "HY18-2",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1592240400000+0700)/",
+        "InterviewScheduleId": "382afde2-3581-40f7-9c2b-92298a1619ab",
+        "InterviewScore": 57,
+        "Location": "https://binus.zoom.us/j/91867857952?pwd=ZXBNdkRGN2F0S2F4RmdRcVhIMmwxUT09",
+        "MainInterviewer": "LI19-1",
+        "Result": "Pos",
+        "StartTime": "11:20",
+        "TraineeCode": "T034",
+        "TraineeName": "Ricky Imanuel"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "AP18-2",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1592240400000+0700)/",
+        "InterviewScheduleId": "1e6f147c-3893-4fd2-b3d2-42bfd3811939",
+        "InterviewScore": 70,
+        "Location": "https://binus.zoom.us/j/94448353397?pwd=OTRSME9hOEVxYktRZjU5cjdVVzA2dz09",
+        "MainInterviewer": "AH18-1",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T059",
+        "TraineeName": "David"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "LI19-1",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1592240400000+0700)/",
+        "InterviewScheduleId": "7fdd619c-3005-4e5c-8b41-427dcbc8a17f",
+        "InterviewScore": 83,
+        "Location": "https://binus.zoom.us/j/94321123461?pwd=M3VLTWFveVpSNVBYNm5FRVVrRjNGUT09",
+        "MainInterviewer": "SW16-2",
+        "Result": "Acc",
+        "StartTime": "13:20",
+        "TraineeCode": "T082",
+        "TraineeName": "Stanley Dave Teherag"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "CL18-2",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1592240400000+0700)/",
+        "InterviewScheduleId": "5239f583-d241-4847-9363-bf46260b2265",
+        "InterviewScore": 79,
+        "Location": "https://binus.zoom.us/j/95806712380?pwd=d2tZRGd4WVJwcXBYVzFFYjhrNkZkdz09",
+        "MainInterviewer": "ds08-1",
+        "Result": "Acc",
+        "StartTime": "13:20",
+        "TraineeCode": "T125",
+        "TraineeName": "Rhenald Saputra"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "DA17-1",
+        "EndTime": "17:00",
+        "InterviewDate": "/Date(1592240400000+0700)/",
+        "InterviewScheduleId": "e2765b11-3845-44ec-90b7-ec819fe669ec",
+        "InterviewScore": 49,
+        "Location": "https://binus.zoom.us/j/95889961552?pwd=elM0UUlOZ2dGZXFGdVpDN1NaY0gvQT09",
+        "MainInterviewer": "AH18-1",
+        "Result": "Pos",
+        "StartTime": "15:20",
+        "TraineeCode": "T040",
+        "TraineeName": "Vincent Benedict"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "ds08-1",
+        "EndTime": "13:00",
+        "InterviewDate": "/Date(1592326800000+0700)/",
+        "InterviewScheduleId": "ce4c5fc6-e21b-40df-b854-451b361b329c",
+        "InterviewScore": 78,
+        "Location": "https://binus.zoom.us/j/92617090116?pwd=TVU1cjltZ3NISWVGcUw1MndwU20ydz09",
+        "MainInterviewer": "SW16-2",
+        "Result": "Acc",
+        "StartTime": "11:20",
+        "TraineeCode": "T088",
+        "TraineeName": "Brandon Julio Thenaro"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "EZ17-1",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1592326800000+0700)/",
+        "InterviewScheduleId": "13be00b9-f48c-4f4d-93bd-ff174c7de455",
+        "InterviewScore": 79,
+        "Location": "https://binus.zoom.us/j/97200781454?pwd=T1hKS3JwRnF2aTZ0N1FhbHBqTVovZz09",
+        "MainInterviewer": "SW16-2",
+        "Result": "Acc",
+        "StartTime": "13:20",
+        "TraineeCode": "T084",
+        "TraineeName": "Thaddeus Cleo"
+      },
+      {
+        "__type": "ClientInterviewSchedule:#BPlusTraining.Logic",
+        "CoInterviewer": "HY18-2",
+        "EndTime": "15:00",
+        "InterviewDate": "/Date(1592326800000+0700)/",
+        "InterviewScheduleId": "be331658-af3c-4822-acc3-c5e4715519b8",
+        "InterviewScore": 54,
+        "Location": "https://binus.zoom.us/j/94817252391?pwd=aE5KZWNxYy92R2pRWDVURDBLYTNZQT09",
+        "MainInterviewer": "LV18-2",
+        "Result": "Rej",
+        "StartTime": "13:20",
+        "TraineeCode": "T091",
+        "TraineeName": "Fernando Chai"
+      }
+    ]
+  },
+  
+  GetInterviewQuestions: [
+    {
+      "__type": "ClientInterviewQuestion:#BPlusTraining.Logic",
+      "InterviewQuestionId": "9942d71e-93d7-40d6-974b-85e7a2702549",
+      "InterviewQuestionName": "Interview Question Even 19/20"
+    },
+    {
+      "__type": "ClientInterviewQuestion:#BPlusTraining.Logic",
+      "InterviewQuestionId": "e4da0532-8322-4979-a1dd-02ff041f526f",
+      "InterviewQuestionName": "Interview Question Odd 19/20"
+    },
+    {
+      "__type": "ClientInterviewQuestion:#BPlusTraining.Logic",
+      "InterviewQuestionId": "a1602145-c0a9-4cd0-98ce-8128dd307c1b",
+      "InterviewQuestionName": "Interview Question Even 13/14"
+    },
+    {
+      "__type": "ClientInterviewQuestion:#BPlusTraining.Logic",
+      "InterviewQuestionId": "eb603638-a69b-4def-8ca0-e4bd38d401ab",
+      "InterviewQuestionName": "Interview Question Even 11/12"
+    }
+  ],
+
+  // interviewQuestionId: "9942d71e-93d7-40d6-974b-85e7a2702549"
+  GetInterviewQuestionDetails: [
+    {
+      "__type": "InterviewQuestionDetail:#BPlusTraining.Logic",
+      "DescriptionEnglish": "Knowledge and awareness about job description",
+      "DescriptionIndonesia": "Pengetahuan tentang pekerjaan yang akan dihadapi",
+      "Number": 1,
+      "Weight": 4
+    },
+    {
+      "__type": "InterviewQuestionDetail:#BPlusTraining.Logic",
+      "DescriptionEnglish": "Intelligence and mental readiness",
+      "DescriptionIndonesia": "Intelegensi dan kesiagaan mental",
+      "Number": 2,
+      "Weight": 4
+    },
+    {
+      "__type": "InterviewQuestionDetail:#BPlusTraining.Logic",
+      "DescriptionEnglish": "Motivation and ambition",
+      "DescriptionIndonesia": "Motivasi dan ambisi",
+      "Number": 3,
+      "Weight": 3
+    },
+    {
+      "__type": "InterviewQuestionDetail:#BPlusTraining.Logic",
+      "DescriptionEnglish": "Maturity and self confidence",
+      "DescriptionIndonesia": "Kematangan pribadi dan kepercayaan diri",
+      "Number": 4,
+      "Weight": 4
+    },
+    {
+      "__type": "InterviewQuestionDetail:#BPlusTraining.Logic",
+      "DescriptionEnglish": "Ability to deliver an idea",
+      "DescriptionIndonesia": "Kemampuan menyampaikan gagasan",
+      "Number": 5,
+      "Weight": 4
+    },
+    {
+      "__type": "InterviewQuestionDetail:#BPlusTraining.Logic",
+      "DescriptionEnglish": "Ability to communicate with others",
+      "DescriptionIndonesia": "Kemampuan bergaul baik dengan orang lain",
+      "Number": 6,
+      "Weight": 3
+    },
+    {
+      "__type": "InterviewQuestionDetail:#BPlusTraining.Logic",
+      "DescriptionEnglish": "Attitude and manners",
+      "DescriptionIndonesia": "Tatakrama dan sikap",
+      "Number": 7,
+      "Weight": 3
+    },
+    {
+      "__type": "InterviewQuestionDetail:#BPlusTraining.Logic",
+      "DescriptionEnglish": "Perseverance and self discipline",
+      "DescriptionIndonesia": "Ketekunan dan kedisiplinan",
+      "Number": 8,
+      "Weight": 3
+    }
+  ],
+  //#endregion
+
+  //#region Announcement.svc
+  GetMessage: [
+    {
+      "__type": "Message:#BPlusTraining.Logic",
+      "FileId": "00000000-0000-0000-0000-000000000000",
+      "FileName": "",
+      "Generation": "20-2",
+      "GenerationId": "51fb670e-2468-ea11-abcb-d8d385fcda38",
+      "HasFile": false,
+      "InsertBy": {
+        "__type": "Binusian:#BPlusTraining.Logic",
+        "Name": "NS17-1",
+        "UserId": "0f6c96b3-6fe4-e611-9a56-d8d385fce79e"
+      },
+      "InsertOn": "/Date(1594697184702+0700)/",
+      "MemberType": "ar",
+      "MessageId": "11845d60-1c60-4578-ae9c-7ff4b99eb60e",
+      "Note": "Trainee Book & Acquaintance Form\nhttp://tiny.cc/list-link-nar20-2\n<br><br>\nTraining Room\nhttps://binus.zoom.us/j/98468227452?pwd=Z2FiRTJ6MkNzUVFpNVRWUkZoSXM0Zz09",
+      "Title": "List Link"
+    }
+  ],
   //#endregion
 };

@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageAttendanceIpListComponent implements OnInit {
 
+  public ipList: string[] = [];
+
   constructor() { }
 
   ngOnInit(): void {

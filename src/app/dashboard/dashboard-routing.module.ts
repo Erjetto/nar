@@ -23,6 +23,10 @@ import { ManageInterviewQuestionComponent } from './master/manage-interview-ques
 import { ManageUserRoleComponent } from './master/manage-user-role/manage-user-role.component';
 import { ManageAttendanceIpListComponent } from './master/manage-attendance-ip-list/manage-attendance-ip-list.component';
 import { ManageScheduleComponent } from './master/manage-schedule/manage-schedule.component';
+import { ModifyAnnouncementComponent } from './modify/modify-announcement/modify-announcement.component';
+import { ModifyMaterialComponent } from './modify/modify-material/modify-material.component';
+import { ModifyInterviewScheduleComponent } from './modify/modify-interview-schedule/modify-interview-schedule.component';
+import { ModifyInterviewMaterialComponent } from './modify/modify-interview-material/modify-interview-material.component';
 
 export const routes: Routes = [
 	{
@@ -89,6 +93,32 @@ export const routes: Routes = [
           },
         ]
 			} ,
+			{
+				path: Endpoints.MODIFY,
+        data: { name: 'Modify' },
+        children: [
+          {
+            path: 'announcement',
+            component: ModifyAnnouncementComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Announcement' },
+          },
+          {
+            path: 'material',
+            component: ModifyMaterialComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Material' },
+          },
+          {
+            path: 'interview-material',
+            component: ModifyInterviewMaterialComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Interview Material' },
+          },
+          {
+            path: 'interview-schedule',
+            component: ModifyInterviewScheduleComponent,
+            data: { roles: RoleFlags.AssistantSupervisor, name: 'Interview Schedule' },
+          },
+        ]
+      },
 			// {
 			// 	path: 'my-data',
 			// 	component: null,

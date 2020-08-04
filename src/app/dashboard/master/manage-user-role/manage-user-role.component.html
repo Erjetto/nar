@@ -1,1 +1,92 @@
-<p>manage-user-role works!</p>
+<div class="container">
+	<div class="row">
+		<div class="col-4">
+			<rd-card [cardTitle]="'Insert User Roles'">
+				<div class="row form-group">
+					<label for="selectRole" class="col-4 col-form-label">Roles</label>
+					<div class="col">
+						<ng-select
+							name="selectRole"
+							[items]="roles"
+							[searchable]="false"
+							[clearable]="false"
+							[bindLabel]="'roleName'"
+							[bindValue]="'roleId'"
+							[ngModel]="roles[0].roleId"
+						></ng-select>
+					</div>
+				</div>
+				<div class="row form-group">
+					<label for="traineeText" class="col-4 col-form-label">Users</label>
+					<div class="col">
+						<textarea
+							name="traineeText"
+							id="traineeText"
+							class="form-control"
+							style="resize: vertical; width: 100%;"
+						></textarea>
+					</div>
+				</div>
+				<div class="row justify-content-around">
+					<button class="btn btn-primary">
+						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
+					</button>
+				</div>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'User In Roles'">
+        <div class="row form-group">
+          <div class="col-4">
+						<input
+							type="text"
+							class="form-control"
+							id="searchTrainee"
+							placeholder="Search"
+							[ngbTypeahead]="onTypeSearch"
+							[(ngModel)]="searchText"
+						/>
+          </div>
+        </div>
+				<table class="table table-sm table-striped table-hover text-center">
+					<thead>
+						<tr>
+							<th>Username</th>
+							<th>Roles</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="userInRolesFiltered?.length === 0">
+							<td colspan="4">No user...</td>
+						</tr>
+						<tr *ngFor="let user of userInRolesFiltered">
+							<td> {{user.UserName}}
+								<!-- <ngb-highlight
+									[term]="searchText"
+									[result]="user.UserName"
+								></ngb-highlight> -->
+							</td>
+							<td>{{user.Role}}
+								<!-- <ngb-highlight
+									[term]="searchText"
+									[result]="user.Role"
+                ></ngb-highlight> -->
+              </td>
+							<td>
+								<rd-confirmable-button
+									[description]="'Delete ' + user.UserName + '?'"
+								>
+									<!-- (confirm)="onDeleteTrainee(trainee)"                 -->
+									<button class="btn btn-xs btn-danger">
+										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+									</button>
+								</rd-confirmable-button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+</div>

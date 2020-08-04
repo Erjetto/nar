@@ -1,1 +1,61 @@
-<p>manage-interview-question works!</p>
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Insert Interview Questions'">
+				<div class="row form-group">
+					<label for="questionTitle" class="col-1 col-form-label">Title</label>
+					<div class="col">
+						<input type="text" name="questionTitle" class="form-control" />
+					</div>
+				</div>
+				<div class="row form-group">
+					<label for="questionText" class="col-1 col-form-label">
+						Questions
+					</label>
+					<div class="col">
+						<textarea
+							name="questionText"
+							class="form-control"
+							style="resize: vertical; width: 100%;"
+						>[english],[indonesian],[weight]</textarea>
+					</div>
+				</div>
+				<div class="row justify-content-around">
+          <div class="col-1"></div>
+          <div class="col">
+            <button class="btn btn-primary">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
+            </button>
+          </div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Interview Questions List'">
+				<table class="table table-sm table-striped">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>English</th>
+							<th>Indonesian</th>
+							<th>Weight</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="interviewQuestionDetails?.length === 0">
+							<td colspan="3">No questions here</td>
+						</tr>
+						<tr *ngFor="let question of interviewQuestionDetails">
+							<td>{{ question.Number }}</td>
+							<td>{{ question.DescriptionEnglish }}</td>
+							<td>{{ question.DescriptionIndonesia }}</td>
+							<td>{{ question.Weight }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+</div>

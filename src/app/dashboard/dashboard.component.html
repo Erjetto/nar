@@ -44,11 +44,14 @@
 				></rd-clock>
 
 				<div class="row justify-content-end pt-1">
+					<span class="btn btn-sm" (click)="isDark = !isDark">
+              {{isDark ? 'Light Theme' : 'Dark Theme'}}
+          </span>
 					<!-- <span>
             <fa-icon class="btn btn-sm hover-text-blue" [icon]="['far', 'bell']"></fa-icon>
           </span> -->
 					<span
-						class="btn btn-sm text-black-50 hover-text-blue"
+						class="btn btn-sm  hover-text-blue"
 						(click)="signOut()"
 					>
 						<b>Sign Out</b> &nbsp;
@@ -61,8 +64,14 @@
 </header>
 <nav class="navbar sticky-top">
 	<div class="container-lg">
+		<!-- TODO: Hover to scroll left here -->
+		<!-- <div style="width: 106%; position:relative; left:-3%">
+      <div class="menu-list-scroller">
+  
+      </div> -->
 		<div class="menu-list">
-			<div *ngFor="let menu of menuList">
+			<!-- TODO: Div with gradient white here -->
+			<ng-container *ngFor="let menu of menuList">
 				<ng-container [ngSwitch]="menu.children == undefined">
 					<!-- No Submenu -->
 					<a
@@ -91,7 +100,7 @@
 						</div>
 					</a>
 				</ng-container>
-			</div>
+			</ng-container>
 		</div>
 	</div>
 </nav>

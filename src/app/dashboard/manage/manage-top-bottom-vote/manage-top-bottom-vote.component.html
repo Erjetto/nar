@@ -169,7 +169,7 @@
 							*ngFor="let voter of traineeVotesFiltered$ | async"
 						>
 							<div class="col">
-								<h5 class="row text-dark vote-item__voter">
+								<h5 class="row  vote-item__voter">
 									<ngb-highlight
 										[result]="getTrainee(voter.TraineeId).codeAndName"
 										[term]="searchText"
@@ -181,7 +181,7 @@
 										<h6 class="row">Top {{ voter.TopVotes.length }}</h6>
 										<div class="pl-4 row" *ngFor="let vote of voter.TopVotes">
 											<div class="col">
-												<span class="text-dark">
+												<span class="">
 													<ngb-highlight
 														[result]="getTrainee(voter.TraineeId).codeAndName"
 														[term]="searchText"

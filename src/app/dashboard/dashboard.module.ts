@@ -43,6 +43,10 @@ import { ManageInterviewQuestionComponent } from './master/manage-interview-ques
 import { ManageUserRoleComponent } from './master/manage-user-role/manage-user-role.component';
 import { ManageAttendanceIpListComponent } from './master/manage-attendance-ip-list/manage-attendance-ip-list.component';
 import { ManageScheduleComponent } from './master/manage-schedule/manage-schedule.component';
+import { ModifyAnnouncementComponent } from './modify/modify-announcement/modify-announcement.component';
+import { ModifyMaterialComponent } from './modify/modify-material/modify-material.component';
+import { ModifyInterviewScheduleComponent } from './modify/modify-interview-schedule/modify-interview-schedule.component';
+import { ModifyInterviewMaterialComponent } from './modify/modify-interview-material/modify-interview-material.component';
 
 @NgModule({
 	declarations: [
@@ -50,18 +54,26 @@ import { ManageScheduleComponent } from './master/manage-schedule/manage-schedul
 		HomeComponent,
 		CandidateQuestionsComponent,
 		AnswerScheduleComponent,
-		ManageCaseComponent,
+    
+    ManageCaseComponent,
 		ManageTopBottomVoteComponent,
-		ViewTraineeComponent,
+    
+    ViewTraineeComponent,
 		ViewEvaluationComponent,
 		ViewTraineeDetailComponent,
-		ManageGenerationComponent,
+    
+    ManageGenerationComponent,
 		ManagePhaseComponent,
 		ManageSubjectComponent,
 		ManageScheduleComponent,
 		ManageInterviewQuestionComponent,
 		ManageUserRoleComponent,
 		ManageAttendanceIpListComponent,
+    
+    ModifyAnnouncementComponent,
+		ModifyMaterialComponent,
+		ModifyInterviewScheduleComponent,
+		ModifyInterviewMaterialComponent,
 	],
 	imports: [
 		SharedModule,
