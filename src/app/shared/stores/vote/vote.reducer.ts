@@ -62,7 +62,7 @@ export const getTraineeVotesFiltered = createSelector(
 		let filteredVotes = cloneDeep(votes);
 		if (search !== '') {
 			filteredVotes = filteredVotes.filter((vote) => {
-				if (
+				if ( // If voter's name & code contains search text
 					trainees
 						.find((t) => t.TraineeId === vote.TraineeId)
 						.codeAndName.toLowerCase()
