@@ -10,7 +10,7 @@
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
-				<form>
+				<form #phaseForm="ngForm">
 					<div class="row form-group">
 						<label for="genName" class="col-4 col-form-label">Name</label>
 						<div class="col">
@@ -31,7 +31,8 @@
 								type="text"
 								class="form-control"
 								name="beginDate"
-								[ngModel]="editForm?.BeginDate | date: editDateFormat"
+                [ngModel]="editForm?.BeginDate | date: editDateFormat"
+                placeholder="yyyy-mm-dd"
 							/>
 						</div>
 					</div>
@@ -42,7 +43,8 @@
 								type="text"
 								class="form-control"
 								name="endDate"
-								[ngModel]="editForm?.EndDate | date: editDateFormat"
+                [ngModel]="editForm?.EndDate | date: editDateFormat"
+                placeholder="yyyy-mm-dd"
 							/>
 						</div>
 					</div>
@@ -50,7 +52,6 @@
 						<label for="endDate" class="col-4 col-form-label">Phase Type</label>
 						<div class="col">
 							<ng-select
-								id="selectPhaseType"
 								name="selectPhaseType"
 								[items]="phaseTypes"
 								[clearable]="false"
@@ -62,7 +63,7 @@
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button class="btn btn-primary" *ngIf="!editForm">
+						<button class="btn btn-primary" *ngIf="!editForm" (click)="createPhase(phaseForm)">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Phase
 						</button>
 						<button class="btn btn-primary" *ngIf="editForm">
@@ -76,7 +77,7 @@
 					</div>
 				</form>
 			</rd-card>
-			<rd-card [cardTitle]="'Trainee in Phase'">
+			<rd-card [cardTitle]="'Insert Trainee to Phase'">
 				<form>
 					<div class="row form-group">
 						<label for="phaseType" class="col-4 col-form-label"
@@ -104,22 +105,37 @@
 								[items]="phases"
 								[clearable]="false"
 								[bindLabel]="'Description'"
-								[bindValue]="'PhaseId'"
 								[searchable]="false"
-								[ngModel]="phases[0].PhaseId"
+                [(ngModel)]="currentPhase"
 							></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="traineeText" class="col-4 col-form-label">Trainee</label>
+						<label for="traineeText" class="col-4 col-form-label">Binusian Numbers</label>
 						<div class="col">
 							<textarea
 								name="traineeText"
 								id="traineeText"
 								class="form-control"
-								style="resize: vertical; width: 100%;"
-							></textarea>
+                style="resize: vertical; width: 100%; height: 200px"
+							>{{'20015xxxxx\n20015xxxxx\n...'}}</textarea>
 						</div>
+					</div>
+					<div class="row form-group">
+            <div class="col-4"></div>
+            <div class="col">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="alsoAddSchedule"
+                  name="alsoAddSchedule"
+                />
+                <label class="custom-control-label" for="alsoAddSchedule">
+                  Also add trainee schedule
+                </label>
+              </div>
+            </div>
 					</div>
 					<div class="row justify-content-around">
 						<button class="btn btn-primary">
@@ -178,9 +194,7 @@
 							[items]="phases"
 							[clearable]="false"
 							[bindLabel]="'Description'"
-							[bindValue]="'PhaseId'"
-							[searchable]="false"
-							[ngModel]="phases[0].PhaseId"
+              [searchable]="false"
 						></ng-select>
 					</div>
 				</div>

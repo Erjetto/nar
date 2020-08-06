@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ClientSubject, ClientPhase } from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
 import { clone } from 'lodash';
+import { DashboardContentBase } from '../../dashboard-content-base.component';
+import { Store, ActionsSubject } from '@ngrx/store';
+import { IAppState } from 'src/app/app.reducer';
 
 @Component({
 	selector: 'rd-manage-subject',
 	templateUrl: './manage-subject.component.html',
 	styleUrls: ['./manage-subject.component.scss'],
+	//changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageSubjectComponent implements OnInit {
+export class ManageSubjectComponent extends DashboardContentBase
+implements OnInit, OnDestroy  {
 	public subjects: ClientSubject[];
 
 	public size = [
@@ -24,8 +29,12 @@ export class ManageSubjectComponent implements OnInit {
 
 	public editForm: ClientSubject;
 
-	constructor() {}
-
+	constructor(
+		private store: Store<IAppState>,
+		action: ActionsSubject,
+	) {
+		super(action);
+	}
 	ngOnInit(): void {
 		this.phases = MockData.GetPhasesCurrentGeneration.map(ClientPhase.fromJson);
 		this.subjects = MockData.GetSubjectListByPhase.map(ClientSubject.fromJson);

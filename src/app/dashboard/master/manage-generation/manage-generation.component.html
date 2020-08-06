@@ -13,7 +13,8 @@
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
-				<form>
+				<form #genForm="ngForm">
+          <input type="hidden" name="genId" [ngModel]="editForm?.GenerationId">
 					<div class="row form-group">
 						<label for="genName" class="col-3 col-form-label">Name</label>
 						<div class="col">
@@ -21,7 +22,8 @@
 								type="text"
 								class="form-control"
 								name="genName"
-								[ngModel]="editForm?.Description"
+                [ngModel]="editForm?.Description"
+                required
 							/>
 						</div>
 					</div>
@@ -34,7 +36,9 @@
 									id="oddSemRadio"
 									name="semesterRadio"
 									class="custom-control-input"
-									[checked]="editForm?.Semester === 'Odd'"
+                  [ngModel]="editForm?.Semester"
+                  value="Odd"
+                  required
 								/>
 								<label class="custom-control-label" for="oddSemRadio"
 									>Odd</label
@@ -46,7 +50,9 @@
 									id="eventSemRadio"
 									name="semesterRadio"
 									class="custom-control-input"
-									[checked]="editForm?.Semester === 'Event'"
+                  [ngModel]="editForm?.Semester"
+                  value="Even"
+                  required
 								/>
 								<label class="custom-control-label" for="eventSemRadio"
 									>Even</label
@@ -58,7 +64,9 @@
 									id="compactSemRadio"
 									name="semesterRadio"
 									class="custom-control-input"
-									[checked]="editForm?.Semester === 'Compact'"
+                  [ngModel]="editForm?.Semester"
+                  value="Compact"
+                  required
 								/>
 								<label class="custom-control-label" for="compactSemRadio"
 									>Compact</label
@@ -73,22 +81,23 @@
 								type="number"
 								class="form-control"
 								name="lastYear"
-								[ngModel]="editForm?.Year"
+                [ngModel]="editForm?.Year"
+                required
 							/>
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button class="btn btn-primary" *ngIf="!editForm">
+						<button class="btn btn-primary" *ngIf="!editForm" (click)="createGen(genForm)">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Generation
 						</button>
-						<button class="btn btn-primary" *ngIf="editForm">
+						<button class="btn btn-primary" *ngIf="editForm" (click)="editGen(genForm)">
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Change(s)
 						</button>
-						<rd-confirmable-button *ngIf="editForm">
+						<!-- <rd-confirmable-button *ngIf="editForm">
               <button class="btn btn-danger">
                 <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Generation
               </button>
-						</rd-confirmable-button>
+						</rd-confirmable-button> -->
 					</div>
 				</form>
 			</rd-card>

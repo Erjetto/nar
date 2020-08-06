@@ -77,15 +77,18 @@
 								/>
 							</span>
 							<div class="row text-center justify-content-evenly">
-								<span [ngClass]="{ 'text-success': trainee.IsActive }"
-									><b>{{ trainee.Plus }}</b></span
-								>&nbsp;
-								<span [ngClass]="{ 'text-secondary': trainee.IsActive }"
-									><b>{{ trainee.Neutral }}</b></span
-								>&nbsp;
-								<span [ngClass]="{ 'text-danger': trainee.IsActive }"
-									><b>{{ trainee.Minus }}</b></span
-								><br />
+								<span [ngClass]="{ 'text-success': trainee.IsActive }">
+                  <b>{{ trainee.Plus }}</b>
+                </span>
+								&nbsp;
+                <span>
+                  <b>{{ trainee.Neutral }}</b>
+                </span>
+								&nbsp;
+								<span [ngClass]="{ 'text-danger': trainee.IsActive }">
+                  <b>{{ trainee.Minus }}</b>
+                </span>
+                <br />
 							</div>
 							{{ trainee.TraineeNumber }}
 							<br />

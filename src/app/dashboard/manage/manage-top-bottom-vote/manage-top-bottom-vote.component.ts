@@ -24,7 +24,7 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 	selector: 'rd-manage-top-bottom-vote',
 	templateUrl: './manage-top-bottom-vote.component.html',
 	styleUrls: ['./manage-top-bottom-vote.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	//changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageTopBottomVoteComponent extends DashboardContentBase implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild('insertVoteCard') insertScheduleCard: CardComponent;

@@ -26,7 +26,7 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 	selector: 'rd-answer-schedule',
 	templateUrl: './answer-schedule.component.html',
 	styleUrls: ['./answer-schedule.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	//changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnswerScheduleComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {

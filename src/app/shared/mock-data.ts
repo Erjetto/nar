@@ -171,6 +171,57 @@ export const MockData = {
 		},
 	],
   
+  GetSubjects: [
+    {
+      "__type": "ClientSubject:#BPlusTraining.Logic",
+      "HasPresentation": true,
+      "Name": "Web Design",
+      "Phase": null,
+      "SubjectId": "5678790f-3eb5-ea11-abcb-d8d385fcda38"
+    },
+    {
+      "__type": "ClientSubject:#BPlusTraining.Logic",
+      "HasPresentation": true,
+      "Name": "Java",
+      "Phase": null,
+      "SubjectId": "aa349105-3eb5-ea11-abcb-d8d385fcda38"
+    },
+    {
+      "__type": "ClientSubject:#BPlusTraining.Logic",
+      "HasPresentation": true,
+      "Name": "PHP",
+      "Phase": null,
+      "SubjectId": "5878790f-3eb5-ea11-abcb-d8d385fcda38"
+    },
+    {
+      "__type": "ClientSubject:#BPlusTraining.Logic",
+      "HasPresentation": true,
+      "Name": "Laravel",
+      "Phase": null,
+      "SubjectId": "5a78790f-3eb5-ea11-abcb-d8d385fcda38"
+    },
+    {
+      "__type": "ClientSubject:#BPlusTraining.Logic",
+      "HasPresentation": true,
+      "Name": "C",
+      "Phase": null,
+      "SubjectId": "4ed03bfd-3db5-ea11-abcb-d8d385fcda38"
+    },
+    {
+      "__type": "ClientSubject:#BPlusTraining.Logic",
+      "HasPresentation": true,
+      "Name": "Database",
+      "Phase": null,
+      "SubjectId": "50d03bfd-3db5-ea11-abcb-d8d385fcda38"
+    },
+    {
+      "__type": "ClientSubject:#BPlusTraining.Logic",
+      "HasPresentation": true,
+      "Name": "OS",
+      "Phase": null,
+      "SubjectId": "ac349105-3eb5-ea11-abcb-d8d385fcda38"
+    }
+  ],
 	//#endregion
 
 	//#region TraineeAttendance.svc

@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 	selector: 'rd-candidate-questions',
 	templateUrl: './candidate-questions.component.html',
 	styleUrls: ['./candidate-questions.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	//changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CandidateQuestionsComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {

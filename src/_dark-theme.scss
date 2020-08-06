@@ -1,0 +1,65 @@
+@import './variables';
+
+// Moved from dashboard, but have to use !important instead
+// Solution?
+
+.dark-theme {
+	header,
+	nav,
+	.form-control,
+	.table,
+	rd-card,
+	.form-control::placeholder {
+		background-color: $header-bg-color-dark !important;
+		color: white !important;
+	}
+	.table-hover tbody tr:hover {
+		color: unset;
+	}
+	rd-card.card-collapsible {
+		.card__title:hover {
+			background-color: lighten(
+				$color: $header-bg-color-dark,
+				$amount: 15%
+			) !important;
+		}
+		.card__cover {
+			background-color: rgba(
+				$color: lighten($color: $header-bg-color-dark, $amount: 15%),
+				$alpha: 0.8
+			) !important;
+		}
+	}
+
+	.navbar {
+		border-top: 1px solid lighten($color: $header-bg-color-dark, $amount: 15%) !important;
+		border-bottom: 1px solid
+			lighten($color: $header-bg-color-dark, $amount: 15%) !important;
+		box-shadow: 0px 1px 1px 1px
+			lighten($color: $header-bg-color-dark, $amount: 15%) !important;
+	}
+
+	.menu-item {
+		color: $text-color-dark !important;
+
+		&.menu-active {
+			color: $active-text-color-dark !important;
+		}
+	}
+
+	a {
+		color: #59a9ff !important;
+	}
+
+	.sub-menu {
+		background-color: $header-bg-color-dark !important;
+		border: 1px solid lighten($color: $header-bg-color-dark, $amount: 15%) !important;
+		box-shadow: 0px 2px 3px 0px
+			lighten($color: $header-bg-color-dark, $amount: 15%) !important;
+	}
+
+	.dashboard__content {
+		background-color: $content-bg-color-dark !important;
+		color: $text-color-dark !important;
+	}
+}

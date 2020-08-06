@@ -26,7 +26,7 @@ import { NgSelectConfig } from '@ng-select/ng-select';
 	selector: 'rd-dashboard',
 	templateUrl: './dashboard.component.html',
 	styleUrls: ['./dashboard.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	//changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 	@HostBinding('class') hostClass = 'd-flex flex-column';

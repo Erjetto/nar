@@ -59,7 +59,6 @@
 	.eval-attendance table thead th {
 		vertical-align: middle;
 		text-align: center;
-		background: #eee;
 	}
 
 	.eval-attendance table th,
@@ -76,10 +75,10 @@
 		vertical-align: middle;
 	}
 
-	[readonly='readonly'] {
-		cursor: pointer !important;
-		background-color: #fff !important;
-	}
+	// [readonly='readonly'] {
+	// 	cursor: pointer !important;
+	// 	background-color: #fff !important;
+	// }
 
 	.badge-delete {
 		background-color: rgba(183, 28, 28, 0.8);

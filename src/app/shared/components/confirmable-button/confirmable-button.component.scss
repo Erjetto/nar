@@ -3,8 +3,9 @@
   display: inline-block;
 }
 
-.popover-header{
-  
+::ng-deep .popover-header{
+  white-space: nowrap;
+  color: black;
 }
 
 ::ng-deep .popover-body{

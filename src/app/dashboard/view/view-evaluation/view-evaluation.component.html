@@ -57,13 +57,15 @@
 							</div>
 							<div class="col-1">
 								<button class="btn btn-primary">
-									&nabla;
+									{{true ? '&nabla;' : '&Delta;'}}
 								</button>
 							</div>
 							<div class="col">
-								<button class="btn btn-primary">Date</button>
-								<button class="btn btn-primary">Author</button>
-								<button class="btn btn-primary">Type</button>
+                <div class="row justify-content-around">
+                  <button class="btn btn-primary" [class.active]="true">Date</button>
+                  <button class="btn btn-primary">Author</button>
+                  <button class="btn btn-primary">Type</button>
+                </div>
 							</div>
 						</div>
 					</div>
@@ -136,7 +138,8 @@
 										<div class="row">
 											<div class="col">
 												<!-- *ngIf="note.IsDeleteAble" -->
-												<rd-confirmable-button *ngIf="note.IsDeleteAble">
+                        <rd-confirmable-button
+                         *ngIf="note.IsDeleteAble">
 													<!-- (confirm)="deleteNote(note)" -->
 													<button class="btn btn-danger">
 														<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>

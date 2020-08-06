@@ -31,7 +31,7 @@ import { isEmpty } from 'lodash';
 	selector: 'rd-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	//changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {

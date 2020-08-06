@@ -528,6 +528,112 @@ export class TraineePresentation extends BaseModel {
 	}
 }
 
+export class CoreTrainingPresentation extends BaseModel {
+	constructor(
+		public Comment = '',
+		public Deadline = '',
+		public GenerationId = '',
+		public Material = '',
+		public PhaseId = '',
+		public PresentationComment: CoreTrainingPresentationComment = null,
+		public PresentationDate: Date = null,
+		public PresentationNo = 0,
+		public Questions: CoreTrainingPresentationQuestion[] = [],
+		public SubjectId = '',
+		public TraineeCode = '',
+		public TraineeId = '',
+		public TraineeName = ''
+	) {
+		super();
+	}
+
+	static fromJson(data: any): CoreTrainingPresentation {
+		return Object.assign(new CoreTrainingPresentation(), data, {
+			Questions: map(data.Questions, DataHistory.fromJson),
+			PresentationDate: DateHelper.fromCSharpDate(data.PresentationDate),
+			PresentationComment: CoreTrainingPresentationItem.fromJson(
+				data.PresentationComment
+			),
+		});
+	}
+}
+
+export class CoreTrainingPresentationComment extends BaseModel {
+	constructor(
+		public Comment = '',
+		public Histories: DataHistory[] = [],
+		public Id = '',
+		public UserId = '',
+		public UserName = ''
+	) {
+		super();
+	}
+
+	static fromJson(data: any): CoreTrainingPresentationComment {
+		return Object.assign(new CoreTrainingPresentationComment(), data, {
+			Histories: map(data.Histories, DataHistory.fromJson),
+		});
+	}
+}
+
+export class DataHistory extends BaseModel {
+	constructor(
+		public Text = '',
+		public UserId = '',
+		public SavedDate: Date = null
+	) {
+		super();
+	}
+
+	static fromJson(data: any): DataHistory {
+		return Object.assign(new DataHistory(), data, {
+			SavedDate: DateHelper.fromCSharpDate(data.SavedDate),
+		});
+	}
+}
+
+export class CoreTrainingPresentationQuestion extends BaseModel {
+	constructor(
+		public Question: CoreTrainingPresentationItem = null,
+		public AcceptedAnswerId = '',
+		public Answers = '',
+		public DeadlinePassed = '',
+		public Status = '',
+		public StatusBy = ''
+	) {
+		super();
+	}
+
+	static fromJson(data: any): CoreTrainingPresentationQuestion {
+		return Object.assign(new CoreTrainingPresentationQuestion(), data, {
+			Question: CoreTrainingPresentationItem.fromJson(data.Question),
+		});
+	}
+}
+
+export class CoreTrainingPresentationItem extends BaseModel {
+	constructor(
+		public Comments: CoreTrainingPresentationItem[] = [],
+		public Histories: DataHistory[] = [],
+		public Id = '',
+		public RespondenUserName = '',
+		public Status = '',
+		public StatusBy = '',
+		public Text = '',
+		public UserId = '',
+		public UserName = ''
+	) {
+		super();
+	}
+
+	static fromJson(data: any): CoreTrainingPresentationItem {
+		return Object.assign(new CoreTrainingPresentationItem(), data, {
+      Histories: map(data.Histories, DataHistory.fromJson),
+      Comments: map(data.Comments, CoreTrainingPresentation.fromJson)
+		});
+	}
+}
+
 export class ClientEvaluation extends BaseModel {
 	constructor(
 		public AbsentNote: AbsentNote[] = [],
@@ -1027,6 +1133,24 @@ export class TopBottomVote extends BaseModel {
 	}
 }
 
+export class TrainerTopBottomVote extends BaseModel {
+	constructor(
+		public TrainerName = '',
+		public VoteId = '',
+		public ScheduleID = '',
+		public TopVotes: VoteItem[] = [],
+		public BottomVotes: VoteItem[] = []
+	) {
+		super();
+	}
+	static fromJson(data?: any): TrainerTopBottomVote {
+		return Object.assign(new TrainerTopBottomVote(), data, {
+			TopVotes: map(data?.TopVotes),
+			BottomVotes: map(data?.BottomVotes),
+		});
+	}
+}
+
 export class TopBottomVoteSchedule extends BaseModel {
 	constructor(
 		public ScheduleId = '',
@@ -1080,7 +1204,7 @@ export class ClientInterviewReport extends BaseModel {
 		public DescriptionIndonesia = '',
 		public Number = 0,
 		public Weight = 0,
-		public StatusTotal: {Acc, Rej, Pos} = null,
+		public StatusTotal: { Acc; Rej; Pos } = null,
 		public Schedules: ClientInterviewSchedule[] = []
 	) {
 		super();
@@ -1096,8 +1220,7 @@ export class ClientInterviewReport extends BaseModel {
 				},
 				{ Acc: 0, Rej: 0, Pos: 0 }
 			),
-    });
-    
+		});
 	}
 }
 
