@@ -40,7 +40,7 @@ export class GeneralService {
 		);
 	}
 
-  public GetSubjects(): Observable<ClientSubject[]> {
+  public GetSubjects(phaseId: string): Observable<ClientSubject[]> {
 		return of(MockData.GetSubjects).pipe(
 			delay(500),
 			map((r) => r.map(ClientSubject.fromJson))

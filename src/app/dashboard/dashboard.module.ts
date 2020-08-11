@@ -5,8 +5,8 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 import {
-  MAINSTATE_REDUCER_NAME,
-  MainStateReducer,
+	MAINSTATE_REDUCER_NAME,
+	MainStateReducer,
 } from '../shared/stores/main/main.reducer';
 import {
 	CANDIDATE_REDUCER_NAME,
@@ -17,15 +17,21 @@ import {
 	CaseStateReducer,
 } from '../shared/stores/case/case.reducer';
 const stores = [
-  StoreModule.forFeature(MAINSTATE_REDUCER_NAME, MainStateReducer),
-  StoreModule.forFeature(CASESTATE_REDUCER_NAME, CaseStateReducer),
-  StoreModule.forFeature(CANDIDATE_REDUCER_NAME, CandidateStateReducer),
-]
+	StoreModule.forFeature(MAINSTATE_REDUCER_NAME, MainStateReducer),
+	StoreModule.forFeature(CASESTATE_REDUCER_NAME, CaseStateReducer),
+	StoreModule.forFeature(CANDIDATE_REDUCER_NAME, CandidateStateReducer),
+	StoreModule.forFeature(MASTERSTATE_REDUCER_NAME, MasterStateReducer),
+];
 
 import { MainStateEffects } from '../shared/stores/main/main.effect';
 import { CandidateStateEffects } from '../shared/stores/candidate/candidate.effect';
 import { CaseStateEffects } from '../shared/stores/case/case.effect';
-const effects = [MainStateEffects, CandidateStateEffects, CaseStateEffects]
+const effects = [
+	MainStateEffects,
+	CandidateStateEffects,
+	CaseStateEffects,
+	MasterStateEffects,
+];
 
 import { DashboardComponent } from './dashboard.component';
 import { HomeComponent } from './home/home.component';
@@ -47,6 +53,11 @@ import { ModifyAnnouncementComponent } from './modify/modify-announcement/modify
 import { ModifyMaterialComponent } from './modify/modify-material/modify-material.component';
 import { ModifyInterviewScheduleComponent } from './modify/modify-interview-schedule/modify-interview-schedule.component';
 import { ModifyInterviewMaterialComponent } from './modify/modify-interview-material/modify-interview-material.component';
+import { MasterStateEffects } from '../shared/stores/master/master.effect';
+import {
+	MASTERSTATE_REDUCER_NAME,
+	MasterStateReducer,
+} from '../shared/stores/master/master.reducer';
 
 @NgModule({
 	declarations: [
@@ -54,31 +65,31 @@ import { ModifyInterviewMaterialComponent } from './modify/modify-interview-mate
 		HomeComponent,
 		CandidateQuestionsComponent,
 		AnswerScheduleComponent,
-    
-    ManageCaseComponent,
+
+		ManageCaseComponent,
 		ManageTopBottomVoteComponent,
-    
-    ViewTraineeComponent,
+
+		ViewTraineeComponent,
 		ViewEvaluationComponent,
 		ViewTraineeDetailComponent,
-    
-    ManageGenerationComponent,
+
+		ManageGenerationComponent,
 		ManagePhaseComponent,
 		ManageSubjectComponent,
 		ManageScheduleComponent,
 		ManageInterviewQuestionComponent,
 		ManageUserRoleComponent,
 		ManageAttendanceIpListComponent,
-    
-    ModifyAnnouncementComponent,
+
+		ModifyAnnouncementComponent,
 		ModifyMaterialComponent,
 		ModifyInterviewScheduleComponent,
 		ModifyInterviewMaterialComponent,
 	],
 	imports: [
 		SharedModule,
-    DashboardRoutingModule,
-    ...stores,
+		DashboardRoutingModule,
+		...stores,
 		EffectsModule.forFeature(effects),
 	],
 	exports: [],

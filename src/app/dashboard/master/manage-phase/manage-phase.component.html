@@ -102,12 +102,12 @@
 							<ng-select
 								id="selectPhase"
 								name="selectPhase"
-								[items]="phases"
+								[items]="(phases$ | async)"
 								[clearable]="false"
 								[bindLabel]="'Description'"
-								[searchable]="false"
-                [(ngModel)]="currentPhase"
-							></ng-select>
+                [searchable]="false"
+                [ngModel]="(phases$|async)[0]"
+                ></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
@@ -118,7 +118,7 @@
 								id="traineeText"
 								class="form-control"
                 style="resize: vertical; width: 100%; height: 200px"
-							>{{'20015xxxxx\n20015xxxxx\n...'}}</textarea>
+							>{{binusianPrefix+'xxxxxxxx\n' + binusianPrefix + 'xxxxxxxx\n...'}}</textarea>
 						</div>
 					</div>
 					<div class="row form-group">
@@ -146,7 +146,7 @@
 			</rd-card>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Phase List'">
+			<rd-card [cardTitle]="'Phase List'" [isLoading]="loadingPhases$ | async">
 				<table class="table table-sm table-striped table-hover text-center">
 					<thead>
 						<tr>
@@ -157,11 +157,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngIf="phases?.length === 0">
+						<tr *ngIf="(phases$ | async)?.length === 0">
 							<td colspan="4">No phases yet</td>
 						</tr>
 						<tr
-							*ngFor="let phase of phases"
+							*ngFor="let phase of (phases$ | async)"
 							class="cursor-pointer"
 							(click)="onSelectPhase(phase)"
 						>
@@ -173,7 +173,7 @@
 					</tbody>
 				</table>
 			</rd-card>
-			<rd-card [cardTitle]="'Trainee In Phase'">
+			<rd-card [cardTitle]="'Trainee In Phase'" [isLoading]="loadingTraineeInPhase$ | async">
 				<div class="row form-group">
 					<div class="col">
 						<ng-select
@@ -191,10 +191,11 @@
 						<ng-select
 							id="selectPhase"
 							name="selectPhase"
-							[items]="phases"
+							[items]="(phases$ | async)"
 							[clearable]="false"
 							[bindLabel]="'Description'"
               [searchable]="false"
+              [ngModel]="(phases$|async)[0]"
 						></ng-select>
 					</div>
 				</div>
@@ -209,10 +210,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngIf="traineeInPhase?.length === 0">
+							<tr *ngIf="(traineeInPhase$ | async)?.length === 0">
 								<td colspan="4">No trainees in this phase</td>
 							</tr>
-							<tr *ngFor="let trainee of traineeInPhase" class="cursor-pointer">
+							<tr *ngFor="let trainee of (traineeInPhase$ | async)" class="cursor-pointer">
 								<td>{{ trainee.TraineeCode }}</td>
 								<td>{{ trainee.TraineeNumber }}</td>
 								<td>{{ trainee.TraineeName }}</td>
