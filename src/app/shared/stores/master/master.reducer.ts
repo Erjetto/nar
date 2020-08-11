@@ -105,7 +105,7 @@ export const MasterStateReducer = createReducer(
 
 	on(MasterStateAction.FetchTraineeInPhase, (state) => ({
 		...state,
-		loadingTraineeInFetchTraineeInPhase: true,
+		loadingTraineeInPhase: true,
 	})),
 
 	on(MasterStateAction.FetchSubjects, (state) => ({
@@ -161,8 +161,8 @@ export const MasterStateReducer = createReducer(
 
 	on(MasterStateAction.FetchTraineeInPhaseSuccess, (state, { payload }) => ({
 		...state,
-		traineeInPhases: payload,
-		loadingTraineeInPhases: false,
+		traineeInPhase: payload,
+		loadingTraineeInPhase: false,
 	})),
 
 	on(MasterStateAction.FetchSubjectsSuccess, (state, { payload }) => ({

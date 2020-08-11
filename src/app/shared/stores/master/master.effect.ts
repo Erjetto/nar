@@ -54,6 +54,7 @@ export class MasterStateEffects {
 		private voteService: VoteService
 	) {}
 
+  //#region get
 	@Effect()
 	getRoles$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchRoles),
@@ -132,7 +133,7 @@ export class MasterStateEffects {
 					)
 				);
 		})
-	);
+  );
 	@Effect()
 	getSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchSchedules),
@@ -205,5 +206,35 @@ export class MasterStateEffects {
 					)
 				);
 		})
-	);
+  );
+  //#endregion
+  
+  //#region create
+  @Effect()
+  createPhase$: Observable<Action> = this.actions$.pipe(
+    ofType(MasterStateAction.CreatePhase),
+    switchMap(action => {
+      return this.leaderService.SavePhase({...action, type: action.phaseType}).pipe(
+        mergeMap(res => {
+          if(!res) return of(MasterStateAction.DeleteFailed({message: 'Failed in creating phase'}))
+          else return of(MasterStateAction.FetchPhases())
+        })
+      )
+    })
+  );
+  @Effect()
+  createTraineeInPhase$: Observable<Action> = this.actions$.pipe(
+    ofType(MasterStateAction.CreateTraineeInPhase),
+    switchMap(action => {
+      return this.leaderService.SaveTraineesToPhase(action).pipe(
+        mergeMap(res => {
+          if(!res) return of(MasterStateAction.DeleteFailed({message: 'Failed in creating trainee'}))
+          else return of(MasterStateAction.FetchTraineeInPhase({phaseId: action.phaseId}))
+        })
+      )
+    })
+  );
+  //#endregion
+
+
 }
