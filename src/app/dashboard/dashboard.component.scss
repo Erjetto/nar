@@ -8,7 +8,8 @@
   
 	header,
 	.navbar {
-		background-color: $header-bg-color-light;
+    background-color: $header-bg-color-light;
+    z-index: $header-z-index;
 	}
 
 	.navbar {
