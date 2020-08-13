@@ -1,18 +1,9 @@
 import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
-import {
-	trigger,
-	query,
-	style,
-	animate,
-	keyframes,
-	state,
-	transition,
-} from '@angular/animations';
 import { Observable, interval, timer, Subject, Subscription } from 'rxjs';
-import { tap, takeUntil, repeatWhen } from 'rxjs/operators';
+import { tap, takeUntil, repeatWhen, map } from 'rxjs/operators';
 import { Toast } from '../../models';
 import { swipeAnimation } from '../../angular-animations';
-import { Store, select } from '@ngrx/store';
+import { Store, select, ActionsSubject } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import * as MainStateAction from '../../stores/main/main.action';
 import * as fromMainState from '../../stores/main/main.reducer';
@@ -21,45 +12,44 @@ import * as fromMainState from '../../stores/main/main.reducer';
 	selector: 'rd-toaster',
 	templateUrl: './toaster.component.html',
 	styleUrls: ['./toaster.component.scss'],
-	animations: [
-		// trigger('toastAnimation', [
-		//   query('.toast:enter', style({opacity: 0})),
-		//   query('.toast:enter', animate('300ms ease-out', keyframes([
-		//     style({transform:'translateY()', offset:0}),
-		//     style({transform:'translateY()', offset:0}),
-		//   ])))
-		// ])
-		swipeAnimation('up', 50, 300),
-	],
+	animations: [swipeAnimation('up', 50, 300)],
 })
 export class ToasterComponent implements OnInit, OnDestroy {
-
 	public messages$: Observable<Toast[]>;
-	public messages: Toast[] = [
-		new Toast('info', 'Lorem ipsum dolor sit amet'),
-		// new Toast('success', 'Fetch data success 2'),
-		// new Toast('warning', 'Fetch data failed 3'),
-		// new Toast('danger', 'Fetch data failed 4'),
-	];
 
-	private decayTimer$: Subscription;
 	private stop$ = new Subject<void>();
 	private start$ = new Subject<void>();
+	private destroyed$ = new Subject<void>();
 
-	constructor(private store: Store<IAppState>) {
+	constructor(
+		private store: Store<IAppState>,
+		private actionSubject: ActionsSubject
+	) {
 		this.messages$ = this.store.pipe(select(fromMainState.getToastMessages));
+		// Trigger decayTimer when messages[] changes
+		this.messages$
+			.pipe(
+				takeUntil(this.destroyed$),
+				map((arr) => arr.length > 0),
+				tap((hasMessage) => {
+					this.stop$.next();
+					if (hasMessage) this.start$.next();
+				})
+			)
+			.subscribe();
 
-		this.decayTimer$ = interval(3500)
+		interval(3500)
 			.pipe(
 				takeUntil(this.stop$),
 				repeatWhen(() => this.start$),
 				tap((v) =>
-					this.store.dispatch(
-						MainStateAction.ToastMessage({
-							messageType: 'info',
-							message: 'Hello World! ' + v,
-						})
-					)
+					this.store.dispatch(MainStateAction.RemoveMessage({ index: 0 }))
+					// this.store.dispatch(
+					// 	MainStateAction.ToastMessage({
+					// 		message: 'adsfasdf',
+					// 		messageType: 'success',
+					// 	})
+					// )
 				)
 			)
 			.subscribe();
@@ -74,7 +64,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.stop$.next();
-		this.stop$.complete();
+		this.destroyed$.next();
 	}
 
 	toastNewMessage(...message: Toast[]) {
@@ -83,9 +73,6 @@ export class ToasterComponent implements OnInit, OnDestroy {
 	}
 
 	removeToast(index: number) {
-		this.store.dispatch(MainStateAction.RemoveMessage({index}));
-		// this.messages.splice(index, 1);
-		this.stop$.next();
-		this.start$.next();
+		this.store.dispatch(MainStateAction.RemoveMessage({ index }));
 	}
 }

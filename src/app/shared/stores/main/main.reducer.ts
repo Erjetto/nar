@@ -7,9 +7,10 @@ import {
 
 import * as MainStateAction from './main.action';
 import { Toast } from '../../models';
-import { drop, filter } from 'lodash';
+import { drop, filter, min, max } from 'lodash';
 
 export interface IMainState {
+	messagesMax: number;
 	messages: Toast[];
 
 	currentRole: string;
@@ -17,7 +18,13 @@ export interface IMainState {
 }
 
 export const initialState: IMainState = {
-	messages: [],
+	messagesMax: 4,
+	messages: [
+		new Toast('info', 'Lorem ipsum dolor sit amet'),
+		new Toast('success', 'Fetch data success 2'),
+		new Toast('warning', 'Fetch data failed 3'),
+		new Toast('danger', 'Fetch data failed 4'),
+	],
 
 	currentGeneration: '20-1',
 	currentRole: 'AssistantSupervisor',
@@ -30,15 +37,19 @@ export const MainStateReducer = createReducer(
 
 	on(MainStateAction.ToastMessage, (state, { message, messageType }) => ({
     ...state,
-    messages: [...state.messages, new Toast(messageType, message)]
+    // Only show the last 4 toast
+		messages: [
+			...drop(state.messages, max([state.messages.length - state.messagesMax + 1, 0])),
+			new Toast(messageType, message),
+		],
 	})),
 
-  // TODO: Check if works
-	on(MainStateAction.RemoveMessage, (state, {index}) => ({
-    ...state,
-    messages: filter(state.messages, (v, i) => i !== index)
-  })),
-  
+	// TODO: Check if works
+	on(MainStateAction.RemoveMessage, (state, { index }) => ({
+		...state,
+		messages: filter(state.messages, (v, i) => i !== index),
+	})),
+
 	on(MainStateAction.ChangeGeneration, (state, { name }) => ({
 		...state,
 		currentGeneration: name,
@@ -47,7 +58,7 @@ export const MainStateReducer = createReducer(
 	on(MainStateAction.ChangeRole, (state, { name }) => ({
 		...state,
 		currentRole: name,
-	})),
+	}))
 
 	// on(MainStateAction.FetchGenerationsSuccess, (state, { payload }) => ({
 	// 	...state,
