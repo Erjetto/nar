@@ -33,67 +33,67 @@ export class MainStateEffects {
 		private subjectService: SubjectService
 	) {}
 
-	@Effect()
-	getGenerations$: Observable<Action> = this.actions$.pipe(
-		ofType(MainStateAction.FetchGenerations), delay(500),
-		// withLatestFrom(
-		//   this.store.pipe(select(fromMainState.getMainState)),
-		//   (action: Action, state: fromMainState.IMainState) => state
-		// ),
-		switchMap(() => {
-			return this.genService.getGenerations().pipe(
-				// of(MainStateAction.FetchGenerationsSuccess({ payload: map(results, ClientGeneration.fromJson) }))
-				mergeMap((results: any) => {
-					const res = map(results, ClientGeneration.fromJson);
-					return of(MainStateAction.FetchGenerationsSuccess({ payload: res }));
-				})
-			);
-		})
-	);
+	// @Effect()
+	// getGenerations$: Observable<Action> = this.actions$.pipe(
+	// 	ofType(MainStateAction.FetchGenerations), delay(500),
+	// 	// withLatestFrom(
+	// 	//   this.store.pipe(select(fromMainState.getMainState)),
+	// 	//   (action: Action, state: fromMainState.IMainState) => state
+	// 	// ),
+	// 	switchMap(() => {
+	// 		return this.genService.getGenerations().pipe(
+	// 			// of(MainStateAction.FetchGenerationsSuccess({ payload: map(results, ClientGeneration.fromJson) }))
+	// 			mergeMap((results: any) => {
+	// 				const res = map(results, ClientGeneration.fromJson);
+	// 				return of(MainStateAction.FetchGenerationsSuccess({ payload: res }));
+	// 			})
+	// 		);
+	// 	})
+	// );
 
-	@Effect()
-	getPhases$: Observable<Action> = this.actions$.pipe(
-		ofType(MainStateAction.FetchPhases), delay(500),
-		switchMap(() => {
-			return this.phaseService.getPhases().pipe(
-				mergeMap((results: any) => {
-					const res = map(results, ClientPhase.fromJson);
-					return of(MainStateAction.FetchPhasesSuccess({ payload: res }));
-				})
-			);
-		})
-	);
+	// @Effect()
+	// getPhases$: Observable<Action> = this.actions$.pipe(
+	// 	ofType(MainStateAction.FetchPhases), delay(500),
+	// 	switchMap(() => {
+	// 		return this.phaseService.getPhases().pipe(
+	// 			mergeMap((results: any) => {
+	// 				const res = map(results, ClientPhase.fromJson);
+	// 				return of(MainStateAction.FetchPhasesSuccess({ payload: res }));
+	// 			})
+	// 		);
+	// 	})
+	// );
 
-	@Effect()
-	getSubjects$: Observable<Action> = this.actions$.pipe(
-    ofType(MainStateAction.FetchSubjects), delay(500),
-    pluck('phaseId'),
-		switchMap((phaseId: string) => {
-			return this.subjectService.getSubjects(phaseId).pipe(
-				mergeMap((results: any) => {
-					const res = map(results, ClientSubject.fromJson);
-					return of(MainStateAction.FetchSubjectsSuccess({ payload: res }));
-				})
-			);
-		})
-	);
+	// @Effect()
+	// getSubjects$: Observable<Action> = this.actions$.pipe(
+  //   ofType(MainStateAction.FetchSubjects), delay(500),
+  //   pluck('phaseId'),
+	// 	switchMap((phaseId: string) => {
+	// 		return this.subjectService.getSubjects(phaseId).pipe(
+	// 			mergeMap((results: any) => {
+	// 				const res = map(results, ClientSubject.fromJson);
+	// 				return of(MainStateAction.FetchSubjectsSuccess({ payload: res }));
+	// 			})
+	// 		);
+	// 	})
+	// );
 
-	@Effect()
-	getSchedule$: Observable<Action> = this.actions$.pipe(
-    ofType(MainStateAction.FetchSchedules), delay(500),
-    pluck('subjectId'),
-		switchMap((subjectId: string) => {
-      // return this.scheduleService.getSchedules(subjectId)
-      const mockData = [
-        new ClientSchedule(false, new Date(), new Date(), true, 'asdf', 'JavaH1', [new Date(), new Date()]),
-        new ClientSchedule(false, new Date(), new Date(), true, 'fdas', 'JavaH2', [new Date(), new Date()]),
-      ]
-      return of(mockData).pipe(
-				mergeMap((results: any) => {
-					const res = map(results, ClientSchedule.fromJson);
-					return of(MainStateAction.FetchSchedulesSuccess({ payload: res }));
-				})
-			);
-		})
-	);
+	// @Effect()
+	// getSchedule$: Observable<Action> = this.actions$.pipe(
+  //   ofType(MainStateAction.FetchSchedules), delay(500),
+  //   pluck('subjectId'),
+	// 	switchMap((subjectId: string) => {
+  //     // return this.scheduleService.getSchedules(subjectId)
+  //     const mockData = [
+  //       new ClientSchedule(false, new Date(), new Date(), true, 'asdf', 'JavaH1', [new Date(), new Date()]),
+  //       new ClientSchedule(false, new Date(), new Date(), true, 'fdas', 'JavaH2', [new Date(), new Date()]),
+  //     ]
+  //     return of(mockData).pipe(
+	// 			mergeMap((results: any) => {
+	// 				const res = map(results, ClientSchedule.fromJson);
+	// 				return of(MainStateAction.FetchSchedulesSuccess({ payload: res }));
+	// 			})
+	// 		);
+	// 	})
+	// );
 }

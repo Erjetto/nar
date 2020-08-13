@@ -1,8 +1,8 @@
 <div class="toaster-container container-lg">
 	<div class="col-sm-10 col-md-9 col-lg-7 m-auto">
 		<div
-			*ngFor="let message of messages; let i = index"
-			class="alert alert-dismissible"
+			*ngFor="let message of messages$|async; let i = index"
+			class="alert alert-dismissible clickable"
 			[ngClass]="'alert-' + message.messageType"
 			@swipeAnimation
 		>

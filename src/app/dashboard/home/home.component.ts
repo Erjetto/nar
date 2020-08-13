@@ -20,8 +20,8 @@ import {
 } from 'rxjs/operators';
 
 import { ClientPhase, ClientStatistic } from 'src/app/shared/models';
-import * as MainStateAction from 'src/app/shared/stores/main/main.action';
-import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
+import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
+import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
 import { Observable, of, Subject, interval } from 'rxjs';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { DashboardContentBase } from '../dashboard-content-base.component';
@@ -53,7 +53,7 @@ export class HomeComponent extends DashboardContentBase
 	}
 
 	ngOnInit(): void {
-    this.phases$ = this.store.pipe(select(fromMainState.getPhases));
+    this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
     // this.phases$.pipe(take(4)).subscribe(console.log);
 
 		// this.phases$.pipe(
@@ -74,7 +74,7 @@ export class HomeComponent extends DashboardContentBase
 
 	reloadView() {
 		// console.log('ReloadView from Home because it has no state for reloading data');
-		this.store.dispatch(MainStateAction.FetchPhases());
+		this.store.dispatch(MasterStateAction.FetchPhases());
 
 		// this.phases$.pipe(
 		//   filter(res => !isEmpty(res)),

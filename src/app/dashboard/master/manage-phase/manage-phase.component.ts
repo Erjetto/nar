@@ -97,15 +97,23 @@ export class ManagePhaseComponent extends DashboardContentBase
 		return this.phaseTypes.find((p) => p.key === key).val;
 	}
 
-	createPhase(form: NgForm) {
-		const { name, beginDate, endDate, type } = form.controls;
-    this.store.dispatch(MasterStateAction.CreatePhase({
-			name: name.value,
-			beginDate: beginDate.value,
-			endDate: endDate.value,
-			phaseType: type.value,
-		}))
-	}
+	submitPhaseForm(form: NgForm) {
+    const { name, beginDate, endDate, type } = form.controls;
+    if(this.editForm)
+      this.store.dispatch(MasterStateAction.CreatePhase({
+        name: name.value,
+        beginDate: beginDate.value,
+        endDate: endDate.value,
+        phaseType: type.value,
+      }))
+    else
+      this.store.dispatch(MasterStateAction.UpdatePhase({
+        PhaseId: this.editForm.PhaseId,
+        Description: name.value,
+        EndDate: endDate.value,
+        StartDate: beginDate.value,
+      }))
+  }
 
 	addTraineesInPhase(form: NgForm) {
 		const { selectPhase, traineeText, alsoAddSchedule } = form.controls;

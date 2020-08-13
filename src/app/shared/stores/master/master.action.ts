@@ -138,6 +138,43 @@ export const CreateTraineeInPhase = createAction(
 // );
 //#endregion
 
+//#region Update
+// export const UpdateRole = createAction('[MasterState] UpdateRoles');
+// export const UpdateUserInRole = createAction('[MasterState] UpdateUserInRoles');
+// export const UpdateGeneration = createAction('[MasterState] UpdateGenerations');
+export const UpdatePhase = createAction(
+	'[MasterState] UpdatePhase',
+	props<{
+		Description: string;
+		EndDate: string;
+		PhaseId: string;
+		StartDate: string;
+	}>()
+);
+// export const UpdateSubject = createAction(
+// 	'[MasterState] UpdateSubjects',
+// 	props<{ phaseId: string }>()
+// );
+// export const UpdateSchedule = createAction(
+// 	'[MasterState] UpdateSchedules',
+// 	props<{ subjectId: string }>()
+// );
+// export const UpdateTraineeInSchedule = createAction(
+// 	'[MasterState] UpdateTraineeInSchedule',
+// 	props<{ schedule: string }>()
+// );
+// export const UpdateInterviewQuestion = createAction(
+// 	'[MasterState] UpdateInterviewQuestions'
+// );
+// export const UpdateInterviewQuestionDetail = createAction(
+// 	'[MasterState] UpdateInterviewQuestionDetails',
+// 	props<{ interviewQuestionId: string }>()
+// );
+// export const UpdateInterviewSchedule = createAction(
+// 	'[MasterState] UpdateInterviewSchedules'
+// );
+//#endregion
+
 //#region Delete
 // export const DeleteRole = createAction('[MasterState] DeleteRoles');
 // export const DeleteUserInRole = createAction('[MasterState] DeleteUserInRoles');

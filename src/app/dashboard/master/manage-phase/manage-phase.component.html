@@ -63,10 +63,10 @@
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button class="btn btn-primary" *ngIf="!editForm" (click)="createPhase(phaseForm)">
+						<button class="btn btn-primary" *ngIf="!editForm" (click)="submitPhaseForm(phaseForm)">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Phase
 						</button>
-						<button class="btn btn-primary" *ngIf="editForm">
+						<button class="btn btn-primary" *ngIf="editForm" (click)="submitPhaseForm(phaseForm)">
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
 						</button>
 						<rd-confirmable-button *ngIf="editForm">

@@ -9,26 +9,14 @@ import { Store, ActionsSubject, select } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 
 import {
-	tap,
-	switchMap,
-	takeUntil,
-	mergeAll,
-	take,
-	first,
-	filter,
-	map,
-} from 'rxjs/operators';
-
-import {
 	ClientPhase,
 	ClientStatistic,
 	ClientTrainee,
 	ClientTraineeReputation,
 } from 'src/app/shared/models';
-import * as MainStateAction from 'src/app/shared/stores/main/main.action';
-import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
+import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
+import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
 import { Observable, of, Subject, interval } from 'rxjs';
-import { HomeService } from 'src/app/shared/services/home.service';
 
 import { isEmpty } from 'lodash';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -57,7 +45,7 @@ export class ViewTraineeComponent extends DashboardContentBase
 	ngOnInit(): void {
 		console.log(this.viewMode);
 		
-		this.phases$ = this.store.pipe(select(fromMainState.getPhases));
+		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 
 		this.trainees$ = of(
 			MockData.GetTraineesReputationByPhase.TraineeReputation.map(
@@ -74,7 +62,7 @@ export class ViewTraineeComponent extends DashboardContentBase
 	}
 
 	reloadView() {
-		this.store.dispatch(MainStateAction.FetchPhases());
+		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
 	onSelectTrainee(trainee) {}

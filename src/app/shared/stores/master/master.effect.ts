@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, select, Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 
-import { GenerationService } from '../../services/generation.service';
-import * as MasterStateAction from './master.action';
-import * as fromMasterState from './master.reducer';
 import { Observable, from, of } from 'rxjs';
 import {
 	switchMap,
@@ -16,15 +13,13 @@ import {
 	pluck,
 	delay,
 } from 'rxjs/operators';
-import {
-	ClientGeneration,
-	ClientPhase,
-	ClientSubject,
-	ClientSchedule,
-} from '../../models';
-import { map } from 'lodash';
-import { PhaseService } from '../../services/phase.service';
-import { SubjectService } from '../../services/subject.service';
+
+import * as MasterStateAction from './master.action';
+import * as fromMasterState from './master.reducer';
+
+import * as MainStateAction from '../main/main.action';
+import * as fromMainState from '../main/main.reducer';
+
 import { GeneralService } from '../../services/new/general.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
 import { InterviewService } from '../../services/new/interview.service';
@@ -34,7 +29,6 @@ import { PresentationService } from '../../services/new/presentation.service';
 import { TraineeAttendanceService } from '../../services/new/trainee-attendance.service';
 import { TraineeService } from '../../services/new/trainee.service';
 import { VoteService } from '../../services/new/vote.service';
-import { MockData } from '../../mock-data';
 
 @Injectable({
 	providedIn: 'root',
@@ -42,7 +36,8 @@ import { MockData } from '../../mock-data';
 export class MasterStateEffects {
 	constructor(
 		private actions$: Actions,
-		private store: Store<fromMasterState.IMasterState>,
+		private masterStore: Store<fromMasterState.IMasterState>,
+		private mainStore: Store<fromMainState.IMainState>,
 		private generalService: GeneralService,
 		private announcementService: AnnouncementService,
 		private interviewService: InterviewService,
@@ -96,10 +91,11 @@ export class MasterStateEffects {
 	);
 	@Effect()
 	getSubjects$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.FetchSubjects),
-		switchMap(() => {
+    ofType(MasterStateAction.FetchSubjects),
+    pluck('phaseId'),
+		switchMap((phaseId) => {
 			return this.generalService
-				.GetSubjects()
+				.GetSubjects(phaseId)
 				.pipe(
 					mergeMap((res) =>
 						of(MasterStateAction.FetchSubjectsSuccess({ payload: res }))
@@ -236,5 +232,21 @@ export class MasterStateEffects {
   );
   //#endregion
 
+  //#region 
+  @Effect()
+  updatePhase$: Observable<Action> = this.actions$.pipe(
+    ofType(MasterStateAction.UpdatePhase),
+    switchMap(action => {
+      return this.leaderService.UpdatePhase(action).pipe(
+        mergeMap(res => {
+          if(!res) return of(MasterStateAction.DeleteFailed({message: 'Failed in updating phase'}))
+          else return of(MasterStateAction.FetchPhases())
+        })
+      )
+    })
+  );
+  
+
+  //#endregion
 
 }

@@ -16,11 +16,12 @@ import { IAppState } from '../app.reducer';
 import { Store, select } from '@ngrx/store';
 import * as MainStateAction from '../shared/stores/main/main.action';
 import * as fromMainState from '../shared/stores/main/main.reducer';
+import * as MasterStateAction from '../shared/stores/master/master.action';
+import * as fromMasterState from '../shared/stores/master/master.reducer';
 import { MenuService } from '../shared/services/menu.service';
 import { Route, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter, takeUntil, delay, tap } from 'rxjs/operators';
 import { UserService } from '../shared/services/user.service';
-import { NgSelectConfig } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'rd-dashboard',
@@ -87,11 +88,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				select(fromMainState.getCurrentRole)
 			);
 
-			this.genList$ = this.store.pipe(select(fromMainState.getGenerations));
+			this.genList$ = this.store.pipe(select(fromMasterState.getGenerations));
 			this.roleList$ = of(Role.allRoles);
 
 			// Trigger fetch data
-			this.store.dispatch(MainStateAction.FetchGenerations());
+			this.store.dispatch(MasterStateAction.FetchGenerations());
 			this.store.dispatch(
 				MainStateAction.ChangeRole({
 					name: this.user.ActiveRole,
@@ -106,11 +107,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 					})
 				);
 			});
-			// this.store.dispatch(MainStateAction.FetchRoles());
 		}
-
-    // preload
-		// this.store.dispatch(MainStateAction.FetchPhases());
 	}
 
 	ngOnDestroy(): void {
