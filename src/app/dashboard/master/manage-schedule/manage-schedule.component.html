@@ -3,8 +3,8 @@
 		<div class="col-4">
 			<rd-card [cardTitle]="editForm ? 'Edit Schedule' : 'Insert New Schedule'">
 				<form>
-					<div class="row form-group">
-						<label for="phaseType" class="col-4 col-form-label"
+					<!-- <div class="row form-group">
+						<label for="selectPhaseType" class="col-4 col-form-label"
 							>Phase Type</label
 						>
 						<div class="col">
@@ -19,41 +19,45 @@
 								[ngModel]="phaseTypes[0].key"
 							></ng-select>
 						</div>
-					</div>
+					</div> -->
 					<div class="row form-group">
-						<label for="phaseType" class="col-4 col-form-label">Phase</label>
+						<label for="selectPhase" class="col-4 col-form-label">
+							Phase
+						</label>
 						<div class="col">
 							<ng-select
 								id="selectPhase"
 								name="selectPhase"
-								[items]="phases"
+								[items]="phases$ | async"
 								[clearable]="false"
 								[bindLabel]="'Description'"
 								[bindValue]="'PhaseId'"
 								[searchable]="false"
-								[ngModel]="phases[0].PhaseId"
+								[ngModel]="(phases$ | async)[0]?.PhaseId"
 							></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="phaseType" class="col-4 col-form-label">Subject</label>
+						<label for="selectSubject" class="col-4 col-form-label">
+							Subject
+						</label>
 						<div class="col">
 							<ng-select
 								id="selectSubject"
 								name="selectSubject"
-								[items]="subjects"
+								[items]="subjects$ | async"
 								[clearable]="false"
 								[bindLabel]="'Name'"
 								[bindValue]="'SubjectId'"
 								[searchable]="false"
-								[ngModel]="subjects[0].SubjectId"
+								[ngModel]="(subjects$ | async)[0]?.SubjectId"
 							></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="phaseType" class="col-4 col-form-label"
-							>Schedule Type</label
-						>
+						<label class="col-4 col-form-label">
+							Schedule Type
+						</label>
 						<div class="col">
 							<div class="custom-control custom-radio">
 								<input
@@ -104,7 +108,7 @@
 			</rd-card>
 			<rd-card [cardTitle]="'Trainee in Schedule'">
 				<form>
-					<div class="row form-group">
+					<!-- <div class="row form-group">
 						<label for="selectphaseType" class="col-4 col-form-label"
 							>Phase Type</label
 						>
@@ -120,19 +124,19 @@
 								[ngModel]="phaseTypes[0].key"
 							></ng-select>
 						</div>
-					</div>
+					</div> -->
 					<div class="row form-group">
 						<label for="selectPhase" class="col-4 col-form-label">Phase</label>
 						<div class="col">
 							<ng-select
 								id="selectPhase"
 								name="selectPhase"
-								[items]="phases"
+								[items]="phases$ | async"
 								[clearable]="false"
 								[bindLabel]="'Description'"
 								[bindValue]="'PhaseId'"
 								[searchable]="false"
-								[ngModel]="phases[0].PhaseId"
+								[ngModel]="(phases$ | async)[0]?.PhaseId"
 							></ng-select>
 						</div>
 					</div>
@@ -144,12 +148,12 @@
 							<ng-select
 								id="selectSubject"
 								name="selectSubject"
-								[items]="subjects"
+								[items]="subjects$ | async"
 								[clearable]="false"
 								[bindLabel]="'Name'"
 								[bindValue]="'SubjectId'"
 								[searchable]="false"
-								[ngModel]="subjects[0].SubjectId"
+								[ngModel]="(subjects$ | async)[0]?.SubjectId"
 							></ng-select>
 						</div>
 					</div>
@@ -161,12 +165,12 @@
 							<ng-select
 								id="selectSchedule"
 								name="selectSchedule"
-								[items]="schedules"
+								[items]="(schedules$ | async)"
 								[clearable]="false"
 								[bindLabel]="'ScheduleName'"
 								[bindValue]="'ScheduleId'"
 								[searchable]="false"
-								[ngModel]="schedules[0].ScheduleId"
+								[ngModel]="(schedules$ | async)[0]?.ScheduleId"
 							></ng-select>
 						</div>
 					</div>
@@ -194,7 +198,7 @@
 		<div class="col">
 			<rd-card [cardTitle]="'Trainee In Phase'">
 				<div class="row form-group">
-					<div class="col">
+					<!-- <div class="col">
 						<ng-select
 							id="selectPhaseType"
 							name="selectPhaseType"
@@ -205,29 +209,29 @@
 							[searchable]="false"
 							[ngModel]="phaseTypes[0].key"
 						></ng-select>
-					</div>
+					</div> -->
 					<div class="col">
 						<ng-select
 							id="selectPhase"
 							name="selectPhase"
-							[items]="phases"
+							[items]="phases$ | async"
 							[clearable]="false"
 							[bindLabel]="'Description'"
 							[bindValue]="'PhaseId'"
 							[searchable]="false"
-							[ngModel]="phases[0].PhaseId"
+							[ngModel]="(phases$ | async)[0]?.PhaseId"
 						></ng-select>
 					</div>
 					<div class="col">
 						<ng-select
 							id="selectSubject"
 							name="selectSubject"
-							[items]="subjects"
+							[items]="subjects$ | async"
 							[clearable]="false"
 							[bindLabel]="'Name'"
 							[bindValue]="'SubjectId'"
 							[searchable]="false"
-							[ngModel]="subjects[0].SubjectId"
+							[ngModel]="(subjects$ | async)[0]?.SubjectId"
 						></ng-select>
 					</div>
 				</div>
@@ -244,11 +248,11 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngIf="schedules?.length === 0">
-								<td colspan="4">No schedules yet</td>
+							<tr *ngIf="(schedules$ | async)?.length === 0">
+								<td colspan="6">No schedules yet</td>
 							</tr>
 							<tr
-								*ngFor="let schedule of schedules"
+								*ngFor="let schedule of (schedules$ | async)"
 								class="cursor-pointer"
 								(click)="onSelectSchedule(schedule)"
 							>
@@ -265,7 +269,7 @@
 			</rd-card>
 			<rd-card [cardTitle]="'Trainee In Phase'">
 				<div class="row form-group">
-					<div class="col">
+					<!-- <div class="col">
 						<ng-select
 							id="selectPhaseType"
 							name="selectPhaseType"
@@ -276,41 +280,41 @@
 							[searchable]="false"
 							[ngModel]="phaseTypes[0].key"
 						></ng-select>
-					</div>
+					</div> -->
 					<div class="col">
 						<ng-select
 							id="selectPhase"
 							name="selectPhase"
-							[items]="phases"
+							[items]="phases$ | async"
 							[clearable]="false"
 							[bindLabel]="'Description'"
 							[bindValue]="'PhaseId'"
 							[searchable]="false"
-							[ngModel]="phases[0].PhaseId"
+							[ngModel]="(phases$ | async)[0]?.PhaseId"
 						></ng-select>
 					</div>
 					<div class="col">
 						<ng-select
 							id="selectSubject"
 							name="selectSubject"
-							[items]="subjects"
+							[items]="subjects$ | async"
 							[clearable]="false"
 							[bindLabel]="'Name'"
 							[bindValue]="'SubjectId'"
 							[searchable]="false"
-							[ngModel]="subjects[0].SubjectId"
+							[ngModel]="(subjects$ | async)[0]?.SubjectId"
 						></ng-select>
 					</div>
 					<div class="col">
 						<ng-select
 							id="selectSchedule"
 							name="selectSchedule"
-							[items]="schedules"
+							[items]="(schedules$ | async)"
 							[clearable]="false"
 							[bindLabel]="'ScheduleName'"
 							[bindValue]="'ScheduleId'"
 							[searchable]="false"
-							[ngModel]="schedules[0].ScheduleId"
+							[ngModel]="(schedules$ | async)[0]?.ScheduleId"
 						></ng-select>
 					</div>
 				</div>
@@ -325,10 +329,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngIf="traineeInSchedule?.length === 0">
+							<tr *ngIf="(traineeInSchedule$ | async)?.length === 0">
 								<td colspan="4">No trainees in this schedule</td>
 							</tr>
-							<tr *ngFor="let trainee of traineeInSchedule">
+							<tr *ngFor="let trainee of (traineeInSchedule$ | async)">
 								<td>{{ trainee.TraineeCode }}</td>
 								<td>{{ trainee.TraineeNumber }}</td>
 								<td>{{ trainee.TraineeName }}</td>

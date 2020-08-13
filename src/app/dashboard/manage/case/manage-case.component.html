@@ -12,7 +12,7 @@
 							class="col"
 							[items]="phases$ | async"
 							[clearable]="false"
-							bindLabel="PhaseType"
+							bindLabel="Description"
 							placeholder="Phase"
               [searchable]="false"
 							[ngModel]="(phases$ | async)[0]"
@@ -87,9 +87,9 @@
 			<rd-card
 				#insertCaseCard
 				[cardTitle]="'Insert New Case'"
-				[expanded]="false"
+				[expanded]="!!caseForm"
 			>
-				<div rdCardBadges class="" *ngIf="isEditing">
+				<div rdCardBadges class="" *ngIf="!!caseForm">
 					<button
 						class="btn btn-sm btn-secondary mr-1"
 						(click)="onCancelEdit()"
@@ -100,7 +100,7 @@
 				<form>
 					<div class="row">
 						<div class="col">
-							<div class="row form-group" *ngIf="!isEditing">
+							<div class="row form-group" *ngIf="!caseForm">
 								<label for="selectSubject" class="col-3 col-form-label"
 									>Subject</label
 								>
@@ -126,7 +126,7 @@
 										id="caseName"
 										name="caseName"
 										class="form-control"
-										[ngModel]="caseForm.CaseName"
+										[ngModel]="caseForm?.CaseName"
 									/>
 								</div>
 							</div>
@@ -140,7 +140,7 @@
 										id="correctors"
 										name="correctors"
 										class="form-control"
-										[ngModel]="caseForm.Corrector"
+										[ngModel]="caseForm?.Corrector"
 									/>
 								</div>
 							</div>
@@ -155,7 +155,7 @@
 										name="fileUpload"
 										class="col form-control"
 									/>
-									<div class="input-group-append" *ngIf="isEditing">
+									<div class="input-group-append" *ngIf="caseForm">
 										<button
 											class="btn btn-info"
 											(click)="onClick()"
@@ -169,7 +169,7 @@
 							</div>
 						</div>
 						<div class="col">
-							<div class="row form-group" *ngIf="!isEditing">
+							<div class="row form-group" *ngIf="!caseForm">
 								<label for="selectSchedule" class="col-4 col-form-label"
 									>Schedule</label
 								>
@@ -195,7 +195,7 @@
 										id="scheduleDate"
 										name="scheduleDate"
 										class="form-control"
-										[ngModel]="caseForm.ScheduleDate | date: viewDateFormat"
+										[ngModel]="caseForm?.ScheduleDate | date: viewDateFormat"
 									/>
 								</div>
 							</div>
@@ -209,7 +209,7 @@
 										id="trainerDeadline"
 										name="trainerDeadline"
 										class="form-control"
-										[ngModel]="caseForm.TrainerDeadline | date: viewDateFormat"
+										[ngModel]="caseForm?.TrainerDeadline | date: viewDateFormat"
 									/>
 								</div>
 							</div>
@@ -223,14 +223,14 @@
 										id="traineeDeadline"
 										name="traineeDeadline"
 										class="form-control"
-										[ngModel]="caseForm.TraineeDeadline | date: viewDateFormat"
+										[ngModel]="caseForm?.TraineeDeadline | date: viewDateFormat"
 									/>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div></div>
-					<div class="row justify-content-around mt-2" [ngSwitch]="isEditing">
+					<div class="row justify-content-around mt-2" [ngSwitch]="!!caseForm">
 						<ng-container *ngSwitchCase="false">
 							<button type="submit" class="btn btn-primary">
 								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create

@@ -3,7 +3,6 @@ import {
 	OnInit,
 	ChangeDetectionStrategy,
 	ViewChild,
-	ChangeDetectorRef,
 	OnDestroy,
 } from '@angular/core';
 import { Store, select, ActionsSubject } from '@ngrx/store';
@@ -25,18 +24,17 @@ import { take, filter, tap, first, switchMap, takeUntil } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { isEmpty } from 'lodash';
 import { ObservableHelper } from 'src/app/shared/utilities/observable-helper';
-import { ofType } from '@ngrx/effects';
 import { CardComponent } from 'src/app/shared/components/card/card.component';
 
 @Component({
 	selector: 'rd-manage-case',
 	templateUrl: './manage-case.component.html',
 	styleUrls: ['./manage-case.component.scss'],
-	//changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageCaseComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {
-	@ViewChild('insertCaseCard') insertCaseCard: CardComponent;
+	// @ViewChild('insertCaseCard') insertCaseCard: CardComponent;
 
 	public viewDateFormat = 'HH:mm, dd MMM yyyy';
 
@@ -48,8 +46,8 @@ export class ManageCaseComponent extends DashboardContentBase
 	public caseList$: Observable<Case[]>;
 	public caseListLoading$: Observable<boolean>;
 
-	public isEditing = false;
-	public caseForm: Case = new Case();
+	// public isEditing = false;
+	public caseForm: Case;
 
 	constructor(
 		private store: Store<IAppState>,
@@ -62,7 +60,7 @@ export class ManageCaseComponent extends DashboardContentBase
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
 		this.schedules$ = this.store.pipe(select(fromMasterState.getSchedules));
-    this.manageCaseLoading$ = this.store.pipe(fromMasterState.isManageCaseLoading);
+    this.manageCaseLoading$ = this.store.pipe(select(fromMasterState.isManageCaseLoading));
     
 		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
 		this.caseListLoading$ = this.store.pipe(select(fromCaseState.getCasesLoading));
@@ -117,17 +115,17 @@ export class ManageCaseComponent extends DashboardContentBase
 	}
 
 	onSelectCase(row: Case) {
-		this.isEditing = true;
+		// this.isEditing = true;
 		this.caseForm = row;
-		this.insertCaseCard.cardTitle = 'Edit/View Case';
-		this.insertCaseCard.toggleMinimized(false);
+		// this.insertCaseCard.cardTitle = 'Edit/View Case';
+		// this.insertCaseCard.toggleMinimized(false);
 	}
 
 	onCancelEdit() {
-		this.insertCaseCard.toggleMinimized(true);
-		this.insertCaseCard.cardTitle = 'Insert New Case';
-		this.isEditing = false;
-		this.caseForm = new Case();
+		// this.insertCaseCard.toggleMinimized(true);
+		// this.insertCaseCard.cardTitle = 'Insert New Case';
+		// this.isEditing = false;
+		this.caseForm = null;
 		// interval(300).pipe(first()).subscribe(() => {
 		// })
 		// setTimeout(() => {

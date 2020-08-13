@@ -20,7 +20,7 @@
 								type="text"
 								class="form-control"
 								name="subjectName"
-								[ngModel]="editForm.Name"
+								[ngModel]="editForm?.Name"
 							/>
 						</div>
 					</div>
@@ -28,12 +28,13 @@
 						<label for="maxFileSize" class="col-4 col-form-label">
 							Max File Size
 						</label>
-						<div class="col">
-							<input
+						<div class="col-5">
+              <input
+                #fileSizeInput="ngModel"
 								type="text"
 								class="form-control"
-								name="maxFileSize"
-								[(ngModel)]="editForm.MaxFileSize"
+                name="maxFileSize"
+								[ngModel]="editForm?.MaxFileSize"
 							/>
 						</div>
 						<div class="col">
@@ -45,7 +46,7 @@
 								[searchable]="false"
 								[clearable]="false"
 								[ngModel]="currentSize"
-								(change)="convertFileSize($event)"
+								(change)="convertFileSize($event, fileSizeInput)"
 							></ng-select>
 						</div>
 					</div>
@@ -88,7 +89,7 @@
 									class="custom-control-input"
 									id="hasPresentation"
 									name="hasPresentation"
-									[checked]="editForm.HasPresentation"
+									[checked]="editForm?.HasPresentation"
 								/>
 								<label class="custom-control-label" for="hasPresentation">
 									Has Presentation

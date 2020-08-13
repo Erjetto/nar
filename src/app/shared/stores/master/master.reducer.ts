@@ -20,18 +20,18 @@ import {
 
 export interface IMasterState {
 	roles: Role[];
-  userInRoles: ClientUserInRoles[];
-  
-	generations: ClientGeneration[];
-  subjects: ClientSubject[];
+	userInRoles: ClientUserInRoles[];
 
-  phaseTypes: any[];
+	generations: ClientGeneration[];
+	subjects: ClientSubject[];
+
+	phaseTypes: any[];
 	phases: ClientPhase[];
-  traineeInPhase: ClientTrainee[];
-  
-  schedules: ClientSchedule[];
-  traineeInSchedule: ClientTrainee[];
-  
+	traineeInPhase: ClientTrainee[];
+
+	schedules: ClientSchedule[];
+	traineeInSchedule: ClientTrainee[];
+
 	interviewQuestion: ClientInterviewQuestion[];
 	interviewQuestionDetails: InterviewQuestionDetail[];
 
@@ -56,7 +56,10 @@ export const initialState: IMasterState = {
 	generations: [],
 	subjects: [],
 
-  phaseTypes: [{ key: 'ar', val: 'Assistant Recruitment' },{ key: 'other', val: 'Other' }],
+	phaseTypes: [
+		{ key: 'ar', val: 'Assistant Recruitment' },
+		{ key: 'other', val: 'Other' },
+	],
 	phases: [],
 	traineeInPhase: [],
 
@@ -185,24 +188,32 @@ export const MasterStateReducer = createReducer(
 		loadingTraineeInSchedule: false,
 	})),
 
-	on(MasterStateAction.FetchInterviewQuestionsSuccess, (state, { payload }) => ({
-		...state,
-		interviewQuestions: payload,
-		loadingInterviewQuestion: false,
-	})),
+	on(
+		MasterStateAction.FetchInterviewQuestionsSuccess,
+		(state, { payload }) => ({
+			...state,
+			interviewQuestions: payload,
+			loadingInterviewQuestion: false,
+		})
+	),
 
-	on(MasterStateAction.FetchInterviewQuestionDetailsSuccess, (state, { payload }) => ({
-		...state,
-		interviewQuestionDetails: payload,
-		loadingInterviewQuestionDetails: false,
-	})),
+	on(
+		MasterStateAction.FetchInterviewQuestionDetailsSuccess,
+		(state, { payload }) => ({
+			...state,
+			interviewQuestionDetails: payload,
+			loadingInterviewQuestionDetails: false,
+		})
+	),
 
-	on(MasterStateAction.FetchInterviewSchedulesSuccess, (state, { payload }) => ({
-		...state,
-		InterviewSchedules: payload,
-		loadingInterviewSchedules: false,
-	})),
-
+	on(
+		MasterStateAction.FetchInterviewSchedulesSuccess,
+		(state, { payload }) => ({
+			...state,
+			InterviewSchedules: payload,
+			loadingInterviewSchedules: false,
+		})
+	)
 );
 
 export const getMasterState = createFeatureSelector<IMasterState>(
