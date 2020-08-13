@@ -24,7 +24,8 @@ export interface IMasterState {
   
 	generations: ClientGeneration[];
   subjects: ClientSubject[];
-  
+
+  phaseTypes: any[];
 	phases: ClientPhase[];
   traineeInPhase: ClientTrainee[];
   
@@ -55,6 +56,7 @@ export const initialState: IMasterState = {
 	generations: [],
 	subjects: [],
 
+  phaseTypes: [{ key: 'ar', val: 'Assistant Recruitment' },{ key: 'other', val: 'Other' }],
 	phases: [],
 	traineeInPhase: [],
 
@@ -214,6 +216,7 @@ export const getRoles = getMasterStateBy((s) => s.roles);
 export const getUserInRoles = getMasterStateBy((s) => s.userInRoles);
 export const getGenerations = getMasterStateBy((s) => s.generations);
 export const getSubjects = getMasterStateBy((s) => s.subjects);
+export const getPhaseTypes = getMasterStateBy((s) => s.phaseTypes);
 export const getPhases = getMasterStateBy((s) => s.phases);
 export const getTraineeInPhase = getMasterStateBy((s) => s.traineeInPhase);
 export const getSchedules = getMasterStateBy((s) => s.schedules);

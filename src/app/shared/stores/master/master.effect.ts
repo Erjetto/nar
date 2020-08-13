@@ -12,6 +12,7 @@ import {
 	tap,
 	pluck,
 	delay,
+	map,
 } from 'rxjs/operators';
 
 import * as MasterStateAction from './master.action';
@@ -49,7 +50,7 @@ export class MasterStateEffects {
 		private voteService: VoteService
 	) {}
 
-  //#region get
+	//#region get
 	@Effect()
 	getRoles$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchRoles),
@@ -91,8 +92,8 @@ export class MasterStateEffects {
 	);
 	@Effect()
 	getSubjects$: Observable<Action> = this.actions$.pipe(
-    ofType(MasterStateAction.FetchSubjects),
-    pluck('phaseId'),
+		ofType(MasterStateAction.FetchSubjects),
+		pluck('phaseId'),
 		switchMap((phaseId) => {
 			return this.generalService
 				.GetSubjects(phaseId)
@@ -129,7 +130,7 @@ export class MasterStateEffects {
 					)
 				);
 		})
-  );
+	);
 	@Effect()
 	getSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchSchedules),
@@ -153,7 +154,9 @@ export class MasterStateEffects {
 				.GetTraineesByPhase(scheduleId)
 				.pipe(
 					mergeMap((res) =>
-						of(MasterStateAction.FetchTraineeInScheduleSuccess({ payload: res }))
+						of(
+							MasterStateAction.FetchTraineeInScheduleSuccess({ payload: res })
+						)
 					)
 				);
 		})
@@ -197,56 +200,125 @@ export class MasterStateEffects {
 				.GetInterviewQuestionDetails(interviewQuestionId)
 				.pipe(
 					mergeMap((res) =>
-						of(MasterStateAction.FetchInterviewQuestionDetailsSuccess({payload: res,})
+						of(
+							MasterStateAction.FetchInterviewQuestionDetailsSuccess({
+								payload: res,
+							})
 						)
 					)
 				);
 		})
-  );
-  //#endregion
-  
-  //#region create
-  @Effect()
-  createPhase$: Observable<Action> = this.actions$.pipe(
-    ofType(MasterStateAction.CreatePhase),
-    switchMap(action => {
-      return this.leaderService.SavePhase({...action, type: action.phaseType}).pipe(
-        mergeMap(res => {
-          if(!res) return of(MasterStateAction.DeleteFailed({message: 'Failed in creating phase'}))
-          else return of(MasterStateAction.FetchPhases())
-        })
-      )
-    })
-  );
-  @Effect()
-  createTraineeInPhase$: Observable<Action> = this.actions$.pipe(
-    ofType(MasterStateAction.CreateTraineeInPhase),
-    switchMap(action => {
-      return this.leaderService.SaveTraineesToPhase(action).pipe(
-        mergeMap(res => {
-          if(!res) return of(MasterStateAction.DeleteFailed({message: 'Failed in creating trainee'}))
-          else return of(MasterStateAction.FetchTraineeInPhase({phaseId: action.phaseId}))
-        })
-      )
-    })
-  );
-  //#endregion
+	);
+	//#endregion
 
-  //#region 
-  @Effect()
-  updatePhase$: Observable<Action> = this.actions$.pipe(
-    ofType(MasterStateAction.UpdatePhase),
-    switchMap(action => {
-      return this.leaderService.UpdatePhase(action).pipe(
-        mergeMap(res => {
-          if(!res) return of(MasterStateAction.DeleteFailed({message: 'Failed in updating phase'}))
-          else return of(MasterStateAction.FetchPhases())
-        })
-      )
-    })
-  );
-  
+	//#region create
+	@Effect()
+	createPhase$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.CreatePhase),
+		switchMap((action) => {
+			return this.leaderService
+				.SavePhase({ ...action, type: action.phaseType })
+				.pipe(
+					mergeMap((res) => {
+						if (!res)
+							return of(
+								MasterStateAction.DeleteFailed({
+									message: 'Failed in creating phase',
+								})
+							);
+						else return of(MasterStateAction.FetchPhases());
+					})
+				);
+		})
+	);
+	@Effect()
+	createTraineeInPhase$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.CreateTraineeInPhase),
+		switchMap((action) => {
+			return this.leaderService.SaveTraineesToPhase(action).pipe(
+				mergeMap((res) => {
+					if (!res)
+						return of(
+							MasterStateAction.DeleteFailed({
+								message: 'Failed in creating trainee',
+							})
+						);
+					else
+						return of(
+							MasterStateAction.FetchTraineeInPhase({ phaseId: action.phaseId })
+						);
+				})
+			);
+		})
+	);
+	//#endregion
 
-  //#endregion
+	//#region update
+	@Effect()
+	updatePhase$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.UpdatePhase),
+		switchMap((action) => {
+			return this.leaderService.UpdatePhase(action).pipe(
+				mergeMap((res) => {
+					if (!res)
+						return of(
+							MasterStateAction.DeleteFailed({
+								message: 'Failed in updating phase',
+							})
+						);
+					else return of(MasterStateAction.FetchPhases());
+				})
+			);
+		})
+	);
 
+	//#endregion
+
+	//#region delete
+	@Effect()
+	deletePhase$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.DeletePhase),
+		switchMap((action) => {
+			return of(
+				MasterStateAction.DeleteFailed({
+					message: 'Failed in deleting phase: Not implemented yet',
+				})
+			);
+			// return this.leaderService.dele(action).pipe(
+			//   mergeMap(res => {
+			//     if(!res) return of(MasterStateAction.DeleteFailed({message: 'Failed in deleting phase'}))
+			//     else return of(MasterStateAction.FetchPhases())
+			//   })
+			// )
+		})
+	);
+
+	@Effect()
+	deleteTraineeInPhase$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.DeleteTraineeInPhase),
+		switchMap((action) => {
+			return this.leaderService.DeleteTraineeInPhase(action).pipe(
+				mergeMap((res) => {
+					if (!res)
+						return of(
+							MasterStateAction.DeleteFailed({
+								message: 'Failed in Deleting trainee in phase',
+							})
+						);
+					else return of(MasterStateAction.FetchPhases());
+				})
+			);
+		})
+	);
+
+	//#endregion
+
+	@Effect()
+	alertMessage$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.DeleteFailed),
+		pluck('message'),
+		map((message) =>
+			(MainStateAction.ToastMessage({ message, messageType: 'danger' }))
+		)
+	);
 }

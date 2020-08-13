@@ -31,8 +31,8 @@
 								type="text"
 								class="form-control"
 								name="beginDate"
-                [ngModel]="editForm?.BeginDate | date: editDateFormat"
-                placeholder="yyyy-mm-dd"
+								[ngModel]="editForm?.BeginDate | date: editDateFormat"
+								placeholder="yyyy-mm-dd"
 							/>
 						</div>
 					</div>
@@ -43,33 +43,41 @@
 								type="text"
 								class="form-control"
 								name="endDate"
-                [ngModel]="editForm?.EndDate | date: editDateFormat"
-                placeholder="yyyy-mm-dd"
+								[ngModel]="editForm?.EndDate | date: editDateFormat"
+								placeholder="yyyy-mm-dd"
 							/>
 						</div>
 					</div>
-					<div class="row form-group">
+					<!-- <div class="row form-group">
 						<label for="endDate" class="col-4 col-form-label">Phase Type</label>
 						<div class="col">
 							<ng-select
 								name="selectPhaseType"
-								[items]="phaseTypes"
+								[items]="phaseTypes$ | async"
 								[clearable]="false"
 								[bindLabel]="'val'"
 								[bindValue]="'key'"
 								[searchable]="false"
-								[ngModel]="phaseTypes[0].key"
+								[ngModel]="(phaseTypes$ | async)[0].key"
 							></ng-select>
 						</div>
-					</div>
+					</div> -->
 					<div class="row justify-content-around">
-						<button class="btn btn-primary" *ngIf="!editForm" (click)="submitPhaseForm(phaseForm)">
+						<button
+							class="btn btn-primary"
+							*ngIf="!editForm"
+							(click)="submitPhaseForm(phaseForm)"
+						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Phase
 						</button>
-						<button class="btn btn-primary" *ngIf="editForm" (click)="submitPhaseForm(phaseForm)">
+						<button
+							class="btn btn-primary"
+							*ngIf="editForm"
+							(click)="submitPhaseForm(phaseForm)"
+						>
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
 						</button>
-						<rd-confirmable-button *ngIf="editForm">
+						<rd-confirmable-button *ngIf="editForm" (confirm)="onDeletePhase()">
 							<button class="btn btn-danger">
 								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 							</button>
@@ -79,7 +87,7 @@
 			</rd-card>
 			<rd-card [cardTitle]="'Insert Trainee to Phase'">
 				<form>
-					<div class="row form-group">
+					<!-- <div class="row form-group">
 						<label for="phaseType" class="col-4 col-form-label"
 							>Phase Type</label
 						>
@@ -87,55 +95,63 @@
 							<ng-select
 								id="selectPhaseType"
 								name="selectPhaseType"
-								[items]="phaseTypes"
+								[items]="phaseTypes$ | async"
 								[clearable]="false"
 								[bindLabel]="'val'"
 								[bindValue]="'key'"
 								[searchable]="false"
-								[ngModel]="phaseTypes[0].key"
+								[ngModel]="(phaseTypes$ | async)[0].key"
 							></ng-select>
 						</div>
-					</div>
+					</div> -->
 					<div class="row form-group">
 						<label for="phaseType" class="col-4 col-form-label">Phase</label>
 						<div class="col">
 							<ng-select
 								id="selectPhase"
 								name="selectPhase"
-								[items]="(phases$ | async)"
+								[items]="phases$ | async"
 								[clearable]="false"
 								[bindLabel]="'Description'"
-                [searchable]="false"
-                [ngModel]="(phases$|async)[0]"
-                ></ng-select>
+								[searchable]="false"
+								[ngModel]="(phases$ | async)[0]"
+							></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="traineeText" class="col-4 col-form-label">Binusian Numbers</label>
+						<label for="traineeText" class="col-4 col-form-label"
+							>Binusian Numbers</label
+						>
 						<div class="col">
 							<textarea
 								name="traineeText"
 								id="traineeText"
 								class="form-control"
-                style="resize: vertical; width: 100%; height: 200px"
-							>{{binusianPrefix+'xxxxxxxx\n' + binusianPrefix + 'xxxxxxxx\n...'}}</textarea>
+								style="resize: vertical; width: 100%; height: 200px;"
+								>{{
+									binusianPrefix +
+										'xxxxxxxx\n' +
+										binusianPrefix +
+										'xxxxxxxx\n...'
+								}}</textarea
+							>
 						</div>
 					</div>
 					<div class="row form-group">
-            <div class="col-4"></div>
-            <div class="col">
-              <div class="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="alsoAddSchedule"
-                  name="alsoAddSchedule"
-                />
-                <label class="custom-control-label" for="alsoAddSchedule">
-                  Also add trainee schedule
-                </label>
-              </div>
-            </div>
+						<div class="col-4"></div>
+						<div class="col">
+							<div class="custom-control custom-checkbox">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="alsoAddSchedule"
+									name="alsoAddSchedule"
+								/>
+								<label class="custom-control-label" for="alsoAddSchedule">
+									Also add trainee schedule
+								</label>
+							</div>
+						</div>
 					</div>
 					<div class="row justify-content-around">
 						<button class="btn btn-primary">
@@ -161,7 +177,7 @@
 							<td colspan="4">No phases yet</td>
 						</tr>
 						<tr
-							*ngFor="let phase of (phases$ | async)"
+							*ngFor="let phase of phases$ | async"
 							class="cursor-pointer"
 							(click)="onSelectPhase(phase)"
 						>
@@ -173,29 +189,33 @@
 					</tbody>
 				</table>
 			</rd-card>
-			<rd-card [cardTitle]="'Trainee In Phase'" [isLoading]="loadingTraineeInPhase$ | async">
+			<rd-card
+				[cardTitle]="'Trainee In Phase'"
+				[isLoading]="loadingTraineeInPhase$ | async"
+			>
 				<div class="row form-group">
-					<div class="col">
+					<!-- <div class="col-6">
 						<ng-select
 							id="selectPhaseType"
 							name="selectPhaseType"
-							[items]="phaseTypes"
+							[items]="phaseTypes$ | async"
 							[clearable]="false"
 							[bindLabel]="'val'"
-							[bindValue]="'key'"
 							[searchable]="false"
-							[ngModel]="phaseTypes[0].key"
+							[ngModel]="(phaseTypes$ | async)[0]"
+							(change)="onChangePhaseType($event)"
 						></ng-select>
-					</div>
-					<div class="col">
+					</div> -->
+					<div class="col-6">
 						<ng-select
 							id="selectPhase"
 							name="selectPhase"
-							[items]="(phases$ | async)"
+							[items]="phases$ | async"
 							[clearable]="false"
 							[bindLabel]="'Description'"
-              [searchable]="false"
-              [ngModel]="(phases$|async)[0]"
+							[searchable]="false"
+							[ngModel]="(phases$ | async)[0]"
+							(change)="onChangePhase($event)"
 						></ng-select>
 					</div>
 				</div>
@@ -213,7 +233,10 @@
 							<tr *ngIf="(traineeInPhase$ | async)?.length === 0">
 								<td colspan="4">No trainees in this phase</td>
 							</tr>
-							<tr *ngFor="let trainee of (traineeInPhase$ | async)" class="cursor-pointer">
+							<tr
+								*ngFor="let trainee of traineeInPhase$ | async"
+								class="cursor-pointer"
+							>
 								<td>{{ trainee.TraineeCode }}</td>
 								<td>{{ trainee.TraineeNumber }}</td>
 								<td>{{ trainee.TraineeName }}</td>

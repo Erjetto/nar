@@ -20,7 +20,7 @@
 								type="text"
 								class="form-control"
 								name="subjectName"
-								[ngModel]="editForm?.Name"
+								[ngModel]="editForm.Name"
 							/>
 						</div>
 					</div>
@@ -33,7 +33,7 @@
 								type="text"
 								class="form-control"
 								name="maxFileSize"
-                [ngModel]="editForm?.MaxFileSize"
+								[(ngModel)]="editForm.MaxFileSize"
 							/>
 						</div>
 						<div class="col">
@@ -42,11 +42,11 @@
 								name="selectFileSize"
 								[items]="size"
 								[bindLabel]="'key'"
-                [searchable]="false"
-                [clearable]="false"
-                [ngModel]="currentSize"
-                (change)="convertFileSize($event)"
-                ></ng-select>
+								[searchable]="false"
+								[clearable]="false"
+								[ngModel]="currentSize"
+								(change)="convertFileSize($event)"
+							></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
@@ -55,30 +55,30 @@
 							<ng-select
 								id="selectPhase"
 								name="selectPhase"
-								[items]="phases"
+								[items]="phases$ | async"
 								[clearable]="false"
 								[bindLabel]="'Description'"
 								[bindValue]="'PhaseId'"
 								[searchable]="false"
-								[ngModel]="phases[0].PhaseId"
+								[ngModel]="(phases$ | async)[0]?.PhaseId"
 							></ng-select>
 						</div>
 					</div>
-					<div class="row form-group">
+					<!-- <div class="row form-group">
 						<label for="endDate" class="col-4 col-form-label">Phase Type</label>
 						<div class="col">
 							<ng-select
 								id="selectPhaseType"
 								name="selectPhaseType"
-								[items]="phaseTypes"
+								[items]="phaseTypes$ | async"
 								[clearable]="false"
 								[bindLabel]="'val'"
 								[bindValue]="'key'"
 								[searchable]="false"
-								[ngModel]="phaseTypes[0].key"
+								[ngModel]="(phaseTypes$ | async)[0].key"
 							></ng-select>
 						</div>
-					</div>
+					</div> -->
 					<div class="row form-group">
 						<div class="col-4"></div>
 						<div class="col">
@@ -87,8 +87,8 @@
 									type="checkbox"
 									class="custom-control-input"
 									id="hasPresentation"
-                  name="hasPresentation"
-                  [checked]="editForm?.HasPresentation"
+									name="hasPresentation"
+									[checked]="editForm.HasPresentation"
 								/>
 								<label class="custom-control-label" for="hasPresentation">
 									Has Presentation
@@ -113,7 +113,33 @@
 			</rd-card>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Subject List'">
+			<rd-card [cardTitle]="'Subject in Phase List'">
+				<div class="row form-group">
+					<!-- <div class="col-6">
+						<ng-select
+							id="selectPhaseType"
+							name="selectPhaseType"
+							[items]="phaseTypes$ | async"
+							[clearable]="false"
+							[bindLabel]="'val'"
+							[searchable]="false"
+							[ngModel]="(phaseTypes$ | async)[0]"
+							(change)="onChangePhaseType($event)"
+						></ng-select>
+					</div> -->
+					<div class="col-6">
+						<ng-select
+							id="selectPhase"
+							name="selectPhase"
+							[items]="phases$ | async"
+							[clearable]="false"
+							[bindLabel]="'Description'"
+							[searchable]="false"
+							[ngModel]="(phases$ | async)[0]"
+							(change)="onChangePhase($event)"
+						></ng-select>
+					</div>
+				</div>
 				<table class="table table-sm table-striped table-hover text-center">
 					<thead>
 						<tr>
@@ -123,16 +149,16 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngIf="subjects?.length === 0">
+						<tr *ngIf="(subjects$ | async)?.length === 0">
 							<td colspan="4">No subject yet</td>
 						</tr>
 						<tr
-							*ngFor="let subject of subjects"
+							*ngFor="let subject of subjects$ | async"
 							class="cursor-pointer"
 							(click)="onSelectSubject(subject)"
 						>
 							<td>{{ subject.Name }}</td>
-							<td>{{ subject.HasPresentation ? '&#x2611;' : '&#x2610;'}}</td>
+							<td>{{ subject.HasPresentation ? '&#x2611;' : '&#x2610;' }}</td>
 							<td>{{ subject.MaxFileSize }}</td>
 						</tr>
 					</tbody>
