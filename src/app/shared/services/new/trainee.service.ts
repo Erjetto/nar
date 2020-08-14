@@ -24,5 +24,10 @@ export class TraineeService {
 			delay(500),
 			map((r) => JSON.parse(r))
 		);
-	}
+  }
+  
+  public Delete(binusianNumber): Observable<any>{
+    // return this.httpClient.post(this.baseUrl + 'Delete', data)
+    return of(true).pipe(delay(500))
+  }
 }

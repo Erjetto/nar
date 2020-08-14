@@ -247,9 +247,9 @@ export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTrain
 export const isInterviewQuestionLoading = getMasterStateBy((s) => s.loadingInterviewQuestion);
 export const isInterviewQuestionDetailsLoading = getMasterStateBy((s) => s.loadingInterviewQuestionDetails);
 
-export const isManageCaseLoading = createSelector(
-  isPhasesLoading,
-  isSubjectsLoading,
-  isSchedulesLoading,
-  (a, b, c) => a || b || c
-)
+// export const isManageCaseLoading = createSelector(
+//   isPhasesLoading,
+//   isSubjectsLoading,
+//   isSchedulesLoading,
+//   (a, b, c) => a || b || c
+// )

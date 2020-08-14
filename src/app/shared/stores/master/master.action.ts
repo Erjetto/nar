@@ -31,7 +31,7 @@ export const FetchSchedules = createAction(
 );
 export const FetchTraineeInSchedule = createAction(
 	'[MasterState] FetchTraineeInSchedule',
-	props<{ schedule: string }>()
+	props<{ scheduleId: string }>()
 );
 export const FetchInterviewQuestions = createAction(
 	'[MasterState] FetchInterviewQuestions'
@@ -95,8 +95,8 @@ export const FetchInterviewSchedulesSuccess = createAction(
 
 //#region Create
 // export const CreateRole = createAction('[MasterState] CreateRoles');
-// export const CreateUserInRole = createAction('[MasterState] CreateUserInRoles');
-// export const CreateGeneration = createAction('[MasterState] CreateGenerations');
+export const CreateUserInRole = createAction('[MasterState] CreateUserInRoles');
+export const CreateGeneration = createAction('[MasterState] CreateGenerations');
 export const CreatePhase = createAction(
 	'[MasterState] CreatePhase',
 	props<{
@@ -109,33 +109,38 @@ export const CreatePhase = createAction(
 export const CreateTraineeInPhase = createAction(
 	'[MasterState] CreateTraineeInPhase',
 	props<{
-		binusianNumbers: string;
+		binusianNumbers: string[];
 		phaseId: string;
 		isAddToSchedule: boolean;
 	}>()
 );
-// export const CreateSubject = createAction(
-// 	'[MasterState] CreateSubjects',
-// 	props<{ phaseId: string }>()
-// );
-// export const CreateSchedule = createAction(
-// 	'[MasterState] CreateSchedules',
-// 	props<{ subjectId: string }>()
-// );
-// export const CreateTraineeInSchedule = createAction(
-// 	'[MasterState] CreateTraineeInSchedule',
-// 	props<{ schedule: string }>()
-// );
-// export const CreateInterviewQuestion = createAction(
-// 	'[MasterState] CreateInterviewQuestions'
-// );
-// export const CreateInterviewQuestionDetail = createAction(
-// 	'[MasterState] CreateInterviewQuestionDetails',
-// 	props<{ interviewQuestionId: string }>()
-// );
-// export const CreateInterviewSchedule = createAction(
-// 	'[MasterState] CreateInterviewSchedules'
-// );
+export const CreateSubject = createAction(
+	'[MasterState] CreateSubjects',
+	props<{
+		name: string;
+		phaseId: string;
+    value: boolean;
+    maxFileSize: number;
+	}>()
+);
+export const CreateSchedule = createAction(
+	'[MasterState] CreateSchedules',
+	props<{ subjectId: string }>()
+);
+export const CreateTraineeInSchedule = createAction(
+	'[MasterState] CreateTraineeInSchedule',
+	props<{ schedule: string }>()
+);
+export const CreateInterviewQuestion = createAction(
+	'[MasterState] CreateInterviewQuestions'
+);
+export const CreateInterviewQuestionDetail = createAction(
+	'[MasterState] CreateInterviewQuestionDetails',
+	props<{ interviewQuestionId: string }>()
+);
+export const CreateInterviewSchedule = createAction(
+	'[MasterState] CreateInterviewSchedules'
+);
 //#endregion
 
 //#region Update
@@ -177,7 +182,7 @@ export const UpdatePhase = createAction(
 
 //#region Delete
 // export const DeleteRole = createAction('[MasterState] DeleteRoles');
-// export const DeleteUserInRole = createAction('[MasterState] DeleteUserInRoles');
+export const DeleteUserInRole = createAction('[MasterState] DeleteUserInRoles');
 // export const DeleteGeneration = createAction('[MasterState] DeleteGenerations');
 export const DeletePhase = createAction(
 	'[MasterState] DeletePhase',
@@ -186,14 +191,14 @@ export const DeletePhase = createAction(
 export const DeleteTraineeInPhase = createAction(
 	'[MasterState] DeleteTraineeInPhase',
 	props<{
-    PhaseId: string;
-    TraineeId: string;
+		PhaseId: string;
+		TraineeId: string;
 	}>()
 );
-// export const DeleteSubject = createAction(
-// 	'[MasterState] DeleteSubjects',
-// 	props<{ phaseId: string }>()
-// );
+export const DeleteSubject = createAction(
+	'[MasterState] DeleteSubjects',
+	props<{ subjectId: string }>()
+);
 // export const DeleteSchedule = createAction(
 // 	'[MasterState] DeleteSchedules',
 // 	props<{ subjectId: string }>()
@@ -214,4 +219,11 @@ export const DeleteTraineeInPhase = createAction(
 // );
 //#endregion
 
-export const DeleteFailed = createAction('[MasterState] DeleteFailed', props<{message: string}>())
+export const ActionSuccess = createAction(
+	'[MasterState] ActionSuccess',
+	props<{ message: string }>()
+);
+export const ActionFailed = createAction(
+	'[MasterState] ActionFailed',
+	props<{ message: string }>()
+);
