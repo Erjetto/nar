@@ -10,7 +10,7 @@
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
-				<form>
+				<form #subjectForm="ngForm">
 					<div class="row form-group">
 						<label for="subjectName" class="col-4 col-form-label">
 							Subject
@@ -98,10 +98,10 @@
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button class="btn btn-primary" *ngIf="!editForm">
+						<button class="btn btn-primary" *ngIf="!editForm" (click)="onCreateSubject()">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Subject
 						</button>
-						<button class="btn btn-primary" *ngIf="editForm">
+						<button class="btn btn-primary" *ngIf="editForm" (click)="onSaveEdit()">
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
 						</button>
 						<rd-confirmable-button *ngIf="editForm">
@@ -114,7 +114,7 @@
 			</rd-card>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Subject in Phase List'">
+			<rd-card [cardTitle]="'Subject in Phase List'" [isLoading]="subjectListLoading$|async">
 				<div class="row form-group">
 					<!-- <div class="col-6">
 						<ng-select
@@ -151,7 +151,7 @@
 					</thead>
 					<tbody>
 						<tr *ngIf="(subjects$ | async)?.length === 0">
-							<td colspan="4">No subject yet</td>
+							<td colspan="3">No subject yet</td>
 						</tr>
 						<tr
 							*ngFor="let subject of subjects$ | async"

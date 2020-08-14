@@ -2,6 +2,14 @@
 	<div class="row">
 		<div class="col-4">
 			<rd-card [cardTitle]="editForm ? 'Edit Schedule' : 'Insert New Schedule'">
+        <div rdCardBadges class="" *ngIf="editForm">
+					<button
+						class="btn btn-sm btn-secondary mr-1"
+						(click)="onCancelEdit()"
+					>
+						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
+					</button>
+				</div>
 				<form>
 					<!-- <div class="row form-group">
 						<label for="selectPhaseType" class="col-4 col-form-label"
@@ -66,9 +74,9 @@
 									name="scheduleTypeRadio"
 									class="custom-control-input"
 								/>
-								<label class="custom-control-label" for="dailyRadio"
-									>Daily</label
-								>
+								<label class="custom-control-label" for="dailyRadio">
+									Daily
+								</label>
 							</div>
 							<div class="custom-control custom-radio">
 								<input
@@ -77,36 +85,56 @@
 									name="scheduleTypeRadio"
 									class="custom-control-input"
 								/>
-								<label class="custom-control-label" for="specificRadio"
-									>Specific</label
-								>
+								<label class="custom-control-label" for="specificRadio">
+									Specific
+								</label>
 							</div>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="endDate" class="col-4 col-form-label"
-							>Schedule Name</label
-						>
+						<label for="endDate" class="col-4 col-form-label">
+              Schedule Name
+            </label>
 						<div class="col">
 							<input type="text" class="form-control" name="scheduleName" />
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="endDate" class="col-4 col-form-label"
-							>Schedule Count</label
-						>
+						<label for="endDate" class="col-4 col-form-label">
+              Schedule Count
+            </label>
 						<div class="col">
 							<input type="number" class="form-control" name="scheduleCount" />
 						</div>
 					</div>
-					<div class="row justify-content-around">
+					<!-- <div class="row justify-content-around">
 						<button class="btn btn-primary">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert Schedule
 						</button>
+          </div> -->
+					<div class="row justify-content-around mt-2">
+						<button type="submit" class="btn btn-primary" *ngIf="!editForm">
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create
+						</button>
+						<button
+							class="btn btn-primary"
+							(click)="onClick()"
+							*ngIf="editForm"
+						>
+							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
+						</button>
+						<rd-confirmable-button
+							*ngIf="editForm"
+							(confirm)="onDeleteSchedule()"
+						>
+							<button class="btn btn-danger">
+								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+							</button>
+						</rd-confirmable-button>
 					</div>
 				</form>
 			</rd-card>
-			<rd-card [cardTitle]="'Trainee in Schedule'">
+			<rd-card [cardTitle]="'Insert Trainee in Schedule'">
 				<form>
 					<!-- <div class="row form-group">
 						<label for="selectphaseType" class="col-4 col-form-label"
@@ -165,7 +193,7 @@
 							<ng-select
 								id="selectSchedule"
 								name="selectSchedule"
-								[items]="(schedules$ | async)"
+								[items]="schedules$ | async"
 								[clearable]="false"
 								[bindLabel]="'ScheduleName'"
 								[bindValue]="'ScheduleId'"
@@ -196,7 +224,10 @@
 			</rd-card>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Trainee In Phase'">
+			<rd-card
+				[cardTitle]="'Schedule in Subject'"
+				[isLoading]="scheduleInSubjectLoading$ | async"
+			>
 				<div class="row form-group">
 					<!-- <div class="col">
 						<ng-select
@@ -252,7 +283,7 @@
 								<td colspan="6">No schedules yet</td>
 							</tr>
 							<tr
-								*ngFor="let schedule of (schedules$ | async)"
+								*ngFor="let schedule of schedules$ | async"
 								class="cursor-pointer"
 								(click)="onSelectSchedule(schedule)"
 							>
@@ -267,7 +298,10 @@
 					</table>
 				</div>
 			</rd-card>
-			<rd-card [cardTitle]="'Trainee In Phase'">
+			<rd-card
+				[cardTitle]="'Trainee In Schedule'"
+				[isLoading]="traineeInScheduleLoading$ | async"
+			>
 				<div class="row form-group">
 					<!-- <div class="col">
 						<ng-select
@@ -309,7 +343,7 @@
 						<ng-select
 							id="selectSchedule"
 							name="selectSchedule"
-							[items]="(schedules$ | async)"
+							[items]="schedules$ | async"
 							[clearable]="false"
 							[bindLabel]="'ScheduleName'"
 							[bindValue]="'ScheduleId'"
@@ -332,7 +366,7 @@
 							<tr *ngIf="(traineeInSchedule$ | async)?.length === 0">
 								<td colspan="4">No trainees in this schedule</td>
 							</tr>
-							<tr *ngFor="let trainee of (traineeInSchedule$ | async)">
+							<tr *ngFor="let trainee of traineeInSchedule$ | async">
 								<td>{{ trainee.TraineeCode }}</td>
 								<td>{{ trainee.TraineeNumber }}</td>
 								<td>{{ trainee.TraineeName }}</td>

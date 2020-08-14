@@ -16,7 +16,8 @@ import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
 import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
 import { filter, takeUntil, map, tap, first } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
-import { NgModel } from '@angular/forms';
+import { NgModel, NgForm } from '@angular/forms';
+import { SymbolConstant } from 'src/app/shared/constants/symbol.constant';
 
 @Component({
 	selector: 'rd-manage-subject',
@@ -26,12 +27,16 @@ import { NgModel } from '@angular/forms';
 })
 export class ManageSubjectComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {
-	public subjectsLoading$: Observable<boolean>;
+	public subjectListLoading$: Observable<boolean>;
 	public subjects$: Observable<ClientSubject[]>;
 	public phases$: Observable<ClientPhase[]>;
 	// public phaseTypes$: Observable<any>;
 
-	public subjects: ClientSubject[];
+  public subjects: ClientSubject[];
+  
+  readonly constant = {
+    symbol: SymbolConstant
+  }
 
 	public size = [
 		{ key: 'byte', val: 1 },
@@ -53,18 +58,16 @@ export class ManageSubjectComponent extends DashboardContentBase
 		action: ActionsSubject
 	) {
 		super(action);
-	}
+  }
+  
 	ngOnInit(): void {
-		// this.phases = MockData.GetPhasesCurrentGeneration.map(ClientPhase.fromJson);
-		// this.subjects = MockData.GetSubjectListByPhase.map(ClientSubject.fromJson);
-		// this.phaseTypes$ = this.store.pipe(select(fromMasterState.getPhaseTypes));
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
-		this.subjectsLoading$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
-
-    this.subjects$.pipe(
-      
-    )
+    this.subjectListLoading$ = this.store.pipe(
+      select(fromMasterState.getMasterState),
+      map(v => v.loadingPhases || v.loadingSubjects)
+    );
+    
 		this.phases$
 			.pipe(
 				filter((v) => !isEmpty(v)),
@@ -74,7 +77,6 @@ export class ManageSubjectComponent extends DashboardContentBase
 						MasterStateAction.FetchSubjects({ phaseId: v[0].PhaseId })
 					)
 				),
-				first() // temporary: only auto load in first reload
 			)
 			.subscribe();
 	}
@@ -83,20 +85,7 @@ export class ManageSubjectComponent extends DashboardContentBase
 		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
-	// refreshPhases(){
-	//   this.generalService.GetPhasesCurrentGeneration().subscribe( res => {
-	//     this.phases = res;
-	//     this.currentPhase = res[0];
-	//     this.refreshSubject();
-	//   })
-	// }
-
-	// refreshSubject(){
-	//   this.generalService.GetSubjects(this.currentPhase.PhaseId).subscribe( res => {
-
-	//   })
-	// }
-
+  
 	convertFileSize(size, currentInput: NgModel) {
 		// val
 		currentInput.control.setValue(
@@ -110,17 +99,28 @@ export class ManageSubjectComponent extends DashboardContentBase
 		this.currentSize = this.size[0];
 	}
 
-	// onChangePhaseType(phaseType) {
-	//   // fetch phase
-	// }
-
 	onChangePhase(phase: ClientPhase) {
 		this.store.dispatch(
 			MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId })
 		);
-	}
+  }
+  
+  onCreateSubject(form: NgForm){
+    const {subjectName, maxFileSize, selectFileSize, selectPhase, hasPresentation} = form.value
+    this.store.dispatch(MasterStateAction.CreateSubject({
+      name: subjectName,
+      phaseId: selectPhase,
+      value: hasPresentation,
+      maxFileSize: maxFileSize * selectFileSize.val
+    }))
+    
+  }
 
 	onCancelEdit() {
 		this.editForm = null;
-	}
+  }
+  
+  onSaveEdit(){
+
+  }
 }

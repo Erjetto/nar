@@ -20,7 +20,7 @@ import * as fromCaseState from 'src/app/shared/stores/case/case.reducer';
 import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
 import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
 
-import { take, filter, tap, first, switchMap, takeUntil } from 'rxjs/operators';
+import { take, filter, tap, first, switchMap, takeUntil, map } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { isEmpty } from 'lodash';
 import { ObservableHelper } from 'src/app/shared/utilities/observable-helper';
@@ -60,7 +60,11 @@ export class ManageCaseComponent extends DashboardContentBase
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
 		this.schedules$ = this.store.pipe(select(fromMasterState.getSchedules));
-    this.manageCaseLoading$ = this.store.pipe(select(fromMasterState.isManageCaseLoading));
+    this.manageCaseLoading$ = this.store.pipe(
+      // select(fromMasterState.isManageCaseLoading),
+      select(fromMasterState.getMasterState),
+      map(v => v.loadingPhases || v.loadingSubjects || v.loadingSchedules)
+    );
     
 		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
 		this.caseListLoading$ = this.store.pipe(select(fromCaseState.getCasesLoading));
