@@ -4,6 +4,13 @@
 // Solution?
 
 .dark-theme {
+  
+
+	// .dashboard__content {
+		background-color: $content-bg-color-dark !important;
+		color: $text-color-dark !important;
+  // }
+  
 	header,
 	nav,
 	.form-control,
@@ -57,9 +64,9 @@
 		box-shadow: 0px 2px 3px 0px
 			lighten($color: $header-bg-color-dark, $amount: 15%) !important;
 	}
-
-	.dashboard__content {
-		background-color: $content-bg-color-dark !important;
-		color: $text-color-dark !important;
-	}
 }
+
+// .body:has(> rd-root > .dark-theme){
+//   background-color: $content-bg-color-dark !important;
+//   color: $text-color-dark !important;
+// }

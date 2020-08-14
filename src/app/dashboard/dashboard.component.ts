@@ -32,7 +32,9 @@ import { UserService } from '../shared/services/user.service';
 export class DashboardComponent implements OnInit, OnDestroy {
 	@HostBinding('class') hostClass = 'd-flex flex-column';
 
-  @HostBinding('class.dark-theme') isDark = true;
+  // @HostBinding('class.dark-theme') isDark = true;
+  public isDark = true;
+  
   
 	public destroyed$ = new Subject<void>();
 
@@ -59,6 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
     private store: Store<IAppState>,
 	) {
+    this.toggleGreyMode(true);
 		// Temporary
 		// Get user from user service later
 		this.user.Role = Role.fromName(RoleFlags.AssistantSupervisor);
@@ -108,7 +111,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				);
 			});
 		}
-	}
+  }
+  
+  toggleGreyMode(to?: boolean){
+    this.isDark = to != null ? to : !this.isDark;
+    
+    if(this.isDark)
+      document.body.classList.add('dark-theme')
+    else 
+      document.body.classList.remove('dark-theme')
+  }
 
 	ngOnDestroy(): void {
 		this.destroyed$.next();
