@@ -32,11 +32,11 @@ export class ManageSubjectComponent extends DashboardContentBase
 	public phases$: Observable<ClientPhase[]>;
 	// public phaseTypes$: Observable<any>;
 
-  public subjects: ClientSubject[];
-  
-  readonly constant = {
-    symbol: SymbolConstant
-  }
+	public subjects: ClientSubject[];
+
+	readonly constant = {
+		symbol: SymbolConstant,
+	};
 
 	public size = [
 		{ key: 'byte', val: 1 },
@@ -58,25 +58,23 @@ export class ManageSubjectComponent extends DashboardContentBase
 		action: ActionsSubject
 	) {
 		super(action);
-  }
-  
+	}
+
 	ngOnInit(): void {
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
-    this.subjectListLoading$ = this.store.pipe(
-      select(fromMasterState.getMasterState),
-      map(v => v.loadingPhases || v.loadingSubjects)
-    );
-    
+		this.subjectListLoading$ = this.store.pipe(
+			select(fromMasterState.getMasterState),
+			map((v) => v.loadingPhases || v.loadingSubjects)
+		);
+
+		// Auto fetch subject when fetched phase
 		this.phases$
 			.pipe(
 				filter((v) => !isEmpty(v)),
-				takeUntil(this.destroyed$),
-				map((v) =>
-					this.store.dispatch(
-						MasterStateAction.FetchSubjects({ phaseId: v[0].PhaseId })
-					)
-				),
+				// takeUntil(this.destroyed$),
+				map((v) => this.onChangePhase(v[0])),
+				first() // Only in first fetch
 			)
 			.subscribe();
 	}
@@ -85,7 +83,6 @@ export class ManageSubjectComponent extends DashboardContentBase
 		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
-  
 	convertFileSize(size, currentInput: NgModel) {
 		// val
 		currentInput.control.setValue(
@@ -103,24 +100,30 @@ export class ManageSubjectComponent extends DashboardContentBase
 		this.store.dispatch(
 			MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId })
 		);
-  }
-  
-  onCreateSubject(form: NgForm){
-    const {subjectName, maxFileSize, selectFileSize, selectPhase, hasPresentation} = form.value
-    this.store.dispatch(MasterStateAction.CreateSubject({
-      name: subjectName,
-      phaseId: selectPhase,
-      value: hasPresentation,
-      maxFileSize: maxFileSize * selectFileSize.val
-    }))
+	}
+
+	onCreateSubject(form: NgForm) {
+		const {
+			subjectName,
+			maxFileSize,
+			selectFileSize,
+			selectPhase,
+			hasPresentation,
+    } = form.value;
     
-  }
+		this.store.dispatch(
+			MasterStateAction.CreateSubject({
+				name: subjectName,
+				phaseId: selectPhase,
+				value: hasPresentation,
+				maxFileSize: maxFileSize * selectFileSize.val,
+			})
+		);
+	}
 
 	onCancelEdit() {
 		this.editForm = null;
-  }
-  
-  onSaveEdit(){
+	}
 
-  }
+	onSaveEdit() {}
 }

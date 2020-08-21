@@ -54,6 +54,7 @@ export class ManageScheduleComponent extends DashboardContentBase
 	}
 
 	ngOnInit(): void {
+    //#region bind to store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
 		this.schedules$ = this.store.pipe(select(fromMasterState.getSchedules));
@@ -66,7 +67,8 @@ export class ManageScheduleComponent extends DashboardContentBase
 		this.scheduleInSubjectLoading$ = this.store.pipe(
 			select(fromMasterState.getMasterState),
 			map((v) => v.loadingPhases || v.loadingSubjects || v.loadingSchedules)
-		);
+    );
+    //#endregion
 		
 		//#region auto fetch new subject,schedule & trainee when fetch
 		this.phases$

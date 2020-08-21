@@ -98,7 +98,7 @@
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button class="btn btn-primary" *ngIf="!editForm" (click)="onCreateSubject()">
+						<button class="btn btn-primary" *ngIf="!editForm" (click)="onCreateSubject(subjectForm)">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Subject
 						</button>
 						<button class="btn btn-primary" *ngIf="editForm" (click)="onSaveEdit()">

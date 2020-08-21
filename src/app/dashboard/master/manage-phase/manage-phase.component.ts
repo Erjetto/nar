@@ -63,17 +63,13 @@ export class ManagePhaseComponent extends DashboardContentBase
 			select(fromMasterState.isTraineeInPhaseLoading)
 		);
 
-		// load phase then load trainee
+		// Auto fetch traineeInPhase when fetched phase
 		this.phases$
 			.pipe(
 				filter((v) => !isEmpty(v)),
-				takeUntil(this.destroyed$),
-				map((v) =>
-					this.store.dispatch(
-						MasterStateAction.FetchTraineeInPhase({ phaseId: v[0].PhaseId })
-					)
-				),
-				first() // temporary: only auto load in first reload
+				// takeUntil(this.destroyed$),
+				map((v) => this.onChangePhase(v[0])),
+				first() // Only in first fetch
 			)
 			.subscribe();
 	}
@@ -93,7 +89,7 @@ export class ManagePhaseComponent extends DashboardContentBase
 
 	submitPhaseForm(form: NgForm) {
 		const { name, beginDate, endDate, type } = form.controls;
-		if (this.editForm)
+		if (this.editForm == null) 
 			this.store.dispatch(
 				MasterStateAction.CreatePhase({
 					name: name.value,
@@ -131,14 +127,14 @@ export class ManagePhaseComponent extends DashboardContentBase
   //   );
   // }
 
+	onSelectPhase(phase) {
+		this.editForm = phase;
+	}
+
 	onChangePhase(phase: ClientPhase) {
 		this.store.dispatch(
 			MasterStateAction.FetchTraineeInPhase({ phaseId: phase.PhaseId })
 		);
-	}
-
-	onSelectPhase(phase) {
-		this.editForm = phase;
 	}
 
 	onDeletePhase() {
