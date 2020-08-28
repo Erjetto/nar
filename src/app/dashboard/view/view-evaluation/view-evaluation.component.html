@@ -6,7 +6,13 @@
 					'View Evaluation - ' + (currentDate | date: viewDateFormat)
 				"
 			>
-				Datepicker here...
+				<input
+					class="form-control"
+					type="date"
+          name="evaluationDate"
+          [ngModel]="currentDate | date:'yyyy-MM-dd'"
+					(change)="viewEvaluationOnDate($event)"
+				/>
 			</rd-card>
 		</div>
 	</div>
@@ -57,15 +63,17 @@
 							</div>
 							<div class="col-1">
 								<button class="btn btn-primary">
-									{{true ? '&nabla;' : '&Delta;'}}
+									{{ true ? '&nabla;' : '&Delta;' }}
 								</button>
 							</div>
 							<div class="col">
-                <div class="row justify-content-around">
-                  <button class="btn btn-primary" [class.active]="true">Date</button>
-                  <button class="btn btn-primary">Author</button>
-                  <button class="btn btn-primary">Type</button>
-                </div>
+								<div class="row justify-content-around">
+									<button class="btn btn-primary" [class.active]="true">
+										Date
+									</button>
+									<button class="btn btn-primary">Author</button>
+									<button class="btn btn-primary">Type</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -138,8 +146,7 @@
 										<div class="row">
 											<div class="col">
 												<!-- *ngIf="note.IsDeleteAble" -->
-                        <rd-confirmable-button
-                         *ngIf="note.IsDeleteAble">
+												<rd-confirmable-button *ngIf="note.IsDeleteAble">
 													<!-- (confirm)="deleteNote(note)" -->
 													<button class="btn btn-danger">
 														<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>

@@ -26,6 +26,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
   constructor(private store: Store<IAppState>, action: ActionsSubject,) { super(action); }
 
   ngOnInit(): void {
+    
     this.todaysPresentation = MockData.GetPresentationReportDetailByDate.map(TraineePresentation.fromJson);
     this.attendanceReport = ClientTraineeAttendanceReport.fromJson(MockData.GetTraineeAttendances);
     this.evaluations = ClientEvaluation.fromJson(MockData.GetEvaluation)
@@ -33,6 +34,12 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 
   onSelectPresentation(row: TraineePresentation){
 
+  }
+
+  viewEvaluationOnDate(input: Event){
+    const date = input.target['value'];
+    console.log(date);
+    
   }
 
 }

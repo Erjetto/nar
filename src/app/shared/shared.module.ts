@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
@@ -23,6 +23,7 @@ import { ClickStopPropagationDirective } from './directives/click-stop-propagati
 import { ConfirmableButtonComponent } from './components/confirmable-button/confirmable-button.component';
 import { ContrastTextColorDirective } from './directives/contrast-text-color.directive';
 import { EasyHorizontalSrollDirective } from './directives/easy-horizontal-sroll.directive';
+import { PresentationQuestionComponent } from './component/presentation-question/presentation-question.component';
 
 const SHARED_DECLARATIONS = [
 	// Shared components, pipes, and directives, ex: SearchComponent, CurrencyPipe
@@ -31,6 +32,7 @@ const SHARED_DECLARATIONS = [
   ToasterComponent,
   ModalComponent, 
   ConfirmableButtonComponent,
+  PresentationQuestionComponent,
 
   ClickStopPropagationDirective,
   ContrastTextColorDirective,
@@ -42,7 +44,8 @@ const SHARED_DECLARATIONS = [
 	imports: [
 		FontAwesomeModule,
 		CommonModule,
-		FormsModule,
+    FormsModule,
+    ReactiveFormsModule,
 		HttpClientModule,
     RouterModule,
     NgSelectModule,
@@ -52,6 +55,7 @@ const SHARED_DECLARATIONS = [
 		FontAwesomeModule,
 		CommonModule,
 		FormsModule,
+    ReactiveFormsModule,
 		HttpClientModule,
 		RouterModule,
     NgSelectModule,

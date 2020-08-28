@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-4">
 			<rd-card [cardTitle]="editForm ? 'Edit Schedule' : 'Insert New Schedule'">
-        <div rdCardBadges class="" *ngIf="editForm">
+				<div rdCardBadges class="" *ngIf="editForm">
 					<button
 						class="btn btn-sm btn-secondary mr-1"
 						(click)="onCancelEdit()"
@@ -10,7 +10,7 @@
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
-				<form>
+				<form #scheduleForm="ngForm">
 					<!-- <div class="row form-group">
 						<label for="selectPhaseType" class="col-4 col-form-label"
 							>Phase Type</label
@@ -73,6 +73,9 @@
 									id="dailyRadio"
 									name="scheduleTypeRadio"
 									class="custom-control-input"
+									value="daily"
+									ngModel
+									#scheduleTypeRadio="ngModel"
 								/>
 								<label class="custom-control-label" for="dailyRadio">
 									Daily
@@ -84,6 +87,9 @@
 									id="specificRadio"
 									name="scheduleTypeRadio"
 									class="custom-control-input"
+									value="specific"
+									ngModel
+									#scheduleTypeRadio="ngModel"
 								/>
 								<label class="custom-control-label" for="specificRadio">
 									Specific
@@ -92,19 +98,170 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="endDate" class="col-4 col-form-label">
-              Schedule Name
-            </label>
+						<label for="scheduleName" class="col-4 col-form-label">
+							Schedule Name
+						</label>
 						<div class="col">
 							<input type="text" class="form-control" name="scheduleName" />
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="endDate" class="col-4 col-form-label">
-              Schedule Count
-            </label>
+						<label for="scheduleCount" class="col-4 col-form-label">
+							Schedule Count
+						</label>
+						<div class="col-3">
+							<input
+								type="number"
+								class="form-control"
+								name="scheduleCount"
+								[(ngModel)]="scheduleCount"
+								(change)="updateMeetingForm()"
+							/>
+						</div>
 						<div class="col">
-							<input type="number" class="form-control" name="scheduleCount" />
+							<div class="custom-control custom-checkbox">
+								<input
+									type="checkbox"
+									id="canSelfRegisterCheck"
+									name="canSelfRegisterCheck"
+									class="custom-control-input"
+									value="canSelfRegister"
+								/>
+								<label class="custom-control-label" for="canSelfRegisterCheck">
+									Can Self-Register
+								</label>
+							</div>
+						</div>
+					</div>
+					<div
+						class="row form-group"
+						*ngIf="scheduleTypeRadio.value === 'specific'"
+					>
+						<label for="scheduleStart" class="col-4 col-form-label">
+							Start
+						</label>
+						<div class="col">
+							<input type="date" class="form-control" name="scheduleStart" />
+						</div>
+					</div>
+					<div
+						class="row form-group"
+						*ngIf="scheduleTypeRadio.value === 'specific'"
+					>
+						<label class="col-4 col-form-label">
+							End
+						</label>
+						<div class="col">
+							<input type="date" class="form-control" name="scheduleEnd" />
+						</div>
+					</div>
+					<div
+						class="row form-group"
+						*ngIf="scheduleTypeRadio.value === 'specific'"
+					>
+						<label class="col-3 col-form-label">
+							Meeting per week
+						</label>
+						<div class="col-3">
+							<input
+								type="number"
+								class="form-control"
+								name="meetingPerWeek"
+								[(ngModel)]="meetingPerWeek"
+								(change)="updateMeetingForm()"
+							/>
+						</div>
+						<label class="col-3 col-form-label">
+							Variations
+						</label>
+						<div class="col-3">
+							<input
+								type="number"
+								class="form-control"
+								name="variations"
+								[(ngModel)]="variations"
+								(change)="updateMeetingForm()"
+							/>
+						</div>
+					</div>
+					<div
+						class="v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8 p-2"
+						*ngIf="meetings.length > 0"
+					>
+						<div *ngFor="let meeting of meetings">
+							<h6>
+								Meeting {{ meeting.MeetingNo + 1 }} - Var
+								{{ meeting.VariationNo + 1 }}
+							</h6>
+							<div class="row" *ngFor="let detail of meeting.Detail">
+								<div class="row form-group">
+									<label class="col-4 col-form-label col-form-label-sm">
+										Date
+									</label>
+									<div class="col">
+										<input
+											type="date"
+											class="form-control form-control-sm"
+											[(ngModel)]="detail.ScheduleDate"
+											[ngModelOptions]="{ standalone: true }"
+										/>
+									</div>
+								</div>
+								<div class="row form-group">
+									<label class="col-4 col-form-label col-form-label-sm">
+										Shift
+									</label>
+									<div class="col-3">
+										<input
+											type="number"
+											class="form-control form-control-sm"
+											value="1"
+											min="1"
+											max="7"
+											[(ngModel)]="detail.ShiftStart"
+											[ngModelOptions]="{ standalone: true }"
+										/>
+									</div>
+									<label class="col-2 col-form-label col-form-label-sm">
+										Until:
+									</label>
+									<div class="col-3">
+										<input
+											type="number"
+											class="form-control form-control-sm"
+											value="1"
+											min="1"
+											max="7"
+											[(ngModel)]="detail.ShiftEnd"
+											[ngModelOptions]="{ standalone: true }"
+										/>
+									</div>
+								</div>
+							</div>
+							<div class="row form-group">
+								<label class="col-4 col-form-label col-form-label-sm">
+									Room
+								</label>
+								<div class="col">
+									<input
+										class="form-control form-control-sm"
+										[(ngModel)]="meeting.Room"
+										[ngModelOptions]="{ standalone: true }"
+									/>
+								</div>
+							</div>
+							<div class="row form-group">
+								<label class="col-4 col-form-label col-form-label-sm">
+									Capacity
+								</label>
+								<div class="col">
+									<input
+										class="form-control form-control-sm"
+										[(ngModel)]="meeting.Capacity"
+										[ngModelOptions]="{ standalone: true }"
+									/>
+								</div>
+							</div>
 						</div>
 					</div>
 					<!-- <div class="row justify-content-around">
@@ -113,7 +270,11 @@
 						</button>
           </div> -->
 					<div class="row justify-content-around mt-2">
-						<button type="submit" class="btn btn-primary" *ngIf="!editForm">
+						<button
+							class="btn btn-primary"
+							*ngIf="!editForm"
+							(click)="submitScheduleForm(scheduleForm)"
+						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create
 						</button>
 						<button
@@ -251,6 +412,7 @@
 							[bindValue]="'PhaseId'"
 							[searchable]="false"
 							[ngModel]="(phases$ | async)[0]?.PhaseId"
+							(change)="onChangePhase($event)"
 						></ng-select>
 					</div>
 					<div class="col">
@@ -263,6 +425,7 @@
 							[bindValue]="'SubjectId'"
 							[searchable]="false"
 							[ngModel]="(subjects$ | async)[0]?.SubjectId"
+							(change)="onChangeSubject($event)"
 						></ng-select>
 					</div>
 				</div>
@@ -315,7 +478,7 @@
 							[ngModel]="phaseTypes[0].key"
 						></ng-select>
 					</div> -->
-					<div class="col">
+					<!-- <div class="col">
 						<ng-select
 							id="selectPhase"
 							name="selectPhase"
@@ -338,8 +501,8 @@
 							[searchable]="false"
 							[ngModel]="(subjects$ | async)[0]?.SubjectId"
 						></ng-select>
-					</div>
-					<div class="col">
+					</div> -->
+					<div class="col-6">
 						<ng-select
 							id="selectSchedule"
 							name="selectSchedule"
@@ -349,6 +512,7 @@
 							[bindValue]="'ScheduleId'"
 							[searchable]="false"
 							[ngModel]="(schedules$ | async)[0]?.ScheduleId"
+							(change)="onChangeSchedule($event)"
 						></ng-select>
 					</div>
 				</div>

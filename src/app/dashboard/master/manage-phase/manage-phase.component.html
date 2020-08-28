@@ -28,11 +28,10 @@
             </label>
 						<div class="col">
 							<input
-								type="text"
+								type="date"
 								class="form-control"
 								name="beginDate"
 								[ngModel]="editForm?.BeginDate | date: editDateFormat"
-								placeholder="yyyy-mm-dd"
 							/>
 						</div>
 					</div>
@@ -40,11 +39,10 @@
 						<label for="endDate" class="col-4 col-form-label">End Date</label>
 						<div class="col">
 							<input
-								type="text"
+								type="date"
 								class="form-control"
 								name="endDate"
 								[ngModel]="editForm?.EndDate | date: editDateFormat"
-								placeholder="yyyy-mm-dd"
 							/>
 						</div>
 					</div>

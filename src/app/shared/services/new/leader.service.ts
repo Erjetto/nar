@@ -167,12 +167,17 @@ export class LeaderService {
 		return of(true).pipe(delay(500));
   }
   
-  public SaveSchedule(data: {
-    scheduleDates: string[]; // yyyy-mm-dd
+  public SaveSpecificSchedule(data: {
+		subjectId: string;
+		scheduleType: string;
+		scheduleCount: number;
     scheduleName: string;
-    subjectId: string;
+    dataSchedule: any;
+    start: string;
+    end: string;
+    excTrainee: string[];
   }){
-		// return this.httpClient.post(this.baseUrl + 'SaveSubject', data)
+		// return this.httpClient.post(this.baseUrl + 'SaveSpecificSchedule', data) // checked
 		return of(true).pipe(delay(500));
   }
   

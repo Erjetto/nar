@@ -595,8 +595,8 @@ export class DataHistory extends BaseModel {
 export class CoreTrainingPresentationQuestion extends BaseModel {
 	constructor(
 		public Question: CoreTrainingPresentationItem = null,
+		public Answers: CoreTrainingPresentationItem[] = [],
 		public AcceptedAnswerId = '',
-		public Answers = '',
 		public DeadlinePassed = '',
 		public Status = '',
 		public StatusBy = ''
@@ -607,7 +607,21 @@ export class CoreTrainingPresentationQuestion extends BaseModel {
 	static fromJson(data: any): CoreTrainingPresentationQuestion {
 		return Object.assign(new CoreTrainingPresentationQuestion(), data, {
 			Question: CoreTrainingPresentationItem.fromJson(data.Question),
+			Answers: map(data.Answers, CoreTrainingPresentationItem.fromJson)
 		});
+	}
+}
+
+export class CoreTrainingPresentationQuestionSummary extends BaseModel {
+	constructor(
+		public Question = '',
+		public Subject = ''
+	) {
+		super();
+	}
+
+	static fromJson(data: any): CoreTrainingPresentationQuestionSummary {
+		return Object.assign(new CoreTrainingPresentationQuestionSummary(), data);
 	}
 }
 

@@ -122,7 +122,8 @@ export class ManageCaseComponent extends DashboardContentBase
 		// this.isEditing = true;
 		this.caseForm = row;
 		// this.insertCaseCard.cardTitle = 'Edit/View Case';
-		// this.insertCaseCard.toggleMinimized(false);
+    // this.insertCaseCard.toggleMinimized(false);
+    
 	}
 
 	onCancelEdit() {
