@@ -119,13 +119,22 @@ export const CreateSubject = createAction(
 	props<{
 		name: string;
 		phaseId: string;
-    value: boolean;
-    maxFileSize: number;
+		value: boolean;
+		maxFileSize: number;
 	}>()
 );
 export const CreateSchedule = createAction(
 	'[MasterState] CreateSchedules',
-	props<{ subjectId: string }>()
+	props<{
+		subjectId: string;
+		scheduleType: string;
+		scheduleCount: number;
+    scheduleName: string;
+    dataSchedule: any;
+    start: string;
+    end: string;
+    excTrainee: string[];
+	}>()
 );
 export const CreateTraineeInSchedule = createAction(
 	'[MasterState] CreateTraineeInSchedule',
