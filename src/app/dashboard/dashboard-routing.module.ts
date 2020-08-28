@@ -27,15 +27,18 @@ import { ModifyAnnouncementComponent } from './modify/modify-announcement/modify
 import { ModifyMaterialComponent } from './modify/modify-material/modify-material.component';
 import { ModifyInterviewScheduleComponent } from './modify/modify-interview-schedule/modify-interview-schedule.component';
 import { ModifyInterviewMaterialComponent } from './modify/modify-interview-material/modify-interview-material.component';
+import { ScoringComponent } from './presentation/scoring/scoring.component';
+import { ViewAllQuestionComponent } from './presentation/view-all-question/view-all-question.component';
+import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
 
 export const routes: Routes = [
 	{
 		path: '',
 		component: DashboardComponent,
 		// canActivate: [AuthGuard, RoleGuard],
-    // canActivateChild: [AuthGuard, RoleGuard],
-    // Data for MenuService to prevent Circular import
-		data: { isRootMenu: true }, 
+		// canActivateChild: [AuthGuard, RoleGuard],
+		// Data for MenuService to prevent Circular import
+		data: { isRootMenu: true },
 		children: [
 			{
 				path: '',
@@ -49,76 +52,91 @@ export const routes: Routes = [
 			},
 			{
 				path: Endpoints.MASTER,
-        data: { name: 'Master' },
-        children: [
-          {
-            path: 'generation',
-            component: ManageGenerationComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Generation' },
-          },
-          // {
-          //   path: 'trainee',
-          //   component: managetr,
-          //   data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee' },
-          // },
-          {
-            path: 'phase',
-            component: ManagePhaseComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Phase' },
-          },
-          {
-            path: 'subject',
-            component: ManageSubjectComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Subject' },
-          },
-          {
-            path: 'schedule',
-            component: ManageScheduleComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Schedule' },
-          },
-          {
-            path: 'interview-questions',
-            component: ManageInterviewQuestionComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Interview Questions' },
-          },
-          {
-            path: 'user-roles',
-            component: ManageUserRoleComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'User Roles' },
-          },
-          {
-            path: 'attendance-ip-list',
-            component: ManageAttendanceIpListComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Attendance IP List' },
-          },
-        ]
-			} ,
+				data: { name: 'Master' },
+				children: [
+					{
+						path: 'generation',
+						component: ManageGenerationComponent,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'Generation' },
+					},
+					// {
+					//   path: 'trainee',
+					//   component: managetr,
+					//   data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee' },
+					// },
+					{
+						path: 'phase',
+						component: ManagePhaseComponent,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'Phase' },
+					},
+					{
+						path: 'subject',
+						component: ManageSubjectComponent,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'Subject' },
+					},
+					{
+						path: 'schedule',
+						component: ManageScheduleComponent,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'Schedule' },
+					},
+					{
+						path: 'interview-questions',
+						component: ManageInterviewQuestionComponent,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Interview Questions',
+						},
+					},
+					{
+						path: 'user-roles',
+						component: ManageUserRoleComponent,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'User Roles' },
+					},
+					{
+						path: 'attendance-ip-list',
+						component: ManageAttendanceIpListComponent,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Attendance IP List',
+						},
+					},
+				],
+			},
 			{
 				path: Endpoints.MODIFY,
-        data: { name: 'Modify' },
-        children: [
-          {
-            path: 'announcement',
-            component: ModifyAnnouncementComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Announcement' },
-          },
-          {
-            path: 'material',
-            component: ModifyMaterialComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Material' },
-          },
-          {
-            path: 'interview-material',
-            component: ModifyInterviewMaterialComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Interview Material' },
-          },
-          {
-            path: 'interview-schedule',
-            component: ModifyInterviewScheduleComponent,
-            data: { roles: RoleFlags.AssistantSupervisor, name: 'Interview Schedule' },
-          },
-        ]
-      },
+				data: { name: 'Modify' },
+				children: [
+					{
+						path: 'announcement',
+						component: ModifyAnnouncementComponent,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Announcement',
+						},
+					},
+					{
+						path: 'material',
+						component: ModifyMaterialComponent,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'Material' },
+					},
+					{
+						path: 'interview-material',
+						component: ModifyInterviewMaterialComponent,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Interview Material',
+						},
+					},
+					{
+						path: 'interview-schedule',
+						component: ModifyInterviewScheduleComponent,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Interview Schedule',
+						},
+					},
+				],
+			},
 			// {
 			// 	path: 'my-data',
 			// 	component: null,
@@ -228,11 +246,11 @@ export const routes: Routes = [
 							name: 'Top Bottom Vote',
 						},
 					},
-			// 		{
-			// 			path: 'trainee',
-			// 			component: null,
-			// 			data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee' },
-			// 		},
+					// 		{
+					// 			path: 'trainee',
+					// 			component: null,
+					// 			data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee' },
+					// 		},
 				],
 			},
 			// {
@@ -242,69 +260,80 @@ export const routes: Routes = [
 			// 		name: 'Correction',
 			// 	},
 			// },
-			// {
-			// 	path: 'presentation',
-			// 	data: { roles: RoleFlags.Trainee, name: 'Presentation' },
-			// 	children: [
-			// 		{
-			// 			path: 'scoring',
-			// 			component: null,
-			// 			data: {
-			// 				roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
-			// 				name: 'Scoring',
-			// 			},
-			// 		},
-			// 		{
-			// 			path: 'report-detail-summary',
-			// 			component: null,
-			// 			data: {
-			// 				roles: RoleGroups.SENIOR_ROLES,
-			// 				name: 'Report Detail Summary',
-			// 			},
-			// 		},
-			// 		{
-			// 			path: GrouRoleGroup-all-questions',
-			// 			component: null,
-			// 			data: {
-			// 				roles: RoleGroups.SENIOR_ROLES | RoleFlags.Trainee,
-			// 				name: GrouRoleGroup All Questions',
-			// 			},
-			// 		},
-			// 		{
-			// 			path: 'new',
-			// 			component: null,
-			// 			data: { roles: RoleFlags.Trainee, name: 'New Presentations' },
-			// 		},
-			// 		{
-			// 			path: 'my-presentations',
-			// 			component: null,
-			// 			data: { roles: RoleFlags.Trainee, name: 'My Presentations' },
-			// 		},
-			// 		{
-			// 			path: 'question/:generationId/:trainerId/:questionId',
-			// 			component: null,
-			// 			data: {
-			// 				roles:
-			// 					RoleGroups.SENIOR_ROLES |
-			// 					RoleFlags.JuniorTrainer |
-			// 					RoleFlags.Trainee,
-			// 			},
-			// 		},
-			// 		{
-			// 			path: 'report',
-			// 			component: null,
-			// 			data: { roles: RoleGroups.SENIOR_ROLES, name: 'Report' },
-			// 		},
-			// 		{
-			// 			path: 'report-trainer',
-			// 			component: null,
-			// 			data: {
-			// 				roles: RoleFlags.AssistantSupervisor,
-			// 				name: 'Report Trainer',
-			// 			},
-			// 		},
-			// 	],
-			// },
+			{
+				path: 'presentation',
+				data: {
+          roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
+					name: 'Presentation',
+				},
+				children: [
+					{
+						path: 'scoring',
+						component: ScoringComponent,
+						data: {
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
+							name: 'Scoring',
+						},
+					},
+					// {
+					// 	path: 'report-detail-summary',
+					// 	component: null,
+					// 	data: {
+					// 		roles: RoleGroups.SENIOR_ROLES,
+					// 		name: 'Report Detail Summary',
+					// 	},
+					// },
+					{
+						path: 'view-all-presentations',
+						component: ViewAllPresentationComponent,
+						data: {
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Trainee,
+							name: 'View All Presentations',
+						},
+					},
+					{
+						path: 'view-all-questions',
+						component: ViewAllQuestionComponent,
+						data: {
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Trainee,
+							name: 'View All Questions',
+						},
+					},
+					// {
+					// 	path: 'new',
+					// 	component: null,
+					// 	data: { roles: RoleFlags.Trainee, name: 'New Presentations' },
+					// },
+					// {
+					// 	path: 'my-presentations',
+					// 	component: null,
+					// 	data: { roles: RoleFlags.Trainee, name: 'My Presentations' },
+					// },
+					// {
+					// 	path: 'question/:generationId/:trainerId/:questionId',
+					// 	component: null,
+					// 	data: {
+					// 		roles:
+					// 			RoleGroups.SENIOR_ROLES |
+					// 			RoleFlags.JuniorTrainer |
+					// 			RoleFlags.Trainee,
+					// 	},
+					// },
+					// {
+					// 	path: 'report',
+					// 	component: null,
+					// 	data: { roles: RoleGroups.SENIOR_ROLES, name: 'Report' },
+					// },
+					// {
+					// 	path: 'report-trainer',
+					// 	component: null,
+					// 	data: {
+					// 		roles: RoleFlags.AssistantSupervisor,
+					// 		name: 'Report Trainer',
+					// 	},
+					// },
+				],
+			},
 			{
 				path: 'view',
 				data: { name: 'View' },
@@ -399,7 +428,7 @@ export const routes: Routes = [
 			// 			},
 			// 		},
 			// 	],
-      // },
+			// },
 			{
 				path: 'candidate',
 				data: { name: 'Candidate' },

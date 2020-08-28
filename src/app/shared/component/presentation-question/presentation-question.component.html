@@ -1,0 +1,28 @@
+<div class="row">
+	<div class="col-1">
+		xx Answer
+	</div>
+	<div class="col">
+		<div class="row">
+			{{ question.Question.Text }}
+		</div>
+		<div class="row" *ngIf="rightAnswer != null">
+			<p><b>Answered:</b></p>
+			<p>{{ rightAnswer }}</p>
+		</div>
+	</div>
+	<div class="col-2">
+		<div class="row">
+      <!-- TODO: Put ng-container for button -->
+      <ng-content select=".actions"></ng-content>
+		</div>
+		<div class="row">
+      Asked By {{ question.Question.UserName }}
+    </div>
+    <div class="row" 
+      [ngClass]="{ 'text-danger': question.DeadlinePassed }"
+    >
+			{{ presentation.Deadline | date: 'dd MMM yyyy hh:mm' }}
+		</div>
+	</div>
+</div>

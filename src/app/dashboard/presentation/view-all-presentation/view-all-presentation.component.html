@@ -1,0 +1,91 @@
+<div class="container">
+	<div class="row">
+		<div class="col-3">
+			<rd-card [cardTitle]="'Search Presentation'" [isLoading]="false">
+				<div class="col v-list-m-12 v-list-bordered px-0">
+					<div class="row">
+						<ng-select
+							class="col"
+							[items]="phases$ | async"
+							[clearable]="false"
+							[bindLabel]="'Description'"
+							[searchable]="false"
+              [ngModel]="currentPhase$ | async"
+							(change)="currentPhase$.next($event)"
+						></ng-select>
+					</div>
+					<div class="row">
+						<ng-select
+							class="col"
+							[items]="subjects$ | async"
+							[clearable]="false"
+							[bindLabel]="'Name'"
+							[searchable]="false"
+							[ngModel]="currentSubject$ | async"
+							(change)="currentSubject$.next($event)"
+						></ng-select>
+					</div>
+					<div class="row">
+						<ng-select
+							class="col"
+							[items]="trainees$ | async"
+							[clearable]="false"
+							[bindLabel]="'TraineeName'"
+							[searchable]="false"
+							[ngModel]="currentTrainee$ | async"
+							(change)="currentTrainee$.next($event)"
+						></ng-select>
+					</div>
+					<div class="row">
+						<ng-select
+							class="col"
+							[items]="presentationsForTrainee$ | async"
+							[clearable]="false"
+							[bindLabel]="'PresentationNo'"
+							[searchable]="false"
+							[ngModel]="currentPresentation$ | async"
+							(change)="currentPresentation$.next($event)"
+						></ng-select>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card
+				[cardTitle]="'View Presentation'"
+				[expanded]="!!(currentPresentation$ | async)"
+				[collapsible]="false"
+			>
+				<ng-container *ngIf="!!(currentPresentation$ | async)">
+					<div class="row">
+						<div class="col v-list-m-12 v-list-bordered px-0">
+							<div
+								class="row"
+								*ngFor="
+									let question of (currentPresentation$ | async).Questions
+								"
+							>
+								<rd-presentation-question>
+									<!-- TODO: Add role validation here (!= Trainee) -->
+									<div class="actions" *ngIf="true">
+										<rd-confirmable-button
+											(confirm)="onDeleteQuestion(question)"
+										>
+											<button class="btn btn-danger">
+												<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+											</button>
+										</rd-confirmable-button>
+									</div>
+								</rd-presentation-question>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<b>Comment: </b>
+						<div [innerHTML]="(currentPresentation$|async).Questions"></div>
+					</div>
+				</ng-container>
+			</rd-card>
+		</div>
+	</div>
+</div>

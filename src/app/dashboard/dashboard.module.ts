@@ -16,21 +16,36 @@ import {
 	CASESTATE_REDUCER_NAME,
 	CaseStateReducer,
 } from '../shared/stores/case/case.reducer';
+import {
+	MASTERSTATE_REDUCER_NAME,
+	MasterStateReducer,
+} from '../shared/stores/master/master.reducer';
+import {
+	PRESENTATIONSTATE_REDUCER_NAME,
+	PresentationStateReducer,
+} from '../shared/stores/presentation/presentation.reducer';
 const stores = [
 	StoreModule.forFeature(MAINSTATE_REDUCER_NAME, MainStateReducer),
 	StoreModule.forFeature(CASESTATE_REDUCER_NAME, CaseStateReducer),
 	StoreModule.forFeature(CANDIDATE_REDUCER_NAME, CandidateStateReducer),
 	StoreModule.forFeature(MASTERSTATE_REDUCER_NAME, MasterStateReducer),
+	StoreModule.forFeature(
+		PRESENTATIONSTATE_REDUCER_NAME,
+		PresentationStateReducer
+	),
 ];
 
 import { MainStateEffects } from '../shared/stores/main/main.effect';
 import { CandidateStateEffects } from '../shared/stores/candidate/candidate.effect';
 import { CaseStateEffects } from '../shared/stores/case/case.effect';
+import { MasterStateEffects } from '../shared/stores/master/master.effect';
+import { PresentationStateEffects } from '../shared/stores/presentation/presentation.effect';
 const effects = [
 	MainStateEffects,
 	CandidateStateEffects,
 	CaseStateEffects,
 	MasterStateEffects,
+	PresentationStateEffects,
 ];
 
 import { DashboardComponent } from './dashboard.component';
@@ -53,11 +68,9 @@ import { ModifyAnnouncementComponent } from './modify/modify-announcement/modify
 import { ModifyMaterialComponent } from './modify/modify-material/modify-material.component';
 import { ModifyInterviewScheduleComponent } from './modify/modify-interview-schedule/modify-interview-schedule.component';
 import { ModifyInterviewMaterialComponent } from './modify/modify-interview-material/modify-interview-material.component';
-import { MasterStateEffects } from '../shared/stores/master/master.effect';
-import {
-	MASTERSTATE_REDUCER_NAME,
-	MasterStateReducer,
-} from '../shared/stores/master/master.reducer';
+import { ViewAllQuestionComponent } from './presentation/view-all-question/view-all-question.component';
+import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
+import { ScoringComponent } from './presentation/scoring/scoring.component';
 
 @NgModule({
 	declarations: [
@@ -85,6 +98,9 @@ import {
 		ModifyMaterialComponent,
 		ModifyInterviewScheduleComponent,
 		ModifyInterviewMaterialComponent,
+		ViewAllQuestionComponent,
+		ViewAllPresentationComponent,
+		ScoringComponent,
 	],
 	imports: [
 		SharedModule,
