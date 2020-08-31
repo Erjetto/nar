@@ -128,6 +128,15 @@ export class ClientPhase extends BaseModel {
 	}
 }
 
+export class ClientPhaseSimple extends BaseModel {
+	constructor(public Description = '', public PhaseId = '') {
+		super();
+	}
+	static fromJson(data?: any): ClientPhaseSimple {
+		return Object.assign(new ClientPhaseSimple(), data);
+	}
+}
+
 export class ClientSchedule extends BaseModel {
 	constructor(
 		public CanSelfRegister = null,
@@ -382,6 +391,46 @@ export class ClientTraineeDataAttendance extends BaseModel {
 	}
 }
 
+export class ClientPeriodicTraineeAttendance extends BaseModel {
+	constructor(
+    public Trainee:ClientTrainee = null,
+    public Present = 0,
+    public Permission = 0,
+    public Absent = 0,
+    public SecretariatLate = 0,
+    public SecretariatNeglectsIn = 0,
+    public SecretariatNeglectsOut = 0,
+    public RoomLate = 0,
+    public RoomNeglectsIn = 0,
+    public RoomNeglectsOut = 0,
+    public RestLate = 0,
+    public RestNeglectsIn = 0,
+    public RestNeglectsOut = 0,
+    public TotalLate = 0,
+    public TotalNeglects = 0,
+    public PresentDate = '',
+    public PermissionDate = '',
+    public AbsentDate = '',
+    public SecretariatLateDate = '',
+    public SecretariatNeglectInDate = '',
+    public SecretariatNeglectOutDate = '',
+    public RoomLateDate = '',
+    public RoomNeglectInDate = '',
+    public RoomNeglectOutDate = '',
+    public RestLateDate = '',
+    public RestNeglectInDate = '',
+    public RestNeglectOutDate = '',
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientTraineeDataAttendance {
+		return Object.assign(new ClientTraineeDataAttendance(), data, {
+			Trainee: ClientTrainee.fromJson(data?.Trainee)
+		});
+	}
+}
+
+
 export class ClientTraineeView extends BaseModel {
 	constructor(
 		public TraineeCode = '',
@@ -393,6 +442,70 @@ export class ClientTraineeView extends BaseModel {
 	}
 	static fromJson(data?: any): ClientTraineeView {
 		return Object.assign(new ClientTraineeView(), data);
+	}
+}
+
+export class ClientScoreTrainee extends BaseModel {
+	constructor(
+		public TraineeCode = '',
+		public TraineeName = '',
+		public TraineeNumber = '',
+		public TotalScore = 0,
+		public Rank = 0,
+		public CaseSolved = 0,
+		public TotalCase = 0,
+		public IsActive = false
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientTraineeView {
+		return Object.assign(new ClientTraineeView(), data);
+	}
+}
+
+export class TraineeAttendance extends BaseModel {
+	constructor(
+		public GenerationId = '',
+    public AttendanceId = '',
+    public TraineeId = '',
+    public TraineeCode = '',
+    public TraineeName = '',
+    public TraineeNumber = '',
+    public Status = '',
+    public StatusAttendance = '',
+    public Note = '',
+    public Reason = '',
+    public Type = '',
+    public AttendanceTime:Date = null
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientTraineeAttendanceReport {
+		return Object.assign(new ClientTraineeAttendanceReport(), data, {
+			AttendanceTime: DateHelper.fromCSharpDate(data?.AttendanceTime),
+		});
+	}
+}
+
+export class ClientTraineeDailyAttendance extends BaseModel {
+	constructor(
+    public TraineeCode = '',
+    public TraineeId = '',
+    public TraineeName = '',
+    public Rest: ClientTraineeAttendanceTimeDetail = null,
+    public Secretariat: ClientTraineeAttendanceTimeDetail = null,
+    public Room: ClientTraineeAttendanceTimeDetail = null,
+    public Permissions: ClientTraineeAttendanceDetail[] = []
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientTraineeAttendanceReport {
+		return Object.assign(new ClientTraineeAttendanceReport(), data, {
+			Rest: ClientTraineeAttendanceTimeDetail.fromJson(data?.Rest),
+			Secretariat: ClientTraineeAttendanceTimeDetail.fromJson(data?.Secretariat),
+      Room: ClientTraineeAttendanceTimeDetail.fromJson(data?.Room),
+      Permissions: map(data?.Permissions, ClientTraineeAttendanceDetail.fromJson),
+		});
 	}
 }
 
@@ -549,10 +662,10 @@ export class CoreTrainingPresentation extends BaseModel {
 
 	static fromJson(data: any): CoreTrainingPresentation {
 		return Object.assign(new CoreTrainingPresentation(), data, {
-			Questions: map(data.Questions, DataHistory.fromJson),
-			PresentationDate: DateHelper.fromCSharpDate(data.PresentationDate),
+			Questions: map(data?.Questions, DataHistory.fromJson),
+			PresentationDate: DateHelper.fromCSharpDate(data?.PresentationDate),
 			PresentationComment: CoreTrainingPresentationItem.fromJson(
-				data.PresentationComment
+				data?.PresentationComment
 			),
 		});
 	}
@@ -571,7 +684,7 @@ export class CoreTrainingPresentationComment extends BaseModel {
 
 	static fromJson(data: any): CoreTrainingPresentationComment {
 		return Object.assign(new CoreTrainingPresentationComment(), data, {
-			Histories: map(data.Histories, DataHistory.fromJson),
+			Histories: map(data?.Histories, DataHistory.fromJson),
 		});
 	}
 }
@@ -587,7 +700,7 @@ export class DataHistory extends BaseModel {
 
 	static fromJson(data: any): DataHistory {
 		return Object.assign(new DataHistory(), data, {
-			SavedDate: DateHelper.fromCSharpDate(data.SavedDate),
+			SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
 		});
 	}
 }
@@ -606,17 +719,14 @@ export class CoreTrainingPresentationQuestion extends BaseModel {
 
 	static fromJson(data: any): CoreTrainingPresentationQuestion {
 		return Object.assign(new CoreTrainingPresentationQuestion(), data, {
-			Question: CoreTrainingPresentationItem.fromJson(data.Question),
-			Answers: map(data.Answers, CoreTrainingPresentationItem.fromJson)
+			Question: CoreTrainingPresentationItem.fromJson(data?.Question),
+			Answers: map(data?.Answers, CoreTrainingPresentationItem.fromJson),
 		});
 	}
 }
 
 export class CoreTrainingPresentationQuestionSummary extends BaseModel {
-	constructor(
-		public Question = '',
-		public Subject = ''
-	) {
+	constructor(public Question = '', public Subject = '') {
 		super();
 	}
 
@@ -642,48 +752,12 @@ export class CoreTrainingPresentationItem extends BaseModel {
 
 	static fromJson(data: any): CoreTrainingPresentationItem {
 		return Object.assign(new CoreTrainingPresentationItem(), data, {
-      Histories: map(data.Histories, DataHistory.fromJson),
-      Comments: map(data.Comments, CoreTrainingPresentation.fromJson)
+			Histories: map(data?.Histories, DataHistory.fromJson),
+			Comments: map(data?.Comments, CoreTrainingPresentation.fromJson),
 		});
 	}
 }
 
-export class ClientEvaluation extends BaseModel {
-	constructor(
-		public AbsentNote: AbsentNote[] = [],
-		public TraineeComment: TraineeComment[] = [],
-		public EvaluationNote: ClientEvaluationNote[] = []
-	) {
-		super();
-	}
-	static fromJson(data?: any): ClientEvaluation {
-		return Object.assign(new ClientEvaluation(), data, {
-			AbsentNote: map(data?.AbsentNote, AbsentNote.fromJson),
-			TraineeComment: map(data?.TraineeComment, TraineeComment.fromJson),
-			EvaluationNote: map(data?.EvaluationNote, ClientEvaluationNote.fromJson),
-		});
-	}
-}
-
-export class AbsentNote extends BaseModel {
-	constructor(
-		public FulldayPermission = false,
-		public Rest = '',
-		public RestNote = '',
-		public Room = '',
-		public RoomNote = '',
-		public Secretariat = '',
-		public SecretariatNote = '',
-		public Trainee: ClientTrainee = null
-	) {
-		super();
-	}
-	static fromJson(data?: any): AbsentNote {
-		return Object.assign(new AbsentNote(), data, {
-			Trainee: ClientTrainee.fromJson(data?.Trainee),
-		});
-	}
-}
 
 export class TraineeComment extends BaseModel {
 	constructor(
@@ -704,35 +778,6 @@ export class TraineeComment extends BaseModel {
 		});
 	}
 }
-
-export class ClientNoteDetail extends BaseModel {
-	constructor(public Note = '', public SavedBy = '', public SavedAt = '') {
-		super();
-	}
-	static fromJson(data?: any): ClientNoteDetail {
-		return Object.assign(new ClientNoteDetail(), data);
-	}
-}
-
-export class ClientEvaluationNote extends BaseModel {
-	constructor(
-		public EvaluationDate: Date = null,
-		public IsDeleteAble = false,
-		public NoteId = '',
-		public Notes = '',
-		public SavedAt: Date = null,
-		public SavedBy = ''
-	) {
-		super();
-	}
-	static fromJson(data?: any): ClientEvaluationNote {
-		return Object.assign(new ClientEvaluationNote(), data, {
-			EvaluationDate: DateHelper.fromCSharpDate(data?.EvaluationDate),
-			SavedAt: DateHelper.fromCSharpDate(data?.SavedAt),
-		});
-	}
-}
-
 // export class EvaluationNote extends BaseModel {
 //   constructor(
 //     public Note = '',
@@ -811,6 +856,42 @@ export class ClientCaseTrainer extends BaseModel {
 		return Object.assign(new ClientCaseTrainer(), data, {
 			StartDate: DateHelper.fromCSharpDate(data?.StartDate),
 			ScheduleDate: DateHelper.fromCSharpDate(data?.ScheduleDate),
+			Deadline: DateHelper.fromCSharpDate(data?.Deadline),
+		});
+	}
+}
+
+export class ClientCaseTrainee extends BaseModel {
+	constructor(
+		public TotalScore = 0,
+		public Detail: ClientCaseTraineeDetail[] = []
+	) {
+		super();
+	}
+
+	static fromJson(data?: any): ClientCaseTrainer {
+		return Object.assign(new ClientCaseTrainer(), data, {});
+	}
+}
+
+export class ClientCaseTraineeDetail extends BaseModel {
+	constructor(
+		public SubjectId = '',
+		public CaseId = '',
+		public CaseName = '',
+		public Score = '',
+		public UploadDate = '',
+		public Deadline: Date = null,
+		public isAlreadyPassed = false,
+		public FileId = '',
+		public AnswerId = '',
+		public isLevelUp = false
+	) {
+		super();
+	}
+
+	static fromJson(data?: any): ClientCaseTrainer {
+		return Object.assign(new ClientCaseTrainer(), data, {
 			Deadline: DateHelper.fromCSharpDate(data?.Deadline),
 		});
 	}
@@ -1066,8 +1147,8 @@ export class TraineePermission extends BaseModel {
 	) {
 		super();
 	}
-	static fromJson(data?: any): InterviewMaterialDetail {
-		return Object.assign(new InterviewMaterialDetail(), data, {
+	static fromJson(data?: any): TraineePermission {
+		return Object.assign(new TraineePermission(), data, {
 			PermissionDate: DateHelper.fromCSharpDate(data?.PermissionDate),
 		});
 	}
@@ -1094,10 +1175,83 @@ export class TraineeSchedule extends BaseModel {
 	) {
 		super();
 	}
-	static fromJson(data?: any): InterviewMaterialDetail {
-		return Object.assign(new InterviewMaterialDetail(), data, {
+	static fromJson(data?: any): TraineeSchedule {
+		return Object.assign(new TraineeSchedule(), data, {
 			AttendanceDate: DateHelper.fromCSharpDate(data?.AttendanceDate),
 			InsertedDate: DateHelper.fromCSharpDate(data?.InsertedDate),
+		});
+	}
+}
+
+export class ClientSpecificSchedule extends BaseModel {
+	constructor(
+		public ScheduleDate: Date = null,
+		public AbsenceStatus = '',
+		public SubjectName = '',
+		public ShiftStart = 0,
+		public ShiftEnd = 0,
+		public Room = '',
+		public IsPassed = false,
+		public AttendanceStatus = ''
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientSpecificSchedule {
+		return Object.assign(new ClientSpecificSchedule(), data, {
+			ScheduleDate: DateHelper.fromCSharpDate(data?.ScheduleDate),
+		});
+	}
+}
+
+export class SchedulePerWeek extends BaseModel {
+	constructor(
+		public Schedule: ScheduleVariation[] = [],
+		public ScheduleName = '',
+		public MeetingNo = 0,
+		public EndDate: Date = null
+	) {
+		super();
+	}
+	static fromJson(data?: any): SchedulePerWeek {
+		return Object.assign(new SchedulePerWeek(), data, {
+			Schedule: map(data?.Schedule, ScheduleVariation.fromJson),
+			EndDate: DateHelper.fromCSharpDate(data?.EndDate),
+		});
+	}
+}
+
+export class ScheduleVariation extends BaseModel {
+	constructor(
+		public DataFileId = '',
+		public VariationId = '',
+		public SubjectId = '',
+		public ScheduleName = '',
+		public MeetingNo = 0,
+		public VariationNo = 0,
+		public Room = '',
+		public Capacity = 0,
+		public Detail: ScheduleDetail[] = []
+	) {
+		super();
+	}
+	static fromJson(data?: any): ScheduleVariation {
+		return Object.assign(new ScheduleVariation(), data, {
+			Detail: map(data?.Details, ScheduleDetail.fromJson),
+		});
+	}
+}
+
+export class ScheduleDetail extends BaseModel {
+	constructor(
+		public ShiftStart = 0,
+		public ShiftEnd = 0,
+		public ScheduleDate: Date = null
+	) {
+		super();
+	}
+	static fromJson(data?: any): ScheduleDetail {
+		return Object.assign(new ScheduleDetail(), data, {
+			ScheduleDate: DateHelper.fromCSharpDate(data?.ScheduleDate),
 		});
 	}
 }
@@ -1183,6 +1337,42 @@ export class TopBottomVoteSchedule extends BaseModel {
 	}
 }
 
+export class ClientVoteBestTrainer extends BaseModel {
+	constructor(
+    public UserId = '',
+    public UserName = '',
+    public VoteCount = 0,
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientVoteBestTrainer {
+		return Object.assign(new ClientVoteBestTrainer(), data);
+	}
+}
+
+export class ClientVoteBestTrainerSchedule extends BaseModel {
+	constructor(
+		public VoteBestTrainerScheduleId = '',
+    public VoteName = '',
+    public StartDate: Date = null,
+    public EndDate: Date = null,
+    public Candidates: Binusian[] = [],
+    public WinnerQuota = 0,
+    public Description = '',
+    public VoteType: 'Trainer'|'Trainee'|'All' = 'Trainer',
+    public Status = '',
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientVoteBestTrainerSchedule {
+		return Object.assign(new ClientVoteBestTrainerSchedule(), data, {
+			StartDate: DateHelper.fromCSharpDate(data?.StartDate),
+      EndDate: DateHelper.fromCSharpDate(data?.EndDate),
+      Candidates: map(data?.Candidates, Binusian.fromJson),
+		});
+	}
+}
+
 //#endregion
 
 //#region Interview Question
@@ -1226,8 +1416,8 @@ export class ClientInterviewReport extends BaseModel {
 
 	static fromJson(data: any) {
 		return Object.assign(new ClientInterviewReport(), data, {
-			Schedules: map(data.Schedules, ClientInterviewSchedule.fromJson),
-			StatusTotal: data.Schedules.reduce(
+			Schedules: map(data?.Schedules, ClientInterviewSchedule.fromJson),
+			StatusTotal: data?.Schedules.reduce(
 				(c, s) => {
 					c[s.Result]++;
 					return c;
@@ -1259,8 +1449,95 @@ export class ClientInterviewSchedule extends BaseModel {
 	}
 	static fromJson(data: any) {
 		return Object.assign(new ClientInterviewSchedule(), data, {
-			InterviewDate: DateHelper.fromCSharpDate(data.InterviewDate),
+			InterviewDate: DateHelper.fromCSharpDate(data?.InterviewDate),
 		});
+	}
+}
+
+//#endregion
+
+//#region Note
+
+export class ClientEvaluation extends BaseModel {
+	constructor(
+		public AbsentNote: AbsentNote[] = [],
+		public TraineeComment: TraineeComment[] = [],
+		public EvaluationNote: ClientEvaluationNote[] = []
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientEvaluation {
+		return Object.assign(new ClientEvaluation(), data, {
+			AbsentNote: map(data?.AbsentNote, AbsentNote.fromJson),
+			TraineeComment: map(data?.TraineeComment, TraineeComment.fromJson),
+			EvaluationNote: map(data?.EvaluationNote, ClientEvaluationNote.fromJson),
+		});
+	}
+}
+
+export class AbsentNote extends BaseModel {
+	constructor(
+		public FulldayPermission = false,
+		public Rest = '',
+		public RestNote = '',
+		public Room = '',
+		public RoomNote = '',
+		public Secretariat = '',
+		public SecretariatNote = '',
+		public Trainee: ClientTrainee = null
+	) {
+		super();
+	}
+	static fromJson(data?: any): AbsentNote {
+		return Object.assign(new AbsentNote(), data, {
+			Trainee: ClientTrainee.fromJson(data?.Trainee),
+		});
+	}
+}
+
+export class EvaluationNote extends BaseModel {
+	constructor(
+		public NoteId = '',
+		public Notes = '',
+		public SavedBy = '',
+		public EvaluationDate: Date = null,
+		public SavedAt: Date = null
+	) {
+		super();
+	}
+	static fromJson(data?: any): EvaluationNote {
+		return Object.assign(new EvaluationNote(), data, {
+			EvaluationDate: DateHelper.fromCSharpDate(data?.EvaluationDate),
+			SavedAt: DateHelper.fromCSharpDate(data?.SavedAt),
+		});
+	}
+}
+
+export class ClientEvaluationNote extends BaseModel {
+	constructor(
+		public NoteId = '',
+		public Notes = '',
+		public SavedBy = '',
+		public EvaluationDate: Date = null,
+		public SavedAt: Date = null,
+		public IsDeleteAble = false
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientEvaluationNote {
+		return Object.assign(new ClientEvaluationNote(), data, {
+			EvaluationDate: DateHelper.fromCSharpDate(data?.EvaluationDate),
+			SavedAt: DateHelper.fromCSharpDate(data?.SavedAt),
+		});
+	}
+}
+
+export class ClientNoteDetail extends BaseModel {
+	constructor(public Note = '', public SavedBy = '', public SavedAt = '') {
+		super();
+	}
+	static fromJson(data?: any): ClientNoteDetail {
+		return Object.assign(new ClientNoteDetail(), data);
 	}
 }
 

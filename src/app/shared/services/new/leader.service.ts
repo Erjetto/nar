@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { MockData } from '../../mock-data';
 import { HttpClient } from '@angular/common/http';
@@ -12,6 +12,9 @@ import {
 	ClientPhase,
 	Role,
 	ClientUserInRoles,
+	ClientCaseTrainer,
+	ClientUploadAnswer,
+  SchedulePerWeek,
 } from '../../models';
 
 @Injectable({
@@ -21,7 +24,261 @@ export class LeaderService {
 	private baseUrl = 'Leader.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
-	//#region Get Data
+	public UpdateTraineeActive(data: {
+		traineeId: string;
+		isActive: boolean;
+		reason: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+	}
+
+	public UpdateTraineeScore(data: {
+		phaseId: string;
+		traineeId: string;
+		caseId: string;
+		newScore: number;
+		reason: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+	}
+
+	// ClientTraineeBeeAttendanceOverall
+	public GetOverall(data: {
+		startDate: string;
+		endDate: string;
+	}): Observable<any> {
+		return throwError('Not implemented yet');
+	}
+
+	public GetAllCaseBySubject(data: {
+		subjectId: string;
+	}): Observable<ClientCaseTrainer[]> {
+		return throwError('Not implemented yet');
+	}
+
+	// RegisteredSchedule[]
+	public GetRegisteredSchedule(data: { subjectId: string }): Observable<any[]> {
+		return throwError('Not implemented yet');
+	}
+
+	public GetAllTraineeAnswer(data: {
+		caseId: string;
+	}): Observable<ClientUploadAnswer> {
+		return throwError('Not implemented yet');
+	}
+
+	public CheckCurrentTrainee(data: {
+		traineeList: string[];
+	}): Observable<string[]> {
+		return throwError('Not implemented yet');
+	}
+
+	public SaveSchedule(data: {
+		subjectId: string;
+		scheduleName: string;
+		scheduleDates: string[];
+		specificSchedule: string[];
+		meetPerWeek: number;
+		Variation: string;
+	}): Observable<ClientSchedule[]> {
+		return throwError('Not implemented yet');
+	}
+
+	public ChangeSelfRegisterOfSpecificSchedule(data: {
+		scheduleId: string;
+		flag: boolean;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+	}
+
+	public GetDatesInSchedules(data: { scheduleId: string }): Observable<Date[]> {
+		return throwError('Not implemented yet');
+	}
+
+	public GetSpecificScheduleRegistration(data: {
+		scheduleId: string;
+	}): Observable<SchedulePerWeek> {
+		return throwError('Not implemented yet');
+	}
+
+	public UpdateCaseIncludingFile(data: {
+		caseId: string;
+		caseName: string;
+		correctorNames: string[];
+		traineeDays: string;
+		trainerDays: string;
+		fileId: string;
+		scheduleDate: string;
+	}): Observable<string[]> {
+		return throwError('Not implemented yet');
+	}
+
+	public UpdateCase(data: {
+		caseId: string;
+		caseName: string;
+		correctorNames: string[];
+		traineeDays: string;
+		trainerDays: string;
+		scheduleDate: string;
+	}): Observable<string[]> {
+		return throwError('Not implemented yet');
+  }
+
+	public SaveCase(data: {
+		fileId: string;
+		subjectId: string;
+		scheduleId: string;
+		caseName: string;
+		correctorNames: string[];
+		traineeDays: string;
+		trainerDays: string;
+		scheduleDate: string;
+	}): Observable<string[]> {
+		return throwError('Not implemented yet');
+  }
+
+	public SaveMaterial(data: {
+		fileId: string;
+		subjectId: string;
+		materialName: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public SaveHasPresentation(data: {
+    subjectId: string;
+    presentation: boolean;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public SaveFinalScore(data: {
+    phaseId: string;
+    subjectId: string;
+    data: string[];
+	}): Observable<string[]> {
+		return throwError('Not implemented yet');
+  }
+
+	public GetFinalScore(data: {
+    phaseId: string;
+    subjectId: string;
+	}): Observable<string[]> {
+		return throwError('Not implemented yet');
+  }
+
+  // ClientTraineeInScheduleSpecific
+	public GetTraineeScheduleSpecific(data: {
+    phase: string;
+    subject: string;
+	}): Observable<any> {
+		return throwError('Not implemented yet');
+  }
+
+	public UpdateMaterialWithFile(data: {
+    subjectId: string;
+    materialId: string;
+    fileId: string;
+    material: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public UpdateMaterialWithNoFile(data: {
+    subjectId: string;
+    materialId: string;
+    material: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public UpdateMaterial(data: {
+    subjectId: string;
+    materialId: string;
+    materialName: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public SaveGeneralAssistantRole(data: {
+    value: string;
+	}): Observable<string> {
+		return throwError('Not implemented yet');
+  }
+
+	public DeleteSchedule(data: {
+    scheduleId: string;
+    reason: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public DeletePhase(data: {
+    PhaseId: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public DeleteMaterial(data: {
+    subjectId: string;
+    materialId: string;
+    reason: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public DeleteTraineeInSchedule(data: {
+    ScheduleId: string;
+    TraineeId: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public DeleteCase(data: {
+    scheduleId: string;
+    caseId: string;
+    reason: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+  // QUESTION: Will passing Date work?
+	public SaveTopBottomVoteSchedule(data: {
+    scheduleName: string;
+    startDate: Date;
+    endDate: Date;
+    voteCount: number;
+	}): Observable<TopBottomVoteSchedule> {
+		return throwError('Not implemented yet');
+  }
+
+	public UpdateTopBottomVoteSchedule(data: {
+    scheduleId: string;
+    scheduleName: string;
+    startDate: Date;
+    endDate: Date;
+    voteCount: number;
+	}): Observable<TopBottomVoteSchedule> {
+		return throwError('Not implemented yet');
+  }
+
+	public DeleteTopBottomVoteSchedule(data: {
+    scheduleId: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+  // ZipModel
+	public GetAllTraineeAnswerByZip(data: {
+    caseId: string;
+    correctorId?: string;
+	}): Observable<any> {
+		return throwError('Not implemented yet');
+  }
+
+
+  //#region Get Data
+  // SimpleTraineeData[]
 	public GetTraineesSimpleData(): Observable<ClientTrainee[]> {
 		return of(MockData.GetTraineesByPhase).pipe(
 			delay(500),
@@ -109,18 +366,18 @@ export class LeaderService {
 		// return this.httpClient.post(this.baseUrl + 'SaveGeneration', data)
 		return of(true).pipe(delay(500));
 	}
-  
-  // datas: ['CompSci, Assistant, 3, 150025626,...', ...]
+
+	// datas: ['CompSci, Assistant, 3, 150025626,...', ...]
 	public SaveTraineesInGeneration(data: { datas: string[] }) {
-    // return this.httpClient.post(this.baseUrl + 'SaveTraineesInGeneration', data)
-    return of(true).pipe(delay(500));
-  }
-  
-  // datas: ['1503251513, ar, T001', ...]
+		// return this.httpClient.post(this.baseUrl + 'SaveTraineesInGeneration', data)
+		return of(true).pipe(delay(500));
+	}
+
+	// datas: ['1503251513, ar, T001', ...]
 	public SaveChangeMemberType(data: { datas: string[] }) {
-    // return this.httpClient.post(this.baseUrl + 'SaveChangeMemberType', data)
-    return of(true).pipe(delay(500));
-  }
+		// return this.httpClient.post(this.baseUrl + 'SaveChangeMemberType', data)
+		return of(true).pipe(delay(500));
+	}
 
 	public SavePhase(data: {
 		name: string;
@@ -140,72 +397,59 @@ export class LeaderService {
 		// Possible result -> array of existing error
 		// return this.httpClient.post(this.baseUrl + 'SaveTraineesToPhase', data)
 		return of(true).pipe(delay(500));
-  }
-  
-  public SaveSubject(data: {
-    name: string;
-    phaseId: string;
-    value: boolean;
-  }){
+	}
+
+	public SaveSubject(data: { name: string; phaseId: string; value: boolean }) {
 		// return this.httpClient.post(this.baseUrl + 'SaveSubject', data)
 		return of(true).pipe(delay(500));
-  }
-  
-  public SaveMaximumFileSize(data: {
-    fileSize: string;
-    subjectId: string
-  }){
+	}
+
+	public SaveMaximumFileSize(data: { fileSize: string; subjectId: string }) {
 		// return this.httpClient.post(this.baseUrl + 'SaveMaximumFileSize', data)
 		return of(true).pipe(delay(500));
-  }
-  
-  public SaveSubjectDetail(data: {
-    subjectId: string;
-    value: boolean;
-  }){
+	}
+
+	public SaveSubjectDetail(data: { subjectId: string; value: boolean }) {
 		// return this.httpClient.post(this.baseUrl + 'SaveSubjectDetail', data)
 		return of(true).pipe(delay(500));
-  }
-  
-  public SaveSpecificSchedule(data: {
+	}
+
+	public SaveSpecificSchedule(data: {
 		subjectId: string;
 		scheduleType: string;
 		scheduleCount: number;
-    scheduleName: string;
-    dataSchedule: any;
-    start: string;
-    end: string;
-    excTrainee: string[];
-  }){
+		scheduleName: string;
+		dataSchedule: any;
+		start: string;
+		end: string;
+		excTrainee: string[];
+	}) {
 		// return this.httpClient.post(this.baseUrl + 'SaveSpecificSchedule', data) // checked
 		return of(true).pipe(delay(500));
-  }
-  
-  public SaveTraineesToSchedule(data: {
-    binusianNumbers: string[]; // yyyy-mm-dd
-    phaseId: string;
-    subjectId: string;
-    scheduleId: string;
-  }){
+	}
+
+	public SaveTraineesToSchedule(data: {
+		binusianNumbers: string[]; // yyyy-mm-dd
+		phaseId: string;
+		subjectId: string;
+		scheduleId: string;
+	}) {
 		// return this.httpClient.post(this.baseUrl + 'SaveTraineesToSchedule', data)
 		return of(true).pipe(delay(500));
-  }
-  
-  public SaveInterviewQuestions(data: {
-    questionName: string;
-    questions: string[];
-  }){
+	}
+
+	public SaveInterviewQuestions(data: {
+		questionName: string;
+		questions: string[];
+	}) {
 		// return this.httpClient.post(this.baseUrl + 'SaveInterviewQuestions', data)
 		return of(true).pipe(delay(500));
-  }
-  
-  public SaveUserInRoles(data: {
-    userRoleId: string;
-    userRoles: string[];
-  }){
+	}
+
+	public SaveUserInRoles(data: { userRoleId: string; userRoles: string[] }) {
 		// return this.httpClient.post(this.baseUrl + 'SaveInterviewQuestions', data)
 		return of(true).pipe(delay(500));
-  }
+	}
 
 	//#endregion
 
@@ -232,23 +476,21 @@ export class LeaderService {
 	}
 	//#endregion
 
-  //#region Delete
+	//#region Delete
 
 	public DeleteTraineeInPhase(data: { PhaseId: string; TraineeId: string }) {
 		// return this.httpClient.post(this.baseUrl + 'DeleteTraineeInPhase', data)
 		return of(true).pipe(delay(500));
-  }
+	}
 
-  public DeleteSubject(data: {subjectId: string}){
-    // return this.httpClient.post(this.baseUrl + 'DeleteSubject', data)
-    return of(true).pipe(delay(500));
-  }
-  
-  public DeleteUserInRoles(data: {
-    userInRoleId: string;
-  }){
+	public DeleteSubject(data: { subjectId: string }) {
+		// return this.httpClient.post(this.baseUrl + 'DeleteSubject', data)
+		return of(true).pipe(delay(500));
+	}
+
+	public DeleteUserInRoles(data: { userInRoleId: string }) {
 		// return this.httpClient.post(this.baseUrl + 'DeleteUserInRoles', data)
 		return of(true).pipe(delay(500));
-  }
+	}
 	//#endregion
 }

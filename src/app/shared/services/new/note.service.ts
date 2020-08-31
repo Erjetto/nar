@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { MockData } from '../../mock-data';
 import { HttpClient } from '@angular/common/http';
-import { TopBottomVote, TrainerTopBottomVote } from '../../models';
+import { TopBottomVote, TrainerTopBottomVote, ClientTraineeReputationPaging, ClientTraineeData, EvaluationNote } from '../../models';
 
 @Injectable({
 	providedIn: 'root',
@@ -12,17 +12,31 @@ export class NoteService {
   private baseUrl = 'Note.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
-	public GetTopBottomVotesForSchedule(scheduleId): Observable<TopBottomVote[]> {
-		return of(MockData.GetTopBottomVotesForSchedule).pipe(
-			delay(500),
-			map((r) => r.map(TopBottomVote.fromJson))
-		);
+	public SaveNote(data: {
+		traineeId: string;
+		note: string;
+		reputation: number;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
 	}
 
-	public GetTrainerTopBottomVotesForSchedule(scheduleId): Observable<TrainerTopBottomVote[]> {
-		return of(MockData.GetTrainerTopBottomVotesForSchedule).pipe(
-			delay(500),
-			map((r) => r.map(TrainerTopBottomVote.fromJson))
-		);
+	public GetTraineesReputationByPhase(data: {
+		phaseId: string;
+		index: number;
+		search: string;
+	}): Observable<ClientTraineeReputationPaging> {
+		return throwError('Not implemented yet');
+	}
+
+	public GetTraineeDataForTrainer(data: {
+		traineeId: string;
+	}): Observable<ClientTraineeData> {
+		return throwError('Not implemented yet');
+	}
+
+	public GetEvaluationNotesContain(data: {
+		str: string;
+	}): Observable<EvaluationNote[]> {
+		return throwError('Not implemented yet');
 	}
 }
