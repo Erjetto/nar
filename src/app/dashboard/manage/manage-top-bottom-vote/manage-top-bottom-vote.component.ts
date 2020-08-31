@@ -49,7 +49,7 @@ export class ManageTopBottomVoteComponent extends DashboardContentBase implement
 	public isEditing = false;
 	public editForm = new TopBottomVoteSchedule();
 
-	constructor(private store: Store<IAppState>, action: ActionsSubject,) {super(action);}
+	constructor(private store: Store<IAppState>) {super(store);}
 
 	ngOnInit(): void {
 		this.voteSchedules$ = of([

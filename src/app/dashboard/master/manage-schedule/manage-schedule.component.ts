@@ -68,8 +68,8 @@ export class ManageScheduleComponent extends DashboardContentBase
 
 	public editForm: ClientSchedule;
 
-	constructor(private store: Store<IAppState>, action: ActionsSubject) {
-		super(action);
+	constructor(protected store: Store<IAppState>) {
+		super(store);
 	}
 
 	ngOnInit(): void {

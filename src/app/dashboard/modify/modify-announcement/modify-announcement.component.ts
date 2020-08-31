@@ -31,11 +31,10 @@ export class ModifyAnnouncementComponent extends DashboardContentBase
   public chosenFile : File;
 
 	constructor(
-		private store: Store<IAppState>,
+		protected store: Store<IAppState>,
 		private announcementService: AnnouncementService,
-		action: ActionsSubject
 	) {
-		super(action);
+		super(store);
 	}
 
 	ngOnInit(): void {

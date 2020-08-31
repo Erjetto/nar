@@ -27,15 +27,14 @@ import { UserService } from '../shared/services/user.service';
 	selector: 'rd-dashboard',
 	templateUrl: './dashboard.component.html',
 	styleUrls: ['./dashboard.component.scss'],
-	//changeDetection: ChangeDetectionStrategy.OnPush,
+	// changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 	@HostBinding('class') hostClass = 'd-flex flex-column';
 
-  // @HostBinding('class.dark-theme') isDark = true;
-  public isDark = true;
-  
-  
+	// @HostBinding('class.dark-theme') isDark = true;
+	public isDark = true;
+
 	public destroyed$ = new Subject<void>();
 
 	public menuList: Route[];
@@ -59,9 +58,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		private menuService: MenuService,
 		private router: Router,
 		private route: ActivatedRoute,
-    private store: Store<IAppState>,
+		private store: Store<IAppState>
 	) {
-    this.toggleGreyMode(true);
+		this.toggleGreyMode(true);
 		// Temporary
 		// Get user from user service later
 		this.user.Role = Role.fromName(RoleFlags.AssistantSupervisor);
@@ -75,21 +74,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				filter((evt) => evt instanceof NavigationEnd),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe(
-				() =>
-					(this.currentHeaderMenu = this.route.snapshot.firstChild.data.name)
-			);
+			.subscribe(() => (this.currentHeaderMenu = this.route.snapshot.firstChild.data.name));
 	}
 
 	ngOnInit(): void {
 		// Get data from MainState
 		if (this.user.Role.is(RoleFlags.AssistantSupervisor)) {
-			this.selectedGen$ = this.store.pipe(
-				select(fromMainState.getCurrentGeneration)
-			);
-			this.selectedRole$ = this.store.pipe(
-				select(fromMainState.getCurrentRole)
-			);
+			this.selectedGen$ = this.store.pipe(select(fromMainState.getCurrentGeneration));
+			this.selectedRole$ = this.store.pipe(select(fromMainState.getCurrentRole));
 
 			this.genList$ = this.store.pipe(select(fromMasterState.getGenerations));
 			this.roleList$ = of(Role.allRoles);
@@ -100,9 +92,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				MainStateAction.ChangeRole({
 					name: this.user.ActiveRole,
 				})
-      );
-      
-      // Get user current gen from server
+			);
+
+			// Get user current gen from server
 			this.genService.getCurrentGeneration().subscribe((res) => {
 				this.store.dispatch(
 					MainStateAction.ChangeGeneration({
@@ -111,16 +103,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				);
 			});
 		}
-  }
-  
-  toggleGreyMode(to?: boolean){
-    this.isDark = to != null ? to : !this.isDark;
-    
-    if(this.isDark)
-      document.body.classList.add('dark-theme')
-    else 
-      document.body.classList.remove('dark-theme')
-  }
+	}
+
+	toggleGreyMode(to?: boolean) {
+		this.isDark = to != null ? to : !this.isDark;
+
+		if (this.isDark) document.body.classList.add('dark-theme');
+		else document.body.classList.remove('dark-theme');
+	}
 
 	ngOnDestroy(): void {
 		this.destroyed$.next();
@@ -132,15 +122,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	}
 
 	onChangeRole(evt: Event) {
-		this.store.dispatch(
-			MainStateAction.ChangeRole({ name: evt.target['value'] })
-		);
+		this.store.dispatch(MainStateAction.ChangeRole({ name: evt.target['value'] }));
 	}
 
 	onChangeGen(evt: Event) {
-		this.store.dispatch(
-			MainStateAction.ChangeGeneration({ name: evt.target['value'] })
-		);
+		this.store.dispatch(MainStateAction.ChangeGeneration({ name: evt.target['value'] }));
 	}
 
 	signOut() {}

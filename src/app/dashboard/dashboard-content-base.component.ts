@@ -1,32 +1,48 @@
-import { Subject } from 'rxjs';
-import { ActionsSubject } from '@ngrx/store';
+import { Subject, Observable, combineLatest } from 'rxjs';
+import { ActionsSubject, Store, select } from '@ngrx/store';
 import { ofType } from '@ngrx/effects';
 
-import * as MainStateAction from '../shared/stores/main/main.action';
-import { takeUntil } from 'rxjs/operators';
-import { OnDestroy} from '@angular/core';
+import * as MainStateAction from 'src/app/shared/stores/main/main.action';
+import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
 
-export class DashboardContentBase implements OnDestroy{
+import { takeUntil, filter } from 'rxjs/operators';
+import { OnDestroy } from '@angular/core';
+import { Role, ClientGeneration } from '../shared/models';
+import { IAppState } from '../app.reducer';
+import { isEmpty } from 'lodash';
 
-  protected destroyed$: Subject<any> = new Subject();
+export class DashboardContentBase implements OnDestroy {
+	protected currentRole$: Observable<Role>;
+	protected currentGeneration$: Observable<ClientGeneration>;
 
-  constructor(
-    protected actionsSubject: ActionsSubject
-  ){
-		this.actionsSubject
-    .pipe(
-      ofType(MainStateAction.ChangeGeneration, MainStateAction.ChangeRole),
-      takeUntil(this.destroyed$)
-    )
-    .subscribe((o) => this.reloadView());
-  }
+	protected destroyed$: Subject<any> = new Subject();
 
-  ngOnDestroy(): void{
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
+	constructor(protected store: Store<IAppState>) {
+		this.currentRole$ = this.store.pipe(select(fromMainState.getCurrentRole));
+		this.currentGeneration$ = this.store.pipe(select(fromMainState.getCurrentGeneration));
+		combineLatest([this.currentRole$, this.currentGeneration$])
+			.pipe(
+				filter((values) => values.every((v) => !isEmpty(v))),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe(([role, gen]) => this.onRoleOrGenUpdate(role, gen));
 
-  reloadView(){
-    // get gen & role in MainState
-  }
+		// this.actionsSubject
+		// .pipe(
+		//   ofType(MainStateAction.ChangeGeneration, MainStateAction.ChangeRole),
+		//   takeUntil(this.destroyed$)
+		// )
+		// .subscribe((o) => this.reloadView());
+	}
+
+	ngOnDestroy(): void {
+		this.destroyed$.next();
+		this.destroyed$.complete();
+	}
+
+	onRoleOrGenUpdate(role: Role, gen: ClientGeneration) {}
+
+	reloadView() {
+		// get gen & role in MainState
+	}
 }

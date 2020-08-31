@@ -15,10 +15,9 @@ implements OnInit, OnDestroy  {
   public ipList: string[] = [];
 
 	constructor(
-		private store: Store<IAppState>,
-		action: ActionsSubject,
+		protected store: Store<IAppState>,
 	) {
-		super(action);
+		super(store);
 	}
 
   ngOnInit(): void {

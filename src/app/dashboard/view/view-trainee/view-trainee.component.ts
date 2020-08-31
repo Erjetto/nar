@@ -38,8 +38,8 @@ export class ViewTraineeComponent extends DashboardContentBase
 
 	public searchText = '';
 
-	constructor(actionsSubject: ActionsSubject, private store: Store<IAppState>) {
-		super(actionsSubject);
+	constructor(protected store: Store<IAppState>) {
+		super(store);
 	}
 
 	ngOnInit(): void {

@@ -29,10 +29,9 @@ export class ManageGenerationComponent extends DashboardContentBase
 
 	constructor(
 		private leaderService: LeaderService,
-		private store: Store<IAppState>,
-		action: ActionsSubject
+		protected store: Store<IAppState>,
 	) {
-		super(action);
+		super(store);
 	}
 
 	ngOnInit(): void {

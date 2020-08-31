@@ -41,8 +41,8 @@ export class AnswerScheduleComponent extends DashboardContentBase
 	public trainerSchedule$: Observable<SubcoCandidateAnswerModel[]>;
 	public selectedSchedule$: Observable<SubcoCandidateAnswerModel>;
 
-	constructor(actionsSubject: ActionsSubject, private store: Store<IAppState>) {
-		super(actionsSubject);
+	constructor(protected store: Store<IAppState>) {
+		super(store);
 		registerLocaleData(localeID);
 		const pipe = new DatePipe('ID');
 		const today = pipe.transform(Date.now(), this.dateFormat);

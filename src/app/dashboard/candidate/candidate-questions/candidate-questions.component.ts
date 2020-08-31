@@ -22,8 +22,8 @@ export class CandidateQuestionsComponent extends DashboardContentBase
 
 	public questions: string[] = []; // For flexible input
 
-	constructor(actionsSubject: ActionsSubject, private store: Store<IAppState>) {
-		super(actionsSubject);
+	constructor(protected store: Store<IAppState>) {
+		super(store);
 	}
 
 	ngOnInit(): void {

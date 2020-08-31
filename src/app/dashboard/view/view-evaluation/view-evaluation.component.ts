@@ -23,7 +23,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
   public attendanceReport: ClientTraineeAttendanceReport;
   public evaluations: ClientEvaluation;
 
-  constructor(private store: Store<IAppState>, action: ActionsSubject,) { super(action); }
+  constructor(protected store: Store<IAppState>) { super(store); }
 
   ngOnInit(): void {
     

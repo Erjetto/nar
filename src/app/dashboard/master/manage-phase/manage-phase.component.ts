@@ -47,10 +47,9 @@ export class ManagePhaseComponent extends DashboardContentBase
 	constructor(
 		private generalService: GeneralService,
 		private leaderService: LeaderService,
-		private store: Store<IAppState>,
-		action: ActionsSubject
+		protected store: Store<IAppState>,
 	) {
-		super(action);
+		super(store);
     // this.phaseTypes$ = this.store.pipe(select(fromMasterState.getPhaseTypes));
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.loadingPhases$ = this.store.pipe(

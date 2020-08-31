@@ -45,11 +45,10 @@ export class HomeComponent extends DashboardContentBase
 	public destroyed$: Subject<any> = new Subject();
 
 	constructor(
-		actionsSubject: ActionsSubject,
-		private store: Store<IAppState>,
+		protected store: Store<IAppState>,
 		private homeService: HomeService,
 	) {
-		super(actionsSubject);
+		super(store);
 	}
 
 	ngOnInit(): void {

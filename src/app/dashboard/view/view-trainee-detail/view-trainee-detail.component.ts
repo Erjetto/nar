@@ -17,8 +17,8 @@ export class ViewTraineeDetailComponent extends DashboardContentBase implements 
 
   public traineeDetail: ClientTraineeData;
 
-  constructor(private store: Store<IAppState>, action: ActionsSubject,) {
-    super(action);
+  constructor(protected store: Store<IAppState>,) {
+    super(store);
     this.traineeDetail = ClientTraineeData.fromJson(MockData.GetTraineeDataForTrainer);
   }
 

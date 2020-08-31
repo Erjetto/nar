@@ -54,10 +54,9 @@ export class ManageSubjectComponent extends DashboardContentBase
 	constructor(
 		private leaderService: LeaderService,
 		private generalService: GeneralService,
-		private store: Store<IAppState>,
-		action: ActionsSubject
+		protected store: Store<IAppState>,
 	) {
-		super(action);
+		super(store);
 	}
 
 	ngOnInit(): void {

@@ -18,10 +18,9 @@ implements OnInit, OnDestroy  {
   public interviewQuestionDetails: InterviewQuestionDetail[];
 
 	constructor(
-		private store: Store<IAppState>,
-		action: ActionsSubject,
+		protected store: Store<IAppState>,
 	) {
-		super(action);
+		super(store);
 	}
   
   ngOnInit(): void {
