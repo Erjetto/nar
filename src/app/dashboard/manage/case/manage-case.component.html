@@ -77,7 +77,7 @@
 							<td>{{ case.ScheduleDate | date: viewDateFormat }}</td>
 							<td>{{ case.TraineeDeadline | date: viewDateFormat }}</td>
 							<td>{{ case.TrainerDeadline | date: viewDateFormat }}</td>
-							<td>{{ case.Corrector.join(', ') }}</td>
+							<td>{{ case.correctorList }}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -139,7 +139,7 @@
 										id="correctors"
 										name="correctors"
 										class="form-control"
-										[ngModel]="caseForm?.Corrector"
+										[value]="caseForm?.correctorList"
 									/>
 								</div>
 							</div>

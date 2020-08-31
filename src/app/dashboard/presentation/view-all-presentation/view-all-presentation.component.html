@@ -28,7 +28,7 @@
 					<div class="row">
 						<ng-select
 							class="col"
-							[items]="trainees$ | async"
+							[items]="filteredTrainees$ | async"
 							[clearable]="false"
 							[bindLabel]="'TraineeName'"
 							[searchable]="false"

@@ -63,88 +63,66 @@ export class MasterStateEffects {
 	getUserInRoles$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchUserInRoles),
 		switchMapTo(this.leaderService.GetUserInRoles()),
-		mergeMap((res) =>
-			of(MasterStateAction.FetchUserInRolesSuccess({ payload: res }))
-		)
+		mergeMap((res) => of(MasterStateAction.FetchUserInRolesSuccess({ payload: res })))
 	);
 
 	@Effect()
 	getGenerations$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchGenerations),
 		switchMapTo(this.leaderService.GetGenerations()),
-		mergeMap((res) =>
-			of(MasterStateAction.FetchGenerationsSuccess({ payload: res }))
-		)
+		mergeMap((res) => of(MasterStateAction.FetchGenerationsSuccess({ payload: res })))
 	);
 	@Effect()
 	getSubjects$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchSubjects),
 		pluck('phaseId'),
 		switchMap((phaseId) =>
-			this.generalService
-				.GetSubjects(phaseId)
-				.pipe(map((res) => ({ phaseId, res })))
+			this.generalService.GetSubjects({ phaseId }).pipe(map((res) => ({ phaseId, res })))
 		),
-		mergeMap(({ phaseId, res }) =>
-			of(MasterStateAction.FetchSubjectsSuccess({ payload: res }))
-		)
+		mergeMap(({ phaseId, res }) => of(MasterStateAction.FetchSubjectsSuccess({ payload: res })))
 	);
 	@Effect()
 	getPhases$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchPhases),
 		switchMapTo(this.generalService.GetPhasesCurrentGeneration()),
-		mergeMap((res) =>
-			of(MasterStateAction.FetchPhasesSuccess({ payload: res }))
-		)
+		mergeMap((res) => of(MasterStateAction.FetchPhasesSuccess({ payload: res })))
 	);
 
 	@Effect()
 	getTraineeInPhase$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchTraineeInPhase),
 		pluck('phaseId'),
-		switchMap((phaseId) => this.leaderService.GetTraineesByPhase(phaseId)),
-		mergeMap((res) =>
-			of(MasterStateAction.FetchTraineeInPhaseSuccess({ payload: res }))
-		)
+		switchMap((phaseId) => this.leaderService.GetTraineesByPhase({ phaseId })),
+		mergeMap((res) => of(MasterStateAction.FetchTraineeInPhaseSuccess({ payload: res })))
 	);
 
 	@Effect()
 	getSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchSchedules),
 		pluck('subjectId'),
-		switchMap((subjectId) => this.leaderService.GetSchedules(subjectId)),
-		mergeMap((res) =>
-			of(MasterStateAction.FetchSchedulesSuccess({ payload: res }))
-		)
+		switchMap((subjectId) => this.leaderService.GetSchedules({ subjectId })),
+		mergeMap((res) => of(MasterStateAction.FetchSchedulesSuccess({ payload: res })))
 	);
 
 	@Effect()
 	getTraineeInSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchTraineeInSchedule),
 		pluck('scheduleId'),
-		switchMap((scheduleId) =>
-			this.leaderService.GetTraineesByPhase(scheduleId)
-		),
-		mergeMap((res) =>
-			of(MasterStateAction.FetchTraineeInScheduleSuccess({ payload: res }))
-		)
+		switchMap((scheduleId) => this.leaderService.GetTraineesBySchedule({ scheduleId })),
+		mergeMap((res) => of(MasterStateAction.FetchTraineeInScheduleSuccess({ payload: res })))
 	);
 
 	@Effect()
 	getInterviewSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchInterviewSchedules),
 		switchMap(() => this.interviewService.GetInterviewSchedules()),
-		mergeMap((res) =>
-			of(MasterStateAction.FetchInterviewSchedulesSuccess({ payload: res }))
-		)
+		mergeMap((res) => of(MasterStateAction.FetchInterviewSchedulesSuccess({ payload: res })))
 	);
 	@Effect()
 	getInterviewQuestions$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchInterviewQuestions),
 		switchMap(() => this.interviewService.GetInterviewQuestions()),
-		mergeMap((res) =>
-			of(MasterStateAction.FetchInterviewQuestionsSuccess({ payload: res }))
-		)
+		mergeMap((res) => of(MasterStateAction.FetchInterviewQuestionsSuccess({ payload: res })))
 	);
 	@Effect()
 	getInterviewQuestionDetails$: Observable<Action> = this.actions$.pipe(
@@ -153,13 +131,7 @@ export class MasterStateEffects {
 		switchMap((interviewQuestionId) =>
 			this.interviewService.GetInterviewQuestionDetails(interviewQuestionId)
 		),
-		mergeMap((res) =>
-			of(
-				MasterStateAction.FetchInterviewQuestionDetailsSuccess({
-					payload: res,
-				})
-			)
-		)
+		mergeMap((res) => of(MasterStateAction.FetchInterviewQuestionDetailsSuccess({ payload: res })))
 	);
 	//#endregion
 
@@ -191,45 +163,43 @@ export class MasterStateEffects {
 	@Effect()
 	createPhase$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreatePhase),
-		switchMap((action) =>
-			this.leaderService.SavePhase({ ...action, type: action.phaseType })
-		),
+		switchMap((action) => this.leaderService.SavePhase({ ...action, type: action.phaseType })),
 		mergeMap((res) =>
 			res != null
 				? of(MasterStateAction.FetchPhases())
-        : of(MainStateAction.ToastMessage({
-            messageType: 'danger',
-            message: 'Failed in updating phase',
-          }))
+				: of(
+						MainStateAction.ToastMessage({
+							messageType: 'danger',
+							message: 'Failed in updating phase',
+						})
+				  )
 		)
 	);
 	@Effect()
 	createTraineeInPhase$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateTraineeInPhase),
 		switchMap((action) =>
-			this.leaderService
-				.SaveTraineesToPhase(action)
-				.pipe(map((res) => ({ res, action })))
+			this.leaderService.SaveTraineesToPhase(action).pipe(map((res) => ({ res, action })))
 		),
 		mergeMap(({ res, action }) =>
 			res != null
 				? of(MasterStateAction.FetchTraineeInPhase({ phaseId: action.phaseId }))
-        : of(MainStateAction.ToastMessage({
-            messageType: 'danger',
-            message: 'Failed in updating phase',
-          }))
+				: of(
+						MainStateAction.ToastMessage({
+							messageType: 'danger',
+							message: 'Failed in updating phase',
+						})
+				  )
 		)
 	);
 	@Effect()
 	createSubject$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateSubject),
 		switchMap((action) =>
-			this.leaderService
-				.SaveSubject(action)
-				.pipe(map((res) => ({ res, action })))
+			this.leaderService.SaveSubject(action).pipe(map((res) => ({ res, action })))
 		),
 		switchMap(({ res, action }) => {
-      // Nested Observable BAD! Do something?
+			// Nested Observable BAD! Do something?
 			if (res)
 				return this.leaderService
 					.SaveMaximumFileSize({
@@ -299,8 +269,7 @@ export class MasterStateEffects {
 			of(
 				MainStateAction.ToastMessage({
 					messageType: 'danger',
-					message:
-						'Failed in creating InterviewQuestionDetail: Not implemented yet',
+					message: 'Failed in creating InterviewQuestionDetail: Not implemented yet',
 				})
 			)
 		)
@@ -324,13 +293,15 @@ export class MasterStateEffects {
 	updatePhase$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.UpdatePhase),
 		switchMap((action) => this.leaderService.UpdatePhase(action)),
-    mergeMap((res) => 
-    res != null
-    ? of(MasterStateAction.FetchPhases())
-    : of(MainStateAction.ToastMessage({
-        messageType: 'danger',
-        message: 'Failed in updating phase',
-      }))
+		mergeMap((res) =>
+			res != null
+				? of(MasterStateAction.FetchPhases())
+				: of(
+						MainStateAction.ToastMessage({
+							messageType: 'danger',
+							message: 'Failed in updating phase',
+						})
+				  )
 		)
 	);
 
@@ -348,27 +319,22 @@ export class MasterStateEffects {
 						message: 'Failed in deleting phase: Not implemented yet',
 					})
 				)
-			// return this.leaderService.dele(action).pipe(
-			//   mergeMap(res => {
-			// if(!res) return of(MasterStateAction.ToastMessage({message: 'Failed in deleting phase'}))
-			// messageType: 'danger',
-			//     else return of(MasterStateAction.FetchPhases())
-			//   })
-			// )
 		)
 	);
 
 	@Effect()
 	deleteTraineeInPhase$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.DeleteTraineeInPhase),
-    switchMap((action) => this.leaderService.DeleteTraineeInPhase(action)),
-    mergeMap((res) => 
-    res != null
-    ? of(MasterStateAction.FetchPhases())
-    : of(MainStateAction.ToastMessage({
-        messageType: 'danger',
-        message: 'Failed in updating phase',
-      }))
+		switchMap((action) => this.leaderService.DeleteTraineeInPhase(action)),
+		mergeMap((res) =>
+			res != null
+				? of(MasterStateAction.FetchPhases())
+				: of(
+						MainStateAction.ToastMessage({
+							messageType: 'danger',
+							message: 'Failed in updating phase',
+						})
+				  )
 		)
 	);
 

@@ -11,10 +11,14 @@ import { drop, filter, min, max } from 'lodash';
 
 export interface IPresentationState {
   presentations: CoreTrainingPresentation[];
+
+  loadingPresentations: boolean;
 }
 
 export const initialState: IPresentationState = {
   presentations: [],
+
+  loadingPresentations: false,
 };
 
 export const PRESENTATIONSTATE_REDUCER_NAME = 'PresentationState';
@@ -22,10 +26,16 @@ export const PRESENTATIONSTATE_REDUCER_NAME = 'PresentationState';
 export const PresentationStateReducer = createReducer(
 	initialState,
 
+  on(PresentationStateAction.FetchPresentations, (state)=> ({
+    ...state,
+    loadingPresentations: true
+  })),
+
   on(PresentationStateAction.FetchPresentationsSuccess, (state, {payload})=> ({
     ...state,
+    loadingPresentations: false,
     presentations: payload
-  }))
+  })),
 
 );
 
@@ -37,6 +47,7 @@ export const getPresentationStateBy = (fn: (_: IPresentationState) => any) =>
 	createSelector(getPresentationState, fn);
 
 export const getPresentations = getPresentationStateBy((s) => s.presentations);
+export const isPresentationsLoading = getPresentationStateBy((s) => s.loadingPresentations);
 // export const getAnnouncements = getPresentationStateBy((s) => s.announcement);
 
 // export const getCurrentGeneration = getPresentationStateBy((s) => s.currentGeneration);

@@ -13500,22 +13500,25 @@ export const MockData = {
 
 	// scheduleId: "8998e270-89c1-ea11-abcb-d8d385fcda38"
 	GetCase: [
-		{
-			__type: 'ClientPhase:#BPlusTraining.Logic',
-			BeginDate: '/Date(1594573200000+0700)/',
-			Description: 'Core Training',
-			EndDate: '/Date(1597251600000+0700)/',
-			PhaseId: '40cb12af-3db5-ea11-abcb-d8d385fcda38',
-			PhaseType: 'ar',
-		},
-		{
-			__type: 'ClientPhase:#BPlusTraining.Logic',
-			BeginDate: '/Date(1589216400000+0700)/',
-			Description: 'Presentation',
-			EndDate: '/Date(1589734800000+0700)/',
-			PhaseId: 'a2196d78-f294-ea11-abcb-d8d385fcda38',
-			PhaseType: 'ar',
-		},
+      {
+        "__type": "Case:#BPlusTraining.Logic",
+        "CaseId": "e5806d38-c5b8-42bf-b8f4-2639107b1f05",
+        "CaseName": "LaravelH1BP",
+        "Corrector": [
+          {
+            "__type": "Binusian:#BPlusTraining.Logic",
+            "Name": "BD19-1",
+            "UserId": "597551f0-e525-e911-8e6f-d8d385fce79e"
+          }
+        ],
+        "FileId": "ebeb0cb5-24d9-ea11-abcb-d8d385fcda38",
+        "FileName": "LaravelH1BP.zip",
+        "ScheduleDate": "/Date(1596888000000+0700)/",
+        "ScheduleId": "d7439a9c-8ac1-ea11-abcb-d8d385fcda38",
+        "ScheduleName": "LaravelH1BP",
+        "TraineeDeadline": "/Date(1597017600000+0700)/",
+        "TrainerDeadline": "/Date(1597053600000+0700)/"
+      }
 	],
 	// subjectId: "ac349105-3eb5-ea11-abcb-d8d385fcda38"
 	GetMaximumFileSize: 50000,

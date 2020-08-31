@@ -7,11 +7,7 @@ import * as MainStateAction from '../main/main.action';
 import * as PresentationStateAction from './presentation.action';
 import * as fromPresentationState from './presentation.reducer';
 import { Observable, of } from 'rxjs';
-import {
-	switchMap,
-	mergeMap,
-	pluck,
-} from 'rxjs/operators';
+import { switchMap, mergeMap, pluck } from 'rxjs/operators';
 import { PresentationService } from '../../services/new/presentation.service';
 import { isEmpty } from 'lodash';
 
@@ -19,34 +15,34 @@ import { isEmpty } from 'lodash';
 	providedIn: 'root',
 })
 export class PresentationStateEffects {
-	constructor(
-    private actions$: Actions,
-    private presentationService: PresentationService,
-	) {}
-  
-  // @Effect()
-  // getPresentationsByGeneration$: Observable<Action> = this.actions$.pipe(
-  //   ofType(PresentationStateAction.FetchPresentations),
-  //   switchMap(data => this.presentationService.FindCoreTrainingPresentationByGeneration(data)),
-  //   mergeMap(res => 
-  //     !isEmpty(res) 
-  //     ? of(PresentationStateAction.FetchPresentationsSuccess({payload: res}))
-  //     : of(MainStateAction.ToastMessage({
-  //       messageType: 'danger',
-  //       message: 'Failed to get presentations'
-  //     }))
-  // ))
-  
-  @Effect()
-  getPresentationsBySubject$: Observable<Action> = this.actions$.pipe(
-    ofType(PresentationStateAction.FetchPresentations),
-    switchMap(data => this.presentationService.FindCoreTrainingPresentationBySubject(data)),
-    mergeMap(res => 
-      !isEmpty(res) 
-      ? of(PresentationStateAction.FetchPresentationsSuccess({payload: res}))
-      : of(MainStateAction.ToastMessage({
-        messageType: 'danger',
-        message: 'Failed to get presentations'
-      }))
-  ))
+	constructor(private actions$: Actions, private presentationService: PresentationService) {}
+
+	// @Effect()
+	// getPresentationsByGeneration$: Observable<Action> = this.actions$.pipe(
+	//   ofType(PresentationStateAction.FetchPresentations),
+	//   switchMap(data => this.presentationService.FindCoreTrainingPresentationByGeneration(data)),
+	//   mergeMap(res =>
+	//     !isEmpty(res)
+	//     ? of(PresentationStateAction.FetchPresentationsSuccess({payload: res}))
+	//     : of(MainStateAction.ToastMessage({
+	//       messageType: 'danger',
+	//       message: 'Failed to get presentations'
+	//     }))
+	// ))
+
+	@Effect()
+	getPresentationsBySubject$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.FetchPresentations),
+		switchMap((data) => this.presentationService.FindCoreTrainingPresentationBySubject(data)),
+		mergeMap((res) =>
+			!isEmpty(res)
+				? of(PresentationStateAction.FetchPresentationsSuccess({ payload: res }))
+				: of(
+						MainStateAction.ToastMessage({
+							messageType: 'danger',
+							message: 'Failed to get presentations',
+						})
+				  )
+		)
+	);
 }

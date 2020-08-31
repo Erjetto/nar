@@ -816,7 +816,7 @@ export class Case extends BaseModel {
 	constructor(
 		public CaseId = '',
 		public CaseName = '',
-		public Corrector: string[] = [],
+		public Corrector: Binusian[] = [],
 		public FileId = '',
 		public FileName = '',
 		public ScheduleDate: Date = null,
@@ -825,9 +825,13 @@ export class Case extends BaseModel {
 		public TrainerDeadline: Date = null
 	) {
 		super();
-	}
+  }
+  get correctorList() {
+    return this.Corrector.map(b => b.Name).join(', ');
+  }
 	static fromJson(data?: any): Case {
 		return Object.assign(new Case(), data, {
+			Corrector: map(data?.Corrector, Binusian.fromJson),
 			ScheduleDate: DateHelper.fromCSharpDate(data?.ScheduleDate),
 			TraineeDeadline: DateHelper.fromCSharpDate(data?.TraineeDeadline),
 			TrainerDeadline: DateHelper.fromCSharpDate(data?.TrainerDeadline),

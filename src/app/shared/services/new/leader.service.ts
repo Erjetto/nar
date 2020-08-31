@@ -15,6 +15,7 @@ import {
 	ClientCaseTrainer,
 	ClientUploadAnswer,
   SchedulePerWeek,
+  Case,
 } from '../../models';
 
 @Injectable({
@@ -285,14 +286,14 @@ export class LeaderService {
 			map((r) => r.map(ClientTrainee.fromJson))
 		);
 	}
-	public GetTraineesByPhase(phaseId): Observable<ClientTrainee[]> {
+	public GetTraineesByPhase(data: {phaseId: string}): Observable<ClientTrainee[]> {
 		return of(MockData.GetTraineesByPhase).pipe(
 			delay(500),
 			map((r) => r.map(ClientTrainee.fromJson))
 		);
 	}
 
-	public GetTraineesBySchedule(scheduleId): Observable<ClientTrainee[]> {
+	public GetTraineesBySchedule(data: {scheduleId: string}): Observable<ClientTrainee[]> {
 		return of(MockData.GetTraineesBySchedule).pipe(
 			delay(500),
 			map((r) => r.map(ClientTrainee.fromJson))
@@ -313,24 +314,24 @@ export class LeaderService {
 		);
 	}
 
-	public GetSchedules(subjectId): Observable<ClientSchedule[]> {
+	public GetSchedules(data: {subjectId: string}): Observable<ClientSchedule[]> {
 		return of(MockData.GetSchedules).pipe(
 			delay(500),
 			map((r) => r.map(ClientSchedule.fromJson))
 		);
 	}
 
-	public GetCurrentSubject(phaseId): Observable<ClientSubject> {
+	public GetCurrentSubject(data: {phaseId: string}): Observable<ClientSubject> {
 		return of(MockData.GetCurrentSubject).pipe(
 			delay(500),
 			map((r) => ClientSubject.fromJson(r))
 		);
 	}
 
-	public GetCase(scheduleId): Observable<ClientPhase[]> {
+	public GetCase(data: {scheduleId: string}): Observable<Case[]> {
 		return of(MockData.GetCase).pipe(
 			delay(500),
-			map((r) => r.map(ClientPhase.fromJson))
+			map((r) => r.map(Case.fromJson))
 		);
 	}
 
