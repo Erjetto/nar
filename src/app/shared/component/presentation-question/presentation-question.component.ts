@@ -13,11 +13,9 @@ export class PresentationQuestionComponent implements OnInit {
 
   constructor() { }
 
-  get rightAnswer(){
-    return this.question.Answers.find(q => q.Id === this.question.AcceptedAnswerId);
-  }
 
   ngOnInit(): void {
+    
   }
 
 }

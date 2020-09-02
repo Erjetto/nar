@@ -24,6 +24,7 @@ import { ConfirmableButtonComponent } from './components/confirmable-button/conf
 import { ContrastTextColorDirective } from './directives/contrast-text-color.directive';
 import { EasyHorizontalSrollDirective } from './directives/easy-horizontal-sroll.directive';
 import { PresentationQuestionComponent } from './component/presentation-question/presentation-question.component';
+import { VarDirective } from './directives/var.directive';
 
 const SHARED_DECLARATIONS = [
 	// Shared components, pipes, and directives, ex: SearchComponent, CurrencyPipe
@@ -37,10 +38,11 @@ const SHARED_DECLARATIONS = [
   ClickStopPropagationDirective,
   ContrastTextColorDirective,
   EasyHorizontalSrollDirective,
+  VarDirective,
 ];
 
 @NgModule({
-	declarations: [...SHARED_DECLARATIONS, ],
+	declarations: [...SHARED_DECLARATIONS,  ],
 	imports: [
 		FontAwesomeModule,
 		CommonModule,

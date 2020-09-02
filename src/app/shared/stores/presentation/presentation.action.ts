@@ -6,7 +6,17 @@ export const FetchPresentations = createAction(
 	props<{ generationId: string, subjectId: string }>()
 );
 
+export const FetchPresentationStatus = createAction(
+	'[MainState] FetchPresentationStatus',
+	props<{ filename: string }>()
+);
+
 export const FetchPresentationsSuccess = createAction(
 	'[MainState] FetchPresentationsSuccess',
 	props<{ payload: CoreTrainingPresentation[] }>()
+);
+
+export const FetchPresentationStatusSuccess = createAction(
+	'[MainState] FetchPresentationStatusSuccess',
+	props<{ payload: string }>()
 );

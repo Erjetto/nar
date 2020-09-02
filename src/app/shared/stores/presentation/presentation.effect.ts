@@ -7,7 +7,7 @@ import * as MainStateAction from '../main/main.action';
 import * as PresentationStateAction from './presentation.action';
 import * as fromPresentationState from './presentation.reducer';
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, tap } from 'rxjs/operators';
 import { PresentationService } from '../../services/new/presentation.service';
 import { isEmpty } from 'lodash';
 
@@ -33,10 +33,26 @@ export class PresentationStateEffects {
 	@Effect()
 	getPresentationsBySubject$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentations),
-		switchMap((data) => this.presentationService.FindCoreTrainingPresentationBySubject(data)),
+    switchMap((data) => this.presentationService.FindCoreTrainingPresentationBySubject(data)),
 		mergeMap((res) =>
 			!isEmpty(res)
 				? of(PresentationStateAction.FetchPresentationsSuccess({ payload: res }))
+				: of(
+						MainStateAction.ToastMessage({
+							messageType: 'danger',
+							message: 'Failed to get presentations',
+						})
+				  )
+		)
+	);
+
+	@Effect()
+	getPresentationStatus$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.FetchPresentationStatus),
+    switchMap((data) => this.presentationService.GetPresentationStatus(data)),
+		mergeMap((res) =>
+			!isEmpty(res)
+				? of(PresentationStateAction.FetchPresentationStatusSuccess({ payload: res }))
 				: of(
 						MainStateAction.ToastMessage({
 							messageType: 'danger',

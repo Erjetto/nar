@@ -21,38 +21,25 @@ export class ToasterComponent implements OnInit, OnDestroy {
 	private start$ = new Subject<void>();
 	private destroyed$ = new Subject<void>();
 
-	constructor(
-		private store: Store<IAppState>,
-		private actionSubject: ActionsSubject
-	) {
+	constructor(private store: Store<IAppState>, private actionSubject: ActionsSubject) {
 		this.messages$ = this.store.pipe(select(fromMainState.getToastMessages));
 		// Trigger decayTimer when messages[] changes
 		this.messages$
 			.pipe(
-				takeUntil(this.destroyed$),
 				map((arr) => arr.length > 0),
-				tap((hasMessage) => {
-					this.stop$.next();
-					if (hasMessage) this.start$.next();
-				})
+				takeUntil(this.destroyed$)
 			)
-			.subscribe();
+			.subscribe((hasMessage) => {
+				if (hasMessage) this.start$.next();
+				else this.stop$.next();
+			});
 
 		interval(3500)
 			.pipe(
-				takeUntil(this.stop$),
 				repeatWhen(() => this.start$),
-				tap((v) =>
-					this.store.dispatch(MainStateAction.RemoveMessage({ index: 0 }))
-					// this.store.dispatch(
-					// 	MainStateAction.ToastMessage({
-					// 		message: 'adsfasdf',
-					// 		messageType: 'success',
-					// 	})
-					// )
-				)
+				takeUntil(this.stop$),
 			)
-			.subscribe();
+			.subscribe((v) => this.store.dispatch(MainStateAction.RemoveMessage({ index: 0 })));
 
 		// this.decayTimer$.subscribe((val) => {
 		//   this.messages.pop();
