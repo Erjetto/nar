@@ -28,9 +28,9 @@ export class InterviewService {
 			map((r) => r.map(ClientInterviewQuestion.fromJson))
 		);
 	}
-	public GetInterviewQuestionDetails(
+	public GetInterviewQuestionDetails(data: {
 		interviewQuestionId: string
-	): Observable<InterviewQuestionDetail[]> {
+  }): Observable<InterviewQuestionDetail[]> {
 		return of(MockData.GetInterviewQuestionDetails).pipe(
 			delay(500),
 			map((r) => r.map(InterviewQuestionDetail.fromJson))

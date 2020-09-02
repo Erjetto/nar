@@ -249,6 +249,7 @@ export class LeaderService {
     startDate: Date;
     endDate: Date;
     voteCount: number;
+    isForTrainer: boolean;
 	}): Observable<TopBottomVoteSchedule> {
 		return throwError('Not implemented yet');
   }
@@ -259,6 +260,7 @@ export class LeaderService {
     startDate: Date;
     endDate: Date;
     voteCount: number;
+    isForTrainer: boolean;
 	}): Observable<TopBottomVoteSchedule> {
 		return throwError('Not implemented yet');
   }

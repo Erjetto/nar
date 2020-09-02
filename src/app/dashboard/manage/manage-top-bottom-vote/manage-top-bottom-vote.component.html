@@ -31,11 +31,10 @@
 						</table>
 					</rd-card>
 					<rd-card
-						*rdVar="editForm$ | async as form"
-						[cardTitle]="form ? 'Edit Vote Schedule' : 'Insert New Vote Schedule'"
-						[expanded]="form"
+						[cardTitle]="(editForm$ | async) ? 'Edit Vote Schedule' : 'Insert New Vote Schedule'"
+						[expanded]="(editForm$ | async)"
 					>
-						<div rdCardBadges class="" *ngIf="form">
+						<div rdCardBadges class="" *ngIf="editForm$ | async">
 							<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
 								<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 							</button>
@@ -69,7 +68,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="row justify-content-around mt-2" [ngSwitch]="!!form">
+							<div class="row justify-content-around mt-2" [ngSwitch]="!!(editForm$ | async)">
 								<ng-container *ngSwitchCase="false">
 									<button type="submit" class="btn btn-primary">
 										<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create

@@ -13,6 +13,7 @@ import {
 	Material,
 	ClientTraineeView,
 	ClientTraineeData,
+  ClientTrainee,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 
@@ -63,7 +64,7 @@ export class GeneralService {
 		return throwError('Not implemented yet');
 	}
 
-	public GetTrainees(): Observable<ClientTraineeView[]> {
+	public GetTrainees(): Observable<ClientTrainee[]> {
 		return throwError('Not implemented yet');
 	}
 

@@ -8,7 +8,9 @@ export class VarDirective {
 	set rdVar(context: any) {
 		this.context.$implicit = this.context.ngVar = context;
 		this.updateView();
-	}
+  }
+  
+  // NOTE: Not working as expected
 
 	context: any = {};
 

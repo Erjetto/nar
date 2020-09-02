@@ -19,6 +19,10 @@ import { delay, distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
 import { CardComponent } from 'src/app/shared/components/card/card.component';
 import { clone, cloneDeep } from 'lodash';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
+import * as VoteStateAction from 'src/app/shared/stores/vote/vote.action';
+import * as fromVoteState from 'src/app/shared/stores/vote/vote.reducer';
+import * as BinusianStateAction from 'src/app/shared/stores/binusian/binusian.action';
+import * as fromBinusianState from 'src/app/shared/stores/binusian/binusian.reducer';
 
 @Component({
 	selector: 'rd-manage-top-bottom-vote',
@@ -31,17 +35,19 @@ export class ManageTopBottomVoteComponent
 	implements OnInit, AfterViewInit, OnDestroy {
 	public viewDateFormat = 'dd MMM yyyy';
 
+	public voteSchedules$: Observable<TopBottomVoteSchedule[]>;
+	public trainerVotes$: Observable<TopBottomVote[]>;
+	public trainees$: Observable<ClientTrainee[]>;
+	public traineeVotes$: Observable<TopBottomVote[]>;
+
 	public trainees: ClientTrainee[];
 	public traineeVotes: TopBottomVote[];
 
 	// Use Subject to manually stream new data and automatically markForChanges()
-	public traineeVotesFiltered$ = new Subject<TopBottomVote[]>();
+	public traineeVotesFiltered$: Observable<TopBottomVote[]>;
 	public searchText = '';
 
 	public currentVote: 'trainer' | 'trainee' = 'trainee';
-
-	public voteSchedules$: Observable<TopBottomVoteSchedule[]>;
-	public trainerVotes$: Observable<TopBottomVote[]>;
 
 	public voteScheduleLoading$: Observable<boolean>;
 	public voteResultLoading$: Observable<boolean>;
@@ -53,17 +59,11 @@ export class ManageTopBottomVoteComponent
 	}
 
 	ngOnInit(): void {
-		this.voteSchedules$ = of([
-			new TopBottomVoteSchedule('ScheduleId1', 'Best Trainee', 3, new Date(), new Date()),
-			new TopBottomVoteSchedule('ScheduleId2', 'Best Trainee 2', 2, new Date(), new Date()),
-			new TopBottomVoteSchedule('ScheduleId3', 'Best Trainee 3', 3, new Date(), new Date()),
-		]).pipe(delay(500));
-
-		this.trainees = [
-			new ClientTrainee('T1', 'T099', 'Rheza', '124123124', true),
-			new ClientTrainee('T2', 'T098', 'asdfasdf', '124123124', true),
-			new ClientTrainee('T3', 'T097', 'asdfasdfasdf', '124123124', true),
-		];
+		this.voteSchedules$ = this.store.pipe(select(fromVoteState.getVoteSchedules));
+		this.traineeVotesFiltered$ = this.store.pipe(select(fromVoteState.getTraineeVotesFiltered));
+		this.trainees$ = this.store.pipe(select(fromBinusianState.getTrainees));
+		this.voteResultLoading$ = this.store.pipe(select(fromVoteState.isVoteResultLoading));
+		this.voteScheduleLoading$ = this.store.pipe(select(fromVoteState.isVoteScheduleLoading));
 
 		this.traineeVotes = [
 			new TopBottomVote(
@@ -108,10 +108,11 @@ export class ManageTopBottomVoteComponent
 				[new VoteItem('T3', 'Jelek')]
 			),
 		];
+		this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
 	}
 
 	ngAfterViewInit(): void {
-		this.traineeVotesFiltered$.next(this.traineeVotes);
+		// this.traineeVotesFiltered$.next(this.traineeVotes);
 	}
 
 	// Arrow function because normal function refer 'this' as null because
@@ -121,33 +122,37 @@ export class ManageTopBottomVoteComponent
 			debounceTime(500),
 			distinctUntilChanged(),
 			map((text) => {
-				this.searchText = text;
+				this.store.dispatch(VoteStateAction.SetFilterText({ filterText: text }));
+				// this.searchText = text;
 				// TODO: call action like SetSearch({payload: 'text'}) instead
 				// Moved to vote.reducer
-				let filteredVotes = cloneDeep(this.traineeVotes);
-				text = text.toLowerCase();
-				if (text !== '') {
-					filteredVotes = filteredVotes.filter((vote) => {
-						if (this.getTrainee(vote.TraineeId).codeAndName.toLowerCase().indexOf(text) !== -1)
-							return true;
+				// let filteredVotes = cloneDeep(this.traineeVotes);
+				// text = text.toLowerCase();
+				// if (text !== '') {
+				// 	filteredVotes = filteredVotes.filter((vote) => {
+				// 		if (this.getTrainee(vote.TraineeId).codeAndName.toLowerCase().indexOf(text) !== -1)
+				// 			return true;
 
-						vote.TopVotes = vote.TopVotes.filter(
-							(voteItem) =>
-								(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(text) !== -1
-						);
-						vote.BottomVotes = vote.BottomVotes.filter(
-							(voteItem) =>
-								(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(text) !== -1
-						);
-						return vote.TopVotes.length + vote.BottomVotes.length > 0;
-					});
-					this.traineeVotesFiltered$.next(filteredVotes);
-				}
+				// 		vote.TopVotes = vote.TopVotes.filter(
+				// 			(voteItem) =>
+				// 				(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(text) !== -1
+				// 		);
+				// 		vote.BottomVotes = vote.BottomVotes.filter(
+				// 			(voteItem) =>
+				// 				(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(text) !== -1
+				// 		);
+				// 		return vote.TopVotes.length + vote.BottomVotes.length > 0;
+				// 	});
+				// 	this.traineeVotesFiltered$.next(filteredVotes);
+				// }
 			})
 		);
 
 	selectSchedule(row: TopBottomVoteSchedule) {
 		this.editForm$.next(row);
+		this.store.dispatch(
+			VoteStateAction.FetchTopBottomVotesForSchedule({ scheduleId: row.ScheduleId })
+		);
 	}
 
 	cancelEdit() {

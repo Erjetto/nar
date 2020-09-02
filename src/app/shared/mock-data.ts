@@ -13394,16 +13394,34 @@ export const MockData = {
 	],
 
 	GetTopBottomVoteSchedules: [
-		{
-			__type: 'TopBottomVoteSchedule:#BPlusTraining.Logic',
-			EndDate: '/Date(1595869200000)/',
-			ScheduleId: '195b4281-9256-45c9-8198-914794b5adaf',
-			ScheduleName: 'Top Bottom 1',
-			StartDate: '/Date(1595782800000)/',
-			VoteCount: 3,
-			isForTrainer: false,
-		},
-	],
+    {
+      "__type": "TopBottomVoteSchedule:#BPlusTraining.Logic",
+      "EndDate": "/Date(1595869200000)/",
+      "ScheduleId": "195b4281-9256-45c9-8198-914794b5adaf",
+      "ScheduleName": "Top Bottom 1",
+      "StartDate": "/Date(1595782800000)/",
+      "VoteCount": 3,
+      "isForTrainer": false
+    },
+    {
+      "__type": "TopBottomVoteSchedule:#BPlusTraining.Logic",
+      "EndDate": "/Date(1596733200000)/",
+      "ScheduleId": "922cb2e9-6401-4b23-a8ed-54b33b26bb74",
+      "ScheduleName": "Top Bottom Trainee - 2",
+      "StartDate": "/Date(1596733200000)/",
+      "VoteCount": 3,
+      "isForTrainer": false
+    },
+    {
+      "__type": "TopBottomVoteSchedule:#BPlusTraining.Logic",
+      "EndDate": "/Date(1596819600000)/",
+      "ScheduleId": "6f89769a-666f-41a0-af8e-738462826b70",
+      "ScheduleName": "Top Bottom 2",
+      "StartDate": "/Date(1596733200000)/",
+      "VoteCount": 3,
+      "isForTrainer": true
+    }
+  ],
 
 	// subjectId: "ac349105-3eb5-ea11-abcb-d8d385fcda38"
 	GetSchedules: [

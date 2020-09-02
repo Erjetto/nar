@@ -80,12 +80,11 @@
 			</rd-card>
 			<!-- [cardTitle]="isEditing ? 'Edit/View Case' : 'Insert New Case'" -->
 			<rd-card
-				*rdVar="caseForm$ | async as form"
-				[cardTitle]="form ? 'Edit/View Case' : 'Insert New Case'"
-				[expanded]="form"
+				[cardTitle]="(caseForm$ | async) ? 'Edit/View Case' : 'Insert New Case'"
+				[expanded]="(caseForm$ | async)"
 			>
 				<!-- Expand if form has value -->
-				<div rdCardBadges class="" *ngIf="form">
+				<div rdCardBadges class="" *ngIf="caseForm$ | async">
 					<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
@@ -93,7 +92,7 @@
 				<form>
 					<div class="row">
 						<div class="col">
-							<div class="row form-group" *ngIf="!form">
+							<div class="row form-group" *ngIf="!(caseForm$ | async)">
 								<label for="selectSubject" class="col-3 col-form-label">Subject</label>
 								<ng-select
 									id="selectSubject"
@@ -115,7 +114,7 @@
 										id="caseName"
 										name="caseName"
 										class="form-control"
-										[ngModel]="form?.CaseName"
+										[ngModel]="(caseForm$ | async)?.CaseName"
 									/>
 								</div>
 							</div>
@@ -127,7 +126,7 @@
 										id="correctors"
 										name="correctors"
 										class="form-control"
-										[value]="form?.correctorList"
+										[value]="(caseForm$ | async)?.correctorList"
 									/>
 								</div>
 							</div>
@@ -135,7 +134,7 @@
 								<label for="fileUpload" class="col-3 col-form-label">File</label>
 								<div class="col input-group">
 									<input type="file" id="fileUpload" name="fileUpload" class="col form-control" />
-									<div class="input-group-append" *ngIf="form">
+									<div class="input-group-append" *ngIf="(caseForm$ | async)">
 										<button
 											class="btn btn-info"
 											(click)="downloadFile()"
@@ -149,7 +148,7 @@
 							</div>
 						</div>
 						<div class="col">
-							<div class="row form-group" *ngIf="!form">
+							<div class="row form-group" *ngIf="!(caseForm$ | async)">
 								<label for="selectSchedule" class="col-4 col-form-label">Schedule</label>
 								<ng-select
 									id="selectSchedule"
@@ -171,7 +170,7 @@
 										id="scheduleDate"
 										name="scheduleDate"
 										class="form-control"
-										[ngModel]="form?.ScheduleDate | date: viewDateFormat"
+										[ngModel]="(caseForm$ | async)?.ScheduleDate | date: viewDateFormat"
 									/>
 								</div>
 							</div>
@@ -183,7 +182,7 @@
 										id="trainerDeadline"
 										name="trainerDeadline"
 										class="form-control"
-										[ngModel]="form?.TrainerDeadline | date: viewDateFormat"
+										[ngModel]="(caseForm$ | async)?.TrainerDeadline | date: viewDateFormat"
 									/>
 								</div>
 							</div>
@@ -195,13 +194,13 @@
 										id="traineeDeadline"
 										name="traineeDeadline"
 										class="form-control"
-										[ngModel]="form?.TraineeDeadline | date: viewDateFormat"
+										[ngModel]="(caseForm$ | async)?.TraineeDeadline | date: viewDateFormat"
 									/>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="row justify-content-around mt-2" [ngSwitch]="!!form">
+					<div class="row justify-content-around mt-2" [ngSwitch]="(caseForm$ | async)">
 						<ng-container *ngSwitchCase="false">
 							<button type="submit" class="btn btn-primary">
 								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create
