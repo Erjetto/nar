@@ -71,6 +71,7 @@ import { ModifyInterviewMaterialComponent } from './modify/modify-interview-mate
 import { ViewAllQuestionComponent } from './presentation/view-all-question/view-all-question.component';
 import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
 import { ScoringComponent } from './presentation/scoring/scoring.component';
+import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
 
 @NgModule({
 	declarations: [
@@ -97,7 +98,9 @@ import { ScoringComponent } from './presentation/scoring/scoring.component';
 		ModifyAnnouncementComponent,
 		ModifyMaterialComponent,
 		ModifyInterviewScheduleComponent,
-		ModifyInterviewMaterialComponent,
+    ModifyInterviewMaterialComponent,
+    
+		ViewQuestionComponent,
 		ViewAllQuestionComponent,
 		ViewAllPresentationComponent,
 		ScoringComponent,

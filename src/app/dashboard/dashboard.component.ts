@@ -22,6 +22,7 @@ import { MenuService } from '../shared/services/menu.service';
 import { Route, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter, takeUntil, delay, tap } from 'rxjs/operators';
 import { UserService } from '../shared/services/user.service';
+import { GeneralService } from '../shared/services/new/general.service';
 
 @Component({
 	selector: 'rd-dashboard',
@@ -53,6 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	public selectedRole$: Observable<string>;
 
 	constructor(
+		private generalService: GeneralService,
 		private genService: GenerationService,
 		private userService: UserService,
 		private menuService: MenuService,
@@ -92,16 +94,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				MainStateAction.ChangeRole({
 					name: this.user.ActiveRole,
 				})
-			);
+      );
 
-			// Get user current gen from server
-			this.genService.getCurrentGeneration().subscribe((res) => {
-				this.store.dispatch(
-					MainStateAction.ChangeGeneration({
-						name: ClientGeneration.fromJson(res).Description,
-					})
-				);
-			});
+      // TODO: Check how old nar gets active role and current gen
+      
 		}
 	}
 

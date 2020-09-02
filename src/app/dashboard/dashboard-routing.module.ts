@@ -30,6 +30,7 @@ import { ModifyInterviewMaterialComponent } from './modify/modify-interview-mate
 import { ScoringComponent } from './presentation/scoring/scoring.component';
 import { ViewAllQuestionComponent } from './presentation/view-all-question/view-all-question.component';
 import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
+import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
 
 export const routes: Routes = [
 	{
@@ -297,6 +298,13 @@ export const routes: Routes = [
 						data: {
 							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Trainee,
 							name: 'View All Questions',
+						},
+					},
+					{
+						path: 'view-question/',
+						component: ViewQuestionComponent,
+						data: {
+							roles: RoleGroups.ALL,
 						},
 					},
 					// {
