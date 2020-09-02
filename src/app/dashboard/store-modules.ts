@@ -14,6 +14,7 @@ import {
 	PresentationStateReducer,
 } from '../shared/stores/presentation/presentation.reducer';
 import { VOTESTATE_REDUCER_NAME, VoteStateReducer } from '../shared/stores/vote/vote.reducer';
+import { BINUSIANSTATE_REDUCER_NAME, BinusianStateReducer } from '../shared/stores/binusian/binusian.reducer';
 
 import { MainStateEffects } from '../shared/stores/main/main.effect';
 import { CandidateStateEffects } from '../shared/stores/candidate/candidate.effect';
@@ -21,6 +22,7 @@ import { CaseStateEffects } from '../shared/stores/case/case.effect';
 import { MasterStateEffects } from '../shared/stores/master/master.effect';
 import { PresentationStateEffects } from '../shared/stores/presentation/presentation.effect';
 import { VoteStateEffects } from '../shared/stores/vote/vote.effect';
+import { BinusianStateEffects } from '../shared/stores/binusian/binusian.effect';
 import { StoreModule } from '@ngrx/store';
 
 
@@ -31,6 +33,7 @@ export const ALL_STORES = [
 	StoreModule.forFeature(MASTERSTATE_REDUCER_NAME, MasterStateReducer),
 	StoreModule.forFeature(PRESENTATIONSTATE_REDUCER_NAME, PresentationStateReducer),
 	StoreModule.forFeature(VOTESTATE_REDUCER_NAME, VoteStateReducer),
+	StoreModule.forFeature(BINUSIANSTATE_REDUCER_NAME, BinusianStateReducer),
 ];
 
 export const ALL_EFFECTS = [
@@ -40,4 +43,5 @@ export const ALL_EFFECTS = [
 	MasterStateEffects,
 	PresentationStateEffects,
 	VoteStateEffects,
+	BinusianStateEffects,
 ];
