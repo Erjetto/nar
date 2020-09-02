@@ -127,10 +127,7 @@ export class MasterStateEffects {
 	@Effect()
 	getInterviewQuestionDetails$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchInterviewQuestionDetails),
-		pluck('interviewQuestionId'),
-		switchMap((interviewQuestionId) =>
-			this.interviewService.GetInterviewQuestionDetails(interviewQuestionId)
-		),
+		switchMap((data) => this.interviewService.GetInterviewQuestionDetails(data)),
 		mergeMap((res) => of(MasterStateAction.FetchInterviewQuestionDetailsSuccess({ payload: res })))
 	);
 	//#endregion
@@ -184,12 +181,7 @@ export class MasterStateEffects {
 		mergeMap(({ res, action }) =>
 			res != null
 				? of(MasterStateAction.FetchTraineeInPhase({ phaseId: action.phaseId }))
-				: of(
-						MainStateAction.ToastMessage({
-							messageType: 'danger',
-							message: 'Failed in updating phase',
-						})
-				  )
+				: of(MainStateAction.FailMessage('Creating Trainee in Phase'))
 		)
 	);
 	@Effect()
@@ -217,74 +209,37 @@ export class MasterStateEffects {
 								);
 						})
 					);
-			else
-				return of(
-					MainStateAction.ToastMessage({
-						messageType: 'danger',
-						message: 'Failed in creating subject: Not implemented yet',
-					})
-				);
+			else return of(MainStateAction.NotImplementedMessage('Creating Subject'));
 		})
 	);
 	@Effect()
 	createSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateSchedule),
-		switchMap((action) =>
-			of(
-				MainStateAction.ToastMessage({
-					messageType: 'danger',
-					message: 'Failed in creating Schedule: Not implemented yet',
-				})
-			)
-		)
+		switchMap((action) => of(MainStateAction.NotImplementedMessage('creating Schedule')))
 	);
+
 	@Effect()
 	createTraineeInSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateTraineeInSchedule),
-		switchMap((action) =>
-			of(
-				MainStateAction.ToastMessage({
-					messageType: 'danger',
-					message: 'Failed in creating TraineeInSchedule: Not implemented yet',
-				})
-			)
-		)
+		switchMap((action) => of(MainStateAction.NotImplementedMessage('creating Schedule')))
 	);
+
 	@Effect()
 	createInterviewQuestion$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateInterviewQuestion),
-		switchMap((action) =>
-			of(
-				MainStateAction.ToastMessage({
-					messageType: 'danger',
-					message: 'Failed in creating InterviewQuestion: Not implemented yet',
-				})
-			)
-		)
+		switchMap((action) => of(MainStateAction.NotImplementedMessage('creating InterviewQuestion')))
 	);
 	@Effect()
 	createInterviewQuestionDetail$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateInterviewQuestionDetail),
 		switchMap((action) =>
-			of(
-				MainStateAction.ToastMessage({
-					messageType: 'danger',
-					message: 'Failed in creating InterviewQuestionDetail: Not implemented yet',
-				})
-			)
+			of(MainStateAction.NotImplementedMessage('creating InterviewQuestionDetail'))
 		)
 	);
 	@Effect()
 	createInterviewSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateInterviewSchedule),
-		switchMap((action) =>
-			of(
-				MainStateAction.ToastMessage({
-					messageType: 'danger',
-					message: 'Failed in creating InterviewSchedule: Not implemented yet',
-				})
-			)
-		)
+		switchMap((action) => of(MainStateAction.NotImplementedMessage('creating InterviewSchedule')))
 	);
 	//#endregion
 
@@ -296,12 +251,7 @@ export class MasterStateEffects {
 		mergeMap((res) =>
 			res != null
 				? of(MasterStateAction.FetchPhases())
-				: of(
-						MainStateAction.ToastMessage({
-							messageType: 'danger',
-							message: 'Failed in updating phase',
-						})
-				  )
+				: of(MainStateAction.FailMessage('Updating phase'))
 		)
 	);
 
@@ -311,15 +261,7 @@ export class MasterStateEffects {
 	@Effect()
 	deletePhase$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.DeletePhase),
-		switchMap(
-			(action) =>
-				of(
-					MainStateAction.ToastMessage({
-						messageType: 'danger',
-						message: 'Failed in deleting phase: Not implemented yet',
-					})
-				)
-		)
+		switchMap((action) => of(MainStateAction.NotImplementedMessage('deleting phase')))
 	);
 
 	@Effect()
@@ -329,12 +271,7 @@ export class MasterStateEffects {
 		mergeMap((res) =>
 			res != null
 				? of(MasterStateAction.FetchPhases())
-				: of(
-						MainStateAction.ToastMessage({
-							messageType: 'danger',
-							message: 'Failed in updating phase',
-						})
-				  )
+				: of(MainStateAction.NotImplementedMessage('Deleting trainee in phase'))
 		)
 	);
 

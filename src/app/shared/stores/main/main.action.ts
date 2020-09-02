@@ -1,4 +1,4 @@
-import { createAction, props } from '@ngrx/store';
+import { createAction, props, Action } from '@ngrx/store';
 import { Message } from '../../models';
 
 export const ChangeRole = createAction(
@@ -49,3 +49,34 @@ export const UploadFileSuccess = createAction(
 export const UploadFileFailed = createAction(
 	'[MainState] UploadFileFailed'
 );
+
+// tslint:disable-next-line: only-arrow-functions
+export function ErrorGetMessage(what: string): Action{
+  return ToastMessage({
+    messageType:'danger',
+    message: 'Failed to get ' + what
+  });
+}
+
+// tslint:disable-next-line: only-arrow-functions
+export function FailMessage(doingWhat: string): Action{
+  return ToastMessage({
+    messageType:'danger',
+    message: 'Failed ' + doingWhat
+  });
+}
+
+// tslint:disable-next-line: only-arrow-functions
+export function EmptyGetMessage(what: string): Action{
+  return ToastMessage({
+    messageType:'danger',
+    message: what + ' is empty'
+  });
+}
+// tslint:disable-next-line: only-arrow-functions
+export function NotImplementedMessage(doingWhat: string): Action{
+  return ToastMessage({
+    messageType:'danger',
+    message: 'Error in ' + doingWhat + ': Not implemented yet'
+  });
+}

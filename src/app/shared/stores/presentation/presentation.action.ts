@@ -2,21 +2,21 @@ import { createAction, props } from '@ngrx/store';
 import { CoreTrainingPresentation } from '../../models';
 
 export const FetchPresentations = createAction(
-	'[MainState] FetchPresentations',
+	'[PresentationState] FetchPresentations',
 	props<{ generationId: string, subjectId: string }>()
 );
 
 export const FetchPresentationStatus = createAction(
-	'[MainState] FetchPresentationStatus',
+	'[PresentationState] FetchPresentationStatus',
 	props<{ filename: string }>()
 );
 
 export const FetchPresentationsSuccess = createAction(
-	'[MainState] FetchPresentationsSuccess',
+	'[PresentationState] FetchPresentationsSuccess',
 	props<{ payload: CoreTrainingPresentation[] }>()
 );
 
 export const FetchPresentationStatusSuccess = createAction(
-	'[MainState] FetchPresentationStatusSuccess',
+	'[PresentationState] FetchPresentationStatusSuccess',
 	props<{ payload: string }>()
 );

@@ -37,12 +37,7 @@ export class PresentationStateEffects {
 		mergeMap((res) =>
 			!isEmpty(res)
 				? of(PresentationStateAction.FetchPresentationsSuccess({ payload: res }))
-				: of(
-						MainStateAction.ToastMessage({
-							messageType: 'danger',
-							message: 'Failed to get presentations',
-						})
-				  )
+				: of(MainStateAction.ErrorGetMessage('presentations'))
 		)
 	);
 
@@ -53,12 +48,7 @@ export class PresentationStateEffects {
 		mergeMap((res) =>
 			!isEmpty(res)
 				? of(PresentationStateAction.FetchPresentationStatusSuccess({ payload: res }))
-				: of(
-						MainStateAction.ToastMessage({
-							messageType: 'danger',
-							message: 'Failed to get presentations',
-						})
-				  )
+				: of(MainStateAction.ErrorGetMessage('presentations'))
 		)
 	);
 }
