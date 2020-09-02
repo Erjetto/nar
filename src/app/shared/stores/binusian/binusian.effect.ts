@@ -15,6 +15,7 @@ import { Case, ClientPhase, ClientSubject, ClientCaseTrainer } from '../../model
 import { map } from 'lodash';
 import { LeaderService } from '../../services/new/leader.service';
 import { TraineeService } from '../../services/new/trainee.service';
+import { GeneralService } from '../../services/new/general.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -24,13 +25,14 @@ export class CaseStateEffects {
 		private actions$: Actions,
 		private mainStore: Store<fromMainState.IMainState>,
 		private leaderService: LeaderService,
+		private generalService: GeneralService,
 		private traineeService: TraineeService
 	) {}
 
 	@Effect()
-	getBinusians$: Observable<Action> = this.actions$.pipe(
+	getTrainees$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchTrainees),
-		switchMap(() => this.traineeService.GetTrainees()),
+		switchMap(() => this.generalService.GetTrainees()),
 		mergeMap((results) => of(BinusianStateAction.FetchTraineesSuccess({ payload: results })))
 	);
 

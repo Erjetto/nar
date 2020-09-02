@@ -1,52 +1,10 @@
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { SharedModule } from '../shared/shared.module';
-
-import {
-	MAINSTATE_REDUCER_NAME,
-	MainStateReducer,
-} from '../shared/stores/main/main.reducer';
-import {
-	CANDIDATE_REDUCER_NAME,
-	CandidateStateReducer,
-} from '../shared/stores/candidate/candidate.reducer';
-import {
-	CASESTATE_REDUCER_NAME,
-	CaseStateReducer,
-} from '../shared/stores/case/case.reducer';
-import {
-	MASTERSTATE_REDUCER_NAME,
-	MasterStateReducer,
-} from '../shared/stores/master/master.reducer';
-import {
-	PRESENTATIONSTATE_REDUCER_NAME,
-	PresentationStateReducer,
-} from '../shared/stores/presentation/presentation.reducer';
-const stores = [
-	StoreModule.forFeature(MAINSTATE_REDUCER_NAME, MainStateReducer),
-	StoreModule.forFeature(CASESTATE_REDUCER_NAME, CaseStateReducer),
-	StoreModule.forFeature(CANDIDATE_REDUCER_NAME, CandidateStateReducer),
-	StoreModule.forFeature(MASTERSTATE_REDUCER_NAME, MasterStateReducer),
-	StoreModule.forFeature(
-		PRESENTATIONSTATE_REDUCER_NAME,
-		PresentationStateReducer
-	),
-];
-
-import { MainStateEffects } from '../shared/stores/main/main.effect';
-import { CandidateStateEffects } from '../shared/stores/candidate/candidate.effect';
-import { CaseStateEffects } from '../shared/stores/case/case.effect';
-import { MasterStateEffects } from '../shared/stores/master/master.effect';
-import { PresentationStateEffects } from '../shared/stores/presentation/presentation.effect';
-const effects = [
-	MainStateEffects,
-	CandidateStateEffects,
-	CaseStateEffects,
-	MasterStateEffects,
-	PresentationStateEffects,
-];
+import { ALL_STORES, ALL_EFFECTS } from './store-modules';
 
 import { DashboardComponent } from './dashboard.component';
 import { HomeComponent } from './home/home.component';
@@ -98,8 +56,8 @@ import { ViewQuestionComponent } from './presentation/view-question/view-questio
 		ModifyAnnouncementComponent,
 		ModifyMaterialComponent,
 		ModifyInterviewScheduleComponent,
-    ModifyInterviewMaterialComponent,
-    
+		ModifyInterviewMaterialComponent,
+
 		ViewQuestionComponent,
 		ViewAllQuestionComponent,
 		ViewAllPresentationComponent,
@@ -108,8 +66,8 @@ import { ViewQuestionComponent } from './presentation/view-question/view-questio
 	imports: [
 		SharedModule,
 		DashboardRoutingModule,
-		...stores,
-		EffectsModule.forFeature(effects),
+		...ALL_STORES,
+		EffectsModule.forFeature(ALL_EFFECTS),
 	],
 	exports: [],
 	providers: [],
