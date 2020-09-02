@@ -7,7 +7,7 @@ import {
 	ClientTrainee,
 	TrainerTopBottomVote,
 } from '../../models';
-import { getBinusianState, getTrainees } from '../binusian/binusian.reducer';
+import { getBinusianState, getTrainees, getTraineesEntity } from '../binusian/binusian.reducer';
 import { cloneDeep } from 'lodash';
 import * as VoteStateAction from './vote.action';
 
@@ -86,40 +86,72 @@ export const getMainStateBy = (fn: (_: IVoteState) => any) => createSelector(get
 
 export const getVoteSchedules = getMainStateBy((s) => s.voteSchedules);
 export const getTraineeVotes = getMainStateBy((s) => s.traineeVotes);
+export const getTrainerVotes = getMainStateBy((s) => s.trainerVotes);
 export const getFilterText = getMainStateBy((s) => s.filterText);
 
 export const isVoteResultLoading = getMainStateBy((s) => s.voteResultLoading);
 export const isVoteScheduleLoading = getMainStateBy((s) => s.voteScheduleLoading);
 
-export const getTraineeVotesFiltered = createSelector(
-	getTraineeVotes,
+export const getTrainerVotesFiltered = createSelector(
+	getTrainerVotes,
 	getFilterText,
-	getTrainees,
-	(votes: TopBottomVote[], search: string, trainees: ClientTrainee[]) => {
+	getTraineesEntity,
+	(votes: TrainerTopBottomVote[], search: string, trainees: { [id: string]: ClientTrainee }) => {
+		search = search.toLowerCase();
 		let filteredVotes = cloneDeep(votes);
+
 		if (search !== '') {
 			filteredVotes = filteredVotes.filter((vote) => {
-				if (
-					// If voter's name & code contains search text
-					trainees
-						.find((t) => t.TraineeId === vote.TraineeId)
-						.codeAndName.toLowerCase()
-						.indexOf(search) !== -1
-				)
-					return true;
+				if (vote.TrainerName.toLowerCase().indexOf(search) !== -1) return true;
 
 				vote.TopVotes = vote.TopVotes.filter(
 					(voteItem) =>
-						(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(search) !== -1
+						(voteItem.Reason + ' ' + trainees[voteItem.TraineeId]?.codeAndName)
+							.toLowerCase()
+							.indexOf(search) !== -1
 				);
 
 				vote.BottomVotes = vote.BottomVotes.filter(
 					(voteItem) =>
-						(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(search) !== -1
+						(voteItem.Reason + ' ' + trainees[voteItem.TraineeId]?.codeAndName)
+							.toLowerCase()
+							.indexOf(search) !== -1
+        );
+        console.log(vote.TopVotes.length + vote.BottomVotes.length > 0)
+				return vote.TopVotes.length + vote.BottomVotes.length > 0;
+			});
+		}
+		return filteredVotes;
+	}
+);
+
+export const getTraineeVotesFiltered = createSelector(
+	getTraineeVotes,
+	getFilterText,
+	getTraineesEntity,
+	(votes: TopBottomVote[], search: string, trainees: { [id: string]: ClientTrainee }) => {
+		search = search.toLowerCase();
+		let filteredVotes = cloneDeep(votes);
+		if (search !== '') {
+			filteredVotes = filteredVotes.filter((vote) => {
+				if (trainees[vote.TraineeId]?.codeAndName.toLowerCase().indexOf(search) !== -1) return true;
+
+				vote.TopVotes = vote.TopVotes.filter(
+					(voteItem) =>
+						(voteItem.Reason + ' ' + trainees[voteItem.TraineeId]?.codeAndName)
+							.toLowerCase()
+							.indexOf(search) !== -1
+				);
+
+				vote.BottomVotes = vote.BottomVotes.filter(
+					(voteItem) =>
+						(voteItem.Reason + ' ' + trainees[voteItem.TraineeId]?.codeAndName)
+							.toLowerCase()
+							.indexOf(search) !== -1
 				);
 				return vote.TopVotes.length + vote.BottomVotes.length > 0;
 			});
-			return filteredVotes;
 		}
+		return filteredVotes;
 	}
 );

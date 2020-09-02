@@ -20,7 +20,7 @@ import { GeneralService } from '../../services/new/general.service';
 @Injectable({
 	providedIn: 'root',
 })
-export class CaseStateEffects {
+export class BinusianStateEffects {
 	constructor(
 		private actions$: Actions,
 		private mainStore: Store<fromMainState.IMainState>,
@@ -32,7 +32,7 @@ export class CaseStateEffects {
 	@Effect()
 	getTrainees$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchTrainees),
-		switchMap(() => this.generalService.GetTrainees()),
+    switchMap(() => this.generalService.GetTrainees()),
 		mergeMap((results) => of(BinusianStateAction.FetchTraineesSuccess({ payload: results })))
 	);
 

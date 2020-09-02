@@ -48,7 +48,7 @@ export class VoteStateEffects {
 	getTrainerTopBottomVoteForSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(VoteStateAction.FetchTrainerTopBottomVotesForSchedule),
 		switchMap((data) => this.voteService.GetTrainerTopBottomVotesForSchedule(data)),
-		mergeMap((res) =>
+    mergeMap((res) =>
 			!isEmpty(res)
 				? of(VoteStateAction.FetchTrainerTopBottomVotesForScheduleSuccess({ payload: res }))
 				: of(MainStateAction.ErrorGetMessage('Trainer Top bottom votes'))

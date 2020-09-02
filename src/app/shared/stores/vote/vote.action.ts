@@ -15,7 +15,7 @@ export const FetchTopBottomVotesForSchedule = createAction(
 );
 
 export const FetchTrainerTopBottomVotesForSchedule = createAction(
-	'[VoteState] FetchTopBottomVotesForSchedule',
+	'[VoteState] FetchTrainerTopBottomVotesForSchedule',
 	props<{ scheduleId: string }>()
 );
 
@@ -73,7 +73,7 @@ export const FetchTopBottomVotesForScheduleSuccess = createAction(
 );
 
 export const FetchTrainerTopBottomVotesForScheduleSuccess = createAction(
-	'[VoteState] FetchTopBottomVotesForScheduleSuccess',
+	'[VoteState] FetchTrainerTopBottomVotesForScheduleSuccess',
 	props<{ payload: TrainerTopBottomVote[] }>()
 );
 

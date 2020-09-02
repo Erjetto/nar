@@ -3,7 +3,7 @@
 		<div class="col-5">
 			<div class="row">
 				<div class="col">
-					<rd-card [cardTitle]="'Top/Bottom Vote'">
+					<rd-card [cardTitle]="'Top/Bottom Vote'" [isLoading]="voteScheduleLoading$ | async">
 						<table class="table table-sm table-striped table-hover text-center">
 							<thead>
 								<tr>
@@ -32,7 +32,7 @@
 					</rd-card>
 					<rd-card
 						[cardTitle]="(editForm$ | async) ? 'Edit Vote Schedule' : 'Insert New Vote Schedule'"
-						[expanded]="(editForm$ | async)"
+						[expanded]="editForm$ | async"
 					>
 						<div rdCardBadges class="" *ngIf="editForm$ | async">
 							<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
@@ -44,13 +44,25 @@
 								<div class="col">
 									<div class="row form-group">
 										<label for="selectSubject">Name</label>
-										<input type="text" name="ScheduleName" id="ScheduleName" class="form-control" />
+										<input
+											type="text"
+											name="ScheduleName"
+											id="ScheduleName"
+											class="form-control"
+											[value]="(editForm$ | async)?.ScheduleName"
+										/>
 									</div>
 								</div>
 								<div class="col-3">
 									<div class="row form-group">
 										<label for="selectSubject"># of votes</label>
-										<input type="number" name="AmountVote" id="AmountVote" class="form-control" />
+										<input
+											type="number"
+											name="AmountVote"
+											id="AmountVote"
+											class="form-control"
+											[value]="(editForm$ | async)?.VoteCount"
+										/>
 									</div>
 								</div>
 							</div>
@@ -58,13 +70,25 @@
 								<div class="col">
 									<div class="row form-group">
 										<label for="selectSubject">Start</label>
-										<input type="text" name="StartDate" id="StartDate" class="form-control" />
+										<input
+											type="date"
+											name="StartDate"
+											id="StartDate"
+											class="form-control"
+											[value]="(editForm$ | async)?.StartDate | date: 'yyyy-MM-dd'"
+										/>
 									</div>
 								</div>
 								<div class="col">
 									<div class="row form-group">
 										<label for="selectSubject">End</label>
-										<input type="text" name="EndDate" id="EndDate" class="form-control" />
+										<input
+											type="date"
+											name="EndDate"
+											id="EndDate"
+											class="form-control"
+											[value]="(editForm$ | async)?.ScheduleName | date: 'yyyy-MM-dd'"
+										/>
 									</div>
 								</div>
 							</div>
@@ -93,7 +117,7 @@
 			</div>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Vote Result'" [expanded]="true">
+			<rd-card [cardTitle]="'Vote Result'" [isLoading]="voteResultLoading$ | async">
 				<div class="row">
 					<div class="col">
 						<ul class="nav nav-tabs">
@@ -127,34 +151,91 @@
 					</div>
 				</div>
 				<div class="content">
-					<div class="vote-list row">
-						<div
-							class="vote-item row border-bottom"
-							*ngFor="let voter of traineeVotesFiltered$ | async"
-						>
+					<div class="vote-list row" *ngIf="currentVote === 'trainee'">
+						<div class="vote-item row border-bottom" *ngFor="let voter of traineeVotes$ | async">
 							<div class="col">
 								<h5 class="row vote-item__voter">
 									<ngb-highlight
-										[result]="getTrainee(voter.TraineeId).codeAndName"
+										[result]="getTrainee(voter.TraineeId)?.codeAndName"
 										[term]="searchText"
 									></ngb-highlight>
-									<!-- {{ getTrainee(voter.TraineeId).codeAndName }} -->
 								</h5>
-								<div class="pl-4 row">
+								<div class="pl-4 row" *ngIf="voter.TopVotes.length > 0">
 									<div class="col">
 										<h6 class="row">Top {{ voter.TopVotes.length }}</h6>
 										<div class="pl-4 row" *ngFor="let vote of voter.TopVotes">
 											<div class="col">
 												<span class="">
 													<ngb-highlight
-														[result]="getTrainee(voter.TraineeId).codeAndName"
+														[result]="getTrainee(vote.TraineeId)?.codeAndName"
 														[term]="searchText"
 													></ngb-highlight>
-													<!-- {{getTrainee(vote.TraineeId).codeAndName}} -->
 												</span>
 												<p style="font-size: small">
 													<ngb-highlight [result]="vote.Reason" [term]="searchText"></ngb-highlight>
-													<!-- {{ vote.Reason }} -->
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="pl-4 row" *ngIf="voter.BottomVotes.length > 0">
+									<div class="col">
+										<h6 class="row">Bottom {{ voter.BottomVotes.length }}</h6>
+										<div class="pl-4 row" *ngFor="let vote of voter.BottomVotes">
+											<div class="col">
+												<span class="">
+													<ngb-highlight
+														[result]="getTrainee(vote.TraineeId)?.codeAndName"
+														[term]="searchText"
+													></ngb-highlight>
+												</span>
+												<p style="font-size: small">
+													<ngb-highlight [result]="vote.Reason" [term]="searchText"></ngb-highlight>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="vote-list row" *ngIf="currentVote === 'trainer'">
+						<div class="vote-item row border-bottom" *ngFor="let voter of trainerVotes$ | async">
+							<div class="col">
+								<h5 class="row vote-item__voter">
+									<ngb-highlight [result]="voter.TrainerName" [term]="searchText"></ngb-highlight>
+								</h5>
+								<div class="pl-4 row" *ngIf="voter.TopVotes.length > 0">
+									<div class="col">
+										<h6 class="row">Top {{ voter.TopVotes.length }}</h6>
+										<div class="pl-4 row" *ngFor="let vote of voter.TopVotes">
+											<div class="col">
+												<span class="">
+													<ngb-highlight
+														[result]="getTrainee(vote.TraineeId)?.codeAndName"
+														[term]="searchText"
+													></ngb-highlight>
+												</span>
+												<p style="font-size: small">
+													<ngb-highlight [result]="vote.Reason" [term]="searchText"></ngb-highlight>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="pl-4 row" *ngIf="voter.BottomVotes.length > 0">
+									<div class="col">
+										<h6 class="row">Bottom {{ voter.BottomVotes.length }}</h6>
+										<div class="pl-4 row" *ngFor="let vote of voter.BottomVotes">
+											<div class="col">
+												<span class="">
+													<ngb-highlight
+														[result]="getTrainee(vote.TraineeId)?.codeAndName"
+														[term]="searchText"
+													></ngb-highlight>
+												</span>
+												<p style="font-size: small">
+													<ngb-highlight [result]="vote.Reason" [term]="searchText"></ngb-highlight>
 												</p>
 											</div>
 										</div>

@@ -13,7 +13,7 @@ import {
 	Material,
 	ClientTraineeView,
 	ClientTraineeData,
-  ClientTrainee,
+	ClientTrainee,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 
@@ -44,15 +44,11 @@ export class GeneralService {
 		return throwError('Not implemented yet');
 	}
 
-	public GetScoreByPhase(data: {
-		phaseId: string;
-	}): Observable<ClientScoreTrainee[]> {
+	public GetScoreByPhase(data: { phaseId: string }): Observable<ClientScoreTrainee[]> {
 		return throwError('Not implemented yet');
 	}
 
-	public GetScoreBySubject(data: {
-		subjectId: string;
-	}): Observable<ClientScoreTrainee[]> {
+	public GetScoreBySubject(data: { subjectId: string }): Observable<ClientScoreTrainee[]> {
 		return throwError('Not implemented yet');
 	}
 
@@ -65,24 +61,21 @@ export class GeneralService {
 	}
 
 	public GetTrainees(): Observable<ClientTrainee[]> {
+		return of(MockData.GetTrainees).pipe(
+			delay(500),
+			map((r) => r.map(ClientTrainee.fromJson))
+		);
+	}
+
+	public GetTraineeData(data: { traineeId: string }): Observable<ClientTraineeData> {
 		return throwError('Not implemented yet');
 	}
 
-	public GetTraineeData(data: {
-		traineeId: string;
-	}): Observable<ClientTraineeData> {
+	public GetCurrentSubject(data: { phaseId: string }): Observable<ClientSubject> {
 		return throwError('Not implemented yet');
 	}
 
-	public GetCurrentSubject(data: {
-		phaseId: string;
-	}): Observable<ClientSubject> {
-		return throwError('Not implemented yet');
-	}
-
-	public GetSubjectsWithPresentation(data: {
-		phaseId: string;
-	}): Observable<ClientSubject[]> {
+	public GetSubjectsWithPresentation(data: { phaseId: string }): Observable<ClientSubject[]> {
 		return throwError('Not implemented yet');
 	}
 
@@ -92,9 +85,7 @@ export class GeneralService {
 	}
 
 	// Notification
-	public MarkNotificationAsRead(data: {
-		notificationId: string;
-	}): Observable<boolean> {
+	public MarkNotificationAsRead(data: { notificationId: string }): Observable<boolean> {
 		return throwError('Not implemented yet');
 	}
 
@@ -115,9 +106,7 @@ export class GeneralService {
 		);
 	}
 
-	public GetPhasesCurrentGenerationWithType(data: {
-		type: string;
-	}): Observable<ClientPhase[]> {
+	public GetPhasesCurrentGenerationWithType(data: { type: string }): Observable<ClientPhase[]> {
 		return of(MockData.GetPhasesCurrentGenerationWithType).pipe(
 			delay(500),
 			map((r) => r.map(ClientPhase.fromJson))
@@ -131,9 +120,7 @@ export class GeneralService {
 		);
 	}
 
-	public GetStatisticTrainee(data: {
-		phaseId: string;
-	}): Observable<ClientStatistic[]> {
+	public GetStatisticTrainee(data: { phaseId: string }): Observable<ClientStatistic[]> {
 		return of(MockData.GetStatisticTrainee).pipe(
 			delay(500),
 			map((r) => r.map(ClientStatistic.fromJson))

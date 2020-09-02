@@ -14,10 +14,20 @@ import {
 	TopBottomVoteSchedule,
 	TopBottomVote,
 	VoteItem,
+	TrainerTopBottomVote,
 } from 'src/app/shared/models';
-import { delay, distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
+import {
+	delay,
+	distinctUntilChanged,
+	debounceTime,
+	map,
+	take,
+	takeUntil,
+	tap,
+  filter,
+} from 'rxjs/operators';
 import { CardComponent } from 'src/app/shared/components/card/card.component';
-import { clone, cloneDeep } from 'lodash';
+import { clone, cloneDeep, isEmpty } from 'lodash';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import * as VoteStateAction from 'src/app/shared/stores/vote/vote.action';
 import * as fromVoteState from 'src/app/shared/stores/vote/vote.reducer';
@@ -32,120 +42,55 @@ import * as fromBinusianState from 'src/app/shared/stores/binusian/binusian.redu
 })
 export class ManageTopBottomVoteComponent
 	extends DashboardContentBase
-	implements OnInit, AfterViewInit, OnDestroy {
+	implements OnInit, OnDestroy {
 	public viewDateFormat = 'dd MMM yyyy';
 
 	public voteSchedules$: Observable<TopBottomVoteSchedule[]>;
-	public trainerVotes$: Observable<TopBottomVote[]>;
-	public trainees$: Observable<ClientTrainee[]>;
 	public traineeVotes$: Observable<TopBottomVote[]>;
+	public trainerVotes$: Observable<TrainerTopBottomVote[]>;
 
-	public trainees: ClientTrainee[];
-	public traineeVotes: TopBottomVote[];
-
-	// Use Subject to manually stream new data and automatically markForChanges()
-	public traineeVotesFiltered$: Observable<TopBottomVote[]>;
 	public searchText = '';
-
 	public currentVote: 'trainer' | 'trainee' = 'trainee';
 
 	public voteScheduleLoading$: Observable<boolean>;
 	public voteResultLoading$: Observable<boolean>;
 
-	public editForm$: BehaviorSubject<TopBottomVoteSchedule> = new BehaviorSubject(null);
+	public traineesEntity: {[id:string]: ClientTrainee}; // for get trainee name by id
+	public trainees$ = new BehaviorSubject<ClientTrainee[]>([]); // for get trainee name by id
+	public editForm$ = new BehaviorSubject<TopBottomVoteSchedule>(null);
 
 	constructor(protected store: Store<IAppState>) {
 		super(store);
 	}
 
 	ngOnInit(): void {
+		// Get trainee list once
+		this.store
+			.pipe(
+				select(fromBinusianState.getTraineesEntity),
+				filter((v) => !isEmpty(v)),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((res) => (this.traineesEntity = res));
+
 		this.voteSchedules$ = this.store.pipe(select(fromVoteState.getVoteSchedules));
-		this.traineeVotesFiltered$ = this.store.pipe(select(fromVoteState.getTraineeVotesFiltered));
-		this.trainees$ = this.store.pipe(select(fromBinusianState.getTrainees));
+		this.traineeVotes$ = this.store.pipe(select(fromVoteState.getTraineeVotesFiltered));
+		this.trainerVotes$ = this.store.pipe(select(fromVoteState.getTrainerVotesFiltered));
+
 		this.voteResultLoading$ = this.store.pipe(select(fromVoteState.isVoteResultLoading));
 		this.voteScheduleLoading$ = this.store.pipe(select(fromVoteState.isVoteScheduleLoading));
 
-		this.traineeVotes = [
-			new TopBottomVote(
-				'T1',
-				'v2',
-				'ScheduleId1',
-				[
-					new VoteItem(
-						'T2',
-						'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat sapiente, temporibus voluptates non vero itaque! Dolorum commodi accusamus sit, non consequuntur nostrum omnis quibusdam voluptates quo consectetur ut eum voluptatibus!'
-					),
-					new VoteItem('T2', 'Pintar'),
-				],
-				[new VoteItem('T3', 'Jelek')]
-			),
-			new TopBottomVote(
-				'T2',
-				'v3',
-				'ScheduleId1',
-				[new VoteItem('T2', 'Pintar')],
-				[new VoteItem('T3', 'Sombong')]
-			),
-			new TopBottomVote(
-				'T2',
-				'v3',
-				'ScheduleId1',
-				[new VoteItem('T2', 'Tampan')],
-				[new VoteItem('T3', 'Jelek')]
-			),
-			new TopBottomVote(
-				'T2',
-				'v3',
-				'ScheduleId1',
-				[new VoteItem('T2', 'Sombong')],
-				[new VoteItem('T3', 'Jelek')]
-			),
-			new TopBottomVote(
-				'T2',
-				'v3',
-				'ScheduleId1',
-				[new VoteItem('T2', 'Tampan')],
-				[new VoteItem('T3', 'Jelek')]
-			),
-		];
+		this.store.dispatch(BinusianStateAction.FetchTrainees());
 		this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
-	}
-
-	ngAfterViewInit(): void {
-		// this.traineeVotesFiltered$.next(this.traineeVotes);
 	}
 
 	// Arrow function because normal function refer 'this' as null because
 	// onTypeSearch is bound to the input
 	onTypeSearch = (text$: Observable<string>) =>
 		text$.pipe(
-			debounceTime(500),
+			debounceTime(400),
 			distinctUntilChanged(),
-			map((text) => {
-				this.store.dispatch(VoteStateAction.SetFilterText({ filterText: text }));
-				// this.searchText = text;
-				// TODO: call action like SetSearch({payload: 'text'}) instead
-				// Moved to vote.reducer
-				// let filteredVotes = cloneDeep(this.traineeVotes);
-				// text = text.toLowerCase();
-				// if (text !== '') {
-				// 	filteredVotes = filteredVotes.filter((vote) => {
-				// 		if (this.getTrainee(vote.TraineeId).codeAndName.toLowerCase().indexOf(text) !== -1)
-				// 			return true;
-
-				// 		vote.TopVotes = vote.TopVotes.filter(
-				// 			(voteItem) =>
-				// 				(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(text) !== -1
-				// 		);
-				// 		vote.BottomVotes = vote.BottomVotes.filter(
-				// 			(voteItem) =>
-				// 				(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(text) !== -1
-				// 		);
-				// 		return vote.TopVotes.length + vote.BottomVotes.length > 0;
-				// 	});
-				// 	this.traineeVotesFiltered$.next(filteredVotes);
-				// }
-			})
+			map((text) => this.store.dispatch(VoteStateAction.SetFilterText({ filterText: text })))
 		);
 
 	selectSchedule(row: TopBottomVoteSchedule) {
@@ -153,14 +98,17 @@ export class ManageTopBottomVoteComponent
 		this.store.dispatch(
 			VoteStateAction.FetchTopBottomVotesForSchedule({ scheduleId: row.ScheduleId })
 		);
+		this.store.dispatch(
+			VoteStateAction.FetchTrainerTopBottomVotesForSchedule({ scheduleId: row.ScheduleId })
+		);
 	}
 
 	cancelEdit() {
 		this.editForm$.next(null);
 	}
 
-	getTrainee(traineeId: string) {
-		return this.trainees.find((t) => t.TraineeId === traineeId);
+	getTrainee(traineeId: string): ClientTrainee {
+		return this.traineesEntity[traineeId];
 	}
 
 	onClick() {}

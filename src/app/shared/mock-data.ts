@@ -222,6 +222,779 @@ export const MockData = {
       "SubjectId": "ac349105-3eb5-ea11-abcb-d8d385fcda38"
     }
   ],
+
+  GetTrainees: [
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T022      ",
+      "TraineeId": "8b0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Julius Johan"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T023      ",
+      "TraineeId": "8c0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Ryan Dwitama"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T024      ",
+      "TraineeId": "8d0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Vincent"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T025      ",
+      "TraineeId": "8e0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Rio Nagano"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T026      ",
+      "TraineeId": "8f0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Eric Pangiawan"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T027      ",
+      "TraineeId": "900c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Andre Antolis"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T028      ",
+      "TraineeId": "910c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Jedi Jonathan"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T029      ",
+      "TraineeId": "920c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Billy Yusuf Alghani Lusarno"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T030      ",
+      "TraineeId": "930c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Wilton Pangestu"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T031      ",
+      "TraineeId": "940c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Lionel Ritchie"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T032      ",
+      "TraineeId": "950c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Nelly Helim"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T033      ",
+      "TraineeId": "960c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Roland"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T034      ",
+      "TraineeId": "970c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Ricky Imanuel"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T035      ",
+      "TraineeId": "980c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Jonathan Ronald Honggo"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T036      ",
+      "TraineeId": "990c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Kelvin"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T037      ",
+      "TraineeId": "9a0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Ignatius Dillwyn Mulianto"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T038      ",
+      "TraineeId": "9b0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Andrew Dharma Saputra"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T039      ",
+      "TraineeId": "9c0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Inriyani Pertiwi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T040      ",
+      "TraineeId": "9d0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Vincent Benedict"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T041      ",
+      "TraineeId": "9e0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Cheryl Angelica"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T042      ",
+      "TraineeId": "9f0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Samuel Yang"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T043      ",
+      "TraineeId": "a00c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Geraldi Anthony"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T044      ",
+      "TraineeId": "a10c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Erwin"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T045      ",
+      "TraineeId": "a20c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Belinda Mettadevi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T046      ",
+      "TraineeId": "a30c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Vlarancia"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T047      ",
+      "TraineeId": "a40c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Alvin Briandy Chea"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T048      ",
+      "TraineeId": "a50c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Felix Novando"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T049      ",
+      "TraineeId": "a60c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Tiffany Ciangsawira"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T050      ",
+      "TraineeId": "a70c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Fernando Prawiranata"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T051      ",
+      "TraineeId": "a80c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Marwin Dwiputra"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T052      ",
+      "TraineeId": "a90c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Bestyvincen Kartika"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T053      ",
+      "TraineeId": "aa0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Ivano Ekasetia Dhojopatmo"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T054      ",
+      "TraineeId": "ab0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Dea Claresta"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T055      ",
+      "TraineeId": "ac0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Fransiscus Xaverius David Hardjanto"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T056      ",
+      "TraineeId": "ad0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Charleen"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T057      ",
+      "TraineeId": "ae0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Johanes Peter Vincentius"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T058      ",
+      "TraineeId": "af0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Hanna Nadia Savira"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T059      ",
+      "TraineeId": "b00c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "David"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T060      ",
+      "TraineeId": "b10c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Gavriel Castorio"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T061      ",
+      "TraineeId": "b20c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Alvin Christ Budi Agung"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T062      ",
+      "TraineeId": "b30c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Patrice Agustin"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T063      ",
+      "TraineeId": "b40c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Rivandi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T064      ",
+      "TraineeId": "b50c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Chrismorgan Shintaro"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T065      ",
+      "TraineeId": "b60c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Elric Pien William"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T066      ",
+      "TraineeId": "b70c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Ian Marco"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T067      ",
+      "TraineeId": "b80c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Christianto Herpin"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T068      ",
+      "TraineeId": "b90c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Yessin Rio Martin"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T069      ",
+      "TraineeId": "ba0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Rendy Sanjaya Kusuma"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T070      ",
+      "TraineeId": "bb0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Felisha Miranda"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T071      ",
+      "TraineeId": "bc0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Aileen"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T072      ",
+      "TraineeId": "bd0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Sisca"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T073      ",
+      "TraineeId": "be0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Randy Steven"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T074      ",
+      "TraineeId": "bf0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Andres Fernanda Riady"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T075      ",
+      "TraineeId": "c00c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Muhamad Arief Liman"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T076      ",
+      "TraineeId": "c10c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Jason"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T077      ",
+      "TraineeId": "c20c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Philips"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T078      ",
+      "TraineeId": "c30c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Richardo Christjia"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T079      ",
+      "TraineeId": "c40c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Kristina Hendryka"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T080      ",
+      "TraineeId": "c50c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Bryan Takari"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T081      ",
+      "TraineeId": "c60c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Elvan Selvano"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T082      ",
+      "TraineeId": "c70c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Stanley Dave Teherag"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T083      ",
+      "TraineeId": "c80c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Maryanto"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T084      ",
+      "TraineeId": "c90c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Thaddeus Cleo"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T085      ",
+      "TraineeId": "ca0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Stefanus Likardi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T086      ",
+      "TraineeId": "cb0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Excell"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T087      ",
+      "TraineeId": "cc0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Clarik Linadi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T088      ",
+      "TraineeId": "cd0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Brandon Julio Thenaro"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T089      ",
+      "TraineeId": "ce0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Skolastika Gabriella Theresandia Prasetyo"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T090      ",
+      "TraineeId": "cf0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Catharina Zevania Neysa Soetanto"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T091      ",
+      "TraineeId": "d00c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Fernando Chai"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T092      ",
+      "TraineeId": "d10c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Vincent Weilasto"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T093      ",
+      "TraineeId": "d20c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Melvin"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T094      ",
+      "TraineeId": "d30c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Calvin Lee"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T095      ",
+      "TraineeId": "d40c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Langgeng Yudistira"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T096      ",
+      "TraineeId": "d50c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Fajar Hamdani"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T097      ",
+      "TraineeId": "d60c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Muladi Muhamad"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T098      ",
+      "TraineeId": "d70c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Dicky Setiawan"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T099      ",
+      "TraineeId": "d80c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Kurniadi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T100      ",
+      "TraineeId": "d90c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Brandon"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T101      ",
+      "TraineeId": "da0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Lius Aprian Hartono"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T102      ",
+      "TraineeId": "db0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Rico Nelson"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T103      ",
+      "TraineeId": "dc0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Raymond Andilsim"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T104      ",
+      "TraineeId": "dd0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Mario Fredo Tannuwijaya"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T105      ",
+      "TraineeId": "de0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Steven Felizio"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T106      ",
+      "TraineeId": "df0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Willen Febryanto"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T107      ",
+      "TraineeId": "e00c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Michael Marcelino"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T108      ",
+      "TraineeId": "e10c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Alyssa Imani"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T109      ",
+      "TraineeId": "e20c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Felina Suryadi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T110      ",
+      "TraineeId": "e30c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Severian Fathich Wicaksana"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T111      ",
+      "TraineeId": "e40c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Juan Nathan Waraney"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T112      ",
+      "TraineeId": "e50c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Bryan Felix"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T113      ",
+      "TraineeId": "e60c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Muhammad Kharisma Azhari"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T114      ",
+      "TraineeId": "e70c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Muhammad Abdul Aziz Al Ghofari"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T115      ",
+      "TraineeId": "e80c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Tio Novriadi Putra"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T116      ",
+      "TraineeId": "e90c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Clarissa Chuardi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T117      ",
+      "TraineeId": "ea0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Veronica"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T118      ",
+      "TraineeId": "eb0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Zevira Varies Martan"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T119      ",
+      "TraineeId": "ec0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Ariel Peaceo Gunawan"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T120      ",
+      "TraineeId": "ed0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Jifi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T121      ",
+      "TraineeId": "ee0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Clarence Matthew Satria"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T122      ",
+      "TraineeId": "ef0c2345-e868-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Tri Patrisya Br.sibarani"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T123      ",
+      "TraineeId": "af0d28a9-686a-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Raka Nurul Fikri"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T124      ",
+      "TraineeId": "b00d28a9-686a-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Yoshua Aron Nainggolan"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T125      ",
+      "TraineeId": "b10d28a9-686a-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Rhenald Saputra"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T126      ",
+      "TraineeId": "b20d28a9-686a-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Denies"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T127      ",
+      "TraineeId": "b30d28a9-686a-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Levina Niolana"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": true,
+      "TraineeCode": "T128      ",
+      "TraineeId": "b40d28a9-686a-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Lucky Riyadi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T129      ",
+      "TraineeId": "b50d28a9-686a-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Gianni Fiesta Dewi"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T130      ",
+      "TraineeId": "b60d28a9-686a-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Andi Suryo Laksono"
+    },
+    {
+      "__type": "ClientTraineeView:#BPlusTraining.Logic",
+      "IsActive": false,
+      "TraineeCode": "T131      ",
+      "TraineeId": "b70d28a9-686a-ea11-abcb-d8d385fcda38",
+      "TraineeName": "Stefany Chrisdayanty"
+    }
+  ],
 	//#endregion
 
 	//#region TraineeAttendance.svc
@@ -1420,7 +2193,7 @@ export const MockData = {
 	//#endregion
 
 	//#region Trainee.svc
-	GetTrainees: [
+	GetTrainees_Traineesvc: [
 		{
 			__type: 'ClientTraineeData:#BPlusTraining.Logic',
 			AdditionalTraineeData: null,
