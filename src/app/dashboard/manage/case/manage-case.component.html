@@ -1,11 +1,7 @@
 <div class="container-lg">
 	<div class="row">
 		<div class="col-3">
-			<rd-card
-				#viewCaseCard
-				[cardTitle]="'View Cases'"
-				[isLoading]="manageCaseLoading$ | async"
-			>
+			<rd-card #viewCaseCard [cardTitle]="'View Cases'" [isLoading]="manageCaseLoading$ | async">
 				<div class="col v-list-m-12 v-list-bordered px-0">
 					<div class="row">
 						<ng-select
@@ -14,9 +10,9 @@
 							[clearable]="false"
 							bindLabel="Description"
 							placeholder="Phase"
-              [searchable]="false"
-							[ngModel]="(phases$ | async)[0]"
-							(change)="onChangePhase($event)"
+							[searchable]="false"
+							[ngModel]="currentPhase$ | async"
+							(change)="currentPhase$.next($event)"
 						></ng-select>
 					</div>
 					<div class="row">
@@ -26,9 +22,9 @@
 							[clearable]="false"
 							bindLabel="Name"
 							placeholder="Subject"
-              [searchable]="false"
-							[ngModel]="(subjects$ | async)[0]"
-							(change)="onChangeSubject($event)"
+							[searchable]="false"
+							[ngModel]="currentSubject$ | async"
+							(change)="currentSubject$.next($event)"
 						></ng-select>
 					</div>
 					<div class="row">
@@ -38,9 +34,9 @@
 							[clearable]="false"
 							bindLabel="ScheduleName"
 							placeholder="Schedule"
-              [searchable]="false"
-							[ngModel]="(schedules$ | async)[0]"
-							(change)="onChangeSchedule($event)"
+							[searchable]="false"
+							[ngModel]="currentSchedule$ | async"
+							(change)="currentSchedule$.next($event)"
 						></ng-select>
 					</div>
 				</div>
@@ -84,80 +80,65 @@
 			</rd-card>
 			<!-- [cardTitle]="isEditing ? 'Edit/View Case' : 'Insert New Case'" -->
 			<rd-card
-				#insertCaseCard
-				[cardTitle]="'Insert New Case'"
-				[expanded]="!!caseForm"
+				*rdVar="caseForm$ | async as form"
+				[cardTitle]="form ? 'Edit/View Case' : 'Insert New Case'"
+				[expanded]="form"
 			>
-				<div rdCardBadges class="" *ngIf="!!caseForm">
-					<button
-						class="btn btn-sm btn-secondary mr-1"
-						(click)="onCancelEdit()"
-					>
+				<!-- Expand if form has value -->
+				<div rdCardBadges class="" *ngIf="form">
+					<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
 				<form>
 					<div class="row">
 						<div class="col">
-							<div class="row form-group" *ngIf="!caseForm">
-								<label for="selectSubject" class="col-3 col-form-label"
-									>Subject</label
-								>
+							<div class="row form-group" *ngIf="!form">
+								<label for="selectSubject" class="col-3 col-form-label">Subject</label>
 								<ng-select
 									id="selectSubject"
 									name="selectSubject"
 									class="col"
 									[items]="subjects$ | async"
 									[clearable]="false"
-              [searchable]="false"
+									[searchable]="false"
 									bindLabel="Name"
 									placeholder="Subject"
 									[ngModel]="(subjects$ | async)[0]"
 								></ng-select>
 							</div>
 							<div class="row form-group">
-								<label for="caseName" class="col-3 col-form-label"
-									>Case Name</label
-								>
+								<label for="caseName" class="col-3 col-form-label">Case Name</label>
 								<div class="col">
 									<input
 										type="text"
 										id="caseName"
 										name="caseName"
 										class="form-control"
-										[ngModel]="caseForm?.CaseName"
+										[ngModel]="form?.CaseName"
 									/>
 								</div>
 							</div>
 							<div class="row form-group">
-								<label for="correctors" class="col-3 col-form-label"
-									>Corrector(s)</label
-								>
+								<label for="correctors" class="col-3 col-form-label">Corrector(s)</label>
 								<div class="col">
 									<input
 										type="text"
 										id="correctors"
 										name="correctors"
 										class="form-control"
-										[value]="caseForm?.correctorList"
+										[value]="form?.correctorList"
 									/>
 								</div>
 							</div>
 							<div class="row form-group">
-								<label for="fileUpload" class="col-3 col-form-label"
-									>File</label
-								>
+								<label for="fileUpload" class="col-3 col-form-label">File</label>
 								<div class="col input-group">
-									<input
-										type="file"
-										id="fileUpload"
-										name="fileUpload"
-										class="col form-control"
-									/>
-									<div class="input-group-append" *ngIf="caseForm">
+									<input type="file" id="fileUpload" name="fileUpload" class="col form-control" />
+									<div class="input-group-append" *ngIf="form">
 										<button
 											class="btn btn-info"
-											(click)="onClick()"
+											(click)="downloadFile()"
 											ngbPopover="Download (filename).pdf"
 											triggers="mouseenter:mouseleave"
 										>
@@ -168,78 +149,69 @@
 							</div>
 						</div>
 						<div class="col">
-							<div class="row form-group" *ngIf="!caseForm">
-								<label for="selectSchedule" class="col-4 col-form-label"
-									>Schedule</label
-								>
+							<div class="row form-group" *ngIf="!form">
+								<label for="selectSchedule" class="col-4 col-form-label">Schedule</label>
 								<ng-select
 									id="selectSchedule"
 									name="selectSchedule"
 									class="col"
 									[items]="schedules$ | async"
 									[clearable]="false"
-              [searchable]="false"
+									[searchable]="false"
 									bindLabel="ScheduleName"
 									placeholder="Schedule"
 									[ngModel]="(schedules$ | async)[0]"
 								></ng-select>
 							</div>
 							<div class="row form-group">
-								<label for="scheduleDate" class="col-4 col-form-label"
-									>Starts at</label
-								>
+								<label for="scheduleDate" class="col-4 col-form-label">Starts at</label>
 								<div class="col">
 									<input
 										type="text"
 										id="scheduleDate"
 										name="scheduleDate"
 										class="form-control"
-										[ngModel]="caseForm?.ScheduleDate | date: viewDateFormat"
+										[ngModel]="form?.ScheduleDate | date: viewDateFormat"
 									/>
 								</div>
 							</div>
 							<div class="row form-group">
-								<label for="trainerDeadline" class="col-4 col-form-label"
-									>Trainer Deadline</label
-								>
+								<label for="trainerDeadline" class="col-4 col-form-label">Trainer Deadline</label>
 								<div class="col">
 									<input
 										type="text"
 										id="trainerDeadline"
 										name="trainerDeadline"
 										class="form-control"
-										[ngModel]="caseForm?.TrainerDeadline | date: viewDateFormat"
+										[ngModel]="form?.TrainerDeadline | date: viewDateFormat"
 									/>
 								</div>
 							</div>
 							<div class="row form-group">
-								<label for="traineeDeadline" class="col-4 col-form-label"
-									>Trainee Deadline</label
-								>
+								<label for="traineeDeadline" class="col-4 col-form-label">Trainee Deadline</label>
 								<div class="col">
 									<input
 										type="text"
 										id="traineeDeadline"
 										name="traineeDeadline"
 										class="form-control"
-										[ngModel]="caseForm?.TraineeDeadline | date: viewDateFormat"
+										[ngModel]="form?.TraineeDeadline | date: viewDateFormat"
 									/>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div></div>
-					<div class="row justify-content-around mt-2" [ngSwitch]="!!caseForm">
+					<div class="row justify-content-around mt-2" [ngSwitch]="!!form">
 						<ng-container *ngSwitchCase="false">
 							<button type="submit" class="btn btn-primary">
 								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create
 							</button>
 						</ng-container>
 						<ng-container *ngSwitchDefault>
-							<button class="btn btn-primary" (click)="onClick()">
+							<button class="btn btn-primary" (click)="updateCase()">
 								<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
 							</button>
-							<button class="btn btn-danger" (click)="onClick()">
+							<button class="btn btn-danger" (click)="deleteCase()">
 								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Case
 							</button>
 						</ng-container>

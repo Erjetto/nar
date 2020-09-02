@@ -10,7 +10,7 @@
 							[clearable]="false"
 							[bindLabel]="'Description'"
 							[searchable]="false"
-              [ngModel]="currentPhase$ | async"
+							[ngModel]="currentPhase$ | async"
 							(change)="currentPhase$.next($event)"
 						></ng-select>
 					</div>
@@ -25,18 +25,17 @@
 							(change)="currentSubject$.next($event)"
 						></ng-select>
 					</div>
-					<div class="row">
+					<div class="row" *ngIf="(currentSubject$ | async)">
 						<ng-select
 							class="col"
-							[items]="filteredTrainees$ | async"
+							[items]="traineesInSubject$ | async"
 							[clearable]="false"
-							[bindLabel]="'TraineeName'"
 							[searchable]="false"
-							[ngModel]="currentTrainee$ | async"
-							(change)="currentTrainee$.next($event)"
+							[ngModel]="currentTraineeCode$ | async"
+							(change)="currentTraineeCode$.next($event)"
 						></ng-select>
 					</div>
-					<div class="row">
+					<div class="row" *ngIf="(currentTraineeCode$ | async)">
 						<ng-select
 							class="col"
 							[items]="presentationsForTrainee$ | async"
@@ -53,24 +52,41 @@
 		<div class="col">
 			<rd-card
 				[cardTitle]="'View Presentation'"
-				[expanded]="!!(currentPresentation$ | async)"
+				[expanded]="(currentPresentation$ | async)"
 				[collapsible]="false"
 			>
-				<ng-container *ngIf="!!(currentPresentation$ | async)">
-					<div class="row">
+				<ng-container *ngIf="currentPresentation$ | async as presentation">
+					<div class="row mb-3">
+						<div class="col-3"><b>Material</b></div>
+						<div class="col">
+							{{ presentation?.Material }}
+						</div>
+					</div>
+					<div class="row mb-3" *ngIf="presentationStatus$ | async as status">
+						<div class="col-3"><b>Status</b></div>
+						<div
+							class="col"
+							[ngClass]="{
+								'text-danger': status === 'Not Passed',
+								'text-success': status === 'Passed'
+							}"
+						>
+							<b>{{ 'Status here...' }}</b>
+						</div>
+          </div>
+          <div class="row mb-3">
+            <b>Questions:</b>
+          </div>
+					<div class="row mb-3">
 						<div class="col v-list-m-12 v-list-bordered px-0">
-							<div
-								class="row"
-								*ngFor="
-									let question of (currentPresentation$ | async).Questions
-								"
-							>
-								<rd-presentation-question>
+							<div class="row" *ngFor="let question of presentation?.Questions">
+								<rd-presentation-question
+									[presentation]="presentation"
+									[question]="question"
+								>
 									<!-- TODO: Add role validation here (!= Trainee) -->
 									<div class="actions" *ngIf="true">
-										<rd-confirmable-button
-											(confirm)="onDeleteQuestion(question)"
-										>
+										<rd-confirmable-button (confirm)="onDeleteQuestion(question)">
 											<button class="btn btn-danger">
 												<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
 											</button>
@@ -82,7 +98,7 @@
 					</div>
 					<div class="row">
 						<b>Comment: </b>
-						<div [innerHTML]="(currentPresentation$|async).Questions"></div>
+						<div [innerHTML]="presentation?.Comment"></div>
 					</div>
 				</ng-container>
 			</rd-card>

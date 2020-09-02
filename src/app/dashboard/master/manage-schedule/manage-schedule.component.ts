@@ -1,16 +1,5 @@
-import {
-	Component,
-	OnInit,
-	ChangeDetectionStrategy,
-	OnDestroy,
-	ViewChild,
-} from '@angular/core';
-import {
-	ClientPhase,
-	ClientSubject,
-	ClientSchedule,
-	ClientTrainee,
-} from 'src/app/shared/models';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild } from '@angular/core';
+import { ClientPhase, ClientSubject, ClientSchedule, ClientTrainee } from 'src/app/shared/models';
 import { filter, tap, takeUntil, map } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, ActionsSubject, select } from '@ngrx/store';
@@ -27,8 +16,7 @@ import { NgForm } from '@angular/forms';
 	styleUrls: ['./manage-schedule.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageScheduleComponent extends DashboardContentBase
-	implements OnInit, OnDestroy {
+export class ManageScheduleComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	public viewDateFormat = 'EEEE, dd MMM yyyy';
 
 	// Question: Template driven form instead of model driven?
@@ -77,18 +65,13 @@ export class ManageScheduleComponent extends DashboardContentBase
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
 		this.schedules$ = this.store.pipe(select(fromMasterState.getSchedules));
-		this.traineeInSchedule$ = this.store.pipe(
-			select(fromMasterState.getTraineeInSchedule)
-		);
+		this.traineeInSchedule$ = this.store.pipe(select(fromMasterState.getTraineeInSchedule));
 
 		this.traineeInScheduleLoading$ = this.store.pipe(
 			select(fromMasterState.getMasterState),
 			map(
 				(v) =>
-					v.loadingPhases ||
-					v.loadingSubjects ||
-					v.loadingSchedules ||
-					v.loadingTraineeInSchedule
+					v.loadingPhases || v.loadingSubjects || v.loadingSchedules || v.loadingTraineeInSchedule
 			)
 		);
 		this.scheduleInSubjectLoading$ = this.store.pipe(
@@ -101,33 +84,30 @@ export class ManageScheduleComponent extends DashboardContentBase
 		this.phases$
 			.pipe(
 				filter((res) => !isEmpty(res)),
-				tap((res) => this.onChangePhase(res[0])),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe();
+			.subscribe((res) => this.onChangePhase(res[0]));
 
 		this.subjects$
 			.pipe(
 				filter((res) => !isEmpty(res)),
-				tap((res) => this.onChangeSubject(res[0])),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe();
+			.subscribe((res) => this.onChangeSubject(res[0]));
 
 		this.schedules$
 			.pipe(
 				filter((res) => !isEmpty(res)),
-				tap((res) => this.onChangeSchedule(res[0])),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe();
+			.subscribe((res) => this.onChangeSchedule(res[0]));
 		//#endregion
 
 		this.reloadView();
 	}
 
 	reloadView() {
-    this.store.dispatch(MasterStateAction.FetchPhases());
+		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
 	getPhaseType(key) {
@@ -137,14 +117,10 @@ export class ManageScheduleComponent extends DashboardContentBase
 	onDeleteTrainee(trainee) {}
 
 	onChangePhase($event: ClientPhase) {
-		this.store.dispatch(
-			MasterStateAction.FetchSubjects({ phaseId: $event.PhaseId })
-		);
+		this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: $event.PhaseId }));
 	}
 	onChangeSubject($event: ClientSubject) {
-		this.store.dispatch(
-			MasterStateAction.FetchSchedules({ subjectId: $event.SubjectId })
-		);
+		this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: $event.SubjectId }));
 	}
 	onChangeSchedule($event: ClientSchedule) {
 		this.store.dispatch(
@@ -165,10 +141,10 @@ export class ManageScheduleComponent extends DashboardContentBase
 			selectSubject,
 			scheduleTypeRadio,
 			scheduleCount,
-      scheduleName,
-      scheduleStart,
-      scheduleEnd
-    } = form.controls;
+			scheduleName,
+			scheduleStart,
+			scheduleEnd,
+		} = form.controls;
 
 		if (this.editForm == null)
 			this.store.dispatch(
@@ -195,27 +171,26 @@ export class ManageScheduleComponent extends DashboardContentBase
 	}
 
 	updateMeetingForm() {
-    // - this.meetings.length;
-    const detail = { ScheduleDate: '', ShiftStart: 1, ShiftEnd: 1 };
+		// - this.meetings.length;
+		const detail = { ScheduleDate: '', ShiftStart: 1, ShiftEnd: 1 };
 		const newVariant = {
-      Capacity: 0,
-      Detail: [],
-      MeetingNo: 0,
-      Room: '',
-      SubjectId: '',
-      VariationNo: 0,
-    }
+			Capacity: 0,
+			Detail: [],
+			MeetingNo: 0,
+			Room: '',
+			SubjectId: '',
+			VariationNo: 0,
+		};
 		this.meetings = [];
 
 		for (let i = 0; i < this.meetingPerWeek; i++) {
 			for (let j = 0; j < this.variations; j++) {
-        const meeting = cloneDeep(newVariant);
-        meeting.MeetingNo = i;
-        meeting.VariationNo = j;
-        for (let k = 0; k < this.scheduleCount; k++) 
-          meeting.Detail.push(cloneDeep(detail));
-        
-        this.meetings = [...this.meetings, meeting];
+				const meeting = cloneDeep(newVariant);
+				meeting.MeetingNo = i;
+				meeting.VariationNo = j;
+				for (let k = 0; k < this.scheduleCount; k++) meeting.Detail.push(cloneDeep(detail));
+
+				this.meetings = [...this.meetings, meeting];
 			}
 		}
 

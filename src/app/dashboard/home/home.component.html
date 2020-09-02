@@ -10,34 +10,47 @@
 			<div class="row">
 				<rd-card [cardTitle]="'Trainee Statistic'" class="col">
 					<div class="row mb-2">
-						<span>Phase</span> &nbsp;
-						<select [(ngModel)]="selectedPhase" (change)="reloadView()">
+						<div class="col-1 col-form-label">
+							<b>Phase</b>
+						</div>
+						<div class="col-3">
+							<ng-select
+								class="col"
+								[items]="phases$ | async"
+								[clearable]="false"
+								[bindLabel]="'Description'"
+								[searchable]="false"
+								[ngModel]="currentPhase$ | async"
+								(change)="currentPhase$.next($event)"
+							></ng-select>
+						</div>
+						<!-- <select [(ngModel)]="selectedPhase" (change)="reloadView()">
 							<option
 								*ngFor="let phase of phases$ | async"
 								[value]="phase.Description"
 							>
 								{{ phase.Description }}
 							</option>
-						</select>
+            </select> -->
 					</div>
 					<div class="row">
-						<table class="mr-2" *ngFor="let stat of statistics">
+						<table class="mr-2" *ngFor="let stat of statistics$ | async">
 							<thead>
 								<tr>
 									<td>{{ stat.Type }}</td>
-									<td></td>
+									<td class="text-right">#</td>
 								</tr>
 							</thead>
 							<tbody>
 								<tr *ngFor="let data of stat.Detail">
 									<td>{{ data.Description }}</td>
-									<td>{{ data.Count }}</td>
+									<td class="text-right">{{ data.Count }}</td>
 								</tr>
 							</tbody>
 							<tfoot>
 								<tr>
 									<td>Total</td>
-									<td>{{ stat.Total }}</td>
+									<td class="text-right">{{ stat.Total }}</td>
 								</tr>
 							</tfoot>
 						</table>

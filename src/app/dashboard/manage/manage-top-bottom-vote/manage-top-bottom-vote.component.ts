@@ -3,12 +3,12 @@ import {
 	OnInit,
 	ViewChild,
 	ChangeDetectionStrategy,
-  AfterViewInit,
-  OnDestroy,
+	AfterViewInit,
+	OnDestroy,
 } from '@angular/core';
 import { Store, select, ActionsSubject } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, BehaviorSubject } from 'rxjs';
 import {
 	ClientTrainee,
 	TopBottomVoteSchedule,
@@ -24,11 +24,11 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 	selector: 'rd-manage-top-bottom-vote',
 	templateUrl: './manage-top-bottom-vote.component.html',
 	styleUrls: ['./manage-top-bottom-vote.component.scss'],
-	//changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageTopBottomVoteComponent extends DashboardContentBase implements OnInit, AfterViewInit, OnDestroy {
-	@ViewChild('insertVoteCard') insertScheduleCard: CardComponent;
-
+export class ManageTopBottomVoteComponent
+	extends DashboardContentBase
+	implements OnInit, AfterViewInit, OnDestroy {
 	public viewDateFormat = 'dd MMM yyyy';
 
 	public trainees: ClientTrainee[];
@@ -46,34 +46,17 @@ export class ManageTopBottomVoteComponent extends DashboardContentBase implement
 	public voteScheduleLoading$: Observable<boolean>;
 	public voteResultLoading$: Observable<boolean>;
 
-	public isEditing = false;
-	public editForm = new TopBottomVoteSchedule();
+	public editForm$: BehaviorSubject<TopBottomVoteSchedule> = new BehaviorSubject(null);
 
-	constructor(private store: Store<IAppState>) {super(store);}
+	constructor(protected store: Store<IAppState>) {
+		super(store);
+	}
 
 	ngOnInit(): void {
 		this.voteSchedules$ = of([
-			new TopBottomVoteSchedule(
-				'ScheduleId1',
-				'Best Trainee',
-				3,
-				new Date(),
-				new Date()
-			),
-			new TopBottomVoteSchedule(
-				'ScheduleId2',
-				'Best Trainee 2',
-				2,
-				new Date(),
-				new Date()
-			),
-			new TopBottomVoteSchedule(
-				'ScheduleId3',
-				'Best Trainee 3',
-				3,
-				new Date(),
-				new Date()
-			),
+			new TopBottomVoteSchedule('ScheduleId1', 'Best Trainee', 3, new Date(), new Date()),
+			new TopBottomVoteSchedule('ScheduleId2', 'Best Trainee 2', 2, new Date(), new Date()),
+			new TopBottomVoteSchedule('ScheduleId3', 'Best Trainee 3', 3, new Date(), new Date()),
 		]).pipe(delay(500));
 
 		this.trainees = [
@@ -125,11 +108,11 @@ export class ManageTopBottomVoteComponent extends DashboardContentBase implement
 				[new VoteItem('T3', 'Jelek')]
 			),
 		];
-  }
-  
-  ngAfterViewInit(): void {
-    this.traineeVotesFiltered$.next(this.traineeVotes);    
-  }
+	}
+
+	ngAfterViewInit(): void {
+		this.traineeVotesFiltered$.next(this.traineeVotes);
+	}
 
 	// Arrow function because normal function refer 'this' as null because
 	// onTypeSearch is bound to the input
@@ -138,31 +121,23 @@ export class ManageTopBottomVoteComponent extends DashboardContentBase implement
 			debounceTime(500),
 			distinctUntilChanged(),
 			map((text) => {
-        this.searchText = text;
+				this.searchText = text;
 				// TODO: call action like SetSearch({payload: 'text'}) instead
 				// Moved to vote.reducer
-        let filteredVotes = cloneDeep(this.traineeVotes);
-        text = text.toLowerCase();
+				let filteredVotes = cloneDeep(this.traineeVotes);
+				text = text.toLowerCase();
 				if (text !== '') {
 					filteredVotes = filteredVotes.filter((vote) => {
-						if (
-							this.getTrainee(vote.TraineeId)
-								.codeAndName.toLowerCase()
-								.indexOf(text) !== -1
-						)
+						if (this.getTrainee(vote.TraineeId).codeAndName.toLowerCase().indexOf(text) !== -1)
 							return true;
 
 						vote.TopVotes = vote.TopVotes.filter(
 							(voteItem) =>
-								(voteItem.Reason + ' ' + voteItem.TraineeId)
-									.toLowerCase()
-									.indexOf(text) !== -1
+								(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(text) !== -1
 						);
 						vote.BottomVotes = vote.BottomVotes.filter(
 							(voteItem) =>
-								(voteItem.Reason + ' ' + voteItem.TraineeId)
-									.toLowerCase()
-									.indexOf(text) !== -1
+								(voteItem.Reason + ' ' + voteItem.TraineeId).toLowerCase().indexOf(text) !== -1
 						);
 						return vote.TopVotes.length + vote.BottomVotes.length > 0;
 					});
@@ -171,25 +146,12 @@ export class ManageTopBottomVoteComponent extends DashboardContentBase implement
 			})
 		);
 
-	onSelectSchedule(row: TopBottomVoteSchedule) {
-		this.isEditing = true;
-		this.editForm = row;
-		this.insertScheduleCard.cardTitle = 'Edit/View Vote Schedule';
-		this.insertScheduleCard.toggleMinimized(false);
+	selectSchedule(row: TopBottomVoteSchedule) {
+		this.editForm$.next(row);
 	}
 
-	onCancelEdit() {
-		this.insertScheduleCard.toggleMinimized(true);
-		this.insertScheduleCard.cardTitle = 'Insert New Vote Schedule';
-		this.isEditing = false;
-		this.editForm = new TopBottomVoteSchedule();
-
-		// interval(300).pipe(first()).subscribe(() => {
-		// })
-		// setTimeout(() => {
-		//   this.isEditing = false;
-		//   this.caseForm = new Case();
-		// },600)
+	cancelEdit() {
+		this.editForm$.next(null);
 	}
 
 	getTrainee(traineeId: string) {

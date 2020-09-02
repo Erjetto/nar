@@ -1,1 +1,40 @@
-<p>view-all-question works!</p>
+<div class="container">
+	<div class="row">
+		<div class="col-5">
+			<rd-card [cardTitle]="'Download into Excel'" [expanded]="false">
+				<div class="row">
+					<div class="col">
+						<ng-select
+							class="col"
+							[items]="generations$ | async"
+							[clearable]="false"
+							[searchable]="false"
+						></ng-select>
+					</div>
+					<div class="col">
+						<button class="btn text-white bg-excel w-100">Export into Excel</button>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'View All Questions'" [isLoading]="false">
+				<div class="row">
+					<div class="col">
+						<ng-select
+							class="col"
+							[items]="generations$ | async"
+							[clearable]="false"
+							[searchable]="false"
+						></ng-select>
+					</div>
+					<div class="col">
+						<button class="btn text-white bg-excel w-100">Export into Excel</button>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

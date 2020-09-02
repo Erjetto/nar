@@ -3,13 +3,9 @@
 		<div class="col-5">
 			<div class="row">
 				<div class="col">
-					<rd-card
-						[cardTitle]="'Manage Schedules for (generation 1 year lower)'"
-					>
+					<rd-card [cardTitle]="'Manage Schedules for (generation 1 year lower)'">
 						<div class="row">
-							<table
-								class="table table-sm table-striped table-hover text-center"
-							>
+							<table class="table table-sm table-striped table-hover text-center">
 								<thead>
 									<tr>
 										<th>Name</th>
@@ -36,27 +32,19 @@
 							</table>
 						</div>
 						<div class="row mt-2">
-							<button
-								class="btn text-white"
-								style="background-color: teal;"
-							>
-								Export into Excel
-							</button>
+							<button class="btn text-white bg-excel">Export into Excel</button>
 						</div>
 					</rd-card>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col">
-					<rd-card
-						[cardTitle]="'Add Schedules for (gen 1 lower)'"
-						[expanded]="false"
-					>
+					<rd-card [cardTitle]="'Add Schedules for (gen 1 lower)'" [expanded]="false">
 						<div class="col v-list-m-12">
 							<div class="row">
-								<textarea class="form-control" style="resize: vertical;">{{ 
-                  addSchedulePlaceholder 
-                }}</textarea>
+								<textarea class="form-control" style="resize: vertical">{{
+									addSchedulePlaceholder
+								}}</textarea>
 							</div>
 							<div class="row">
 								<button class="btn btn-primary">
@@ -78,9 +66,7 @@
 				<div class="col">
 					<form #form="ngForm">
 						<div class="form-group row">
-							<label class="col-2 col-form-label" for="trainer-name"
-								>Trainer</label
-							>
+							<label class="col-2 col-form-label" for="trainer-name">Trainer</label>
 							<input
 								class="form-control col"
 								type="text"
@@ -89,36 +75,26 @@
 							/>
 						</div>
 						<div class="form-group row">
-							<label class="col-2 col-form-label" for="answer-schedule"
-								>Start Time</label
-							>
+							<label class="col-2 col-form-label" for="answer-schedule">Start Time</label>
 							<input
 								type="datetime"
 								class="form-control col"
 								name="start-time"
-								[value]="
-									(selectedSchedule$ | async)?.StartDate | date: dateFormat
-								"
+								[value]="(selectedSchedule$ | async)?.StartDate | date: dateFormat"
 							/>
 						</div>
 						<div class="form-group row">
-							<label class="col-2 col-form-label" for="answer-schedule"
-								>End Time</label
-							>
+							<label class="col-2 col-form-label" for="answer-schedule">End Time</label>
 							<input
 								type="datetime"
 								class="form-control col"
 								name="end-time"
-								[value]="
-									(selectedSchedule$ | async)?.EndDate | date: dateFormat
-								"
+								[value]="(selectedSchedule$ | async)?.EndDate | date: dateFormat"
 							/>
 						</div>
 						<div class="row justify-content-around">
 							<!-- <input type="submit" value="Save Schedule" class="btn btn-primary"/> -->
-							<button class="btn btn-primary" (click)="saveSchedule(form)">
-								Save Schedule
-							</button>
+							<button class="btn btn-primary" (click)="saveSchedule(form)">Save Schedule</button>
 							<button class="btn btn-danger" (click)="deleteSchedule(form)">
 								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
 								Delete
@@ -128,9 +104,7 @@
 				</div>
 				<hr />
 				<div class="col">
-					<ng-container
-						*ngFor="let question of questionModel.Questions; let i = index"
-					>
+					<ng-container *ngFor="let question of questionModel.Questions; let i = index">
 						<p class="font-weight-bold">
 							{{ i + 1 + '. ' + question }}
 						</p>

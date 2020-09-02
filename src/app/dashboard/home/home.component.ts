@@ -17,6 +17,7 @@ import {
 	first,
 	filter,
   map,
+  mergeMap,
 } from 'rxjs/operators';
 
 import { ClientPhase, ClientStatistic } from 'src/app/shared/models';
@@ -26,6 +27,7 @@ import { Observable, of, Subject, interval } from 'rxjs';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { DashboardContentBase } from '../dashboard-content-base.component';
 import { isEmpty } from 'lodash';
+import { GeneralService } from 'src/app/shared/services/new/general.service';
 
 @Component({
 	selector: 'rd-home',
@@ -35,10 +37,10 @@ import { isEmpty } from 'lodash';
 })
 export class HomeComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {
-	public selectedPhase = 'Desc';
 	public phases$: Observable<ClientPhase[]>;
-
-	public statistics: ClientStatistic[] = [];
+  
+	public currentPhase$: Subject<ClientPhase> = new Subject();
+	public statistics$: Subject<ClientStatistic[]> = new Subject();
 
 	public isLoading$: Observable<boolean>;
 	// public isLoading = {isLoading: true};
@@ -46,52 +48,23 @@ export class HomeComponent extends DashboardContentBase
 
 	constructor(
 		protected store: Store<IAppState>,
-		private homeService: HomeService,
+		private generalService: GeneralService,
 	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
     this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-    // this.phases$.pipe(take(4)).subscribe(console.log);
-
-		// this.phases$.pipe(
-		//   first(), // === take(1)
-		//   filter(res => isEmpty(res)), // if null, then continue to tap()
-		//   tap(() => this.store.dispatch(MainStateAction.FetchPhases()))
-    // ).subscribe();
     
-    // this.isLoading$ = interval(1500).pipe(
-    //   take(20),
-    //   map(val => val%2===0)
-    // );
+    // On phase change, get statistic trainee
+    this.currentPhase$.pipe(
+      filter((res) => !isEmpty(res)),
+      takeUntil(this.destroyed$),
+      switchMap(phase => this.generalService.GetStatisticTrainee({phaseId: phase.PhaseId})),
+      map(statistics => this.statistics$.next(statistics))
+    ).subscribe();
     
+    this.store.dispatch(MasterStateAction.FetchPhases());
+  }
 
-    
-		this.reloadView();
-	}
-
-	reloadView() {
-		// console.log('ReloadView from Home because it has no state for reloading data');
-		this.store.dispatch(MasterStateAction.FetchPhases());
-
-		// this.phases$.pipe(
-		//   filter(res => !isEmpty(res)),
-		//   tap((phases) => {
-		//     this.selectedPhase = phases[0].Description;
-		//     this.homeService.getTraineeStatistics(this.selectedPhase).subscribe((res) => {
-		//       this.statistics = res.map(ClientStatistic.fromJson);
-		//     });
-		//   }),
-		//   first()
-		// ).subscribe();
-	}
-
-	onChangePhase() {
-		this.homeService
-			.getTraineeStatistics(this.selectedPhase)
-			.subscribe((res) => {
-				this.statistics = res.map(ClientStatistic.fromJson);
-			});
-	}
 }

@@ -1,8 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, OnDestroy } from '@angular/core';
 import { Store, select, ActionsSubject } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, interval } from 'rxjs';
-import { ClientPhase, ClientSubject, ClientSchedule, Case } from 'src/app/shared/models';
+import { Observable, interval, Subject, BehaviorSubject } from 'rxjs';
+import {
+	ClientPhase,
+	ClientSubject,
+	ClientSchedule,
+	Case,
+	Role,
+	ClientGeneration,
+} from 'src/app/shared/models';
 
 import * as CaseStateAction from 'src/app/shared/stores/case/case.action';
 import * as fromCaseState from 'src/app/shared/stores/case/case.reducer';
@@ -22,9 +29,12 @@ import { CardComponent } from 'src/app/shared/components/card/card.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageCaseComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	// @ViewChild('insertCaseCard') insertCaseCard: CardComponent;
 
 	public viewDateFormat = 'HH:mm, dd MMM yyyy';
+
+	public currentPhase$: Subject<ClientPhase> = new Subject();
+	public currentSubject$: Subject<ClientSubject> = new Subject();
+	public currentSchedule$: Subject<ClientSchedule> = new Subject();
 
 	public phases$: Observable<ClientPhase[]>;
 	public subjects$: Observable<ClientSubject[]>;
@@ -34,7 +44,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	public caseList$: Observable<Case[]>;
 	public caseListLoading$: Observable<boolean>;
 
-	public caseForm: Case;
+	public caseForm$: BehaviorSubject<Case> = new BehaviorSubject(null);
 
 	constructor(protected store: Store<IAppState>) {
 		super(store);
@@ -53,56 +63,69 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
 		this.caseListLoading$ = this.store.pipe(select(fromCaseState.getCasesLoading));
 
-		//#region auto fetch new subject,schedule & case in first fetch
+		//#region auto select first in array
 		this.phases$
 			.pipe(
 				filter((res) => !isEmpty(res)),
-				tap((res) => this.onChangePhase(res[0])),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe();
+			.subscribe((res) => this.currentPhase$.next(res[0]));
 
 		this.subjects$
 			.pipe(
 				filter((res) => !isEmpty(res)),
-				tap((res) => this.onChangeSubject(res[0])),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe();
+			.subscribe((res) => this.currentSubject$.next(res[0]));
 
 		this.schedules$
 			.pipe(
 				filter((res) => !isEmpty(res)),
-				tap((res) => this.onChangeSchedule(res[0])),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe();
+			.subscribe((res) => this.currentSchedule$.next(res[0]));
 		//#endregion
 
-		this.reloadView();
-	}
+		//#region auto fetch new subject,schedule & case
+		this.currentGeneration$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((res) => this.store.dispatch(MasterStateAction.FetchPhases()));
 
-	reloadView() {
+		this.currentPhase$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((phase) =>
+				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }))
+			);
+
+		this.currentSubject$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((subject) =>
+				this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: subject.SubjectId }))
+			);
+
+		this.currentSchedule$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((schedule) =>
+				this.store.dispatch(CaseStateAction.FetchCases({ scheduleId: schedule.ScheduleId }))
+			);
+		//#endregion
+
 		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
-	onChangePhase($event: ClientPhase) {
-		this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: $event.PhaseId }));
-	}
-	onChangeSubject($event: ClientSubject) {
-		this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: $event.SubjectId }));
-	}
-	onChangeSchedule($event: ClientSchedule) {
-		this.store.dispatch(CaseStateAction.FetchCases({ scheduleId: $event.ScheduleId }));
-	}
-
 	onSelectCase(row: Case) {
-		this.caseForm = row;
+		this.caseForm$.next(row);
 	}
 
-	onCancelEdit() {
-		this.caseForm = null;
-	}
+	cancelEdit() {
+		this.caseForm$.next(null);
+  }
+  
+  downloadFile(){}
 
-	onClick() {}
+  updateCase(){
+    // this.store.dispatch(CaseStateAction)
+  }
+
+  deleteCase(){}
 }
