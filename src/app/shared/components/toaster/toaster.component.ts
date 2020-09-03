@@ -11,16 +11,17 @@ import { MainStateAction, fromMainState } from 'src/app/shared/store-modules';
 	selector: 'rd-toaster',
 	templateUrl: './toaster.component.html',
 	styleUrls: ['./toaster.component.scss'],
-	animations: [swipeAnimation('up', 50, 300)],
+	animations: [swipeAnimation('down', 50, 300)],
 })
 export class ToasterComponent implements OnInit, OnDestroy {
 	public messages$: Observable<Toast[]>;
 
+	private timerOn = false;
 	private stop$ = new Subject<void>();
 	private start$ = new Subject<void>();
 	private destroyed$ = new Subject<void>();
 
-	constructor(private store: Store<IAppState>, private actionSubject: ActionsSubject) {
+	constructor(private store: Store<IAppState>) {
 		this.messages$ = this.store.pipe(select(fromMainState.getToastMessages));
 		// Trigger decayTimer when messages[] changes
 		this.messages$
@@ -29,17 +30,21 @@ export class ToasterComponent implements OnInit, OnDestroy {
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((hasMessage) => {
-				if (hasMessage) this.start$.next();
-				else this.stop$.next();
+				if (hasMessage && !this.timerOn) {
+					this.start$.next();
+					this.timerOn = true;
+				} else if (!hasMessage) {
+					this.stop$.next();
+					this.timerOn = false;
+				}
 			});
 
-		interval(3500)
+		interval(3000)
 			.pipe(
-				repeatWhen(() => this.start$),
-				takeUntil(this.stop$)
+				takeUntil(this.stop$),
+				repeatWhen(() => this.start$)
 			)
 			.subscribe((v) => this.store.dispatch(MainStateAction.RemoveMessage({ index: 0 })));
-
 		// this.decayTimer$.subscribe((val) => {
 		//   this.messages.pop();
 		//   if (this.messages.length === 0) this.stop$.next();
@@ -51,11 +56,6 @@ export class ToasterComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.stop$.next();
 		this.destroyed$.next();
-	}
-
-	toastNewMessage(...message: Toast[]) {
-		// if (this.messages.length === 0) this.start$.next();
-		// this.messages.push(...message);
 	}
 
 	removeToast(index: number) {
