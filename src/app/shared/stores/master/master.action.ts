@@ -92,7 +92,14 @@ export const FetchInterviewSchedulesSuccess = createAction(
 //#region Create
 // export const CreateRole = createAction('[MasterState] CreateRoles');
 export const CreateUserInRole = createAction('[MasterState] CreateUserInRoles');
-export const CreateGeneration = createAction('[MasterState] CreateGenerations');
+export const CreateGeneration = createAction(
+	'[MasterState] CreateGenerations',
+	props<{
+		generationName: string;
+		semester: string;
+		year: string;
+	}>()
+);
 export const CreatePhase = createAction(
 	'[MasterState] CreatePhase',
 	props<{
@@ -152,7 +159,15 @@ export const CreateInterviewSchedule = createAction('[MasterState] CreateIntervi
 //#region Update
 // export const UpdateRole = createAction('[MasterState] UpdateRoles');
 // export const UpdateUserInRole = createAction('[MasterState] UpdateUserInRoles');
-// export const UpdateGeneration = createAction('[MasterState] UpdateGenerations');
+export const UpdateGeneration = createAction(
+	'[MasterState] UpdateGenerations',
+	props<{
+		GenerationId: string;
+		Description: string;
+		Semester: string;
+		Year: string;
+	}>()
+);
 export const UpdatePhase = createAction(
 	'[MasterState] UpdatePhase',
 	props<{
@@ -202,14 +217,15 @@ export const DeleteSubject = createAction(
 	'[MasterState] DeleteSubjects',
 	props<{ subjectId: string }>()
 );
-// export const DeleteSchedule = createAction(
-// 	'[MasterState] DeleteSchedules',
-// 	props<{ subjectId: string }>()
-// );
-// export const DeleteTraineeInSchedule = createAction(
-// 	'[MasterState] DeleteTraineeInSchedule',
-// 	props<{ schedule: string }>()
-// );
+export const DeleteSchedule = createAction(
+	'[MasterState] DeleteSchedules',
+	props<{ scheduleId: string; reason: string }>()
+);
+export const DeleteAllSchedule = createAction('[MasterState] DeleteAllSchedules');
+export const DeleteTraineeInSchedule = createAction(
+	'[MasterState] DeleteTraineeInSchedule',
+	props<{ ScheduleId: string; TraineeId: string }>()
+);
 // export const DeleteInterviewQuestion = createAction(
 // 	'[MasterState] DeleteInterviewQuestions'
 // );

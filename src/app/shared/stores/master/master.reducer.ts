@@ -12,6 +12,9 @@ import {
 	ClientUserInRoles,
 	ClientTrainee,
 } from '../../models';
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { FnParam } from '@angular/compiler/src/output/output_ast';
 
 export interface IMasterState {
 	roles: Role[];
@@ -160,7 +163,8 @@ export const MasterStateReducer = createReducer(
 
 	on(MasterStateAction.FetchGenerationsSuccess, (state, { payload }) => ({
 		...state,
-		generations: payload,
+    generations: payload,
+    loadingGenerations: false,
 	})),
 
 	on(MasterStateAction.FetchPhasesSuccess, (state, { payload }) => ({
@@ -252,9 +256,32 @@ export const isInterviewQuestionDetailsLoading = getMasterStateBy(
 	(s) => s.loadingInterviewQuestionDetails
 );
 
-// export const isManageCaseLoading = createSelector(
-//   isPhasesLoading,
-//   isSubjectsLoading,
-//   isSchedulesLoading,
-//   (a, b, c) => a || b || c
-// )
+// export const getSubjectFromEntity = (
+// 	subjectsEntity: Observable<{ [phaseId: string]: ClientSubject[] }>,
+//   phaseObservable: Observable<ClientPhase>,
+//   callbackIfEmpty: () => void
+// ) =>
+// 	combineLatest([subjectsEntity, phaseObservable]).pipe(
+// 		map(([entity, currPhase]) => {
+// 			if (!currPhase) return [];
+// 			if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
+// 			else {
+//         callbackIfEmpty();
+// 				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
+// 				return [];
+// 			}
+// 		})
+// 	);
+
+// export const getScheduleFromEntity = (phaseObservable: Observable<ClientPhase>) =>
+// 	combineLatest([this.subjectEntity$, phaseObservable]).pipe(
+// 		map(([entity, currPhase]) => {
+// 			if (!currPhase) return [];
+// 			if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
+// 			else {
+// 				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
+// 				return [];
+// 			}
+// 		})
+// 	);
+

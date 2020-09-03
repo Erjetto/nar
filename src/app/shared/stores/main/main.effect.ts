@@ -6,11 +6,7 @@ import { Action, Store } from '@ngrx/store';
 import * as MainStateAction from './main.action';
 import * as fromMainState from './main.reducer';
 import { Observable, of } from 'rxjs';
-import {
-	switchMap,
-	mergeMap,
-	pluck,
-} from 'rxjs/operators';
+import { switchMap, mergeMap, pluck } from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
 
@@ -28,21 +24,36 @@ export class MainStateEffects {
 	getAnnouncement$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.FetchAnnouncements),
 		switchMap(() => this.announcementService.GetMessage()),
-		mergeMap((announcements) =>
-			of(MainStateAction.FetchAnnouncementsSuccess({ announcements }))
-		)
-  );
+		mergeMap((announcements) => of(MainStateAction.FetchAnnouncementsSuccess({ announcements })))
+	);
 
 	@Effect()
 	uploadFile$: Observable<Action> = this.actions$.pipe(
-    ofType(MainStateAction.UploadFile),
-    pluck('file'),
+		ofType(MainStateAction.UploadFile),
+		pluck('file'),
 		switchMap((file) => this.otherService.UploadCase(file)),
 		mergeMap((res) =>
-      res.success
-      ? of(MainStateAction.UploadFileSuccess(res))
-      : of(MainStateAction.UploadFileFailed())
+			res.success
+				? of(MainStateAction.UploadFileSuccess(res))
+				: of(MainStateAction.UploadFileFailed())
 		)
-  );
-  
+	);
+
+	@Effect()
+	crudSuccess$: Observable<Action> = this.actions$.pipe(
+		ofType(
+			MainStateAction.CreateSuccess,
+			MainStateAction.UpdateSuccess,
+			MainStateAction.DeleteSuccess
+		)
+	);
+
+	@Effect()
+	createSuccess$: Observable<Action> = this.actions$.pipe(ofType(MainStateAction.CreateSuccess));
+
+	@Effect()
+	updateSuccess$: Observable<Action> = this.actions$.pipe(ofType(MainStateAction.UpdateSuccess));
+
+	@Effect()
+	deleteSuccess$: Observable<Action> = this.actions$.pipe(ofType(MainStateAction.DeleteSuccess));
 }

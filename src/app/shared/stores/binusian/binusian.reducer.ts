@@ -1,25 +1,24 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import * as BinusianStateAction from './binusian.action';
-import { Role, ClientTrainee, ClientTraineeData } from '../../models';
+import { Role, ClientTrainee, ClientTraineeData, ClientUserInRoles } from '../../models';
 
 export interface IBinusianState {
 	traineesEntity: { [id: string]: ClientTrainee };
-	trainees: ClientTrainee[];
-	traineesByPhase: ClientTrainee[];
-	traineesBySchedule: ClientTrainee[];
 
-	allTraineesData: ClientTraineeData[];
-	loadingTrainees: boolean;
+  trainees: ClientTrainee[];
+  allTraineesData: ClientTraineeData[];
+  userInRoles: ClientUserInRoles[];
+
+  loadingTrainees: boolean;
 	loadingTraineesData: boolean;
 }
 
 export const initialState: IBinusianState = {
 	traineesEntity: null,
 	trainees: [],
-	traineesByPhase: [],
-	traineesBySchedule: [],
-
 	allTraineesData: [],
+  userInRoles: [],
+  
 	loadingTrainees: false,
 	loadingTraineesData: false,
 };
@@ -29,18 +28,8 @@ export const BINUSIANSTATE_REDUCER_NAME = 'BinusianState';
 export const BinusianStateReducer = createReducer(
 	initialState,
 
-	on(
-		BinusianStateAction.FetchTrainees,
-		BinusianStateAction.FetchTraineesByPhase,
-		BinusianStateAction.FetchTraineesBySchedule,
-		(state) => ({ ...state, loadingTrainees: true })
-	),
-	on(
-		BinusianStateAction.FetchTraineesSuccess,
-		BinusianStateAction.FetchTraineesByPhaseSuccess,
-		BinusianStateAction.FetchTraineesByScheduleSuccess,
-		(state) => ({ ...state, loadingTrainees: false })
-	),
+	on(BinusianStateAction.FetchTrainees, (state) => ({ ...state, loadingTrainees: true })),
+	on(BinusianStateAction.FetchTraineesSuccess, (state) => ({ ...state, loadingTrainees: false })),
 
 	on(BinusianStateAction.FetchTraineesSuccess, (state, { payload }) => ({
 		...state,
