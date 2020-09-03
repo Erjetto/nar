@@ -1,71 +1,83 @@
-import {
-	Component,
-	OnInit,
-	ChangeDetectionStrategy,
-	OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ClientGeneration } from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, merge } from 'rxjs';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { MasterStateAction, fromMasterState } from 'src/app/shared/store-modules';
+import {
+	MasterStateAction,
+	fromMasterState,
+	MainStateEffects,
+	MasterStateEffects,
+} from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { NgForm } from '@angular/forms';
 import { LeaderService } from 'src/app/shared/services/new/leader.service';
+import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'rd-manage-generation',
 	templateUrl: './manage-generation.component.html',
 	styleUrls: ['./manage-generation.component.scss'],
-	//changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageGenerationComponent extends DashboardContentBase
-	implements OnInit, OnDestroy {
+export class ManageGenerationComponent extends DashboardContentBase implements OnInit, OnDestroy {
+	public generations$: Observable<ClientGeneration[]>;
 	public generations: ClientGeneration[];
 
-	public editForm: ClientGeneration;
+	public editForm$ = new BehaviorSubject<ClientGeneration>(null);
+
+	public loadingFormGen$ = new BehaviorSubject<boolean>(false);
+	public loadingViewGen$: Observable<boolean>;
 
 	constructor(
-		private leaderService: LeaderService,
 		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private masterEffects: MasterStateEffects
 	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
-		this.generations = MockData.GetGenerations.map(ClientGeneration.fromJson);
+    this.generations$ = this.store.pipe(select(fromMasterState.getGenerations));
+    this.loadingViewGen$ = this.store.pipe(select(fromMasterState.isGenerationsLoading));
+
+		merge(this.masterEffects.createGeneration$) // delete & update(?)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.loadingFormGen$.next(false));
+
+		this.mainEffects.crudSuccess$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.store.dispatch(MasterStateAction.FetchGenerations()));
 	}
 
-	reloadView() {
-		super.reloadView();
+	selectGeneration(gen: ClientGeneration) {
+		this.editForm$.next(gen);
 	}
 
-	onSelectGeneration(gen) {
-		this.editForm = gen;
-	}
-
-	createGen(form: NgForm) {
-		const { genName, semesterRadio, lastYear } = form.controls;
-		this.leaderService.SaveGeneration({
-			generationName: genName.value,
-			semester: semesterRadio.value,
-			year: lastYear.value,
-		});
-
-  }
-
-	editGen(form: NgForm) {
-		const { genId, genName, semesterRadio, lastYear } = form.controls;
-		this.leaderService.UpdateGeneration({
-			GenerationId: genId.value,
-			Description: genName.value,
-			Semester: semesterRadio.value,
-			Year: lastYear.value,
-		});
+	submitGenForm(form: NgForm) {
+		const { genName, semesterRadio, lastYear } = form.value;
+		if (!this.editForm$.value)
+			this.store.dispatch(
+				MasterStateAction.CreateGeneration({
+					generationName: genName,
+					semester: semesterRadio,
+					year: lastYear,
+				})
+			);
+		else
+			this.store.dispatch(
+				MasterStateAction.UpdateGeneration({
+					GenerationId: this.editForm$.value.GenerationId,
+					Description: genName,
+					Semester: semesterRadio,
+					Year: lastYear,
+				})
+			);
+		this.loadingFormGen$.next(true);
 	}
 
 	onCancelEdit() {
-		this.editForm = null;
+		this.editForm$.next(null);
 	}
 }

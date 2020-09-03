@@ -1,19 +1,24 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild } from '@angular/core';
-import {
-	ClientPhase,
-	ClientSubject,
-	ClientSchedule,
-	ClientTrainee,
-	ClientNote,
-} from 'src/app/shared/models';
-import { filter, tap, takeUntil, map, withLatestFrom } from 'rxjs/operators';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { ClientPhase, ClientSubject, ClientSchedule, ClientTrainee } from 'src/app/shared/models';
+import { takeUntil, map, withLatestFrom, tap, filter } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { fromMainState, MainStateAction, fromMasterState, MasterStateAction } from 'src/app/shared/store-modules';
-import { isEmpty, cloneDeep } from 'lodash';
+import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
+import {
+	fromMasterState,
+	MasterStateAction,
+	MasterStateEffects,
+	MainStateEffects,
+} from 'src/app/shared/store-modules';
+import { cloneDeep, isEmpty } from 'lodash';
 import { NgForm } from '@angular/forms';
+
+/*
+NOTE: Schedule HAS NO UPDATE
+TODO: 
+- Implement loading when pressing DELETE ALL SCHEDULE
+*/
 
 @Component({
 	selector: 'rd-manage-schedule',
@@ -46,8 +51,8 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		VariationNo: number;
 	}[] = [];
 
-	public subjectEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
-	public scheduleEntity$: Observable<{ [subjectId: string]: ClientSchedule[] }>;
+	public subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
+	public schedulesEntity$: Observable<{ [subjectId: string]: ClientSchedule[] }>;
 
 	public formCurrPhase$ = new BehaviorSubject<ClientPhase>(null);
 
@@ -66,30 +71,34 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	public insertTraineeSubjectList$: Observable<ClientSubject[]>;
 	public insertTraineeScheduleList$: Observable<ClientSchedule[]>;
 
-	public traineeInScheduleLoading$: Observable<boolean>;
 	public traineeInSchedule$: Observable<ClientTrainee[]>;
 
-	public scheduleInSubjectLoading$: Observable<boolean>;
-	// public schedules$: Observable<ClientSchedule[]>;
-	// public subjects$: Observable<ClientSubject[]>;
+	public loadingFormSchedule$ = new BehaviorSubject<boolean>(false);
+	public loadingFormTraineeInSchedule$ = new BehaviorSubject<boolean>(false);
+	public loadingViewTraineeInSchedule$: Observable<boolean>;
+	public loadingViewSchedule$: Observable<boolean>;
 	public phases$: Observable<ClientPhase[]>;
 
 	public phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];
 
-	public editForm: ClientSchedule;
+	public editForm$ = new BehaviorSubject<ClientSchedule>(null);
 
-	constructor(protected store: Store<IAppState>) {
+	constructor(
+		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private masterEffects: MasterStateEffects
+	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
 		//#region Bind to store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.subjectEntity$ = this.store.pipe(select(fromMasterState.getSubjectsEntity));
-		this.scheduleEntity$ = this.store.pipe(select(fromMasterState.getSchedulesEntity));
+		this.subjectsEntity$ = this.store.pipe(select(fromMasterState.getSubjectsEntity));
+		this.schedulesEntity$ = this.store.pipe(select(fromMasterState.getSchedulesEntity));
 		this.traineeInSchedule$ = this.store.pipe(select(fromMasterState.getTraineesInSchedule));
-		this.scheduleInSubjectLoading$ = this.store.pipe(select(fromMasterState.isSchedulesLoading));
-		this.traineeInScheduleLoading$ = this.store.pipe(
+		this.loadingViewSchedule$ = this.store.pipe(select(fromMasterState.isSchedulesLoading));
+		this.loadingViewTraineeInSchedule$ = this.store.pipe(
 			select(fromMasterState.isTraineeInScheduleLoading)
 		);
 		//#endregion
@@ -104,55 +113,79 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		//#endregion
 
 		//#region Auto select first in array
-		this.phases$
-			.pipe(
-				takeUntil(this.destroyed$),
-				map((phases) => {
-					this.formCurrPhase$.next(phases[0]);
-					this.viewCurrPhase$.next(phases[0]);
-					this.insertTraineeCurrPhase$.next(phases[0]);
-				})
-			)
-			.subscribe();
+		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((phases) => {
+			this.formCurrPhase$.next(phases[0]);
+			this.viewCurrPhase$.next(phases[0]);
+			this.insertTraineeCurrPhase$.next(phases[0]);
+		});
 
 		this.viewSubjectList$
-			.pipe(
-				takeUntil(this.destroyed$),
-				map((subjects) => this.viewCurrSubject$.next(subjects[0]))
-			)
-			.subscribe();
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((subjects) => this.viewCurrSubject$.next(subjects[0]));
 
 		this.viewScheduleList$
-			.pipe(
-				takeUntil(this.destroyed$),
-				map((schedules) => this.viewCurrSchedule$.next(schedules[0]))
-			)
-			.subscribe();
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((schedules) => this.viewCurrSchedule$.next(schedules[0]));
 
 		this.insertTraineeSubjectList$
-			.pipe(
-				takeUntil(this.destroyed$),
-				map((subjects) => this.insertTraineeCurrSubject$.next(subjects[0]))
-			)
-			.subscribe();
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((subjects) => this.insertTraineeCurrSubject$.next(subjects[0]));
 		//#endregion
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
+		//#region Subscribe to effects
+		// Loading purpose
+		merge(this.masterEffects.createSchedule$, this.masterEffects.deleteSchedule$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((action) => this.loadingFormSchedule$.next(false));
+
+		merge(this.masterEffects.createTraineeInSchedule$, this.masterEffects.deleteTraineeInPhase$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((action) => this.loadingFormTraineeInSchedule$.next(false));
+
+		// Reload purpose
+		merge(this.mainEffects.crudSuccess$)
+			.pipe(
+				takeUntil(this.destroyed$),
+				withLatestFrom(this.viewCurrSubject$, this.viewCurrSchedule$)
+			)
+			.subscribe(([action, subject, schedule]) => {
+				this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: subject.SubjectId }));
+				this.store.dispatch(
+					MasterStateAction.FetchTraineeInSchedule({ scheduleId: schedule.ScheduleId })
+				);
+			});
+		//#endregion
+		this.viewCurrSubject$
+			.pipe(
+				filter((v) => !isEmpty(v)),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe((subject) =>
+				this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: subject.SubjectId }))
+			);
+		this.viewCurrSchedule$
+			.pipe(
+				filter((v) => !isEmpty(v)),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe((schedule) =>
+				this.store.dispatch(
+					MasterStateAction.FetchTraineeInSchedule({ scheduleId: schedule.ScheduleId })
+				)
+			);
 	}
 
 	getPhaseType(key) {
 		return this.phaseTypes.find((p) => p.key === key).val;
 	}
 
-	deleteTrainee(trainee) {}
+	deleteTrainee() {}
 
 	selectSchedule(schedule) {
-		this.editForm = schedule;
+		this.editForm$.next(schedule);
 	}
 
 	submitScheduleForm(form: NgForm) {
-		console.log(form);
-
 		const {
 			selectSubject,
 			scheduleTypeRadio,
@@ -160,21 +193,31 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			scheduleName,
 			scheduleStart,
 			scheduleEnd,
-		} = form.controls;
+		} = form.value;
 
-		if (this.editForm == null)
+		if (!this.editForm$.value)
 			this.store.dispatch(
 				MasterStateAction.CreateSchedule({
-					subjectId: selectSubject.value.SubjectId,
-					scheduleType: scheduleTypeRadio.value,
-					scheduleCount: scheduleCount.value,
-					scheduleName: scheduleName.value,
+					subjectId: selectSubject.SubjectId,
+					scheduleType: scheduleTypeRadio,
+					scheduleCount,
+					scheduleName,
 					dataSchedule: this.meetings,
-					start: scheduleStart.value,
-					end: scheduleEnd.value,
+					start: scheduleStart,
+					end: scheduleEnd,
 					excTrainee: [],
 				})
 			);
+	}
+
+	deleteSchedule(form: NgForm) {
+		const { reasonText } = form.value;
+		this.store.dispatch(
+			MasterStateAction.DeleteSchedule({
+				scheduleId: this.editForm$.value.ScheduleId,
+				reason: reasonText,
+			})
+		);
 	}
 
 	updateMeetingForm() {
@@ -205,32 +248,29 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	insertTraineeInSchedule(form: NgForm) {
-		console.log(form);
-		const { selectSubject, selectSchedule, selectPhase, traineeText } = form.controls;
-    const trainees: string[] = traineeText.value.split('\n');
-    if(trainees.some(t => )) 
-      this.store.dispatch(MainState)
+		const { selectSubject, selectSchedule, selectPhase, traineeText } = form.value;
 
-		if (this.editForm == null)
+		if (this.editForm$.value == null)
 			this.store.dispatch(
 				MasterStateAction.CreateTraineeInSchedule({
-					binusianNumbers: trainees,
-					phaseId: selectPhase.value.PhaseId,
-					subjectId: selectSubject.value.SubjectId,
-					scheduleId: selectSchedule.value.ScheduleId,
+					binusianNumbers: traineeText.split('\n'),
+					phaseId: selectPhase.PhaseId,
+					subjectId: selectSubject.SubjectId,
+					scheduleId: selectSchedule.ScheduleId,
 				})
 			);
 	}
 
-	updateSchedule(form: NgForm) {}
-	deleteSchedule(form: NgForm) {}
+	deleteAllSchedule() {
+		this.store.dispatch(MasterStateAction.DeleteAllSchedule());
+	}
 
 	cancelEdit() {
-		this.editForm = null;
+		this.editForm$.next(null);
 	}
 
 	getSubjectFromEntity(phaseObservable: Observable<ClientPhase>) {
-		return combineLatest([this.subjectEntity$, phaseObservable]).pipe(
+		return combineLatest([this.subjectsEntity$, phaseObservable]).pipe(
 			map(([entity, currPhase]) => {
 				if (!currPhase) return [];
 				if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
@@ -243,7 +283,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	getScheduleFromEntity(subjectObservable: Observable<ClientSubject>) {
-		return combineLatest([this.scheduleEntity$, subjectObservable]).pipe(
+		return combineLatest([this.schedulesEntity$, subjectObservable]).pipe(
 			map(([entity, currSubj]) => {
 				if (!currSubj) return [];
 				if (!!currSubj && !!entity[currSubj.SubjectId]) return entity[currSubj.SubjectId];

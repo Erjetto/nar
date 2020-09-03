@@ -1,37 +1,35 @@
 <div class="container">
 	<div class="row">
 		<div class="col-4">
-			<rd-card [cardTitle]="editForm ? 'Edit Phase' : 'Insert New Phase'">
-				<div rdCardBadges class="" *ngIf="editForm">
-					<button
-						class="btn btn-sm btn-secondary mr-1"
-						(click)="onCancelEdit()"
-					>
+			<rd-card
+				[cardTitle]="(editForm$ | async) ? 'Edit Phase' : 'Insert New Phase'"
+				[isLoading]="loadingInsertPhase$|async"
+			>
+				<div rdCardBadges class="" *ngIf="editForm$ | async">
+					<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
 				<form #phaseForm="ngForm">
 					<div class="row form-group">
-						<label for="genName" class="col-4 col-form-label">Name</label>
+						<label for="phaseName" class="col-4 col-form-label">Name</label>
 						<div class="col">
 							<input
 								type="text"
 								class="form-control"
-								name="genName"
-								[ngModel]="editForm?.Description"
+								name="phaseName"
+								[ngModel]="(editForm$ | async)?.Description"
 							/>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="beginDate" class="col-4 col-form-label">
-              Begin Date
-            </label>
+						<label for="beginDate" class="col-4 col-form-label"> Begin Date </label>
 						<div class="col">
 							<input
 								type="date"
 								class="form-control"
 								name="beginDate"
-								[ngModel]="editForm?.BeginDate | date: editDateFormat"
+								[ngModel]="(editForm$ | async)?.BeginDate | date: editDateFormat"
 							/>
 						</div>
 					</div>
@@ -42,40 +40,26 @@
 								type="date"
 								class="form-control"
 								name="endDate"
-								[ngModel]="editForm?.EndDate | date: editDateFormat"
+								[ngModel]="(editForm$ | async)?.EndDate | date: editDateFormat"
 							/>
 						</div>
 					</div>
-					<!-- <div class="row form-group">
-						<label for="endDate" class="col-4 col-form-label">Phase Type</label>
-						<div class="col">
-							<ng-select
-								name="selectPhaseType"
-								[items]="phaseTypes$ | async"
-								[clearable]="false"
-								[bindLabel]="'val'"
-								[bindValue]="'key'"
-								[searchable]="false"
-								[ngModel]="(phaseTypes$ | async)[0].key"
-							></ng-select>
-						</div>
-					</div> -->
 					<div class="row justify-content-around">
 						<button
 							class="btn btn-primary"
-							*ngIf="!editForm"
+							*ngIf="!(editForm$ | async)"
 							(click)="submitPhaseForm(phaseForm)"
 						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Phase
 						</button>
 						<button
 							class="btn btn-primary"
-							*ngIf="editForm"
+							*ngIf="editForm$ | async"
 							(click)="submitPhaseForm(phaseForm)"
 						>
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
 						</button>
-						<rd-confirmable-button *ngIf="editForm" (confirm)="onDeletePhase()">
+						<rd-confirmable-button *ngIf="editForm$ | async" (confirm)="deletePhase()">
 							<button class="btn btn-danger">
 								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 							</button>
@@ -83,25 +67,11 @@
 					</div>
 				</form>
 			</rd-card>
-			<rd-card [cardTitle]="'Insert Trainee to Phase'">
-				<form>
-					<!-- <div class="row form-group">
-						<label for="phaseType" class="col-4 col-form-label"
-							>Phase Type</label
-						>
-						<div class="col">
-							<ng-select
-								id="selectPhaseType"
-								name="selectPhaseType"
-								[items]="phaseTypes$ | async"
-								[clearable]="false"
-								[bindLabel]="'val'"
-								[bindValue]="'key'"
-								[searchable]="false"
-								[ngModel]="(phaseTypes$ | async)[0].key"
-							></ng-select>
-						</div>
-					</div> -->
+			<rd-card
+				[cardTitle]="'Insert Trainee to Phase'"
+				[isLoading]="loadingInsertTraineeInPhase$ | async"
+			>
+				<form #insertTraineeToPhaseForm="ngForm">
 					<div class="row form-group">
 						<label for="phaseType" class="col-4 col-form-label">Phase</label>
 						<div class="col">
@@ -117,22 +87,15 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="traineeText" class="col-4 col-form-label"
-							>Binusian Numbers</label
-						>
+						<label for="traineeText" class="col-4 col-form-label">Binusian Numbers</label>
 						<div class="col">
 							<textarea
 								name="traineeText"
 								id="traineeText"
 								class="form-control"
-								style="resize: vertical; width: 100%; height: 200px;"
-								>{{
-									binusianPrefix +
-										'xxxxxxxx\n' +
-										binusianPrefix +
-										'xxxxxxxx\n...'
-								}}</textarea
-							>
+								style="resize: vertical; width: 100%; height: 200px"
+								[ngModel]="binusianPrefix + 'xxxxxxxx\n' + binusianPrefix + 'xxxxxxxx\n...'"
+							></textarea>
 						</div>
 					</div>
 					<div class="row form-group">
@@ -144,6 +107,7 @@
 									class="custom-control-input"
 									id="alsoAddSchedule"
 									name="alsoAddSchedule"
+									ngModel
 								/>
 								<label class="custom-control-label" for="alsoAddSchedule">
 									Also add trainee schedule
@@ -152,7 +116,7 @@
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button class="btn btn-primary">
+						<button class="btn btn-primary" (click)="addTraineesInPhase(insertTraineeToPhaseForm)">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert Trainee(s)
 						</button>
 					</div>
@@ -160,7 +124,7 @@
 			</rd-card>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Phase List'" [isLoading]="loadingPhases$ | async">
+			<rd-card [cardTitle]="'Phase List'" [isLoading]="loadingViewPhases$ | async">
 				<table class="table table-sm table-striped table-hover text-center">
 					<thead>
 						<tr>
@@ -177,7 +141,7 @@
 						<tr
 							*ngFor="let phase of phases$ | async"
 							class="cursor-pointer"
-							(click)="onSelectPhase(phase)"
+							(click)="selectPhase(phase)"
 						>
 							<td>{{ phase.Description }}</td>
 							<td>{{ phase.BeginDate | date: viewDateFormat }}</td>
@@ -187,10 +151,7 @@
 					</tbody>
 				</table>
 			</rd-card>
-			<rd-card
-				[cardTitle]="'Trainee In Phase'"
-				[isLoading]="loadingTraineeInPhase$ | async"
-			>
+			<rd-card [cardTitle]="'Trainee In Phase'" [isLoading]="loadingViewTraineeInPhase$ | async">
 				<div class="row form-group">
 					<!-- <div class="col-6">
 						<ng-select
@@ -212,8 +173,8 @@
 							[clearable]="false"
 							[bindLabel]="'Description'"
 							[searchable]="false"
-							[ngModel]="(phases$ | async)[0]"
-							(change)="onChangePhase($event)"
+							[ngModel]="currentPhase$ | async"
+							(change)="currentPhase$.next($event)"
 						></ng-select>
 					</div>
 				</div>
@@ -231,17 +192,14 @@
 							<tr *ngIf="(traineeInPhase$ | async)?.length === 0">
 								<td colspan="4">No trainees in this phase</td>
 							</tr>
-							<tr
-								*ngFor="let trainee of traineeInPhase$ | async"
-								class="cursor-pointer"
-							>
+							<tr *ngFor="let trainee of traineeInPhase$ | async" class="cursor-pointer">
 								<td>{{ trainee.TraineeCode }}</td>
 								<td>{{ trainee.TraineeNumber }}</td>
 								<td>{{ trainee.TraineeName }}</td>
 								<td>
 									<rd-confirmable-button
 										[description]="'Delete ' + trainee.TraineeName + '?'"
-										(confirm)="onDeleteTrainee(trainee)"
+										(confirm)="deleteTrainee(trainee)"
 									>
 										<button class="btn btn-xs btn-danger">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete

@@ -1,21 +1,18 @@
-import {
-	Component,
-	OnInit,
-	ChangeDetectionStrategy,
-	OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ClientPhase, ClientTrainee } from 'src/app/shared/models';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { LeaderService } from 'src/app/shared/services/new/leader.service';
 import { NgForm } from '@angular/forms';
-import { GeneralService } from 'src/app/shared/services/new/general.service';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 
-import { MasterStateAction, fromMasterState } from 'src/app/shared/store-modules';
-import { filter, takeUntil, map, tap, first } from 'rxjs/operators';
-import { isEmpty } from 'lodash';
+import {
+	MasterStateAction,
+	fromMasterState,
+	MasterStateEffects,
+	MainStateEffects,
+} from 'src/app/shared/store-modules';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
 	selector: 'rd-manage-phase',
@@ -23,62 +20,67 @@ import { isEmpty } from 'lodash';
 	styleUrls: ['./manage-phase.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManagePhaseComponent extends DashboardContentBase
-	implements OnInit, OnDestroy {
-	public binusianPrefix = (new Date().getFullYear() % 100) + 3; // Get 2 last digit
+export class ManagePhaseComponent extends DashboardContentBase implements OnInit, OnDestroy {
+	public binusianPrefix = (new Date().getFullYear() % 100) + 3;
 	public editDateFormat = 'dd-MM-yyyy';
 	public viewDateFormat = 'EEEE, MMM dd yyyy';
 
-	public traineeInPhase: ClientTrainee[];
-
-	public phases: ClientPhase[];
 	public phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];
 
-	public currentPhase: ClientPhase;
-	public editForm: ClientPhase;
+	public editForm$ = new BehaviorSubject<ClientPhase>(null);
+	public currentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
-  // public phaseTypes$: Observable<any>;
+	public traineeInPhaseEntity$: Observable<{ [phaseId: string]: ClientTrainee[] }>;
 	public traineeInPhase$: Observable<ClientTrainee[]>;
 	public phases$: Observable<ClientPhase[]>;
-	public loadingTraineeInPhase$: Observable<boolean>;
-	public loadingPhases$: Observable<boolean>;
+
+	public loadingInsertPhase$ = new BehaviorSubject<boolean>(false);
+	public loadingInsertTraineeInPhase$ = new BehaviorSubject<boolean>(false);
+	public loadingViewTraineeInPhase$: Observable<boolean>;
+	public loadingViewPhases$: Observable<boolean>;
 
 	constructor(
-		private generalService: GeneralService,
-		private leaderService: LeaderService,
 		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private masterEffects: MasterStateEffects
 	) {
 		super(store);
-    // this.phaseTypes$ = this.store.pipe(select(fromMasterState.getPhaseTypes));
-		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.loadingPhases$ = this.store.pipe(
-      select(fromMasterState.isPhasesLoading)
-		);
-		this.traineeInPhase$ = this.store.pipe(
-			select(fromMasterState.getTraineesInPhase)
-		);
-		this.loadingTraineeInPhase$ = this.store.pipe(
-			select(fromMasterState.isTraineeInPhaseLoading)
-		);
-
-		// Auto fetch traineeInPhase when fetched phase
-		this.phases$
-			.pipe(
-				filter((v) => !isEmpty(v)),
-				// takeUntil(this.destroyed$),
-				map((v) => this.onChangePhase(v[0])),
-				first() // Only in first fetch
-			)
-			.subscribe();
 	}
 
 	ngOnInit(): void {
-		this.reloadView();
-	}
+		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
+		this.traineeInPhaseEntity$ = this.store.pipe(select(fromMasterState.getTraineesInPhaseEntity));
+		this.traineeInPhase$ = this.getTraineeInPhaseFromEntity(this.currentPhase$);
 
-	reloadView() {
-		// this.refreshPhases();
-		this.store.dispatch(MasterStateAction.FetchPhases());
+		this.loadingViewPhases$ = this.store.pipe(select(fromMasterState.isPhasesLoading));
+		this.loadingViewTraineeInPhase$ = this.store.pipe(
+			select(fromMasterState.isTraineeInPhaseLoading)
+		);
+
+		//#region Auto select first in array
+		this.phases$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((phases) => this.currentPhase$.next(phases[0]));
+		//#endregion
+
+		//#region Subscribe to effects
+		// loading
+		this.masterEffects.createTraineeInPhase$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.loadingInsertTraineeInPhase$.next(false));
+
+		// loading
+		merge(this.masterEffects.createPhase$, this.masterEffects.updatePhase$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.loadingInsertPhase$.next(false));
+
+    // Auto fetch after crud 
+		merge(this.mainEffects.crudSuccess$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
+
+		//#endregion
+
 	}
 
 	getPhaseType(key) {
@@ -86,71 +88,74 @@ export class ManagePhaseComponent extends DashboardContentBase
 	}
 
 	submitPhaseForm(form: NgForm) {
-		const { name, beginDate, endDate, type } = form.controls;
-		if (this.editForm == null) 
+		const { phaseName, beginDate, endDate } = form.value;
+		if (this.editForm$.value == null)
 			this.store.dispatch(
 				MasterStateAction.CreatePhase({
-					name: name.value,
-					beginDate: beginDate.value,
-					endDate: endDate.value,
-					phaseType: type.value,
+					name: phaseName,
+					beginDate,
+					endDate,
+					phaseType: this.phaseTypes[0].val,
 				})
 			);
 		else
 			this.store.dispatch(
 				MasterStateAction.UpdatePhase({
-					PhaseId: this.editForm.PhaseId,
-					Description: name.value,
-					EndDate: endDate.value,
-					StartDate: beginDate.value,
+					PhaseId: this.editForm$.value.PhaseId,
+					Description: phaseName,
+					EndDate: endDate,
+					StartDate: beginDate,
 				})
 			);
+		this.loadingInsertPhase$.next(true);
 	}
 
 	addTraineesInPhase(form: NgForm) {
-		const { selectPhase, traineeText, alsoAddSchedule } = form.controls;
+		const { selectPhase, traineeText, alsoAddSchedule } = form.value;
+		this.loadingInsertTraineeInPhase$.next(true);
 		this.store.dispatch(
 			MasterStateAction.CreateTraineeInPhase({
-				binusianNumbers: traineeText.value,
-				phaseId: selectPhase.value,
-				isAddToSchedule: alsoAddSchedule.value,
+				binusianNumbers: traineeText,
+				phaseId: selectPhase,
+				isAddToSchedule: alsoAddSchedule,
 			})
 		);
 	}
 
-	// onChangePhaseType(phaseType) {
-  //   // fetch phase
-  //   this.store.dispatch(
-  //     MasterStateAction.FetchPhases()
-  //   );
-  // }
-
-	onSelectPhase(phase) {
-		this.editForm = phase;
+	selectPhase(phase) {
+		this.editForm$.next(phase);
 	}
 
-	onChangePhase(phase: ClientPhase) {
-		this.store.dispatch(
-			MasterStateAction.FetchTraineeInPhase({ phaseId: phase.PhaseId })
-		);
+	deletePhase() {
+		this.store.dispatch(MasterStateAction.DeletePhase({ PhaseId: this.editForm$.value.PhaseId }));
+		this.loadingInsertPhase$.next(true);
 	}
 
-	onDeletePhase() {
-		this.store.dispatch(
-			MasterStateAction.DeletePhase({ PhaseId: this.editForm.PhaseId })
-		);
-	}
-
-	onDeleteTrainee(trainee: ClientTrainee) {
+	deleteTrainee(trainee: ClientTrainee) {
 		this.store.dispatch(
 			MasterStateAction.DeleteTraineeInPhase({
-				PhaseId: this.currentPhase.PhaseId,
+				PhaseId: this.currentPhase$.value.PhaseId,
 				TraineeId: trainee.TraineeId,
 			})
 		);
 	}
 
-	onCancelEdit() {
-		this.editForm = null;
+	cancelEdit() {
+		this.editForm$.next(null);
+	}
+
+	getTraineeInPhaseFromEntity(phaseObservable: Observable<ClientPhase>) {
+		return combineLatest([this.traineeInPhaseEntity$, phaseObservable]).pipe(
+			map(([entity, currPhase]) => {
+				if (!currPhase) return [];
+				if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
+				else {
+					this.store.dispatch(
+						MasterStateAction.FetchTraineeInPhase({ phaseId: currPhase.PhaseId })
+					);
+					return [];
+				}
+			})
+		);
 	}
 }

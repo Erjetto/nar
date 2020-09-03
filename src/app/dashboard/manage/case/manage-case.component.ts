@@ -107,7 +107,6 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			);
 		//#endregion
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
 	onSelectCase(row: Case) {

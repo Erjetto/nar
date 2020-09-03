@@ -2,7 +2,7 @@ import { Subject, Observable, combineLatest } from 'rxjs';
 import { ActionsSubject, Store, select } from '@ngrx/store';
 import { ofType } from '@ngrx/effects';
 
-import { MainStateAction, fromMainState } from 'src/app/shared/store-modules';
+import { MainStateAction, fromMainState, MasterStateAction } from 'src/app/shared/store-modules';
 
 import { takeUntil, filter } from 'rxjs/operators';
 import { OnDestroy } from '@angular/core';
@@ -17,21 +17,7 @@ export class DashboardContentBase implements OnDestroy {
 	protected destroyed$: Subject<any> = new Subject();
 
 	constructor(protected store: Store<IAppState>) {
-		this.currentRole$ = this.store.pipe(select(fromMainState.getCurrentRole));
-		this.currentGeneration$ = this.store.pipe(select(fromMainState.getCurrentGeneration));
-		combineLatest([this.currentRole$, this.currentGeneration$])
-			.pipe(
-				filter((values) => values.every((v) => !isEmpty(v))),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe(([role, gen]) => this.onRoleOrGenUpdate(role, gen));
-
-		// this.actionsSubject
-		// .pipe(
-		//   ofType(MainStateAction.ChangeGeneration, MainStateAction.ChangeRole),
-		//   takeUntil(this.destroyed$)
-		// )
-		// .subscribe((o) => this.reloadView());
+		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
 	ngOnDestroy(): void {
@@ -39,9 +25,4 @@ export class DashboardContentBase implements OnDestroy {
 		this.destroyed$.complete();
 	}
 
-	onRoleOrGenUpdate(role: Role, gen: ClientGeneration) {}
-
-	reloadView() {
-		// get gen & role in MainState
-	}
 }

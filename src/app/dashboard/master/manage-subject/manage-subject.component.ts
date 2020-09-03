@@ -1,22 +1,18 @@
-import {
-	Component,
-	OnInit,
-	ChangeDetectionStrategy,
-	OnDestroy,
-} from '@angular/core';
-import { Store, ActionsSubject, select } from '@ngrx/store';
-import { clone, max } from 'lodash';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import { max } from 'lodash';
+import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { IAppState } from 'src/app/app.reducer';
-import { LeaderService } from 'src/app/shared/services/new/leader.service';
-import { GeneralService } from 'src/app/shared/services/new/general.service';
 import { ClientSubject, ClientPhase } from 'src/app/shared/models';
-import { MasterStateAction, fromMasterState } from 'src/app/shared/store-modules';
-import { filter, takeUntil, map, tap, first } from 'rxjs/operators';
-import { isEmpty } from 'lodash';
+import {
+	MasterStateAction,
+	fromMasterState,
+	MasterStateEffects,
+	MainStateEffects,
+} from 'src/app/shared/store-modules';
+import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { NgModel, NgForm } from '@angular/forms';
-import { SymbolConstant } from 'src/app/shared/constants/symbol.constant';
 
 @Component({
 	selector: 'rd-manage-subject',
@@ -24,18 +20,16 @@ import { SymbolConstant } from 'src/app/shared/constants/symbol.constant';
 	styleUrls: ['./manage-subject.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageSubjectComponent extends DashboardContentBase
-	implements OnInit, OnDestroy {
-	public subjectListLoading$: Observable<boolean>;
-	public subjects$: Observable<ClientSubject[]>;
+export class ManageSubjectComponent extends DashboardContentBase implements OnInit, OnDestroy {
+	public subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
+	public currentSubjects$: Observable<ClientSubject[]>;
 	public phases$: Observable<ClientPhase[]>;
-	// public phaseTypes$: Observable<any>;
 
-	public subjects: ClientSubject[];
+	public loadingViewSubject$: Observable<boolean>;
+	public loadingFormSubject$ = new BehaviorSubject<boolean>(false);
 
-	readonly constant = {
-		symbol: SymbolConstant,
-	};
+	public currentPhase$ = new BehaviorSubject<ClientPhase>(null);
+	public editForm$ = new BehaviorSubject<ClientSubject>(null);
 
 	public size = [
 		{ key: 'byte', val: 1 },
@@ -45,83 +39,101 @@ export class ManageSubjectComponent extends DashboardContentBase
 	];
 	public currentSize = this.size[0];
 
-	public phases: ClientPhase[];
-
-	public currentPhase: ClientPhase;
-	public editForm: ClientSubject;
-
 	constructor(
-		private leaderService: LeaderService,
-		private generalService: GeneralService,
 		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private masterEffects: MasterStateEffects
 	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
+		//#region Bind to store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
-		this.subjectListLoading$ = this.store.pipe(
+		this.subjectsEntity$ = this.store.pipe(select(fromMasterState.getSubjectsEntity));
+		this.loadingViewSubject$ = this.store.pipe(
 			select(fromMasterState.getMasterState),
 			map((v) => v.loadingPhases || v.loadingSubjects)
 		);
+		//#endregion
 
-		// Auto fetch subject when fetched phase
+		//#region Get from entity
+		this.currentSubjects$ = combineLatest([this.subjectsEntity$, this.currentPhase$]).pipe(
+			map(([entity, currPhase]) => {
+				if (!currPhase) return [];
+				if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
+				else {
+					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
+					return [];
+				}
+			})
+		);
+		//#endregion
+
+		//#region Auto select first in array
 		this.phases$
-			.pipe(
-				filter((v) => !isEmpty(v)),
-				// takeUntil(this.destroyed$),
-				map((v) => this.onChangePhase(v[0])),
-				first() // Only in first fetch
-			)
-			.subscribe();
-	}
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((phases) => this.currentPhase$.next(phases[0]));
+		//#endregion
 
-	reloadView() {
-		this.store.dispatch(MasterStateAction.FetchPhases());
+		//#region Subscribe to effects
+		merge(this.masterEffects.createSubject$) // delete & update(?)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.loadingFormSubject$.next(false));
+
+		// Auto reload data
+		this.mainEffects.crudSuccess$
+			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
+			.subscribe(([action, phase]) =>
+				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }))
+			);
+
+		//#endregion
+
 	}
 
 	convertFileSize(size, currentInput: NgModel) {
-		// val
-		currentInput.control.setValue(
-			max([(currentInput.value * this.currentSize.val) / size.val, 1])
-		);
+		currentInput.control.setValue(max([(currentInput.value * this.currentSize.val) / size.val, 1]));
 		this.currentSize = size;
 	}
 
-	onSelectSubject(subject) {
-		this.editForm = clone(subject);
+	selectSubject(subject) {
+		this.editForm$.next(subject);
 		this.currentSize = this.size[0];
 	}
 
-	onChangePhase(phase: ClientPhase) {
+	submitSubjectForm(form: NgForm) {
+		const { subjectName, maxFileSize, selectFileSize, selectPhase, hasPresentation } = form.value;
+
+		if (!this.editForm$.value)
+			this.store.dispatch(
+				MasterStateAction.CreateSubject({
+					name: subjectName,
+					phaseId: selectPhase,
+					value: hasPresentation,
+					maxFileSize: maxFileSize * selectFileSize.val,
+				})
+			);
+		else
+			this.store.dispatch(
+				MasterStateAction.CreateSubject({
+					name: subjectName,
+					phaseId: selectPhase,
+					value: hasPresentation,
+					maxFileSize: maxFileSize * selectFileSize.val,
+				})
+			);
+		this.loadingFormSubject$.next(true);
+	}
+
+	cancelEdit() {
+		this.editForm$.next(null);
+	}
+
+	deleteSubject() {
 		this.store.dispatch(
-			MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId })
+			MasterStateAction.DeleteSubject({ subjectId: this.editForm$.value.SubjectId })
 		);
+		this.loadingFormSubject$.next(true);
 	}
-
-	onCreateSubject(form: NgForm) {
-		const {
-			subjectName,
-			maxFileSize,
-			selectFileSize,
-			selectPhase,
-			hasPresentation,
-    } = form.value;
-    
-		this.store.dispatch(
-			MasterStateAction.CreateSubject({
-				name: subjectName,
-				phaseId: selectPhase,
-				value: hasPresentation,
-				maxFileSize: maxFileSize * selectFileSize.val,
-			})
-		);
-	}
-
-	onCancelEdit() {
-		this.editForm = null;
-	}
-
-	onSaveEdit() {}
 }

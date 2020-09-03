@@ -12,7 +12,7 @@ import { IAppState } from 'src/app/app.reducer';
 	selector: 'rd-manage-user-role',
 	templateUrl: './manage-user-role.component.html',
 	styleUrls: ['./manage-user-role.component.scss'],
-	//changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageUserRoleComponent extends DashboardContentBase
 implements OnInit, OnDestroy  {

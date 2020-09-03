@@ -2,19 +2,17 @@
 	<div class="row">
 		<div class="col-6">
 			<rd-card
-				[cardTitle]="editForm ? 'Edit Generation' : 'Insert New Generation'"
+				[cardTitle]="(editForm$ | async) ? 'Edit Generation' : 'Insert New Generation'"
 				[collapsible]="false"
+				[isLoading]="loadingFormGen$ | async"
 			>
-				<div rdCardBadges class="" *ngIf="editForm">
-					<button
-						class="btn btn-sm btn-secondary mr-1"
-						(click)="onCancelEdit()"
-					>
+				<div rdCardBadges class="" *ngIf="editForm$ | async">
+					<button class="btn btn-sm btn-secondary mr-1" (click)="onCancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
 				<form #genForm="ngForm">
-          <input type="hidden" name="genId" [ngModel]="editForm?.GenerationId">
+					<input type="hidden" name="genId" [ngModel]="(editForm$ | async)?.GenerationId" />
 					<div class="row form-group">
 						<label for="genName" class="col-3 col-form-label">Name</label>
 						<div class="col">
@@ -22,8 +20,8 @@
 								type="text"
 								class="form-control"
 								name="genName"
-                [ngModel]="editForm?.Description"
-                required
+								[ngModel]="(editForm$ | async)?.Description"
+								required
 							/>
 						</div>
 					</div>
@@ -36,13 +34,11 @@
 									id="oddSemRadio"
 									name="semesterRadio"
 									class="custom-control-input"
-                  [ngModel]="editForm?.Semester"
-                  value="Odd"
-                  required
+									[ngModel]="(editForm$ | async)?.Semester"
+									value="Odd"
+									required
 								/>
-								<label class="custom-control-label" for="oddSemRadio"
-									>Odd</label
-								>
+								<label class="custom-control-label" for="oddSemRadio">Odd</label>
 							</div>
 							<div class="custom-control custom-radio">
 								<input
@@ -50,13 +46,11 @@
 									id="eventSemRadio"
 									name="semesterRadio"
 									class="custom-control-input"
-                  [ngModel]="editForm?.Semester"
-                  value="Even"
-                  required
+									[ngModel]="(editForm$ | async)?.Semester"
+									value="Even"
+									required
 								/>
-								<label class="custom-control-label" for="eventSemRadio"
-									>Even</label
-								>
+								<label class="custom-control-label" for="eventSemRadio">Even</label>
 							</div>
 							<div class="custom-control custom-radio">
 								<input
@@ -64,13 +58,11 @@
 									id="compactSemRadio"
 									name="semesterRadio"
 									class="custom-control-input"
-                  [ngModel]="editForm?.Semester"
-                  value="Compact"
-                  required
+									[ngModel]="(editForm$ | async)?.Semester"
+									value="Compact"
+									required
 								/>
-								<label class="custom-control-label" for="compactSemRadio"
-									>Compact</label
-								>
+								<label class="custom-control-label" for="compactSemRadio">Compact</label>
 							</div>
 						</div>
 					</div>
@@ -81,19 +73,27 @@
 								type="number"
 								class="form-control"
 								name="lastYear"
-                [ngModel]="editForm?.Year"
-                required
+								[ngModel]="(editForm$ | async)?.Year"
+								required
 							/>
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button class="btn btn-primary" *ngIf="!editForm" (click)="createGen(genForm)">
+						<button
+							class="btn btn-primary"
+							*ngIf="!(editForm$ | async)"
+							(click)="submitGenForm(genForm)"
+						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Generation
 						</button>
-						<button class="btn btn-primary" *ngIf="editForm" (click)="editGen(genForm)">
+						<button
+							class="btn btn-primary"
+							*ngIf="editForm$ | async"
+							(click)="submitGenForm(genForm)"
+						>
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Change(s)
 						</button>
-						<!-- <rd-confirmable-button *ngIf="editForm">
+						<!-- <rd-confirmable-button *ngIf="(editForm$|async)">
               <button class="btn btn-danger">
                 <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Generation
               </button>
@@ -103,7 +103,11 @@
 			</rd-card>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Generation List'" [collapsible]="false">
+			<rd-card
+				[cardTitle]="'Generation List'"
+				[collapsible]="false"
+				[isLoading]="loadingViewGen$ | async"
+			>
 				<table class="table table-sm table-striped table-hover text-center">
 					<thead>
 						<tr>
@@ -113,13 +117,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngIf="generations?.length === 0">
+						<tr *ngIf="(generations$ | async)?.length === 0">
 							<td colspan="3">No generations</td>
 						</tr>
 						<tr
-							*ngFor="let gen of generations"
+							*ngFor="let gen of generations$ | async"
 							class="cursor-pointer"
-							(click)="onSelectGeneration(gen)"
+							(click)="selectGeneration(gen)"
 						>
 							<td>{{ gen.Description }}</td>
 							<td>{{ gen.Semester }}</td>
