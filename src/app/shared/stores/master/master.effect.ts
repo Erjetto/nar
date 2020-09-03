@@ -79,7 +79,9 @@ export class MasterStateEffects {
 		switchMap((phaseId) =>
 			this.generalService.GetSubjects({ phaseId }).pipe(map((res) => ({ phaseId, res })))
 		),
-		mergeMap(({ phaseId, res }) => of(MasterStateAction.FetchSubjectsSuccess({ payload: res })))
+		mergeMap(({ phaseId, res }) =>
+			of(MasterStateAction.FetchSubjectsSuccess({ payload: res, phaseId }))
+		)
 	);
 	@Effect()
 	getPhases$: Observable<Action> = this.actions$.pipe(
@@ -92,24 +94,38 @@ export class MasterStateEffects {
 	getTraineeInPhase$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchTraineeInPhase),
 		pluck('phaseId'),
-		switchMap((phaseId) => this.leaderService.GetTraineesByPhase({ phaseId })),
-		mergeMap((res) => of(MasterStateAction.FetchTraineeInPhaseSuccess({ payload: res })))
+		switchMap((phaseId) =>
+			this.leaderService.GetTraineesByPhase({ phaseId }).pipe(map((res) => ({ phaseId, res })))
+		),
+		mergeMap(({ phaseId, res }) =>
+			of(MasterStateAction.FetchTraineeInPhaseSuccess({ payload: res, phaseId }))
+		)
 	);
 
 	@Effect()
 	getSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchSchedules),
 		pluck('subjectId'),
-		switchMap((subjectId) => this.leaderService.GetSchedules({ subjectId })),
-		mergeMap((res) => of(MasterStateAction.FetchSchedulesSuccess({ payload: res })))
+		switchMap((subjectId) =>
+			this.leaderService.GetSchedules({ subjectId }).pipe(map((res) => ({ subjectId, res })))
+		),
+		mergeMap(({ subjectId, res }) =>
+			of(MasterStateAction.FetchSchedulesSuccess({ payload: res, subjectId }))
+		)
 	);
 
 	@Effect()
 	getTraineeInSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchTraineeInSchedule),
 		pluck('scheduleId'),
-		switchMap((scheduleId) => this.leaderService.GetTraineesBySchedule({ scheduleId })),
-		mergeMap((res) => of(MasterStateAction.FetchTraineeInScheduleSuccess({ payload: res })))
+		switchMap((scheduleId) =>
+			this.leaderService
+				.GetTraineesBySchedule({ scheduleId })
+				.pipe(map((res) => ({ scheduleId, res })))
+		),
+		mergeMap(({ scheduleId, res }) =>
+			of(MasterStateAction.FetchTraineeInScheduleSuccess({ payload: res, scheduleId }))
+		)
 	);
 
 	@Effect()

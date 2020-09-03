@@ -5,29 +5,12 @@
 				<div rdCardBadges class="" *ngIf="editForm">
 					<button
 						class="btn btn-sm btn-secondary mr-1"
-						(click)="onCancelEdit()"
+						(click)="cancelEdit()"
 					>
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
 				<form #scheduleForm="ngForm">
-					<!-- <div class="row form-group">
-						<label for="selectPhaseType" class="col-4 col-form-label"
-							>Phase Type</label
-						>
-						<div class="col">
-							<ng-select
-								id="selectPhaseType"
-								name="selectPhaseType"
-								[items]="phaseTypes"
-								[clearable]="false"
-								[bindLabel]="'val'"
-								[bindValue]="'key'"
-								[searchable]="false"
-								[ngModel]="phaseTypes[0].key"
-							></ng-select>
-						</div>
-					</div> -->
 					<div class="row form-group">
 						<label for="selectPhase" class="col-4 col-form-label">
 							Phase
@@ -39,9 +22,9 @@
 								[items]="phases$ | async"
 								[clearable]="false"
 								[bindLabel]="'Description'"
-								[bindValue]="'PhaseId'"
 								[searchable]="false"
-								[ngModel]="(phases$ | async)[0]?.PhaseId"
+                [ngModel]="(formCurrPhase$ | async)"
+                (change)="formCurrPhase$.next($event)"
 							></ng-select>
 						</div>
 					</div>
@@ -53,12 +36,11 @@
 							<ng-select
 								id="selectSubject"
 								name="selectSubject"
-								[items]="subjects$ | async"
+								[items]="formSubjectList$ | async"
 								[clearable]="false"
 								[bindLabel]="'Name'"
-								[bindValue]="'SubjectId'"
 								[searchable]="false"
-								[ngModel]="(subjects$ | async)[0]?.SubjectId"
+                [ngModel]="(formSubjectList$ | async)[0]"
 							></ng-select>
 						</div>
 					</div>
@@ -279,14 +261,14 @@
 						</button>
 						<button
 							class="btn btn-primary"
-							(click)="onClick()"
+							(click)="updateSchedule(scheduleForm)"
 							*ngIf="editForm"
 						>
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
 						</button>
 						<rd-confirmable-button
 							*ngIf="editForm"
-							(confirm)="onDeleteSchedule()"
+							(confirm)="deleteSchedule(scheduleForm)"
 						>
 							<button class="btn btn-danger">
 								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
@@ -296,24 +278,7 @@
 				</form>
 			</rd-card>
 			<rd-card [cardTitle]="'Insert Trainee in Schedule'">
-				<form>
-					<!-- <div class="row form-group">
-						<label for="selectphaseType" class="col-4 col-form-label"
-							>Phase Type</label
-						>
-						<div class="col">
-							<ng-select
-								id="selectPhaseType"
-								name="selectPhaseType"
-								[items]="phaseTypes"
-								[clearable]="false"
-								[bindLabel]="'val'"
-								[bindValue]="'key'"
-								[searchable]="false"
-								[ngModel]="phaseTypes[0].key"
-							></ng-select>
-						</div>
-					</div> -->
+				<form #insertTraineeInScheduleForm="ngForm">
 					<div class="row form-group">
 						<label for="selectPhase" class="col-4 col-form-label">Phase</label>
 						<div class="col">
@@ -323,9 +288,9 @@
 								[items]="phases$ | async"
 								[clearable]="false"
 								[bindLabel]="'Description'"
-								[bindValue]="'PhaseId'"
 								[searchable]="false"
-								[ngModel]="(phases$ | async)[0]?.PhaseId"
+								[ngModel]="(insertTraineeCurrPhase$ | async)"
+                (change)="insertTraineeCurrPhase$.next($event)"
 							></ng-select>
 						</div>
 					</div>
@@ -337,12 +302,12 @@
 							<ng-select
 								id="selectSubject"
 								name="selectSubject"
-								[items]="subjects$ | async"
+								[items]="insertTraineeSubjectList$ | async"
 								[clearable]="false"
 								[bindLabel]="'Name'"
-								[bindValue]="'SubjectId'"
 								[searchable]="false"
-								[ngModel]="(subjects$ | async)[0]?.SubjectId"
+								[ngModel]="(insertTraineeCurrSubject$ | async)"
+                (change)="insertTraineeCurrSubject$.next($event)"
 							></ng-select>
 						</div>
 					</div>
@@ -354,12 +319,11 @@
 							<ng-select
 								id="selectSchedule"
 								name="selectSchedule"
-								[items]="schedules$ | async"
+								[items]="insertTraineeScheduleList$ | async"
 								[clearable]="false"
 								[bindLabel]="'ScheduleName'"
-								[bindValue]="'ScheduleId'"
 								[searchable]="false"
-								[ngModel]="(schedules$ | async)[0]?.ScheduleId"
+								[ngModel]="(insertTraineeScheduleList$ | async)[0]"
 							></ng-select>
 						</div>
 					</div>
@@ -377,7 +341,7 @@
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button class="btn btn-primary">
+						<button class="btn btn-primary" (click)="insertTraineeInSchedule(insertTraineeInScheduleForm)">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert Trainee(s)
 						</button>
 					</div>
@@ -390,18 +354,6 @@
 				[isLoading]="scheduleInSubjectLoading$ | async"
 			>
 				<div class="row form-group">
-					<!-- <div class="col">
-						<ng-select
-							id="selectPhaseType"
-							name="selectPhaseType"
-							[items]="phaseTypes"
-							[clearable]="false"
-							[bindLabel]="'val'"
-							[bindValue]="'key'"
-							[searchable]="false"
-							[ngModel]="phaseTypes[0].key"
-						></ng-select>
-					</div> -->
 					<div class="col">
 						<ng-select
 							id="selectPhase"
@@ -409,23 +361,21 @@
 							[items]="phases$ | async"
 							[clearable]="false"
 							[bindLabel]="'Description'"
-							[bindValue]="'PhaseId'"
 							[searchable]="false"
-							[ngModel]="(phases$ | async)[0]?.PhaseId"
-							(change)="onChangePhase($event)"
+							[ngModel]="(viewCurrPhase$ | async)"
+              (change)="viewCurrPhase$.next($event)"
 						></ng-select>
 					</div>
 					<div class="col">
 						<ng-select
 							id="selectSubject"
 							name="selectSubject"
-							[items]="subjects$ | async"
+							[items]="viewSubjectList$ | async"
 							[clearable]="false"
 							[bindLabel]="'Name'"
-							[bindValue]="'SubjectId'"
 							[searchable]="false"
-							[ngModel]="(subjects$ | async)[0]?.SubjectId"
-							(change)="onChangeSubject($event)"
+							[ngModel]="(viewCurrSubject$ | async)"
+							(change)="viewCurrSubject$.next($event)"
 						></ng-select>
 					</div>
 				</div>
@@ -442,13 +392,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngIf="(schedules$ | async)?.length === 0">
+							<tr *ngIf="(viewScheduleList$ | async)?.length === 0">
 								<td colspan="6">No schedules yet</td>
 							</tr>
 							<tr
-								*ngFor="let schedule of schedules$ | async"
+								*ngFor="let schedule of viewScheduleList$ | async"
 								class="cursor-pointer"
-								(click)="onSelectSchedule(schedule)"
+								(click)="selectSchedule(schedule)"
 							>
 								<td>{{ schedule.ScheduleName }}</td>
 								<td>{{ schedule.scheduleType }}</td>
@@ -466,53 +416,16 @@
 				[isLoading]="traineeInScheduleLoading$ | async"
 			>
 				<div class="row form-group">
-					<!-- <div class="col">
-						<ng-select
-							id="selectPhaseType"
-							name="selectPhaseType"
-							[items]="phaseTypes"
-							[clearable]="false"
-							[bindLabel]="'val'"
-							[bindValue]="'key'"
-							[searchable]="false"
-							[ngModel]="phaseTypes[0].key"
-						></ng-select>
-					</div> -->
-					<!-- <div class="col">
-						<ng-select
-							id="selectPhase"
-							name="selectPhase"
-							[items]="phases$ | async"
-							[clearable]="false"
-							[bindLabel]="'Description'"
-							[bindValue]="'PhaseId'"
-							[searchable]="false"
-							[ngModel]="(phases$ | async)[0]?.PhaseId"
-						></ng-select>
-					</div>
-					<div class="col">
-						<ng-select
-							id="selectSubject"
-							name="selectSubject"
-							[items]="subjects$ | async"
-							[clearable]="false"
-							[bindLabel]="'Name'"
-							[bindValue]="'SubjectId'"
-							[searchable]="false"
-							[ngModel]="(subjects$ | async)[0]?.SubjectId"
-						></ng-select>
-					</div> -->
 					<div class="col-6">
 						<ng-select
 							id="selectSchedule"
 							name="selectSchedule"
-							[items]="schedules$ | async"
+							[items]="viewScheduleList$ | async"
 							[clearable]="false"
 							[bindLabel]="'ScheduleName'"
-							[bindValue]="'ScheduleId'"
 							[searchable]="false"
-							[ngModel]="(schedules$ | async)[0]?.ScheduleId"
-							(change)="onChangeSchedule($event)"
+							[ngModel]="(viewCurrSchedule$ | async)"
+							(change)="viewCurrSchedule$.next($event)"
 						></ng-select>
 					</div>
 				</div>
@@ -537,7 +450,7 @@
 								<td>
 									<rd-confirmable-button
 										[description]="'Delete ' + trainee.TraineeName + '?'"
-										(confirm)="onDeleteTrainee(trainee)"
+										(confirm)="deleteTrainee(trainee)"
 									>
 										<button class="btn btn-xs btn-danger">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete

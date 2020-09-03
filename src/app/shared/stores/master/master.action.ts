@@ -33,16 +33,12 @@ export const FetchTraineeInSchedule = createAction(
 	'[MasterState] FetchTraineeInSchedule',
 	props<{ scheduleId: string }>()
 );
-export const FetchInterviewQuestions = createAction(
-	'[MasterState] FetchInterviewQuestions'
-);
+export const FetchInterviewQuestions = createAction('[MasterState] FetchInterviewQuestions');
 export const FetchInterviewQuestionDetails = createAction(
 	'[MasterState] FetchInterviewQuestionDetails',
 	props<{ interviewQuestionId: string }>()
 );
-export const FetchInterviewSchedules = createAction(
-	'[MasterState] FetchInterviewSchedules'
-);
+export const FetchInterviewSchedules = createAction('[MasterState] FetchInterviewSchedules');
 //#endregion
 
 //#region Fetch Success
@@ -64,19 +60,19 @@ export const FetchPhasesSuccess = createAction(
 );
 export const FetchTraineeInPhaseSuccess = createAction(
 	'[MasterState] FetchTraineeInPhaseSuccess',
-	props<{ payload: ClientTrainee[] }>()
+	props<{ payload: ClientTrainee[]; phaseId: string }>()
 );
 export const FetchSubjectsSuccess = createAction(
 	'[MasterState] FetchSubjectsSuccess',
-	props<{ payload: ClientSubject[] }>()
+	props<{ payload: ClientSubject[]; phaseId: string }>()
 );
 export const FetchSchedulesSuccess = createAction(
 	'[MasterState] FetchSchedulesSuccess',
-	props<{ payload: ClientSchedule[] }>()
+	props<{ payload: ClientSchedule[]; subjectId: string }>()
 );
 export const FetchTraineeInScheduleSuccess = createAction(
 	'[MasterState] FetchTraineeInScheduleSuccess',
-	props<{ payload: ClientTrainee[] }>()
+	props<{ payload: ClientTrainee[]; scheduleId: string }>()
 );
 
 export const FetchInterviewQuestionsSuccess = createAction(
@@ -129,27 +125,28 @@ export const CreateSchedule = createAction(
 		subjectId: string;
 		scheduleType: string;
 		scheduleCount: number;
-    scheduleName: string;
-    dataSchedule: any;
-    start: string;
-    end: string;
-    excTrainee: string[];
+		scheduleName: string;
+		dataSchedule: any;
+		start: string;
+		end: string;
+		excTrainee: string[];
 	}>()
 );
 export const CreateTraineeInSchedule = createAction(
 	'[MasterState] CreateTraineeInSchedule',
-	props<{ schedule: string }>()
+	props<{
+		binusianNumbers: string[]; // yyyy-mm-dd
+		phaseId: string;
+		subjectId: string;
+		scheduleId: string;
+	}>()
 );
-export const CreateInterviewQuestion = createAction(
-	'[MasterState] CreateInterviewQuestions'
-);
+export const CreateInterviewQuestion = createAction('[MasterState] CreateInterviewQuestions');
 export const CreateInterviewQuestionDetail = createAction(
 	'[MasterState] CreateInterviewQuestionDetails',
 	props<{ interviewQuestionId: string }>()
 );
-export const CreateInterviewSchedule = createAction(
-	'[MasterState] CreateInterviewSchedules'
-);
+export const CreateInterviewSchedule = createAction('[MasterState] CreateInterviewSchedules');
 //#endregion
 
 //#region Update
@@ -193,10 +190,7 @@ export const UpdatePhase = createAction(
 // export const DeleteRole = createAction('[MasterState] DeleteRoles');
 export const DeleteUserInRole = createAction('[MasterState] DeleteUserInRoles');
 // export const DeleteGeneration = createAction('[MasterState] DeleteGenerations');
-export const DeletePhase = createAction(
-	'[MasterState] DeletePhase',
-	props<{ PhaseId: string }>()
-);
+export const DeletePhase = createAction('[MasterState] DeletePhase', props<{ PhaseId: string }>());
 export const DeleteTraineeInPhase = createAction(
 	'[MasterState] DeleteTraineeInPhase',
 	props<{

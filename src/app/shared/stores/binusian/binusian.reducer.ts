@@ -45,10 +45,7 @@ export const BinusianStateReducer = createReducer(
 	on(BinusianStateAction.FetchTraineesSuccess, (state, { payload }) => ({
 		...state,
 		trainees: payload,
-		traineesEntity: payload.reduce(
-			(accumulator, curr) => ({ ...accumulator, [curr.TraineeId]: curr }),
-			{}
-		),
+		traineesEntity: payload.reduce((accum, curr) => ({ ...accum, [curr.TraineeId]: curr }), {}),
 	}))
 	// on(BinusianStateAction.FetchTraineesByPhaseSuccess, (state, {payload}) => ({...state, traineesByPhase: payload})),
 	// on(BinusianStateAction.FetchTraineesByScheduleSuccess, (state, {payload}) => ({...state, traineesBySchedule: payload})),

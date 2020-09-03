@@ -1,9 +1,4 @@
-import {
-	createFeatureSelector,
-	createReducer,
-	createSelector,
-	on,
-} from '@ngrx/store';
+import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
 import * as MasterStateAction from './master.action';
 import {
@@ -21,6 +16,11 @@ import {
 export interface IMasterState {
 	roles: Role[];
 	userInRoles: ClientUserInRoles[];
+
+	traineesInScheduleEntity: { [scheduleId: string]: ClientTrainee[] };
+	traineesInPhaseEntity: { [phaseId: string]: ClientTrainee[] };
+	subjectsByPhaseEntity: { [phaseId: string]: ClientSubject[] };
+	schedulesBySubjectEntity: { [subjectId: string]: ClientSchedule[] };
 
 	generations: ClientGeneration[];
 	subjects: ClientSubject[];
@@ -52,6 +52,11 @@ export interface IMasterState {
 export const initialState: IMasterState = {
 	roles: [],
 	userInRoles: [],
+
+	traineesInScheduleEntity: {},
+	traineesInPhaseEntity: {},
+	subjectsByPhaseEntity: {},
+	schedulesBySubjectEntity: {},
 
 	generations: [],
 	subjects: [],
@@ -164,64 +169,62 @@ export const MasterStateReducer = createReducer(
 		loadingPhases: false,
 	})),
 
-	on(MasterStateAction.FetchTraineeInPhaseSuccess, (state, { payload }) => ({
+	on(MasterStateAction.FetchTraineeInPhaseSuccess, (state, { payload, phaseId }) => ({
 		...state,
 		traineeInPhase: payload,
 		loadingTraineeInPhase: false,
+		traineesInPhaseEntity: { ...state.traineesInPhaseEntity, [phaseId]: payload },
 	})),
 
-	on(MasterStateAction.FetchSubjectsSuccess, (state, { payload }) => ({
+	on(MasterStateAction.FetchSubjectsSuccess, (state, { payload, phaseId }) => ({
 		...state,
 		subjects: payload,
 		loadingSubjects: false,
+		subjectsByPhaseEntity: { ...state.subjectsByPhaseEntity, [phaseId]: payload },
 	})),
 
-	on(MasterStateAction.FetchSchedulesSuccess, (state, { payload }) => ({
+	on(MasterStateAction.FetchSchedulesSuccess, (state, { payload, subjectId }) => ({
 		...state,
 		schedules: payload,
 		loadingSchedules: false,
+		schedulesBySubjectEntity: { ...state.schedulesBySubjectEntity, [subjectId]: payload },
 	})),
 
-	on(MasterStateAction.FetchTraineeInScheduleSuccess, (state, { payload }) => ({
+	on(MasterStateAction.FetchTraineeInScheduleSuccess, (state, { payload, scheduleId }) => ({
 		...state,
 		traineeInSchedule: payload,
 		loadingTraineeInSchedule: false,
+		traineesInScheduleEntity: { ...state.traineesInScheduleEntity, [scheduleId]: payload },
 	})),
 
-	on(
-		MasterStateAction.FetchInterviewQuestionsSuccess,
-		(state, { payload }) => ({
-			...state,
-			interviewQuestions: payload,
-			loadingInterviewQuestion: false,
-		})
-	),
+	on(MasterStateAction.FetchInterviewQuestionsSuccess, (state, { payload }) => ({
+		...state,
+		interviewQuestions: payload,
+		loadingInterviewQuestion: false,
+	})),
 
-	on(
-		MasterStateAction.FetchInterviewQuestionDetailsSuccess,
-		(state, { payload }) => ({
-			...state,
-			interviewQuestionDetails: payload,
-			loadingInterviewQuestionDetails: false,
-		})
-	),
+	on(MasterStateAction.FetchInterviewQuestionDetailsSuccess, (state, { payload }) => ({
+		...state,
+		interviewQuestionDetails: payload,
+		loadingInterviewQuestionDetails: false,
+	})),
 
-	on(
-		MasterStateAction.FetchInterviewSchedulesSuccess,
-		(state, { payload }) => ({
-			...state,
-			InterviewSchedules: payload,
-			loadingInterviewSchedules: false,
-		})
-	)
+	on(MasterStateAction.FetchInterviewSchedulesSuccess, (state, { payload }) => ({
+		...state,
+		InterviewSchedules: payload,
+		loadingInterviewSchedules: false,
+	}))
 );
 
-export const getMasterState = createFeatureSelector<IMasterState>(
-	MASTERSTATE_REDUCER_NAME
-);
+export const getMasterState = createFeatureSelector<IMasterState>(MASTERSTATE_REDUCER_NAME);
 
 export const getMasterStateBy = (fn: (_: IMasterState) => any) =>
 	createSelector(getMasterState, fn);
+
+export const getSubjectsEntity = getMasterStateBy((s) => s.subjectsByPhaseEntity);
+export const getTraineesInPhaseEntity = getMasterStateBy((s) => s.traineesInPhaseEntity);
+export const getSchedulesEntity = getMasterStateBy((s) => s.schedulesBySubjectEntity);
+export const getTraineesInScheduleEntity = getMasterStateBy((s) => s.traineesInScheduleEntity);
 
 export const getRoles = getMasterStateBy((s) => s.roles);
 export const getUserInRoles = getMasterStateBy((s) => s.userInRoles);
@@ -229,9 +232,9 @@ export const getGenerations = getMasterStateBy((s) => s.generations);
 export const getSubjects = getMasterStateBy((s) => s.subjects);
 export const getPhaseTypes = getMasterStateBy((s) => s.phaseTypes);
 export const getPhases = getMasterStateBy((s) => s.phases);
-export const getTraineeInPhase = getMasterStateBy((s) => s.traineeInPhase);
+export const getTraineesInPhase = getMasterStateBy((s) => s.traineeInPhase);
 export const getSchedules = getMasterStateBy((s) => s.schedules);
-export const getTraineeInSchedule = getMasterStateBy((s) => s.traineeInSchedule);
+export const getTraineesInSchedule = getMasterStateBy((s) => s.traineeInSchedule);
 export const getInterviewQuestion = getMasterStateBy((s) => s.interviewQuestion);
 export const getInterviewQuestionDetails = getMasterStateBy((s) => s.interviewQuestionDetails);
 export const getIpList = getMasterStateBy((s) => s.ipList);
@@ -245,7 +248,9 @@ export const isTraineeInPhaseLoading = getMasterStateBy((s) => s.loadingTraineeI
 export const isSchedulesLoading = getMasterStateBy((s) => s.loadingSchedules);
 export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTraineeInSchedule);
 export const isInterviewQuestionLoading = getMasterStateBy((s) => s.loadingInterviewQuestion);
-export const isInterviewQuestionDetailsLoading = getMasterStateBy((s) => s.loadingInterviewQuestionDetails);
+export const isInterviewQuestionDetailsLoading = getMasterStateBy(
+	(s) => s.loadingInterviewQuestionDetails
+);
 
 // export const isManageCaseLoading = createSelector(
 //   isPhasesLoading,
