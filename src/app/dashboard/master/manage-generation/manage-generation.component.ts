@@ -9,9 +9,8 @@ import { MockData } from 'src/app/shared/mock-data';
 import { Observable } from 'rxjs';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
+import { MasterStateAction, fromMasterState } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
-import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
 import { NgForm } from '@angular/forms';
 import { LeaderService } from 'src/app/shared/services/new/leader.service';
 

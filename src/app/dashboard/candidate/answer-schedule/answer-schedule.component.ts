@@ -14,8 +14,7 @@ import {
 	SubcoCandidateQuestionModel,
 	Pair,
 } from 'src/app/shared/models';
-import * as CandidateStateAction from 'src/app/shared/stores/candidate/candidate.action';
-import * as fromCandidateState from 'src/app/shared/stores/candidate/candidate.reducer';
+import { CandidateStateAction, fromCandidateState } from 'src/app/shared/store-modules';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeID from '@angular/common/locales/id';
 import { take, takeUntil } from 'rxjs/operators';

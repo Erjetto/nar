@@ -5,8 +5,7 @@ import { Observable } from 'rxjs';
 
 import { SubcoCandidateQuestionModel } from 'src/app/shared/models';
 import { SubcoCandidateService } from 'src/app/shared/services/subco-candidate.service';
-import * as CandidateStateAction from 'src/app/shared/stores/candidate/candidate.action';
-import * as fromCandidateState from 'src/app/shared/stores/candidate/candidate.reducer';
+import { CandidateStateAction, fromCandidateState } from 'src/app/shared/store-modules';
 import { clone, cloneDeep } from 'lodash';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { takeUntil } from 'rxjs/operators';

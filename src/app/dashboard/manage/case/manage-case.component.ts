@@ -11,10 +11,7 @@ import {
 	ClientGeneration,
 } from 'src/app/shared/models';
 
-import * as CaseStateAction from 'src/app/shared/stores/case/case.action';
-import * as fromCaseState from 'src/app/shared/stores/case/case.reducer';
-import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
-import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
+import { MasterStateAction, fromMasterState, CaseStateAction, fromCaseState } from 'src/app/shared/store-modules';
 
 import { take, filter, tap, first, switchMap, takeUntil, map } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';

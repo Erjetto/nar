@@ -13,8 +13,7 @@ import { NgForm } from '@angular/forms';
 import { GeneralService } from 'src/app/shared/services/new/general.service';
 import { Observable } from 'rxjs';
 
-import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
-import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
+import { MasterStateAction, fromMasterState } from 'src/app/shared/store-modules';
 import { filter, takeUntil, map, tap, first } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
 
@@ -56,7 +55,7 @@ export class ManagePhaseComponent extends DashboardContentBase
       select(fromMasterState.isPhasesLoading)
 		);
 		this.traineeInPhase$ = this.store.pipe(
-			select(fromMasterState.getTraineeInPhase)
+			select(fromMasterState.getTraineesInPhase)
 		);
 		this.loadingTraineeInPhase$ = this.store.pipe(
 			select(fromMasterState.isTraineeInPhaseLoading)

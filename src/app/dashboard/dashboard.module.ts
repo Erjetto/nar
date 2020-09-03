@@ -4,7 +4,7 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { SharedModule } from '../shared/shared.module';
-import { ALL_STORES, ALL_EFFECTS } from './store-modules';
+import { ALL_STORES, ALL_EFFECTS } from '../shared/store-modules';
 
 import { DashboardComponent } from './dashboard.component';
 import { HomeComponent } from './home/home.component';

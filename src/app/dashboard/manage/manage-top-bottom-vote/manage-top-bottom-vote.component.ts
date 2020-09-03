@@ -28,11 +28,8 @@ import {
 } from 'rxjs/operators';
 import { CardComponent } from 'src/app/shared/components/card/card.component';
 import { clone, cloneDeep, isEmpty } from 'lodash';
+import { VoteStateAction, fromVoteState, BinusianStateAction, fromBinusianState } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import * as VoteStateAction from 'src/app/shared/stores/vote/vote.action';
-import * as fromVoteState from 'src/app/shared/stores/vote/vote.reducer';
-import * as BinusianStateAction from 'src/app/shared/stores/binusian/binusian.action';
-import * as fromBinusianState from 'src/app/shared/stores/binusian/binusian.reducer';
 
 @Component({
 	selector: 'rd-manage-top-bottom-vote',

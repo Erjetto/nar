@@ -2,8 +2,7 @@ import { Subject, Observable, combineLatest } from 'rxjs';
 import { ActionsSubject, Store, select } from '@ngrx/store';
 import { ofType } from '@ngrx/effects';
 
-import * as MainStateAction from 'src/app/shared/stores/main/main.action';
-import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
+import { MainStateAction, fromMainState } from 'src/app/shared/store-modules';
 
 import { takeUntil, filter } from 'rxjs/operators';
 import { OnDestroy } from '@angular/core';

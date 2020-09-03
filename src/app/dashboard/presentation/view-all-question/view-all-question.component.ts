@@ -4,12 +4,8 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { Observable, Subject, combineLatest } from 'rxjs';
 
-import * as MainStateAction from 'src/app/shared/stores/main/main.action';
-import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
-import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
-import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
-import * as PresentationStateAction from 'src/app/shared/stores/presentation/presentation.action';
-import * as fromPresentationState from 'src/app/shared/stores/presentation/presentation.reducer';
+import { MasterStateAction, fromMasterState, MainStateAction, fromMainState, PresentationStateAction, fromPresentationState } from 'src/app/shared/store-modules';
+
 import {
 	CoreTrainingPresentation,
 	CoreTrainingPresentationQuestion,

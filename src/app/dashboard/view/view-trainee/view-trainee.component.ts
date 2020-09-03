@@ -14,8 +14,7 @@ import {
 	ClientTrainee,
 	ClientTraineeReputation,
 } from 'src/app/shared/models';
-import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
-import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
+import { MasterStateAction, fromMasterState } from 'src/app/shared/store-modules';
 import { Observable, of, Subject, interval } from 'rxjs';
 
 import { isEmpty } from 'lodash';

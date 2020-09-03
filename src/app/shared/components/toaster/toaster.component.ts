@@ -5,8 +5,7 @@ import { Toast } from '../../models';
 import { swipeAnimation } from '../../angular-animations';
 import { Store, select, ActionsSubject } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import * as MainStateAction from '../../stores/main/main.action';
-import * as fromMainState from '../../stores/main/main.reducer';
+import { MainStateAction, fromMainState } from 'src/app/shared/store-modules';
 
 @Component({
 	selector: 'rd-toaster',
@@ -37,7 +36,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
 		interval(3500)
 			.pipe(
 				repeatWhen(() => this.start$),
-				takeUntil(this.stop$),
+				takeUntil(this.stop$)
 			)
 			.subscribe((v) => this.store.dispatch(MainStateAction.RemoveMessage({ index: 0 })));
 

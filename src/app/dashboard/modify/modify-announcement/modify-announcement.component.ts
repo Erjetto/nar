@@ -11,8 +11,7 @@ import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { AnnouncementService } from 'src/app/shared/services/new/announcement.service';
 import { Observable } from 'rxjs';
-import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
-import * as MainStateAction from 'src/app/shared/stores/main/main.action';
+import { MainStateAction, fromMainState } from 'src/app/shared/store-modules';
 import { NgForm } from '@angular/forms';
 
 @Component({

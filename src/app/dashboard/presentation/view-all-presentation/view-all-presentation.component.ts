@@ -3,14 +3,16 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 
-import * as BinusianStateAction from 'src/app/shared/stores/binusian/binusian.action';
-import * as fromBinusianState from 'src/app/shared/stores/binusian/binusian.reducer';
-import * as MainStateAction from 'src/app/shared/stores/main/main.action';
-import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
-import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
-import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
-import * as PresentationStateAction from 'src/app/shared/stores/presentation/presentation.action';
-import * as fromPresentationState from 'src/app/shared/stores/presentation/presentation.reducer';
+import {
+	MasterStateAction,
+	fromMasterState,
+	BinusianStateAction,
+	fromBinusianState,
+	MainStateAction,
+	fromMainState,
+	PresentationStateAction,
+	fromPresentationState,
+} from 'src/app/shared/store-modules';
 
 import { Observable, Subject, merge, combineLatest, BehaviorSubject } from 'rxjs';
 import {
@@ -127,8 +129,8 @@ export class ViewAllPresentationComponent
 					(p) => p.SubjectId === sbj.SubjectId && p.TraineeCode === traineeCode
 				);
 				this.presentationsForTrainee$.next(presentationsFromTrainee);
-        this.currentPresentation$.next(presentationsFromTrainee[0]);
-        console.log(presentationsFromTrainee);
+				this.currentPresentation$.next(presentationsFromTrainee[0]);
+				console.log(presentationsFromTrainee);
 			});
 
 		this.currentPresentation$ // Auto fetch Presentation Status

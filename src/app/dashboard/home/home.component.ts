@@ -21,8 +21,8 @@ import {
 } from 'rxjs/operators';
 
 import { ClientPhase, ClientStatistic } from 'src/app/shared/models';
-import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
-import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
+import { MasterStateAction, fromMasterState } from 'src/app/shared/store-modules';
+
 import { Observable, of, Subject, interval } from 'rxjs';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { DashboardContentBase } from '../dashboard-content-base.component';
