@@ -130,7 +130,6 @@ export class ViewAllPresentationComponent
 				);
 				this.presentationsForTrainee$.next(presentationsFromTrainee);
 				this.currentPresentation$.next(presentationsFromTrainee[0]);
-				console.log(presentationsFromTrainee);
 			});
 
 		this.currentPresentation$ // Auto fetch Presentation Status
@@ -147,7 +146,6 @@ export class ViewAllPresentationComponent
 			});
 		//#endregion
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
 	onDeleteQuestion(qstn: CoreTrainingPresentationQuestion) {}

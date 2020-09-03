@@ -491,6 +491,11 @@ export class LeaderService {
 		return of(true).pipe(delay(500));
 	}
 
+	public DeleteAllSubjects() {
+		// return this.httpClient.post(this.baseUrl + 'DeleteSubject', data)
+		return of(true).pipe(delay(500));
+	}
+
 	public DeleteUserInRoles(data: { userInRoleId: string }) {
 		// return this.httpClient.post(this.baseUrl + 'DeleteUserInRoles', data)
 		return of(true).pipe(delay(500));

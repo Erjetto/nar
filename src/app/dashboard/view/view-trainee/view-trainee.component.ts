@@ -57,12 +57,8 @@ export class ViewTraineeComponent extends DashboardContentBase
 			)
 		);
 
-		this.reloadView();
 	}
 
-	reloadView() {
-		this.store.dispatch(MasterStateAction.FetchPhases());
-	}
 
 	onSelectTrainee(trainee) {}
 

@@ -46,7 +46,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase
 	}
 
 	onSubmitForm(form: NgForm) {
-		const { selectMemberType, title, file, contentTextArea } = form.controls;
+		const { selectMemberType, title, file, contentTextArea } = form.value;
     console.log(form);
     
     // Change file here?

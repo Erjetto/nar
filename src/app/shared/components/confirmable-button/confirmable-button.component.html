@@ -17,8 +17,10 @@
 </ng-container> -->
 <ng-template #popContent>
   <div class="row p-2" *ngIf="description !== ''">
-    <!-- <ng-content select=".description"></ng-content> -->
     {{description}}
+  </div>
+  <div class="row">
+    <ng-content select=".description"></ng-content>
   </div>
 	<div class="btn-group w-100">
 		<button class="btn btn-sm btn-primary rounded-0" (click)="this.confirm.emit()">Yes</button>
@@ -27,6 +29,6 @@
 </ng-template>
 <ng-template #popTitle>Are you sure?</ng-template>
 
-<div [ngbPopover]="popContent" [popoverTitle]="popTitle">
+<div [ngbPopover]="popContent" [popoverTitle]="popTitle" [autoClose]="'outside'">
 	<ng-content></ng-content>
 </div>
