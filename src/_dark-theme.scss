@@ -21,17 +21,19 @@
 	.table-hover tbody tr:hover {
 		color: unset;
 	}
-	rd-card.card-collapsible {
-		.card__title:hover {
-			background-color: lighten($color: $header-bg-color-dark, $amount: 15%) !important;
-		}
+  rd-card{
 		.card__cover {
 			background-color: rgba(
 				$color: lighten($color: $header-bg-color-dark, $amount: 15%),
 				$alpha: 0.8
 			) !important;
 		}
-	}
+  }
+	rd-card.card-collapsible {
+		.card__title:hover {
+			background-color: lighten($color: $header-bg-color-dark, $amount: 15%) !important;
+		}
+  }
 
 	.navbar {
 		border-top: 1px solid lighten($color: $header-bg-color-dark, $amount: 15%) !important;

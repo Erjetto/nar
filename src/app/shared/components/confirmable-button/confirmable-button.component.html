@@ -16,19 +16,21 @@
 	</div>
 </ng-container> -->
 <ng-template #popContent>
-  <div class="row p-2" *ngIf="description !== ''">
-    {{description}}
-  </div>
-  <div class="row">
-    <ng-content select=".description"></ng-content>
-  </div>
+	<div class="row p-2" *ngIf="description !== ''">
+		{{ description }}
+	</div>
+	<div class="row">
+		<ng-content select=".description"></ng-content>
+	</div>
 	<div class="btn-group w-100">
-		<button class="btn btn-sm btn-primary rounded-0" (click)="this.confirm.emit()">Yes</button>
-		<button class="btn btn-sm btn-secondary rounded-0">No</button>
+		<button class="btn btn-sm btn-primary rounded-0" (click)="confirm.emit(); popOver.close()">
+			Yes
+		</button>
+		<button class="btn btn-sm btn-secondary rounded-0" (click)="popOver.close()">No</button>
 	</div>
 </ng-template>
 <ng-template #popTitle>Are you sure?</ng-template>
 
-<div [ngbPopover]="popContent" [popoverTitle]="popTitle" [autoClose]="'outside'">
+<div #pop="ngbPopover" [ngbPopover]="popContent" [popoverTitle]="popTitle" [autoClose]="'outside'">
 	<ng-content></ng-content>
 </div>

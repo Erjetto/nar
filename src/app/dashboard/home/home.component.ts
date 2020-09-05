@@ -61,8 +61,7 @@ export class HomeComponent extends DashboardContentBase
       filter((res) => !isEmpty(res)),
       takeUntil(this.destroyed$),
       switchMap(phase => this.generalService.GetStatisticTrainee({phaseId: phase.PhaseId})),
-      map(statistics => this.statistics$.next(statistics))
-    ).subscribe();
+    ).subscribe(statistics => this.statistics$.next(statistics));
     
     this.store.dispatch(MasterStateAction.FetchPhases());
   }

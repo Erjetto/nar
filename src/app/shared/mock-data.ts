@@ -15080,6 +15080,2129 @@ export const MockData = {
   //#endregion
 
   //#region Interview.svc
+  GetInterviewMaterial: [
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "e16ee7a2-8aa1-ea11-abcb-d8d385fcda38",
+          "FileName": "Panduan_Wawancara_NAR20-2_Even_1920.docx",
+          "MaterialName": "Interviewer Guide"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "5725db3b-8ca1-ea11-abcb-d8d385fcda38",
+          "FileName": "20200528_-_[For_Interviewer]_-_Recap_Nilai_Pre_Training_NAR20-2.xlsx",
+          "MaterialName": "Recap Pre-Training NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": null,
+        "TraineeId": "00000000-0000-0000-0000-000000000000",
+        "TraineeName": "(All trainees)",
+        "TraineeNumber": null
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T022      ",
+        "TraineeId": "8b0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Julius Johan",
+        "TraineeNumber": "2201744544"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T023      ",
+        "TraineeId": "8c0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Ryan Dwitama",
+        "TraineeNumber": "2201750603"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "52b1a69c-8ca1-ea11-abcb-d8d385fcda38",
+          "FileName": "T024.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "53914e1e-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T024.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "2710477b-eca7-ea11-abcb-d8d385fcda38",
+          "FileName": "T024_-_Vincent.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T024",
+        "TraineeId": "8d0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Vincent",
+        "TraineeNumber": "2201762780"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T025      ",
+        "TraineeId": "8e0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Rio Nagano",
+        "TraineeNumber": "2201767232"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "e00774a5-8ca1-ea11-abcb-d8d385fcda38",
+          "FileName": "T026.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "3367d526-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T026.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "435fb0a9-d7aa-ea11-abcb-d8d385fcda38",
+          "FileName": "T026_-_Eric_Pangiawan.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T026",
+        "TraineeId": "8f0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Eric Pangiawan",
+        "TraineeNumber": "2201768273"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "df3a0bb3-8ca1-ea11-abcb-d8d385fcda38",
+          "FileName": "T027.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "2c48752d-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T027.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "2fa87a2b-eba7-ea11-abcb-d8d385fcda38",
+          "FileName": "T027_-_Andre_Antolis.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T027",
+        "TraineeId": "900c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Andre Antolis",
+        "TraineeNumber": "2201771942"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T028      ",
+        "TraineeId": "910c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Jedi Jonathan",
+        "TraineeNumber": "2201806044"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T029      ",
+        "TraineeId": "920c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Billy Yusuf Alghani Lusarno",
+        "TraineeNumber": "2201843222"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "83986ec3-8ca1-ea11-abcb-d8d385fcda38",
+          "FileName": "T030.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "e0a47b3a-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T030.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "4aa43e91-eca7-ea11-abcb-d8d385fcda38",
+          "FileName": "T030_-_Wilton_Pangestu.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T030",
+        "TraineeId": "930c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Wilton Pangestu",
+        "TraineeNumber": "2201845026"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "2cedd2cd-8ca1-ea11-abcb-d8d385fcda38",
+          "FileName": "T031.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "e3a47b3a-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T031.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "daa77ec3-f6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T031_-_Lionel_Ritchie.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T031",
+        "TraineeId": "940c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Lionel Ritchie",
+        "TraineeNumber": "2301846212"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T032      ",
+        "TraineeId": "950c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Nelly Helim",
+        "TraineeNumber": "2301846250"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T033      ",
+        "TraineeId": "960c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Roland",
+        "TraineeNumber": "2301847253"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "1dc69fda-8ca1-ea11-abcb-d8d385fcda38",
+          "FileName": "T034.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "10a3b545-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T034.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "32a87a2b-eba7-ea11-abcb-d8d385fcda38",
+          "FileName": "T034_-_Ricky_Imanuel.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T034",
+        "TraineeId": "970c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Ricky Imanuel",
+        "TraineeNumber": "2301848243"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "4f6b15ef-8ca1-ea11-abcb-d8d385fcda38",
+          "FileName": "T035.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "13a3b545-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T035.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "fcaed4ce-eca7-ea11-abcb-d8d385fcda38",
+          "FileName": "T035_-_Jonathan_Ronald_Honggo.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T035",
+        "TraineeId": "980c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Jonathan Ronald Honggo",
+        "TraineeNumber": "2301848956"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "e8414a3e-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T036.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "00210853-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T036.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "a55a54d0-f6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T036_-_Kelvin.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T036",
+        "TraineeId": "990c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Kelvin",
+        "TraineeNumber": "2301850696"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T037      ",
+        "TraineeId": "9a0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Ignatius Dillwyn Mulianto",
+        "TraineeNumber": "2301851143"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T038      ",
+        "TraineeId": "9b0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Andrew Dharma Saputra",
+        "TraineeNumber": "2301853823"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T039      ",
+        "TraineeId": "9c0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Inriyani Pertiwi",
+        "TraineeNumber": "2301855280"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "698daa47-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T040.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "c028165a-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T040.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "d5dae535-eba7-ea11-abcb-d8d385fcda38",
+          "FileName": "T040_-_Vincent_Benedict.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T040",
+        "TraineeId": "9d0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Vincent Benedict",
+        "TraineeNumber": "2301855822"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T041      ",
+        "TraineeId": "9e0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Cheryl Angelica",
+        "TraineeNumber": "2301855854"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T042      ",
+        "TraineeId": "9f0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Samuel Yang",
+        "TraineeNumber": "2301855961"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T043      ",
+        "TraineeId": "a00c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Geraldi Anthony",
+        "TraineeNumber": "2301855993"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "4dd48751-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T044.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "c328165a-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T044.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "be94feb1-25ab-ea11-abcb-d8d385fcda38",
+          "FileName": "T044_-_Erwin.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T044",
+        "TraineeId": "a10c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Erwin",
+        "TraineeNumber": "2301856592"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T045      ",
+        "TraineeId": "a20c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Belinda Mettadevi",
+        "TraineeNumber": "2301857090"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "5280f25a-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T046.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "70611568-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T046.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "94d902db-f6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T046_-_Vlarancia.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T046",
+        "TraineeId": "a30c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Vlarancia",
+        "TraineeNumber": "2301857443"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T047      ",
+        "TraineeId": "a40c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Alvin Briandy Chea",
+        "TraineeNumber": "2301859511"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "f2e63264-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T048.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "73611568-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T048.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "d8dae535-eba7-ea11-abcb-d8d385fcda38",
+          "FileName": "T048_-_Felix_Novando.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T048",
+        "TraineeId": "a50c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Felix Novando",
+        "TraineeNumber": "2301859543"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T049      ",
+        "TraineeId": "a60c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Tiffany Ciangsawira",
+        "TraineeNumber": "2301860444"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T050      ",
+        "TraineeId": "a70c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Fernando Prawiranata",
+        "TraineeNumber": "2301862840"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T051      ",
+        "TraineeId": "a80c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Marwin Dwiputra",
+        "TraineeNumber": "2301863004"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "7e7ad570-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T052.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "b0ce3775-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T052.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "cc4462dc-eca7-ea11-abcb-d8d385fcda38",
+          "FileName": "T052_-_Bestyvincen_Kartika.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T052",
+        "TraineeId": "a90c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Bestyvincen Kartika",
+        "TraineeNumber": "2301863055"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T053      ",
+        "TraineeId": "aa0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Ivano Ekasetia Dhojopatmo",
+        "TraineeNumber": "2301863345"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T054      ",
+        "TraineeId": "ab0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Dea Claresta",
+        "TraineeNumber": "2301863736"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T055      ",
+        "TraineeId": "ac0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Fransiscus Xaverius David Hardjanto",
+        "TraineeNumber": "2301863755"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T056      ",
+        "TraineeId": "ad0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Charleen",
+        "TraineeNumber": "2301863811"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "af6bb980-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T057.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "50ad9b7e-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T057.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "95acc0e6-f6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T057_-_Johanes_Peter_Vincentius.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T057",
+        "TraineeId": "ae0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Johanes Peter Vincentius",
+        "TraineeNumber": "2301864461"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T058      ",
+        "TraineeId": "af0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Hanna Nadia Savira",
+        "TraineeNumber": "2301866025"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "5d1b9d8a-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T059.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "a0a9a186-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T059.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "cfe7de3f-eba7-ea11-abcb-d8d385fcda38",
+          "FileName": "T059_-_David.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T059",
+        "TraineeId": "b00c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "David",
+        "TraineeNumber": "2301868491"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T060      ",
+        "TraineeId": "b10c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Gavriel Castorio",
+        "TraineeNumber": "2301868964"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T061      ",
+        "TraineeId": "b20c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Alvin Christ Budi Agung",
+        "TraineeNumber": "2301869140"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T062      ",
+        "TraineeId": "b30c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Patrice Agustin",
+        "TraineeNumber": "2301869600"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T063      ",
+        "TraineeId": "b40c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Rivandi",
+        "TraineeNumber": "2301869714"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T064      ",
+        "TraineeId": "b50c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Chrismorgan Shintaro",
+        "TraineeNumber": "2301870350"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T065      ",
+        "TraineeId": "b60c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Elric Pien William",
+        "TraineeNumber": "2301870432"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T066      ",
+        "TraineeId": "b70c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Ian Marco",
+        "TraineeNumber": "2301871542"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T067      ",
+        "TraineeId": "b80c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Christianto Herpin",
+        "TraineeNumber": "2301874941"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T068      ",
+        "TraineeId": "b90c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Yessin Rio Martin",
+        "TraineeNumber": "2301875023"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T069      ",
+        "TraineeId": "ba0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Rendy Sanjaya Kusuma",
+        "TraineeNumber": "2301875490"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T070      ",
+        "TraineeId": "bb0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Felisha Miranda",
+        "TraineeNumber": "2301875540"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T071      ",
+        "TraineeId": "bc0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Aileen",
+        "TraineeNumber": "2301875843"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T072      ",
+        "TraineeId": "bd0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Sisca",
+        "TraineeNumber": "2301876266"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T073      ",
+        "TraineeId": "be0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Randy Steven",
+        "TraineeNumber": "2301876316"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T074      ",
+        "TraineeId": "bf0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Andres Fernanda Riady",
+        "TraineeNumber": "2301876386"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T075      ",
+        "TraineeId": "c00c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Muhamad Arief Liman",
+        "TraineeNumber": "2301876972"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T076      ",
+        "TraineeId": "c10c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Jason",
+        "TraineeNumber": "2301877294"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T077      ",
+        "TraineeId": "c20c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Philips",
+        "TraineeNumber": "2301877344"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T078      ",
+        "TraineeId": "c30c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Richardo Christjia",
+        "TraineeNumber": "2301877445"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T079      ",
+        "TraineeId": "c40c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Kristina Hendryka",
+        "TraineeNumber": "2301877451"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "8af30f93-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T080.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "e066a58f-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T080.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "a19dc5e5-eca7-ea11-abcb-d8d385fcda38",
+          "FileName": "T080_-_Bryan_Takari.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T080",
+        "TraineeId": "c50c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Bryan Takari",
+        "TraineeNumber": "2301877880"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T081      ",
+        "TraineeId": "c60c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Elvan Selvano",
+        "TraineeNumber": "2301877994"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "f2ce229b-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T082.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "9065ae96-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T082.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "d205a7f1-f6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T082_-_Stanley_Dave_Teherag.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T082",
+        "TraineeId": "c70c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Stanley Dave Teherag",
+        "TraineeNumber": "2301878012"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T083      ",
+        "TraineeId": "c80c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Maryanto",
+        "TraineeNumber": "2301878076"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "e9961ea7-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T084.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "a0bfba9d-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T084.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "25a25747-eba7-ea11-abcb-d8d385fcda38",
+          "FileName": "T084_-_Thaddeus_Cleo.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T084",
+        "TraineeId": "c90c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Thaddeus Cleo",
+        "TraineeNumber": "2301878403"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T085      ",
+        "TraineeId": "ca0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Stefanus Likardi",
+        "TraineeNumber": "2301882306"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T086      ",
+        "TraineeId": "cb0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Excell",
+        "TraineeNumber": "2301883126"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T087      ",
+        "TraineeId": "cc0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Clarik Linadi",
+        "TraineeNumber": "2301883901"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "467d46b1-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T088.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "b0e60da5-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T088.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "f8d85af1-eca7-ea11-abcb-d8d385fcda38",
+          "FileName": "T088_-_Brandon_J._Thenaro.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T088",
+        "TraineeId": "cd0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Brandon Julio Thenaro",
+        "TraineeNumber": "2301885466"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "59837bbb-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T089.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "10d6f8ab-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T089.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "1fae41fc-f6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T089_-_Skolastika_Gabriella_Theresandia_Prasetyo.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T089",
+        "TraineeId": "ce0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Skolastika Gabriella Theresandia Prasetyo",
+        "TraineeNumber": "2301886323"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T090      ",
+        "TraineeId": "cf0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Catharina Zevania Neysa Soetanto",
+        "TraineeNumber": "2301887345"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "ec9ab2c4-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T091.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "13d6f8ab-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T091.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "0246744d-eba7-ea11-abcb-d8d385fcda38",
+          "FileName": "T091_-_Fernando_Chai.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T091",
+        "TraineeId": "d00c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Fernando Chai",
+        "TraineeNumber": "2301889275"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T092      ",
+        "TraineeId": "d10c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Vincent Weilasto",
+        "TraineeNumber": "2301889312"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T093      ",
+        "TraineeId": "d20c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Melvin",
+        "TraineeNumber": "2301893045"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T094      ",
+        "TraineeId": "d30c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Calvin Lee",
+        "TraineeNumber": "2301894256"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T095      ",
+        "TraineeId": "d40c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Langgeng Yudistira",
+        "TraineeNumber": "2301896886"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T096      ",
+        "TraineeId": "d50c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Fajar Hamdani",
+        "TraineeNumber": "2301897283"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "d4caadce-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T097.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "d0000ab5-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T097.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "9d55c8fb-eca7-ea11-abcb-d8d385fcda38",
+          "FileName": "T097_-_Muladi_Muhammad.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T097",
+        "TraineeId": "d60c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Muladi Muhamad",
+        "TraineeNumber": "2301903084"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T098      ",
+        "TraineeId": "d70c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Dicky Setiawan",
+        "TraineeNumber": "2301903336"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T099      ",
+        "TraineeId": "d80c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Kurniadi",
+        "TraineeNumber": "2301903424"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T100      ",
+        "TraineeId": "d90c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Brandon",
+        "TraineeNumber": "2301903456"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "9a7933d8-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T101.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "206cbfbc-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T101.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "16763d08-f7a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T101_-_Lius_Aprian_Hartono.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T101",
+        "TraineeId": "da0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Lius Aprian Hartono",
+        "TraineeNumber": "2301904313"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T102      ",
+        "TraineeId": "db0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Rico Nelson",
+        "TraineeNumber": "2301905373"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T103      ",
+        "TraineeId": "dc0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Raymond Andilsim",
+        "TraineeNumber": "2301906533"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T104      ",
+        "TraineeId": "dd0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Mario Fredo Tannuwijaya",
+        "TraineeNumber": "2301907555"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T105      ",
+        "TraineeId": "de0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Steven Felizio",
+        "TraineeNumber": "2301907561"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T106      ",
+        "TraineeId": "df0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Willen Febryanto",
+        "TraineeNumber": "2301909081"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T107      ",
+        "TraineeId": "e00c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Michael Marcelino",
+        "TraineeNumber": "2301910594"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T108      ",
+        "TraineeId": "e10c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Alyssa Imani",
+        "TraineeNumber": "2301911842"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T109      ",
+        "TraineeId": "e20c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Felina Suryadi",
+        "TraineeNumber": "2301914604"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T110      ",
+        "TraineeId": "e30c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Severian Fathich Wicaksana",
+        "TraineeNumber": "2301914661"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T111      ",
+        "TraineeId": "e40c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Juan Nathan Waraney",
+        "TraineeNumber": "2301922934"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T112      ",
+        "TraineeId": "e50c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Bryan Felix",
+        "TraineeNumber": "2301925532"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "92079ee6-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T113.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "60fee4c4-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T113.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "0546744d-eba7-ea11-abcb-d8d385fcda38",
+          "FileName": "T113_-_Muhammad_Kharisma_Azhari.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T113",
+        "TraineeId": "e60c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Muhammad Kharisma Azhari",
+        "TraineeNumber": "2301925564"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T114      ",
+        "TraineeId": "e70c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Muhammad Abdul Aziz Al Ghofari",
+        "TraineeNumber": "2301932153"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T115      ",
+        "TraineeId": "e80c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Tio Novriadi Putra",
+        "TraineeNumber": "2301935786"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "6955ebee-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T116.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "63fee4c4-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T116.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "bb5c5fc1-eca7-ea11-abcb-d8d385fcda38",
+          "FileName": "T116_-_Clarissa_Chuardi.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T116",
+        "TraineeId": "e90c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Clarissa Chuardi",
+        "TraineeNumber": "2301941366"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "59bec2f7-8da1-ea11-abcb-d8d385fcda38",
+          "FileName": "T117.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "b0ff63d1-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T117.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "3c81f11e-f7a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T117_-_Veronica.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T117",
+        "TraineeId": "ea0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Veronica",
+        "TraineeNumber": "2301941611"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T118      ",
+        "TraineeId": "eb0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Zevira Varies Martan",
+        "TraineeNumber": "2301949394"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T119      ",
+        "TraineeId": "ec0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Ariel Peaceo Gunawan",
+        "TraineeNumber": "2301952874"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T120      ",
+        "TraineeId": "ed0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Jifi",
+        "TraineeNumber": "2301954141"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "b7aef504-8ea1-ea11-abcb-d8d385fcda38",
+          "FileName": "T121.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "009686d7-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T121.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "2a295257-eba7-ea11-abcb-d8d385fcda38",
+          "FileName": "T121_-_Clarence_Matthew_Satria.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T121",
+        "TraineeId": "ee0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Clarence Matthew Satria",
+        "TraineeNumber": "2301957963"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T122      ",
+        "TraineeId": "ef0c2345-e868-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Tri Patrisya Br.sibarani",
+        "TraineeNumber": "2301960831"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "307ddd0e-8ea1-ea11-abcb-d8d385fcda38",
+          "FileName": "T123.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "039686d7-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T123.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "5e44b845-e7a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T123_-_Raka_Nurul_Fikri.pdf",
+          "MaterialName": "Assessment  NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T123",
+        "TraineeId": "af0d28a9-686a-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Raka Nurul Fikri",
+        "TraineeNumber": "2301938195"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "1cb9fa16-8ea1-ea11-abcb-d8d385fcda38",
+          "FileName": "T124.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "90509fe2-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T124.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "fec141f3-e6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T124_-_Yoshua_Aron_Nainggolan.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T124",
+        "TraineeId": "b00d28a9-686a-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Yoshua Aron Nainggolan",
+        "TraineeNumber": "2301914730"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "102d3e20-8ea1-ea11-abcb-d8d385fcda38",
+          "FileName": "T125.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "9026e7ec-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T125.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "15d11018-e6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T125_-_Rhenald_Saputra.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T125",
+        "TraineeId": "b10d28a9-686a-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Rhenald Saputra",
+        "TraineeNumber": "2301936883"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "891e2a28-8ea1-ea11-abcb-d8d385fcda38",
+          "FileName": "T126.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "9326e7ec-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T126.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "0ce003c1-25ab-ea11-abcb-d8d385fcda38",
+          "FileName": "T126_-_Denies.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T126",
+        "TraineeId": "b20d28a9-686a-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Denies",
+        "TraineeNumber": "2301873314"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "7cdc6f31-8ea1-ea11-abcb-d8d385fcda38",
+          "FileName": "T127.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "301eaff6-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T127.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "7b723ce6-e6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T127_-_Levina_Niolana.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T127",
+        "TraineeId": "b30d28a9-686a-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Levina Niolana",
+        "TraineeNumber": "2301858515"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": null,
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T128      ",
+        "TraineeId": "b40d28a9-686a-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Lucky Riyadi",
+        "TraineeNumber": "2301886456"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "384dbe3a-8ea1-ea11-abcb-d8d385fcda38",
+          "FileName": "T129.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "6065e0fd-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T129.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "69c91421-e6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T129_-_Gianni_Fiesta_Dewi.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T129",
+        "TraineeId": "b50d28a9-686a-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Gianni Fiesta Dewi",
+        "TraineeNumber": "2301929272"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "49e8ad42-8ea1-ea11-abcb-d8d385fcda38",
+          "FileName": "T130.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "6365e0fd-05a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T130.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "46676aef-e7a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T130_-_Andi_Suryo_Laksono.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T130",
+        "TraineeId": "b60d28a9-686a-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Andi Suryo Laksono",
+        "TraineeNumber": "2301940792"
+      }
+    },
+    {
+      "__type": "InterviewMaterial:#BPlusTraining.Logic",
+      "MaterialId": "00000000-0000-0000-0000-000000000000",
+      "Materials": [
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "51614e4b-8ea1-ea11-abcb-d8d385fcda38",
+          "FileName": "T131.docx",
+          "MaterialName": "BA Test NAR20-2"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "d0975509-06a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T131.zip",
+          "MaterialName": "FLK"
+        },
+        {
+          "__type": "InterviewMaterialDetail:#BPlusTraining.Logic",
+          "FileId": "d080d3d6-e6a7-ea11-abcb-d8d385fcda38",
+          "FileName": "T131_-_Stefany_Chrisdayanty.pdf",
+          "MaterialName": "Assessment NAR20-2"
+        }
+      ],
+      "Trainee": {
+        "__type": "ClientTrainee:#BPlusTraining.Logic",
+        "IsActive": false,
+        "TraineeCode": "T131",
+        "TraineeId": "b70d28a9-686a-ea11-abcb-d8d385fcda38",
+        "TraineeName": "Stefany Chrisdayanty",
+        "TraineeNumber": "2301929266"
+      }
+    }
+  ],
   GetInterviewSchedules: {
     "__type": "ClientInterviewReport:#BPlusTraining.Logic",
     "Details": [
