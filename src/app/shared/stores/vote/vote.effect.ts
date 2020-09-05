@@ -31,8 +31,8 @@ export class VoteStateEffects {
 				? of(VoteStateAction.FetchTopBottomVoteSchedulesSuccess({ payload: res }))
 				: of(MainStateAction.ErrorGetMessage('Top bottom votes schedule'))
 		)
-  );
-  
+	);
+
 	@Effect()
 	getTopBottomVoteForSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(VoteStateAction.FetchTopBottomVotesForSchedule),
@@ -43,17 +43,45 @@ export class VoteStateEffects {
 				: of(MainStateAction.ErrorGetMessage('Trainee Top bottom votes'))
 		)
 	);
-  
+
 	@Effect()
 	getTrainerTopBottomVoteForSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(VoteStateAction.FetchTrainerTopBottomVotesForSchedule),
 		switchMap((data) => this.voteService.GetTrainerTopBottomVotesForSchedule(data)),
-    mergeMap((res) =>
+		mergeMap((res) =>
 			!isEmpty(res)
 				? of(VoteStateAction.FetchTrainerTopBottomVotesForScheduleSuccess({ payload: res }))
 				: of(MainStateAction.ErrorGetMessage('Trainer Top bottom votes'))
 		)
-  );
+	);
+
+	@Effect()
+	updateTopBottomVoteSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(VoteStateAction.UpdateTopBottomVoteSchedule),
+		switchMap((data) => this.leaderService.UpdateTopBottomVoteSchedule(data)),
+		mergeMap((res) =>
+			res != null
+				? of(
+						MainStateAction.UpdateSuccess(),
+						MainStateAction.SuccessfullyMessage('update schedule')
+				  )
+				: of(MainStateAction.FailMessage('deleting schedule'))
+		)
+	);
+
+	@Effect()
+	deleteTopBottomVoteSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(VoteStateAction.DeleteTopBottomVoteSchedule),
+		switchMap((data) => this.leaderService.DeleteTopBottomVoteSchedule(data)),
+		mergeMap((res) =>
+			res === false
+				? of(
+						MainStateAction.DeleteSuccess(),
+						MainStateAction.SuccessfullyMessage('delete schedule')
+				  )
+				: of(MainStateAction.FailMessage('deleting schedule'))
+		)
+	);
 
 	// @Effect()
 	// getPresentationStatus$: Observable<Action> = this.actions$.pipe(

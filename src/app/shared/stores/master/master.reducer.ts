@@ -12,9 +12,7 @@ import {
 	ClientUserInRoles,
 	ClientTrainee,
 } from '../../models';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { FnParam } from '@angular/compiler/src/output/output_ast';
+
 
 export interface IMasterState {
 	roles: Role[];
@@ -35,7 +33,7 @@ export interface IMasterState {
 	schedules: ClientSchedule[];
 	traineeInSchedule: ClientTrainee[];
 
-	interviewQuestion: ClientInterviewQuestion[];
+	interviewQuestions: ClientInterviewQuestion[];
 	interviewQuestionDetails: InterviewQuestionDetail[];
 
 	ipList: string[];
@@ -48,7 +46,7 @@ export interface IMasterState {
 	loadingTraineeInPhase: boolean;
 	loadingSchedules: boolean;
 	loadingTraineeInSchedule: boolean;
-	loadingInterviewQuestion: boolean;
+	loadingInterviewQuestions: boolean;
 	loadingInterviewQuestionDetails: boolean;
 }
 
@@ -74,7 +72,7 @@ export const initialState: IMasterState = {
 	schedules: [],
 	traineeInSchedule: [],
 
-	interviewQuestion: [],
+	interviewQuestions: [],
 	interviewQuestionDetails: [],
 
 	ipList: [],
@@ -87,7 +85,7 @@ export const initialState: IMasterState = {
 	loadingTraineeInPhase: false,
 	loadingSchedules: false,
 	loadingTraineeInSchedule: false,
-	loadingInterviewQuestion: false,
+	loadingInterviewQuestions: false,
 	loadingInterviewQuestionDetails: false,
 };
 
@@ -153,12 +151,14 @@ export const MasterStateReducer = createReducer(
 
 	on(MasterStateAction.FetchRolesSuccess, (state, { payload }) => ({
 		...state,
-		roles: payload,
+    roles: payload,
+    loadingRoles: false,
 	})),
 
 	on(MasterStateAction.FetchUserInRolesSuccess, (state, { payload }) => ({
 		...state,
-		userInRoles: payload,
+    userInRoles: payload,
+    loadingUserInRoles: false,
 	})),
 
 	on(MasterStateAction.FetchGenerationsSuccess, (state, { payload }) => ({
@@ -204,7 +204,7 @@ export const MasterStateReducer = createReducer(
 	on(MasterStateAction.FetchInterviewQuestionsSuccess, (state, { payload }) => ({
 		...state,
 		interviewQuestions: payload,
-		loadingInterviewQuestion: false,
+		loadingInterviewQuestions: false,
 	})),
 
 	on(MasterStateAction.FetchInterviewQuestionDetailsSuccess, (state, { payload }) => ({
@@ -239,7 +239,7 @@ export const getPhases = getMasterStateBy((s) => s.phases);
 export const getTraineesInPhase = getMasterStateBy((s) => s.traineeInPhase);
 export const getSchedules = getMasterStateBy((s) => s.schedules);
 export const getTraineesInSchedule = getMasterStateBy((s) => s.traineeInSchedule);
-export const getInterviewQuestion = getMasterStateBy((s) => s.interviewQuestion);
+export const getInterviewQuestion = getMasterStateBy((s) => s.interviewQuestions);
 export const getInterviewQuestionDetails = getMasterStateBy((s) => s.interviewQuestionDetails);
 export const getIpList = getMasterStateBy((s) => s.ipList);
 
@@ -251,7 +251,7 @@ export const isPhasesLoading = getMasterStateBy((s) => s.loadingPhases);
 export const isTraineeInPhaseLoading = getMasterStateBy((s) => s.loadingTraineeInPhase);
 export const isSchedulesLoading = getMasterStateBy((s) => s.loadingSchedules);
 export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTraineeInSchedule);
-export const isInterviewQuestionLoading = getMasterStateBy((s) => s.loadingInterviewQuestion);
+export const isInterviewQuestionsLoading = getMasterStateBy((s) => s.loadingInterviewQuestions);
 export const isInterviewQuestionDetailsLoading = getMasterStateBy(
 	(s) => s.loadingInterviewQuestionDetails
 );

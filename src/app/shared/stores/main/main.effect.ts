@@ -39,7 +39,8 @@ export class MainStateEffects {
 		)
 	);
 
-	@Effect()
+  // Kalau {dispatch: true}, action akan infinite-loop dispatch
+	@Effect({ dispatch: false })
 	crudSuccess$: Observable<Action> = this.actions$.pipe(
 		ofType(
 			MainStateAction.CreateSuccess,
@@ -48,12 +49,12 @@ export class MainStateEffects {
 		)
 	);
 
-	@Effect()
+	@Effect({ dispatch: false })
 	createSuccess$: Observable<Action> = this.actions$.pipe(ofType(MainStateAction.CreateSuccess));
 
-	@Effect()
+	@Effect({ dispatch: false })
 	updateSuccess$: Observable<Action> = this.actions$.pipe(ofType(MainStateAction.UpdateSuccess));
 
-	@Effect()
+	@Effect({ dispatch: false })
 	deleteSuccess$: Observable<Action> = this.actions$.pipe(ofType(MainStateAction.DeleteSuccess));
 }

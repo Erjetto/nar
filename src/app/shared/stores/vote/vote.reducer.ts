@@ -116,8 +116,7 @@ export const getTrainerVotesFiltered = createSelector(
 						(voteItem.Reason + ' ' + trainees[voteItem.TraineeId]?.codeAndName)
 							.toLowerCase()
 							.indexOf(search) !== -1
-        );
-        console.log(vote.TopVotes.length + vote.BottomVotes.length > 0)
+				);
 				return vote.TopVotes.length + vote.BottomVotes.length > 0;
 			});
 		}

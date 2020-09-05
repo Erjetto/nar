@@ -6,6 +6,7 @@ import {
 	ClientInterviewReport,
 	ClientInterviewQuestion,
 	InterviewQuestionDetail,
+  InterviewMaterial,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 
@@ -22,18 +23,29 @@ export class InterviewService {
 			map((r) => ClientInterviewReport.fromJson(r))
 		);
 	}
-	public GetInterviewQuestions(): Observable<ClientInterviewQuestion[]> {
+  
+  public GetInterviewQuestions(): Observable<ClientInterviewQuestion[]> {
 		return of(MockData.GetInterviewQuestions).pipe(
 			delay(500),
 			map((r) => r.map(ClientInterviewQuestion.fromJson))
 		);
-	}
+  }
+  
 	public GetInterviewQuestionDetails(data: {
 		interviewQuestionId: string
   }): Observable<InterviewQuestionDetail[]> {
 		return of(MockData.GetInterviewQuestionDetails).pipe(
 			delay(500),
 			map((r) => r.map(InterviewQuestionDetail.fromJson))
+		);
+	}
+  
+	public GetInterviewMaterial(data: {
+		phaseId: string
+  }): Observable<InterviewMaterial[]> {
+		return of(MockData.GetInterviewMaterial).pipe(
+			delay(500),
+			map((r) => r.map(InterviewMaterial.fromJson))
 		);
 	}
 }

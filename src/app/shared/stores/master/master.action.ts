@@ -47,7 +47,7 @@ export const FetchRolesSuccess = createAction(
 	props<{ payload: Role[] }>()
 );
 export const FetchUserInRolesSuccess = createAction(
-	'[MasterState] FetchUserInRoles',
+	'[MasterState] FetchUserInRolesSuccess',
 	props<{ payload: ClientUserInRoles[] }>()
 );
 export const FetchGenerationsSuccess = createAction(
@@ -91,7 +91,10 @@ export const FetchInterviewSchedulesSuccess = createAction(
 
 //#region Create
 // export const CreateRole = createAction('[MasterState] CreateRoles');
-export const CreateUserInRole = createAction('[MasterState] CreateUserInRoles');
+export const CreateUserInRole = createAction(
+	'[MasterState] CreateUserInRoles',
+	props<{ userRoleId: string; userRoles: string[] }>()
+);
 export const CreateGeneration = createAction(
 	'[MasterState] CreateGenerations',
 	props<{
@@ -148,7 +151,10 @@ export const CreateTraineeInSchedule = createAction(
 		scheduleId: string;
 	}>()
 );
-export const CreateInterviewQuestion = createAction('[MasterState] CreateInterviewQuestions');
+export const CreateInterviewQuestion = createAction(
+	'[MasterState] CreateInterviewQuestions',
+	props<{ questionName: string; questions: string[] }>()
+);
 export const CreateInterviewQuestionDetail = createAction(
 	'[MasterState] CreateInterviewQuestionDetails',
 	props<{ interviewQuestionId: string }>()
