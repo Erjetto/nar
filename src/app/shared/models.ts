@@ -1282,7 +1282,8 @@ export class TopBottomVoteSchedule extends BaseModel {
 		public ScheduleName = '',
 		public VoteCount = 0,
 		public StartDate: Date = null,
-		public EndDate: Date = null
+    public EndDate: Date = null,
+    public isForTrainer = false,
 	) {
 		super();
 	}

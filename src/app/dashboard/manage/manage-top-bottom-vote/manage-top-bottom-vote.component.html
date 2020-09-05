@@ -3,7 +3,7 @@
 		<div class="col-5">
 			<div class="row">
 				<div class="col">
-					<rd-card [cardTitle]="'Top/Bottom Vote'" [isLoading]="voteScheduleLoading$ | async">
+					<rd-card [cardTitle]="'Top/Bottom Vote'" [isLoading]="loadingViewVoteSchedule$ | async">
 						<table class="table table-sm table-striped table-hover text-center">
 							<thead>
 								<tr>
@@ -32,63 +32,78 @@
 					</rd-card>
 					<rd-card
 						[cardTitle]="(editForm$ | async) ? 'Edit Vote Schedule' : 'Insert New Vote Schedule'"
-						[expanded]="editForm$ | async"
 					>
 						<div rdCardBadges class="" *ngIf="editForm$ | async">
 							<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
 								<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 							</button>
 						</div>
-						<form>
-							<div class="row">
+						<form #voteScheduleForm="ngForm">
+							<div class="row form-group">
 								<div class="col">
-									<div class="row form-group">
+									<div class="row">
 										<label for="selectSubject">Name</label>
 										<input
 											type="text"
 											name="ScheduleName"
 											id="ScheduleName"
 											class="form-control"
-											[value]="(editForm$ | async)?.ScheduleName"
+											[ngModel]="(editForm$ | async)?.ScheduleName"
 										/>
 									</div>
 								</div>
 								<div class="col-3">
-									<div class="row form-group">
+									<div class="row">
 										<label for="selectSubject"># of votes</label>
 										<input
 											type="number"
 											name="AmountVote"
 											id="AmountVote"
 											class="form-control"
-											[value]="(editForm$ | async)?.VoteCount"
+											[ngModel]="(editForm$ | async)?.VoteCount"
 										/>
 									</div>
 								</div>
 							</div>
-							<div class="row">
+							<div class="row form-group">
 								<div class="col">
-									<div class="row form-group">
+									<div class="row">
 										<label for="selectSubject">Start</label>
 										<input
 											type="date"
 											name="StartDate"
 											id="StartDate"
 											class="form-control"
-											[value]="(editForm$ | async)?.StartDate | date: 'yyyy-MM-dd'"
+											[ngModel]="(editForm$ | async)?.StartDate | date: 'yyyy-MM-dd'"
 										/>
 									</div>
 								</div>
 								<div class="col">
-									<div class="row form-group">
+									<div class="row">
 										<label for="selectSubject">End</label>
 										<input
 											type="date"
 											name="EndDate"
 											id="EndDate"
 											class="form-control"
-											[value]="(editForm$ | async)?.ScheduleName | date: 'yyyy-MM-dd'"
+											[ngModel]="(editForm$ | async)?.ScheduleName | date: 'yyyy-MM-dd'"
 										/>
+									</div>
+								</div>
+							</div>
+							<div class="row form-group">
+								<div class="col">
+									<div class="custom-control custom-checkbox">
+										<input
+											type="checkbox"
+											class="custom-control-input"
+											id="isForTrainerCheck"
+											name="isForTrainerCheck"
+											[ngModel]="(editForm$ | async)?.isForTrainer"
+										/>
+										<label class="custom-control-label" for="isForTrainerCheck"
+											>Is for trainer</label
+										>
 									</div>
 								</div>
 							</div>
@@ -99,12 +114,10 @@
 									</button>
 								</ng-container>
 								<ng-container *ngSwitchDefault>
-									<rd-confirmable-button (confirm)="onClick()">
-										<button class="btn btn-primary">
-											<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
-										</button>
-									</rd-confirmable-button>
-									<rd-confirmable-button (confirm)="onClick()">
+									<button class="btn btn-primary">
+										<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
+									</button>
+									<rd-confirmable-button (confirm)="deleteVoteSchedule()">
 										<button class="btn btn-danger">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Schedule
 										</button>
@@ -117,25 +130,29 @@
 			</div>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Vote Result'" [isLoading]="voteResultLoading$ | async">
+			<rd-card [cardTitle]="'Vote Result'" [isLoading]="loadingViewVoteResult$ | async">
 				<div class="row">
 					<div class="col">
 						<ul class="nav nav-tabs">
 							<li class="nav-item cursor-pointer">
+								<!-- [class.active]="(currentVote$|async) === 'trainee'"
+                (click)="currentVote$.next('trainee')" -->
 								<b
 									class="nav-link"
 									[class.active]="currentVote === 'trainee'"
 									(click)="currentVote = 'trainee'"
-									>Trainee</b
 								>
+									Trainee
+								</b>
 							</li>
 							<li class="nav-item cursor-pointer">
 								<b
 									class="nav-link"
 									[class.active]="currentVote === 'trainer'"
 									(click)="currentVote = 'trainer'"
-									>Trainer</b
 								>
+									Trainer
+								</b>
 							</li>
 						</ul>
 					</div>
@@ -151,7 +168,7 @@
 					</div>
 				</div>
 				<div class="content">
-					<div class="vote-list row" *ngIf="currentVote === 'trainee'">
+					<div class="vote-list row" [hidden]="currentVote !== 'trainee'">
 						<div class="vote-item row border-bottom" *ngFor="let voter of traineeVotes$ | async">
 							<div class="col">
 								<h5 class="row vote-item__voter">
@@ -199,7 +216,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="vote-list row" *ngIf="currentVote === 'trainer'">
+					<div class="vote-list row" [hidden]="currentVote !== 'trainer'">
 						<div class="vote-item row border-bottom" *ngFor="let voter of trainerVotes$ | async">
 							<div class="col">
 								<h5 class="row vote-item__voter">

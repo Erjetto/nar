@@ -22,7 +22,7 @@ import { map, takeUntil } from 'rxjs/operators';
 })
 export class ManagePhaseComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	public binusianPrefix = (new Date().getFullYear() % 100) + 3;
-	public editDateFormat = 'dd-MM-yyyy';
+	public editDateFormat = 'yyyy-MM-dd';
 	public viewDateFormat = 'EEEE, MMM dd yyyy';
 
 	public phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];

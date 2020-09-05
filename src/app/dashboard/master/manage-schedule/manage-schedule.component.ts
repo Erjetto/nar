@@ -18,6 +18,7 @@ import { NgForm } from '@angular/forms';
 NOTE: Schedule HAS NO UPDATE
 TODO: 
 - Implement loading when pressing DELETE ALL SCHEDULE
+- Specific is rarely used, consider removing it
 */
 
 @Component({
@@ -132,23 +133,17 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			.subscribe((subjects) => this.insertTraineeCurrSubject$.next(subjects[0]));
 		//#endregion
 
-		//#region Subscribe to effects
-		// Loading purpose
-		merge(this.masterEffects.createSchedule$, this.masterEffects.deleteSchedule$)
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((action) => this.loadingFormSchedule$.next(false));
-
-		merge(this.masterEffects.createTraineeInSchedule$, this.masterEffects.deleteTraineeInPhase$)
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((action) => this.loadingFormTraineeInSchedule$.next(false));
-
-		// Reload purpose
+    //#region Subscribe to effects
+		// Loading & Reload purpose
 		merge(this.mainEffects.crudSuccess$)
 			.pipe(
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.viewCurrSubject$, this.viewCurrSchedule$)
 			)
 			.subscribe(([action, subject, schedule]) => {
+				this.loadingFormSchedule$.next(false);
+        this.loadingFormTraineeInSchedule$.next(false);
+        
 				this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: subject.SubjectId }));
 				this.store.dispatch(
 					MasterStateAction.FetchTraineeInSchedule({ scheduleId: schedule.ScheduleId })
@@ -179,7 +174,14 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		return this.phaseTypes.find((p) => p.key === key).val;
 	}
 
-	deleteTrainee() {}
+	deleteTrainee(trainee: ClientTrainee) {
+		this.store.dispatch(
+			MasterStateAction.DeleteTraineeInSchedule({
+				ScheduleId: this.viewCurrSchedule$.value.ScheduleId,
+				TraineeId: trainee.TraineeId,
+			})
+		);
+	}
 
 	selectSchedule(schedule) {
 		this.editForm$.next(schedule);

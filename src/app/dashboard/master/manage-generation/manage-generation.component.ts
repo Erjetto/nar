@@ -1,8 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ClientGeneration } from 'src/app/shared/models';
-import { MockData } from 'src/app/shared/mock-data';
 import { Observable, BehaviorSubject, merge } from 'rxjs';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
 	MasterStateAction,
@@ -12,8 +11,7 @@ import {
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { NgForm } from '@angular/forms';
-import { LeaderService } from 'src/app/shared/services/new/leader.service';
-import { takeUntil, tap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
 	selector: 'rd-manage-generation',
@@ -33,22 +31,19 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
-		private masterEffects: MasterStateEffects
 	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
-    this.generations$ = this.store.pipe(select(fromMasterState.getGenerations));
-    this.loadingViewGen$ = this.store.pipe(select(fromMasterState.isGenerationsLoading));
+		this.generations$ = this.store.pipe(select(fromMasterState.getGenerations));
+		this.loadingViewGen$ = this.store.pipe(select(fromMasterState.isGenerationsLoading));
 
-		merge(this.masterEffects.createGeneration$) // delete & update(?)
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.loadingFormGen$.next(false));
-
-		this.mainEffects.crudSuccess$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.store.dispatch(MasterStateAction.FetchGenerations()));
+		this.mainEffects.crudSuccess$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+      this.loadingFormGen$.next(false);
+      this.cancelEdit();
+			this.store.dispatch(MasterStateAction.FetchGenerations());
+		});
 	}
 
 	selectGeneration(gen: ClientGeneration) {
@@ -77,7 +72,7 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 		this.loadingFormGen$.next(true);
 	}
 
-	onCancelEdit() {
+	cancelEdit() {
 		this.editForm$.next(null);
 	}
 }

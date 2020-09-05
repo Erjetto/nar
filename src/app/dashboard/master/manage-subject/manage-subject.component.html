@@ -1,7 +1,10 @@
 <div class="container">
 	<div class="row">
 		<div class="col-4">
-			<rd-card [cardTitle]="(editForm$ | async) ? 'Edit Subject' : 'Insert New Subject'">
+			<rd-card
+				[cardTitle]="(editForm$ | async) ? 'Edit Subject' : 'Insert New Subject'"
+				[isLoading]="loadingFormSubject$ | async"
+			>
 				<div rdCardBadges class="" *ngIf="editForm$ | async">
 					<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
@@ -16,6 +19,7 @@
 								class="form-control"
 								name="subjectName"
 								[ngModel]="(editForm$ | async)?.Name"
+								required
 							/>
 						</div>
 					</div>
@@ -28,6 +32,7 @@
 								class="form-control"
 								name="maxFileSize"
 								[ngModel]="(editForm$ | async)?.MaxFileSize"
+								required
 							/>
 						</div>
 						<div class="col">
@@ -39,6 +44,7 @@
 								[searchable]="false"
 								[clearable]="false"
 								[ngModel]="currentSize"
+								required
 								(change)="convertFileSize($event, fileSizeInput)"
 							></ng-select>
 						</div>
@@ -55,6 +61,7 @@
 								[bindValue]="'PhaseId'"
 								[searchable]="false"
 								[ngModel]="(phases$ | async)[0]?.PhaseId"
+								required
 							></ng-select>
 						</div>
 					</div>
@@ -77,11 +84,17 @@
 						<button
 							class="btn btn-primary"
 							*ngIf="!(editForm$ | async)"
+							[disabled]="!subjectForm.valid"
 							(click)="submitSubjectForm(subjectForm)"
 						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Subject
 						</button>
-						<button class="btn btn-primary" *ngIf="editForm$ | async" (click)="submitSubjectForm(subjectForm)">
+						<button
+							class="btn btn-primary"
+							*ngIf="editForm$ | async"
+							[disabled]="!subjectForm.valid"
+							(click)="submitSubjectForm(subjectForm)"
+						>
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
 						</button>
 						<rd-confirmable-button *ngIf="editForm$ | async" (confirm)="deleteSubject()">
@@ -96,18 +109,6 @@
 		<div class="col">
 			<rd-card [cardTitle]="'Subject in Phase List'" [isLoading]="loadingViewSubject$ | async">
 				<div class="row form-group">
-					<!-- <div class="col-6">
-						<ng-select
-							id="selectPhaseType"
-							name="selectPhaseType"
-							[items]="phaseTypes$ | async"
-							[clearable]="false"
-							[bindLabel]="'val'"
-							[searchable]="false"
-							[ngModel]="(phaseTypes$ | async)[0]"
-							(change)="onChangePhaseType($event)"
-						></ng-select>
-					</div> -->
 					<div class="col-6">
 						<ng-select
 							id="selectPhase"
@@ -116,7 +117,8 @@
 							[clearable]="false"
 							[bindLabel]="'Description'"
 							[searchable]="false"
-							[ngModel]="currentPhase$|async"
+							[ngModel]="currentPhase$ | async"
+							required
 							(change)="currentPhase$.next($event)"
 						></ng-select>
 					</div>

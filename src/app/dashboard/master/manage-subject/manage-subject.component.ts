@@ -39,11 +39,7 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 	];
 	public currentSize = this.size[0];
 
-	constructor(
-		protected store: Store<IAppState>,
-		private mainEffects: MainStateEffects,
-		private masterEffects: MasterStateEffects
-	) {
+	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
 		super(store);
 	}
 
@@ -77,19 +73,15 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 		//#endregion
 
 		//#region Subscribe to effects
-		merge(this.masterEffects.createSubject$) // delete & update(?)
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.loadingFormSubject$.next(false));
-
 		// Auto reload data
 		this.mainEffects.crudSuccess$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
-			.subscribe(([action, phase]) =>
-				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }))
-			);
+			.subscribe(([action, phase]) => {
+				this.loadingFormSubject$.next(false);
+				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }));
+			});
 
 		//#endregion
-
 	}
 
 	convertFileSize(size, currentInput: NgModel) {

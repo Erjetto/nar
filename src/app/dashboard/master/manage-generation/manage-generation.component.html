@@ -5,9 +5,9 @@
 				[cardTitle]="(editForm$ | async) ? 'Edit Generation' : 'Insert New Generation'"
 				[collapsible]="false"
 				[isLoading]="loadingFormGen$ | async"
-			>
+        >
 				<div rdCardBadges class="" *ngIf="editForm$ | async">
-					<button class="btn btn-sm btn-secondary mr-1" (click)="onCancelEdit()">
+					<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
@@ -73,7 +73,7 @@
 								type="number"
 								class="form-control"
 								name="lastYear"
-								[ngModel]="(editForm$ | async)?.Year"
+                [ngModel]="(editForm$ | async)?.Year"
 								required
 							/>
 						</div>
@@ -81,7 +81,8 @@
 					<div class="row justify-content-around">
 						<button
 							class="btn btn-primary"
-							*ngIf="!(editForm$ | async)"
+              *ngIf="!(editForm$ | async)"
+              [disabled]="!genForm.valid"
 							(click)="submitGenForm(genForm)"
 						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Generation
@@ -89,6 +90,7 @@
 						<button
 							class="btn btn-primary"
 							*ngIf="editForm$ | async"
+              [disabled]="!genForm.valid"
 							(click)="submitGenForm(genForm)"
 						>
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Change(s)
