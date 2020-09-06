@@ -1053,6 +1053,12 @@ export class InterviewMaterialDetail extends BaseModel {
 	constructor(public MaterialName = '', public FileId = '', public FileName = '') {
 		super();
 	}
+	get downloadLink() {
+		return 'File.svc/GetFile/' + this.FileId;
+	}
+	get linkTitle() {
+		return `Download '${this.FileName}'`;
+	}
 	static fromJson(data?: any): InterviewMaterialDetail {
 		return Object.assign(new InterviewMaterialDetail(), data);
 	}
@@ -1282,8 +1288,8 @@ export class TopBottomVoteSchedule extends BaseModel {
 		public ScheduleName = '',
 		public VoteCount = 0,
 		public StartDate: Date = null,
-    public EndDate: Date = null,
-    public isForTrainer = false,
+		public EndDate: Date = null,
+		public isForTrainer = false
 	) {
 		super();
 	}
@@ -1402,6 +1408,64 @@ export class ClientInterviewSchedule extends BaseModel {
 		return Object.assign(new ClientInterviewSchedule(), data, {
 			InterviewDate: DateHelper.fromCSharpDate(data?.InterviewDate),
 		});
+	}
+}
+
+export class ClientInterviewResult extends BaseModel {
+	constructor(
+		public Semester = '',
+		public SemesterIndo = '',
+		public Year = '',
+		public Major = '',
+		public Location = '',
+		public IsSaved = false,
+		public InterviewScheduleId = '',
+		public TraineeCode = '',
+		public RegistrationCode = '',
+		public TraineeId = '',
+		public TraineeName = '',
+		public TraineeNumber = '',
+		public InterviewDate: Date = null,
+		public StartTime = '',
+		public PictureId = '',
+		public EndTime = '',
+		public MainInterviewer = '',
+		public CoInterviewer = '',
+		public Questions: ClientInterviewResultDetail[] = [],
+		public Note = '',
+		public AttitudeNote = '',
+		public DevelopmentNote = '',
+		public Summary = '',
+		public Decision = '',
+		public SavedBy = '',
+		public SavedAt: Date = null
+	) {
+		super();
+	}
+	public get startToEndTime() {
+		return this.StartTime + ' - ' + this.EndTime;
+	}
+	static fromJson(data: any) {
+		return Object.assign(new ClientInterviewResult(), data, {
+			Questions: map(data?.Questions, ClientInterviewResultDetail.fromJson),
+			InterviewDate: DateHelper.fromCSharpDate(data?.InterviewDate),
+			SavedAt: DateHelper.fromCSharpDate(data?.SavedAt),
+		});
+	}
+}
+
+export class ClientInterviewResultDetail extends BaseModel {
+	constructor(
+		public DescriptionEnglish = '',
+		public DescriptionIndonesia = '',
+		public Weight = 0,
+		public Number = 0,
+		public Value = 0
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientInterviewResultDetail {
+		return Object.assign(new ClientInterviewResultDetail(), data);
 	}
 }
 

@@ -87,7 +87,6 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
-		private masterEffects: MasterStateEffects
 	) {
 		super(store);
 	}

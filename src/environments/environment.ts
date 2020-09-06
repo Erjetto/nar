@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://nar.binus/'
+  apiUrl: 'https://nar.binus.ac.id/'
 };
 
 /*

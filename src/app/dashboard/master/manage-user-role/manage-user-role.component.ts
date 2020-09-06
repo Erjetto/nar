@@ -41,7 +41,6 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
-		private masterEffects: MasterStateEffects
 	) {
 		super(store);
 	}
@@ -61,7 +60,7 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 
 		// Filter user in roles
 		combineLatest([this.userInRoles$, this.searchText$])
-			.pipe(takeUntil(this.destroyed$), tap(console.log))
+			.pipe(takeUntil(this.destroyed$))
 			.subscribe(([users, searchText]) =>
 				this.userInRolesFiltered$.next(
 					users.filter((u) => `${u.UserName} ${u.Role}`.toLowerCase().indexOf(searchText) !== -1)

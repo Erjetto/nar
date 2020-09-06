@@ -4,7 +4,7 @@ import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { MainStateEffects, fromMasterState, MasterStateAction } from 'src/app/shared/store-modules';
+import { MainStateEffects, fromInterviewState, InterviewStateAction } from 'src/app/shared/store-modules';
 import { Observable, BehaviorSubject, Subject, combineLatest } from 'rxjs';
 import { takeUntil, map, withLatestFrom, tap } from 'rxjs/operators';
 import { NgForm, FormBuilder, Validators } from '@angular/forms';
@@ -43,15 +43,15 @@ export class ManageInterviewQuestionComponent
 	}
 
 	ngOnInit(): void {
-		this.interviewQuestions$ = this.store.pipe(select(fromMasterState.getInterviewQuestion));
+		this.interviewQuestions$ = this.store.pipe(select(fromInterviewState.getInterviewQuestions));
 		this.interviewQuestionDetails$ = this.store.pipe(
-			select(fromMasterState.getInterviewQuestionDetails)
+			select(fromInterviewState.getInterviewQuestionDetails)
 		);
 		this.interviewQuestionsLoading$ = this.store.pipe(
-			select(fromMasterState.isInterviewQuestionsLoading)
+			select(fromInterviewState.isInterviewQuestionsLoading)
 		);
 		this.interviewQuestionDetailsLoading$ = this.store.pipe(
-			select(fromMasterState.isInterviewQuestionDetailsLoading)
+			select(fromInterviewState.isInterviewQuestionDetailsLoading)
 		);
 		this.loadingViewInterviewQuestions$ = combineLatest([
 			this.interviewQuestionDetailsLoading$,
@@ -66,7 +66,7 @@ export class ManageInterviewQuestionComponent
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((currGen) =>
 				this.store.dispatch(
-					MasterStateAction.FetchInterviewQuestionDetails({
+					InterviewStateAction.FetchInterviewQuestionDetails({
 						interviewQuestionId: currGen.InterviewQuestionId,
 					})
 				)
@@ -75,15 +75,15 @@ export class ManageInterviewQuestionComponent
 		this.mainEffects.crudSuccess$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currInterviewQuestion$))
 			.subscribe(([action, currGenInterview]) => {
-				this.store.dispatch(MasterStateAction.FetchInterviewQuestions());
+				this.store.dispatch(InterviewStateAction.FetchInterviewQuestions());
 				this.loadingFormInterviewQuestions$.next(false);
 			});
 
-		this.store.dispatch(MasterStateAction.FetchInterviewQuestions());
+		this.store.dispatch(InterviewStateAction.FetchInterviewQuestions());
 	}
 
 	submitInterviewQuestionForm() {
 		this.loadingFormInterviewQuestions$.next(true);
-		this.store.dispatch(MasterStateAction.CreateInterviewQuestion(this.formInterviewQuestion.value));
+		this.store.dispatch(InterviewStateAction.CreateInterviewQuestion(this.formInterviewQuestion.value));
 	}
 }
