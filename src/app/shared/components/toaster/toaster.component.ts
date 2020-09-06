@@ -49,7 +49,12 @@ export class ToasterComponent implements OnInit, OnDestroy {
 		//   this.messages.pop();
 		//   if (this.messages.length === 0) this.stop$.next();
 		// })
-	}
+  }
+  
+  toggleRemoveNotifTimer(shouldContinue:boolean){
+    if(shouldContinue) this.start$.next();
+    else this.stop$.next();
+  }
 
 	ngOnInit(): void {}
 

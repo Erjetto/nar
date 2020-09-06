@@ -1,12 +1,20 @@
 <div class="toaster-container container-lg">
 	<div class="col-sm-10 col-md-9 col-lg-7 m-auto">
 		<div
-			*ngFor="let message of messages$|async; let i = index"
+			*ngFor="let message of messages$ | async; let i = index"
 			class="alert alert-dismissible clickable"
 			[ngClass]="'alert-' + message.messageType"
+			(mouseenter)="toggleRemoveNotifTimer(false)"
+			(mouseout)="toggleRemoveNotifTimer(true)"
 			@swipeAnimation
 		>
-			<button type="button" class="close" (click)="removeToast(i)">
+			<button
+				type="button"
+				class="close"
+				(mouseenter)="toggleRemoveNotifTimer(false)"
+				(mouseout)="toggleRemoveNotifTimer(true)"
+				(click)="removeToast(i)"
+			>
 				<span aria-hidden="true">&times;</span>
 			</button>
 			{{ message.message }}
