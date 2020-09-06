@@ -1,9 +1,144 @@
 <div class="container">
-  <div class="row">
-    <div class="col">
-      <rd-card [cardTitle]="''">
-
-      </rd-card>
-    </div>
-  </div>
+	<div class="row">
+		<div class="col-3">
+			<rd-card [cardTitle]="'View Interview Material'">
+				<div class="col v-list-m-12 v-list-bordered px-0">
+					<div class="row">
+						<ng-select
+							[items]="phaseTypes$ | async"
+							[clearable]="false"
+							bindLabel="val"
+							placeholder="Phase"
+							[searchable]="false"
+							[ngModel]="(phaseTypes$ | async)[0]"
+						></ng-select>
+					</div>
+					<div class="row">
+						<ng-select
+							[items]="phases$ | async"
+							[clearable]="false"
+							bindLabel="Description"
+							placeholder="Phase"
+							[searchable]="false"
+							[ngModel]="currentPhase$ | async"
+							(change)="currentPhase$.next($event)"
+						></ng-select>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'Insert Material'">
+				<div class="row h-list-bordered">
+					<form #insertPerTraineeForm="ngForm" class="col">
+						<div class="row form-group border-lightgrey border-bottom justify-content-center">
+							<h6><b>Insert Per Trainee</b></h6>
+						</div>
+						<div class="row form-group">
+							<div class="col">
+								<ng-select
+									name="selectMemberType"
+									[items]="trainees$ | async"
+									bindLabel="TraineeCode"
+									[clearable]="false"
+									[searchable]="true"
+									[ngModel]="(trainees$ | async)[0]"
+								>
+									<ng-template ng-label-tmp let-item="item">
+										<span>{{ item.codeAndName }}</span>
+									</ng-template>
+									<ng-template ng-option-tmp let-item="item" let-index="index">
+										<span>{{ item.codeAndName }}</span>
+									</ng-template>
+                </ng-select>
+                <span class="font-italic">Note: You can search by T999 code</span>                
+							</div>
+						</div>
+						<div class="row form-group">
+							<label for="materialName" class="col-3 col-form-label"> Name </label>
+							<div class="col">
+								<input
+									type="text"
+									class="form-control"
+									name="materialName"
+									[(ngModel)]="editForm.MaterialName"
+								/>
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="row">
+								<label for="materialUpload" class="col-3 col-form-label"> File </label>
+								<div class="col">
+									<input class="form-control" type="file" name="materialUpload" />
+								</div>
+							</div>
+						</div>
+						<div class="row form-group justify-content-center">
+							<button
+								class="btn btn-primary"
+								[disabled]="!insertPerTraineeForm.valid"
+								(click)="submitInsertPerTraineeForm(insertPerTraineeForm)"
+							>
+								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
+							</button>
+						</div>
+					</form>
+					<div class="col">
+						<div class="row form-group border-lightgrey border-bottom justify-content-center">
+							<h6><b>Mass Insert</b></h6>
+						</div>
+						<div class="row form-group">
+							<input type="file" multiple name="massUpload" />
+							<span class="font-italic">Note: Files must have prefix 'T999_name'</span>
+						</div>
+						<div class="row">Uploaded Files:</div>
+						<div class="row">
+							<ul>
+								<li *ngFor="let file of uploadingFiles">{{ file }}</li>
+							</ul>
+						</div>
+						<div class="row form-group justify-content-around">
+							<button class="btn btn-primary" [disabled]="true">
+								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Process
+							</button>
+							<button class="btn btn-primary" [disabled]="false">
+								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Submit
+							</button>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+			<rd-card [cardTitle]="'Interview Material List'">
+				<table class="table table-sm table-striped table-hover">
+					<thead>
+						<tr>
+							<th class="text-center" width="250px">Trainee</th>
+							<th class="text-center">File List</th>
+							<!-- <th class="text-center">Action</th> -->
+							<!-- <th>Actions</th> -->
+							<!-- <th width="100px">Actions</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="(interviewMaterials$ | async)?.length === 0">
+							<td colspan="2">No interview materials yet</td>
+						</tr>
+						<tr *ngFor="let trainee of interviewMaterials$ | async" class="cursor-pointer">
+							<td>{{ trainee.Trainee.codeAndName }}</td>
+							<td>
+								<ul>
+									<li *ngFor="let material of trainee.Materials">
+										<a [title]="material.linkTitle" [href]="material.downloadLink">{{
+											material.MaterialName
+										}}</a>
+									</li>
+								</ul>
+							</td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
 </div>

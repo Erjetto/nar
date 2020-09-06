@@ -1,18 +1,21 @@
-import {
-	Component,
-	OnInit,
-	ChangeDetectionStrategy,
-	OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Role, Message } from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { AnnouncementService } from 'src/app/shared/services/new/announcement.service';
-import { Observable } from 'rxjs';
-import { MainStateAction, fromMainState } from 'src/app/shared/store-modules';
+import { Observable, BehaviorSubject } from 'rxjs';
+import {
+	MainStateAction,
+	fromMainState,
+	MasterStateEffects,
+	fromMasterState,
+	MasterStateAction,
+	MainStateEffects,
+} from 'src/app/shared/store-modules';
 import { NgForm } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
 	selector: 'rd-modify-announcement',
@@ -20,50 +23,52 @@ import { NgForm } from '@angular/forms';
 	styleUrls: ['./modify-announcement.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModifyAnnouncementComponent extends DashboardContentBase
-	implements OnInit, OnDestroy {
-	public memberTypes: Role[];
+export class ModifyAnnouncementComponent extends DashboardContentBase implements OnInit, OnDestroy {
+	public roles$: Observable<Role[]>;
 
 	public announcements$: Observable<Message[]>;
-  public announcementsLoading$: Observable<boolean>;
+	public announcementsLoading$: Observable<boolean>;
 
-  public chosenFile : File;
+	public chosenFile: File;
+	public loadingFormAnnouncement$ = new BehaviorSubject<boolean>(false);
+	public loadingViewAnnouncements$: Observable<boolean>;
 
-	constructor(
-		protected store: Store<IAppState>,
-		private announcementService: AnnouncementService,
-	) {
+	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
 		super(store);
 	}
 
 	ngOnInit(): void {
-		this.memberTypes = Role.allRoles;
-		this.announcements$ = this.store.pipe(
-			select(fromMainState.getAnnouncements)
-		);
+		//#region Bind to store
+		this.roles$ = this.store.pipe(select(fromMasterState.getRoles));
+		this.loadingViewAnnouncements$ = this.store.pipe(select(fromMainState.getAnnouncements));
+    //#endregion
+    
+		//#region Subscribe to effects
+		this.mainEffects.crudSuccess$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.loadingFormAnnouncement$.next(false));
+		//#endregion
 
+		this.store.dispatch(MasterStateAction.FetchRoles());
 		this.store.dispatch(MainStateAction.FetchAnnouncements());
 	}
 
-	onSubmitForm(form: NgForm) {
+	submitAnnouncementForm(form: NgForm) {
 		const { selectMemberType, title, file, contentTextArea } = form.value;
-    console.log(form);
-    
-    // Change file here?
+		console.log(form);
 
-		// this.store.dispatch(
-		// 	MainStateAction.CreateAnnouncement({
-		// 		memberType: selectMemberType.value,
-		// 		title: title.value,
-		// 		content: contentTextArea.value,
-		// 		file: file.value,
-		// 	})
-		// );
-  }
-  
-  getFile(event: Event){
-    const files = event.target['files'];
-    console.log(files);
-    
-  }
+		this.store.dispatch(
+			MainStateAction.CreateAnnouncement({
+				memberType: selectMemberType.value,
+				title: title.value,
+				content: contentTextArea.value,
+				file: file.value,
+			})
+		);
+	}
+
+	uploadFile(files: FileList) {
+    // Harus {...files} untuk membuang object sebelumnya yg read-only
+    this.store.dispatch(MainStateAction.UploadFile({files: {...files}}))
+	}
 }
