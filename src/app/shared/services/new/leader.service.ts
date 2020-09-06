@@ -309,6 +309,13 @@ export class LeaderService {
 		);
 	}
 
+	public GetPhases(data: {generationId: string}): Observable<ClientGeneration[]> {
+		return of(MockData.GetPhasesCurrentGeneration).pipe(
+			delay(500),
+			map((r) => r.map(ClientGeneration.fromJson))
+		);
+	}
+
 	public GetTopBottomVoteSchedules(): Observable<TopBottomVoteSchedule[]> {
 		return of(MockData.GetTopBottomVoteSchedules).pipe(
 			delay(500),

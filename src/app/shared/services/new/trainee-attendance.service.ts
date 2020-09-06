@@ -86,7 +86,6 @@ export class TraineeAttendanceService {
 	}
 
 	public SaveTraineeAttendances(data: {
-		phase: string;
 		date: string;
 	}): Observable<boolean> {
 		return throwError('Not implemented yet');

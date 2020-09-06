@@ -8,6 +8,10 @@ import {
 	InterviewQuestionDetail,
   InterviewMaterial,
   ClientInterviewSchedule,
+  ClientInterviewResult,
+  ClientInterviewResultDetail,
+  InterviewResultDetail,
+  InterviewTraineeDetail,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -79,10 +83,61 @@ export class InterviewService {
   
 	public GetInterviewResult(data: {
     interviewScheduleId: string
-  }): Observable<ClientinterviewResult> {
+  }): Observable<ClientInterviewResult> {
     return throwError('Not implemented yet')
   }
   
+	public SaveInterviewResult(data: {
+    interviewScheduleId: string;
+    details: InterviewResultDetail;
+    note: string;
+    decision: string;
+    attnote: string;
+    devnote: string;
+    summary: string;
+  }): Observable<boolean> {
+    return throwError('Not implemented yet')
+  }
   
-
+	public SaveInterviewResultDecision(data: {
+    interviewScheduleId: string;
+    note: string;
+    decision: string;
+    attnote: string;
+    devnote: string;
+    summary: string;
+  }): Observable<boolean> {
+    return throwError('Not implemented yet')
+  }
+  
+	public GetInterviewTraineeDetail(data: {
+    traineeId: string;
+  }): Observable<InterviewTraineeDetail> {
+    return throwError('Not implemented yet')
+  }
+  
+	public SaveInterviewMaterial(data: {
+    fileId: string;
+    materialName: string;
+    trainee_Id: string;
+  }): Observable<boolean> {
+    return throwError('Not implemented yet')
+  }
+  
+	public DeleteInterviewMaterial(data: {
+    fileid: string;
+    materialId: string;
+    traineeid: string;
+    reason: string;
+  }): Observable<boolean> {
+    return throwError('Not implemented yet')
+  }
+  
+	public DeleteInterviewSchedule(data: {
+    interviewScheduleId: string;
+    note: string;
+  }): Observable<boolean> {
+    return throwError('Not implemented yet')
+  }
+  
 }

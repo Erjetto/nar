@@ -47,6 +47,12 @@ export class TraineeService {
 		return throwError('Not implemented yet');
 	}
 
+	// public SaveScheduleRegister(data: {
+	// 	userSchedule: RegisteredSchedule
+	// }): Observable<TraineeSchedule[]> {
+	// 	return throwError('Not implemented yet');
+	// }
+
 	public GetCaseBySubject(data: {
 		phaseId: string;
 		subjectId: string;
@@ -101,6 +107,13 @@ export class TraineeService {
 		return of(MockData.GetTrainees).pipe(
 			delay(500),
 			map((r) => r.map(ClientTraineeData.fromJson))
+		);
+	}
+
+	public GetTrainee(): Observable<ClientTraineeData> {
+		return of(MockData.GetTrainees).pipe(
+			delay(500),
+			map((r) => ClientTraineeData.fromJson(r[0]))
 		);
 	}
 

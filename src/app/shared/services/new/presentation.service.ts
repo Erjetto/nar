@@ -23,6 +23,13 @@ export class PresentationService {
 	private baseUrl = environment.apiUrl + 'Presentation.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
+	public GetCoreTrainingPresentationNo(data: {
+		subjectId: string;
+		traineeId: string;
+	}): Observable<CoreTrainingPresentationQuestionSummary> {
+		return throwError('Not implemented yet');
+	}
+
 	public GetCoreTrainingPresentationQuestionSummary(data: {
 		generationId: string;
 	}): Observable<CoreTrainingPresentationQuestionSummary> {
@@ -98,6 +105,14 @@ export class PresentationService {
   }
 
 	public UpdateCoreTrainingPresentationItem(data: {
+		filename: string;
+		itemId: string;
+		text: string;
+	}): Observable<boolean> {
+		return throwError('Not implemented yet');
+  }
+
+	public UpdateCoreTrainingPresentationItemStatus(data: {
 		filename: string;
 		itemId: string;
 		status: string;

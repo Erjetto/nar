@@ -25,6 +25,14 @@ export class GeneralService {
 	private baseUrl = environment.apiUrl + 'General.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
+	public GetCurrentUser(): Observable<User> {
+		return throwError('Not implemented yet');
+	}
+
+	public GetCurrentTime(): Observable<Date> {
+		return throwError('Not implemented yet');
+	}
+
 	public ChangeGeneration(data: { genId: string }): Observable<string> {
 		return throwError('Not implemented yet');
 	}
