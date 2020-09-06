@@ -1,19 +1,15 @@
-import {
-	createFeatureSelector,
-	createReducer,
-	createSelector,
-	on,
-} from '@ngrx/store';
+import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
 import * as MainStateAction from './main.action';
 import { Toast, Message } from '../../models';
-import { drop, filter, min, max } from 'lodash';
+import { drop, filter, min, max, zip, isArray } from 'lodash';
 
 export interface IMainState {
 	messagesMax: number;
-  messages: Toast[];
-  
-  announcement: Message[]; // Home Message
+	messages: Toast[];
+
+	announcement: Message[]; // Home Message
+	uploadedFiles: { fileid: string; filename: string }[];
 
 	currentRole: string;
 	currentGeneration: string;
@@ -23,12 +19,13 @@ export const initialState: IMainState = {
 	messagesMax: 5,
 	messages: [
 		new Toast('info', 'Lorem ipsum dolor sit amet'),
-		new Toast('success', 'Fetch data success 2'),
-		new Toast('warning', 'Fetch data failed 3'),
-		new Toast('danger', 'Fetch data failed 4'),
-  ],
-  
-  announcement: [],
+		// new Toast('success', 'Fetch data success 2'),
+		// new Toast('warning', 'Fetch data failed 3'),
+		// new Toast('danger', 'Fetch data failed 4'),
+	],
+	uploadedFiles: [],
+
+	announcement: [],
 
 	currentGeneration: '20-1',
 	currentRole: 'AssistantSupervisor',
@@ -40,8 +37,8 @@ export const MainStateReducer = createReducer(
 	initialState,
 
 	on(MainStateAction.ToastMessage, (state, { message, messageType }) => ({
-    ...state,
-    // Only show the last n toast
+		...state,
+		// Only show the last n toast
 		messages: [
 			...drop(state.messages, max([state.messages.length - state.messagesMax + 1, 0])),
 			new Toast(messageType, message),
@@ -61,21 +58,22 @@ export const MainStateReducer = createReducer(
 	on(MainStateAction.ChangeRole, (state, { name }) => ({
 		...state,
 		currentRole: name,
-  })),
+	})),
 
 	on(MainStateAction.FetchAnnouncementsSuccess, (state, { announcements }) => ({
 		...state,
 		announcement: announcements,
-  })),
+	})),
 
+	on(MainStateAction.UploadFileSuccess, (state, { fileids, filenames }) => ({
+		...state,
+		uploadedFiles: zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
+	}))
 );
 
-export const getMainState = createFeatureSelector<IMainState>(
-	MAINSTATE_REDUCER_NAME
-);
+export const getMainState = createFeatureSelector<IMainState>(MAINSTATE_REDUCER_NAME);
 
-export const getMainStateBy = (fn: (_: IMainState) => any) =>
-	createSelector(getMainState, fn);
+export const getMainStateBy = (fn: (_: IMainState) => any) => createSelector(getMainState, fn);
 
 export const getToastMessages = getMainStateBy((s) => s.messages);
 export const getAnnouncements = getMainStateBy((s) => s.announcement);

@@ -28,13 +28,11 @@ export const CreateAnnouncement = createAction(
 	props<{ memberType: string; title: string; content: string; file: string }>()
 );
 
-export const UploadFile = createAction('[MainState] UploadFile', props<{ file: File }>());
-
+export const UploadFile = createAction('[MainState] UploadFile', props<{ files: FileList }>());
 export const UploadFileSuccess = createAction(
 	'[MainState] UploadFileSuccess',
-	props<{ fileid: string; filename: string }>()
+	props<{ fileids: string[]; filenames: string[] }>()
 );
-
 export const UploadFileFailed = createAction('[MainState] UploadFileFailed');
 
 //#region Global

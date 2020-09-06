@@ -5,11 +5,8 @@ import {
 	ClientPhase,
 	ClientSubject,
 	ClientSchedule,
-	ClientInterviewQuestion,
-	InterviewQuestionDetail,
-	ClientInterviewReport,
 	ClientUserInRoles,
-	ClientTrainee,
+  ClientTrainee,
 } from '../../models';
 
 //#region Fetch
@@ -33,12 +30,6 @@ export const FetchTraineeInSchedule = createAction(
 	'[MasterState] FetchTraineeInSchedule',
 	props<{ scheduleId: string }>()
 );
-export const FetchInterviewQuestions = createAction('[MasterState] FetchInterviewQuestions');
-export const FetchInterviewQuestionDetails = createAction(
-	'[MasterState] FetchInterviewQuestionDetails',
-	props<{ interviewQuestionId: string }>()
-);
-export const FetchInterviewSchedules = createAction('[MasterState] FetchInterviewSchedules');
 //#endregion
 
 //#region Fetch Success
@@ -73,19 +64,6 @@ export const FetchSchedulesSuccess = createAction(
 export const FetchTraineeInScheduleSuccess = createAction(
 	'[MasterState] FetchTraineeInScheduleSuccess',
 	props<{ payload: ClientTrainee[]; scheduleId: string }>()
-);
-
-export const FetchInterviewQuestionsSuccess = createAction(
-	'[MasterState] FetchInterviewQuestionsSuccess',
-	props<{ payload: ClientInterviewQuestion[] }>()
-);
-export const FetchInterviewQuestionDetailsSuccess = createAction(
-	'[MasterState] FetchInterviewQuestionDetailsSuccess',
-	props<{ payload: InterviewQuestionDetail[] }>()
-);
-export const FetchInterviewSchedulesSuccess = createAction(
-	'[MasterState] FetchInterviewSchedulesSuccess',
-	props<{ payload: ClientInterviewReport }>()
 );
 //#endregion
 
@@ -151,15 +129,6 @@ export const CreateTraineeInSchedule = createAction(
 		scheduleId: string;
 	}>()
 );
-export const CreateInterviewQuestion = createAction(
-	'[MasterState] CreateInterviewQuestions',
-	props<{ questionName: string; questions: string[] }>()
-);
-export const CreateInterviewQuestionDetail = createAction(
-	'[MasterState] CreateInterviewQuestionDetails',
-	props<{ interviewQuestionId: string }>()
-);
-export const CreateInterviewSchedule = createAction('[MasterState] CreateInterviewSchedules');
 //#endregion
 
 //#region Update
@@ -195,16 +164,6 @@ export const UpdatePhase = createAction(
 // 	'[MasterState] UpdateTraineeInSchedule',
 // 	props<{ schedule: string }>()
 // );
-// export const UpdateInterviewQuestion = createAction(
-// 	'[MasterState] UpdateInterviewQuestions'
-// );
-// export const UpdateInterviewQuestionDetail = createAction(
-// 	'[MasterState] UpdateInterviewQuestionDetails',
-// 	props<{ interviewQuestionId: string }>()
-// );
-// export const UpdateInterviewSchedule = createAction(
-// 	'[MasterState] UpdateInterviewSchedules'
-// );
 //#endregion
 
 //#region Delete
@@ -232,23 +191,4 @@ export const DeleteTraineeInSchedule = createAction(
 	'[MasterState] DeleteTraineeInSchedule',
 	props<{ ScheduleId: string; TraineeId: string }>()
 );
-// export const DeleteInterviewQuestion = createAction(
-// 	'[MasterState] DeleteInterviewQuestions'
-// );
-// export const DeleteInterviewQuestionDetail = createAction(
-// 	'[MasterState] DeleteInterviewQuestionDetails',
-// 	props<{ interviewQuestionId: string }>()
-// );
-// export const DeleteInterviewSchedule = createAction(
-// 	'[MasterState] DeleteInterviewSchedules'
-// );
 //#endregion
-
-export const ActionSuccess = createAction(
-	'[MasterState] ActionSuccess',
-	props<{ message: string }>()
-);
-export const ActionFailed = createAction(
-	'[MasterState] ActionFailed',
-	props<{ message: string }>()
-);

@@ -130,24 +130,6 @@ export class MasterStateEffects {
 		)
 	);
 
-	@Effect()
-	getInterviewSchedules$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.FetchInterviewSchedules),
-		switchMap(() => this.interviewService.GetInterviewSchedules()),
-		mergeMap((res) => of(MasterStateAction.FetchInterviewSchedulesSuccess({ payload: res })))
-	);
-	@Effect()
-	getInterviewQuestions$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.FetchInterviewQuestions),
-		switchMap(() => this.interviewService.GetInterviewQuestions()),
-		mergeMap((res) => of(MasterStateAction.FetchInterviewQuestionsSuccess({ payload: res })))
-	);
-	@Effect()
-	getInterviewQuestionDetails$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.FetchInterviewQuestionDetails),
-		switchMap((data) => this.interviewService.GetInterviewQuestionDetails(data)),
-		mergeMap((res) => of(MasterStateAction.FetchInterviewQuestionDetailsSuccess({ payload: res })))
-	);
 	//#endregion
 
 	//#region create
@@ -262,29 +244,6 @@ export class MasterStateEffects {
 					);
 		})
 	);
-
-	@Effect()
-	createInterviewQuestion$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.CreateInterviewQuestion),
-		switchMap((data) => this.leaderService.SaveInterviewQuestions(data)),
-		mergeMap((res) =>
-			res === true
-				? of(MainStateAction.SuccessfullyMessage('created interview questions'))
-				: of(MainStateAction.FailMessage('Saving interview questions'))
-		)
-	);
-	@Effect()
-	createInterviewQuestionDetail$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.CreateInterviewQuestionDetail),
-		switchMap((data) =>
-			of(MainStateAction.NotImplementedMessage('creating InterviewQuestionDetail'))
-		)
-	);
-	@Effect()
-	createInterviewSchedule$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.CreateInterviewSchedule),
-		switchMap((data) => of(MainStateAction.NotImplementedMessage('creating InterviewSchedule')))
-	);
 	//#endregion
 
 	//#region update
@@ -383,5 +342,9 @@ export class MasterStateEffects {
 				: of(MainStateAction.FailMessage('delete trainee in schedule'))
 		)
 	);
-	//#endregion
+  //#endregion
+  
+  //#region Modify tab
+  
+  //#endregion
 }

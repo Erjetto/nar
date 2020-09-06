@@ -5,10 +5,11 @@ import { Action, Store } from '@ngrx/store';
 
 import * as MainStateAction from './main.action';
 import * as fromMainState from './main.reducer';
-import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { switchMap, mergeMap, pluck, catchError } from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
+import { isArray, flatten } from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -30,13 +31,27 @@ export class MainStateEffects {
 	@Effect()
 	uploadFile$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.UploadFile),
-		pluck('file'),
-		switchMap((file) => this.otherService.UploadCase(file)),
-		mergeMap((res) =>
-			res.success
-				? of(MainStateAction.UploadFileSuccess(res))
-				: of(MainStateAction.UploadFileFailed())
-		)
+		pluck('files'),
+		switchMap((files) => {
+      // return throwError('Upload file not implemented yet');
+      return this.otherService.UploadCase(files).pipe(catchError((error) => throwError(error)));
+    }),
+		mergeMap((res) =>{
+			if(res != null){
+        const fileIdsArr: string | string[] = JSON.parse(res.fileid);
+        const fileNamesArr: string | string[] = JSON.parse(res.filename);
+
+				return of(MainStateAction.UploadFileSuccess({
+          fileids: flatten([fileIdsArr]),
+          filenames: flatten([fileNamesArr])
+        }))
+      } else return of(MainStateAction.UploadFileFailed())
+				
+    }),
+    catchError((error: Error) => {
+      console.log(error);
+      return of(MainStateAction.FailMessage(error.message))
+    })
 	);
 
   // Kalau {dispatch: true}, action akan infinite-loop dispatch
