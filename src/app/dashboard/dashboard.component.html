@@ -15,46 +15,33 @@
 				</div>
 				<div class="row justify-content-end pt-1">
 					<ng-container *ngIf="user.Role.is(constant.role.AssistantSupervisor)">
-						<select
-							[ngModel]="selectedRole$ | async"
-							(change)="onChangeRole($event)"
-						>
-							<option
-								*ngFor="let role of roleList$ | async"
-								[value]="role.roleName"
-							>
+						<select [ngModel]="selectedRole$ | async" (change)="onChangeRole($event)">
+							<option *ngFor="let role of roleList$ | async" [value]="role.roleName">
 								{{ role.roleName }}
 							</option>
 						</select>
-						<select
-							[ngModel]="selectedGen$ | async"
-							(change)="onChangeGen($event)"
-						>
-							<option
-								*ngFor="let gen of genList$ | async"
-								[value]="gen.Description"
-							>
+						<select [ngModel]="selectedGen$ | async" (change)="onChangeGen($event)">
+							<option *ngFor="let gen of genList$ | async" [value]="gen.Description">
 								{{ gen.Description }}
 							</option>
 						</select>
 					</ng-container>
 				</div>
 
-				<rd-clock
-					class="row justify-content-end pt-1 font-weight-bold"
-				></rd-clock>
+				<rd-clock class="row justify-content-end pt-1 font-weight-bold"></rd-clock>
 
 				<div class="row justify-content-end pt-1">
-					<span class="btn btn-sm" (click)="toggleGreyMode()">
-              {{isDark ? 'Light Theme' : 'Grey Theme'}}
-          </span>
+					<span class="btn btn-sm hover-text-blue" [hidden]="isDark" (click)="toggleGreyMode()">
+						<fa-icon [icon]="['fas', 'sun']"></fa-icon> Light Theme
+					</span>
+					<span class="btn btn-sm hover-text-blue" [hidden]="!isDark" (click)="toggleGreyMode()">
+						<fa-icon [icon]="['fas', 'moon']"></fa-icon> Grey Theme
+					</span>
+
 					<!-- <span>
             <fa-icon class="btn btn-sm hover-text-blue" [icon]="['far', 'bell']"></fa-icon>
           </span> -->
-					<span
-						class="btn btn-sm  hover-text-blue"
-						(click)="signOut()"
-					>
+					<span class="btn btn-sm hover-text-blue" (click)="signOut()">
 						<b>Sign Out</b> &nbsp;
 						<fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
 					</span>
@@ -84,11 +71,7 @@
 						{{ menu.data.name }}
 					</a>
 					<!-- Has submenu -->
-					<a
-						*ngSwitchCase="false"
-						class="menu-item"
-						[class.menu-active]="isMenuActive(menu)"
-					>
+					<a *ngSwitchCase="false" class="menu-item" [class.menu-active]="isMenuActive(menu)">
 						{{ menu.data.name }}
 						<div class="sub-menu">
 							<a

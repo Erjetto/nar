@@ -1,25 +1,28 @@
-import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgModule, COMPILER_OPTIONS } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { CookieService } from "ngx-cookie-service";
+
+import { AppComponent } from './app.component';
+import { LoginComponent } from 'src/app/login/login.component';
+import { DashboardModule } from 'src/app/dashboard/dashboard.module';
 
 import { AppRoutingModule } from './app-routing.module';
-
-import { StoreModule } from '@ngrx/store';
-import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { metaReducers } from './app.reducer';
-import { SharedModule } from './shared/shared.module';
-import { DashboardModule } from './dashboard/dashboard.module';
+import { metaReducers } from 'src/app/app.reducer';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ErrorHandlerInterceptor } from 'src/app/shared/interceptors/error-handler-interceptor';
+import { LogInterceptor } from 'src/app/shared/interceptors/log-interceptor';
 
 @NgModule({
 	declarations: [AppComponent, LoginComponent],
 	imports: [
-    SharedModule,
+		SharedModule,
 		BrowserModule,
-    AppRoutingModule,
-    DashboardModule,
+		AppRoutingModule,
+		DashboardModule,
 		StoreModule.forRoot(metaReducers, {
 			runtimeChecks: {
 				strictStateImmutability: true, // disallow property mutation, use {...obj}
@@ -29,7 +32,11 @@ import { DashboardModule } from './dashboard/dashboard.module';
 		EffectsModule.forRoot([]),
 		BrowserAnimationsModule,
 	],
-	providers: [],
+	providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlerInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
+    CookieService,
+  ],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

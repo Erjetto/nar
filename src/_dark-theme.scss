@@ -7,10 +7,13 @@
 	// .dashboard__content {
 	background-color: $content-bg-color-dark !important;
 	color: $text-color-dark !important;
-	// }
+  // }
+  .btn{
+    color: white;
+  }
 
 	header,
-	nav,
+  nav,
 	.form-control,
 	.table,
 	rd-card,

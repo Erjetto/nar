@@ -20,6 +20,7 @@ import { Route, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter, takeUntil, delay, tap } from 'rxjs/operators';
 import { UserService } from '../shared/services/user.service';
 import { GeneralService } from '../shared/services/new/general.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
 	selector: 'rd-dashboard',
@@ -51,15 +52,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	public selectedRole$: Observable<string>;
 
 	constructor(
-		private generalService: GeneralService,
-		private genService: GenerationService,
-		private userService: UserService,
+    private cookieService: CookieService,
 		private menuService: MenuService,
 		private router: Router,
 		private route: ActivatedRoute,
 		private store: Store<IAppState>
 	) {
-		this.toggleGreyMode(true);
+    this.initiateTheme();
 		// Temporary
 		// Get user from user service later
 		this.user.Role = Role.fromName(RoleFlags.AssistantSupervisor);
@@ -96,13 +95,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
       // TODO: Check how old nar gets active role and current gen
       
 		}
-	}
+  }
+  
+  initiateTheme(){
+    // Check from cookies first
+    if(this.cookieService.get('use-dark-theme') !== '')
+      this.toggleGreyMode(this.cookieService.get('use-dark-theme') === 'true');
+      
+    else if(window.matchMedia){ // Get default theme from OS
+      this.toggleGreyMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+      this.cookieService.set('use-dark-theme', 'true')
+    }
+  }
 
 	toggleGreyMode(to?: boolean) {
 		this.isDark = to != null ? to : !this.isDark;
 
 		if (this.isDark) document.body.classList.add('dark-theme');
-		else document.body.classList.remove('dark-theme');
+    else document.body.classList.remove('dark-theme');
+
+    this.cookieService.set('use-dark-theme', this.isDark ? 'true' : 'false');
 	}
 
 	ngOnDestroy(): void {
