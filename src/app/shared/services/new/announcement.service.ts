@@ -4,12 +4,13 @@ import { delay, map } from 'rxjs/operators';
 import { MockData } from '../../mock-data';
 import { Message } from '../../models';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class AnnouncementService {
-	private baseUrl = 'Announcement.svc/';
+	private baseUrl = environment.apiUrl + 'Announcement.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public SaveMessageWithFile(data: {

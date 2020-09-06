@@ -10,12 +10,13 @@ import {
   ClientVoteBestTrainer,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class VoteService {
-	private baseUrl = 'Vote.svc/';
+	private baseUrl = environment.apiUrl + 'Vote.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public SaveVoteBestTrainerSchedule(data: {

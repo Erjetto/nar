@@ -14,12 +14,13 @@ import {
 	CoreTrainingPresentationQuestionSummary,
 } from '../../models';
 import { Dictionary } from 'lodash';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class PresentationService {
-	private baseUrl = 'Presentation.svc/';
+	private baseUrl = environment.apiUrl + 'Presentation.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public GetCoreTrainingPresentationQuestionSummary(data: {

@@ -11,12 +11,13 @@ import {
 	ClientPeriodicTraineeAttendance,
   ClientTraineeDailyAttendance,
 } from '../../models';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class TraineeAttendanceService {
-	private baseUrl = 'TraineeAttendance.svc/';
+	private baseUrl = environment.apiUrl + 'TraineeAttendance.svc/';
 	constructor(protected httpClient: HttpClient) {}
 	// Date format: 'yyyy-MM-dd'
 

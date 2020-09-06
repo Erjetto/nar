@@ -4,12 +4,13 @@ import { delay, map } from 'rxjs/operators';
 import { MockData } from '../../mock-data';
 import { ClientCaseTrainer, ClientUploadAnswer } from '../../models';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class TrainerService {
-	private baseUrl = 'Trainer.svc/';
+	private baseUrl = environment.apiUrl + 'Trainer.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public GetAllCases(data: {

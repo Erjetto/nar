@@ -4,12 +4,13 @@ import { delay, map } from 'rxjs/operators';
 import { MockData } from '../../mock-data';
 import { HttpClient } from '@angular/common/http';
 import { TopBottomVote, TrainerTopBottomVote, ClientTraineeReputationPaging, ClientTraineeData, EvaluationNote } from '../../models';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class NoteService {
-  private baseUrl = 'Note.svc/';
+  private baseUrl = environment.apiUrl + 'Note.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public SaveNote(data: {

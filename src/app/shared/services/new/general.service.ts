@@ -16,12 +16,13 @@ import {
 	ClientTrainee,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class GeneralService {
-	private baseUrl = 'General.svc/';
+	private baseUrl = environment.apiUrl + 'General.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public ChangeGeneration(data: { genId: string }): Observable<string> {

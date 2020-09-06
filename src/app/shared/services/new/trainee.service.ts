@@ -13,12 +13,13 @@ import {
   ClientSpecificSchedule,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class TraineeService {
-	private baseUrl = 'Trainee.svc/';
+	private baseUrl = environment.apiUrl + 'Trainee.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public GetTraineeTrainingSchedule(data: {

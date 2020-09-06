@@ -6,12 +6,13 @@ import {
 	SubcoCandidateAnswerModel,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class SubcoCandidateService {
-	private baseUrl = 'SubcoCandidate.svc/';
+	private baseUrl = environment.apiUrl + 'SubcoCandidate.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	// Offset -2 generation
