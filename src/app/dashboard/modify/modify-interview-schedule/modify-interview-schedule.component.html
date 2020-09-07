@@ -2,40 +2,61 @@
 	<div class="row">
 		<div class="col">
 			<rd-card [cardTitle]="'Insert/Update Interview Schedule'">
-				<div class="row form-group">
-					<label for="selectInterview" class="col-2 col-form-label"
-						>Title</label
-					>
-					<div class="col-4">
-						<ng-select
-							name="selectInterview"
-							[items]="[]"
-							[bindLabel]="''"
-							[bindValue]="''"
-							[searchable]="false"
-							[clearable]="false"
-						></ng-select>
-					</div>
-					<div class="col"></div>
-				</div>
-				<div class="row form-group">
-					<div class="col-6">
-						<div class="row">
-							<label for="schedules" class="col-4 col-form-label">
-								Insert multiple schedules
-							</label>
+				<div class="row">
+					<div class="col">
+						<div class="row form-group">
+							<label for="selectInterview" class="col-4 col-form-label">Title</label>
 							<div class="col">
-								<textarea
-									name="schedules"
-									class="form-control"
-									style="height: 120px;"
-								></textarea>
+								<ng-select
+									name="selectInterview"
+									[items]="[]"
+									[bindLabel]="''"
+									[bindValue]="''"
+									[searchable]="false"
+									[clearable]="false"
+								></ng-select>
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col">
+								<div class="row">
+									<label for="schedules"> Insert multiple schedules </label>
+								</div>
+								<div class="row">
+									<div class="col">
+										<textarea
+											name="schedules"
+											class="form-control"
+											style="height: 200px"
+										></textarea>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col">
-						<span>Note:</span>
-						<p>(Put input format here....)</p>
+						<div class="row">
+							<span>The input format must be : </span>
+							<span>
+								Trainee Code,Interview Date,Start Time, End Time,Location, Main
+								Interviewer,Co-Interviewer
+								<ul style="margin: 0">
+									<li>Trainee number, whose trainee training schedule you wish to set</li>
+									<li>Interview date must a general date format</li>
+									<li>Start Time, when the interview start</li>
+									<li>End Time, when the interview end</li>
+									<li>Main Interviewer, the First Interviewer</li>
+									<li>Co-Interviewer, the Second Interviewer</li>
+									<li>
+										For example,
+										<ul>
+											<li>T001,2011-11-30,15:20,15:50,Sekre 6,ac10-2,aa11-1</li>
+											<li>T001,12/31/2011,15:20,15:50,MIPA,ac10-2,aa11-1</li>
+										</ul>
+									</li>
+								</ul>
+							</span>
+						</div>
 					</div>
 				</div>
 				<div class="row justify-content-around">
@@ -56,9 +77,7 @@
 					<span class="acc legend"></span> Acc ({{ interviewScheduleReport.StatusTotal.Acc }})
 				</div>
 				<div class="row">
-					<table
-						class="table table-sm table-hover table-striped table-bordered text-center"
-					>
+					<table class="table table-sm table-hover table-striped table-bordered text-center">
 						<thead>
 							<tr>
 								<th>Traiee Code</th>
@@ -75,9 +94,7 @@
 						</thead>
 						<tbody>
 							<tr *ngIf="interviewScheduleReport.Schedules.length === 0">
-								<td colspan="10">
-									No schedules yet
-								</td>
+								<td colspan="10">No schedules yet</td>
 							</tr>
 							<tr
 								*ngFor="let interview of interviewScheduleReport.Schedules"
@@ -87,7 +104,13 @@
 								<td>{{ interview.TraineeName }}</td>
 								<td>{{ interview.InterviewDate | date: 'EEEE, MMM dd' }}</td>
 								<td>{{ interview.startToEndTime }}</td>
-								<td>{{ interview.Location }}</td>
+								<!-- Create a short link if location is link -->
+								<ng-container [ngSwitch]="isLocationLink(interview.Location)">
+									<td *ngSwitchCase="true">
+										<a [href]="interview.Location">Link here</a>
+									</td>
+									<td *ngSwitchDefault>{{ interview.Location }}</td>
+								</ng-container>
 								<td>{{ interview.MainInterviewer }}</td>
 								<td>{{ interview.CoInterviewer }}</td>
 								<td>{{ interview.InterviewScore }}</td>
@@ -96,9 +119,7 @@
 								</td>
 								<td>
 									<rd-confirmable-button
-										[description]="
-											'Delete interview for ' + interview.TraineeName + '?'
-										"
+										[description]="'Delete interview for ' + interview.TraineeName + '?'"
 									>
 										<button class="btn btn-danger btn-sm">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete

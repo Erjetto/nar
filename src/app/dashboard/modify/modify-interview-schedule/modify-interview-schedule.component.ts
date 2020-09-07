@@ -29,7 +29,7 @@ implements OnInit, OnDestroy  {
       MockData.GetInterviewSchedules
     );
     console.log(this.interviewScheduleReport);
-    
-
   }
+
+  isLocationLink(str : string){return str.includes('http')}
 }
