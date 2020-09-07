@@ -33,8 +33,6 @@ import { TraineeService } from 'src/app/shared/services/new/trainee.service';
 import { VoteService } from 'src/app/shared/services/new/vote.service';
 import { IAppState } from 'src/app/app.reducer';
 
-import { ClientTrainee } from 'src/app/shared/models';
-
 @Injectable({
 	providedIn: 'root',
 })
@@ -57,14 +55,16 @@ export class InterviewStateEffects {
 	@Effect()
 	getInterviewSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(InterviewStateAction.FetchInterviewSchedules),
-		switchMap(() => this.interviewService.GetInterviewSchedules()),
-		mergeMap((res) => of(InterviewStateAction.FetchInterviewSchedulesSuccess({ payload: res })))
+		switchMap(() => this.interviewService.GetInterviewSchedulesForTrainee()),
+		mergeMap((res) => of(InterviewStateAction.FetchInterviewSchedulesSuccess({ payload: res }))),
+		share()
 	);
 	@Effect()
 	getInterviewQuestions$: Observable<Action> = this.actions$.pipe(
 		ofType(InterviewStateAction.FetchInterviewQuestions),
 		switchMap(() => this.interviewService.GetInterviewQuestions()),
-		mergeMap((res) => of(InterviewStateAction.FetchInterviewQuestionsSuccess({ payload: res })))
+		mergeMap((res) => of(InterviewStateAction.FetchInterviewQuestionsSuccess({ payload: res }))),
+		share()
 	);
 	@Effect()
 	getInterviewQuestionDetails$: Observable<Action> = this.actions$.pipe(
@@ -72,14 +72,16 @@ export class InterviewStateEffects {
 		switchMap((data) => this.interviewService.GetInterviewQuestionDetails(data)),
 		mergeMap((res) =>
 			of(InterviewStateAction.FetchInterviewQuestionDetailsSuccess({ payload: res }))
-		)
+		),
+		share()
 	);
 
 	@Effect()
 	getInterviewMaterials$: Observable<Action> = this.actions$.pipe(
 		ofType(InterviewStateAction.FetchInterviewMaterials),
-    switchMap((data) => this.interviewService.GetInterviewMaterial(data)),
-		mergeMap((res) => of(InterviewStateAction.FetchInterviewMaterialsSuccess({ payload: res })))
+		switchMap((data) => this.interviewService.GetInterviewMaterial(data)),
+		mergeMap((res) => of(InterviewStateAction.FetchInterviewMaterialsSuccess({ payload: res }))),
+		share()
 	);
 	//#endregion
 
@@ -92,24 +94,27 @@ export class InterviewStateEffects {
 			res === true
 				? of(MainStateAction.SuccessfullyMessage('created interview questions'))
 				: of(MainStateAction.FailMessage('Saving interview questions'))
-		)
+		),
+		share()
 	);
 	@Effect()
 	createInterviewQuestionDetail$: Observable<Action> = this.actions$.pipe(
 		ofType(InterviewStateAction.CreateInterviewQuestionDetail),
 		switchMap((data) =>
 			of(MainStateAction.NotImplementedMessage('creating InterviewQuestionDetail'))
-		)
+		),
+		share()
 	);
 	@Effect()
 	createInterviewSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(InterviewStateAction.CreateInterviewSchedule),
-		switchMap((data) => of(MainStateAction.NotImplementedMessage('creating InterviewSchedule')))
+		switchMap((data) => of(MainStateAction.NotImplementedMessage('creating InterviewSchedule'))),
+		share()
 	);
 	//#endregion
 
-  //#region update
-  
+	//#region update
+
 	//#endregion
 
 	//#region delete

@@ -33,7 +33,8 @@ export class BinusianStateEffects {
 	getTrainees$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchTrainees),
     switchMap(() => this.generalService.GetTrainees()),
-		mergeMap((results) => of(BinusianStateAction.FetchTraineesSuccess({ payload: results })))
+    mergeMap((results) => of(BinusianStateAction.FetchTraineesSuccess({ payload: results }))),
+    share()
 	);
 
 	// @Effect()

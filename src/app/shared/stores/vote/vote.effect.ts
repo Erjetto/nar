@@ -7,7 +7,7 @@ import * as MainStateAction from '../main/main.action';
 import * as VoteStateAction from './vote.action';
 import * as fromVoteState from './vote.reducer';
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, tap } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, tap, share } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
 import { VoteService } from '../../services/new/vote.service';
 import { LeaderService } from '../../services/new/leader.service';
@@ -30,7 +30,7 @@ export class VoteStateEffects {
 			!isEmpty(res)
 				? of(VoteStateAction.FetchTopBottomVoteSchedulesSuccess({ payload: res }))
 				: of(MainStateAction.ErrorGetMessage('Top bottom votes schedule'))
-		)
+		), share()
 	);
 
 	@Effect()
@@ -41,7 +41,7 @@ export class VoteStateEffects {
 			!isEmpty(res)
 				? of(VoteStateAction.FetchTopBottomVotesForScheduleSuccess({ payload: res }))
 				: of(MainStateAction.ErrorGetMessage('Trainee Top bottom votes'))
-		)
+		), share()
 	);
 
 	@Effect()
@@ -52,7 +52,7 @@ export class VoteStateEffects {
 			!isEmpty(res)
 				? of(VoteStateAction.FetchTrainerTopBottomVotesForScheduleSuccess({ payload: res }))
 				: of(MainStateAction.ErrorGetMessage('Trainer Top bottom votes'))
-		)
+		), share()
 	);
 
 	@Effect()
@@ -62,11 +62,10 @@ export class VoteStateEffects {
 		mergeMap((res) =>
 			res != null
 				? of(
-						MainStateAction.UpdateSuccess(),
 						MainStateAction.SuccessfullyMessage('update schedule')
 				  )
 				: of(MainStateAction.FailMessage('deleting schedule'))
-		)
+		), share()
 	);
 
 	@Effect()
@@ -76,11 +75,10 @@ export class VoteStateEffects {
 		mergeMap((res) =>
 			res === false
 				? of(
-						MainStateAction.DeleteSuccess(),
 						MainStateAction.SuccessfullyMessage('delete schedule')
 				  )
 				: of(MainStateAction.FailMessage('deleting schedule'))
-		)
+		), share()
 	);
 
 	// @Effect()

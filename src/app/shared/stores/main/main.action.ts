@@ -1,5 +1,6 @@
 import { createAction, props, Action } from '@ngrx/store';
 import { Message } from '../../models';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const ChangeRole = createAction('[MainState] ChangeRole', props<{ name: string }>());
 export const ChangeGeneration = createAction(
@@ -36,9 +37,10 @@ export const UploadFileSuccess = createAction(
 export const UploadFileFailed = createAction('[MainState] UploadFileFailed');
 
 //#region Global
-export const CreateSuccess = createAction('[MainState] CreateSuccess');
-export const UpdateSuccess = createAction('[MainState] UpdateSuccess');
-export const DeleteSuccess = createAction('[MainState] DeleteSuccess');
+export const AfterRequest = createAction('[MainState] AfterRequest');
+// export const CreateSuccess = createAction('[MainState] CreateSuccess');
+// export const UpdateSuccess = createAction('[MainState] UpdateSuccess');
+// export const DeleteSuccess = createAction('[MainState] DeleteSuccess');
 //#endregion
 
 //#region Simplified Toast Message
@@ -46,6 +48,12 @@ export const SuccessfullyMessage = (doingWhat: string): Action =>
 	ToastMessage({
 		messageType: 'success',
 		message: 'Successfully ' + doingWhat,
+	});
+
+export const RequestFailedMessage = (error: HttpErrorResponse): Action =>
+	ToastMessage({
+		messageType: 'danger',
+		message: `Request Failed : ${error.message}`
 	});
 
 export const ErrorGetMessage = (what: string): Action =>
@@ -57,7 +65,7 @@ export const ErrorGetMessage = (what: string): Action =>
 export const FailMessage = (doingWhat: string, why?: string): Action =>
 	ToastMessage({
 		messageType: 'danger',
-		message: 'Failed ' + doingWhat + (!!why ? ': ' + why : '')
+		message: 'Failed ' + doingWhat + (!!why ? ': ' + why : ''),
 	});
 
 export const EmptyGetMessage = (what: string): Action =>
@@ -70,5 +78,5 @@ export const NotImplementedMessage = (doingWhat: string): Action =>
 	ToastMessage({
 		messageType: 'danger',
 		message: 'Error in ' + doingWhat + ': Not implemented yet',
-  });
+	});
 //#endregion
