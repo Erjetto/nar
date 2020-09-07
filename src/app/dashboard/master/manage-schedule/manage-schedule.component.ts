@@ -28,10 +28,10 @@ TODO:
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageScheduleComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	public viewDateFormat = 'EEEE, dd MMM yyyy';
+	viewDateFormat = 'EEEE, dd MMM yyyy';
 
 	// Question: Template driven form instead of model driven?
-	// public scheduleForm = new FormGroup({
+	// scheduleForm = new FormGroup({
 	//   subjectId: new FormControl(),
 	//   scheduleName: new FormControl(),
 	//   canSelfRegister: new FormControl(),
@@ -40,10 +40,10 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	//   end: new FormControl(),
 	//   excTrainee: new FormControl()
 	// });
-	public scheduleCount = 1;
-	public variations = 1;
-	public meetingPerWeek = 0;
-	public meetings: {
+	scheduleCount = 1;
+	variations = 1;
+	meetingPerWeek = 0;
+	meetings: {
 		Capacity: number;
 		Detail: { ScheduleDate: string; ShiftStart: number; ShiftEnd: number }[];
 		MeetingNo: number;
@@ -52,37 +52,37 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		VariationNo: number;
 	}[] = [];
 
-	public subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
-	public schedulesEntity$: Observable<{ [subjectId: string]: ClientSchedule[] }>;
+	subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
+	schedulesEntity$: Observable<{ [subjectId: string]: ClientSchedule[] }>;
 
-	public formCurrPhase$ = new BehaviorSubject<ClientPhase>(null);
+	formCurrPhase$ = new BehaviorSubject<ClientPhase>(null);
 
-	public viewCurrPhase$ = new BehaviorSubject<ClientPhase>(null);
-	public viewCurrSubject$ = new BehaviorSubject<ClientSubject>(null);
-	public viewCurrSchedule$ = new BehaviorSubject<ClientSchedule>(null);
+	viewCurrPhase$ = new BehaviorSubject<ClientPhase>(null);
+	viewCurrSubject$ = new BehaviorSubject<ClientSubject>(null);
+	viewCurrSchedule$ = new BehaviorSubject<ClientSchedule>(null);
 
-	public insertTraineeCurrPhase$ = new BehaviorSubject<ClientPhase>(null);
-	public insertTraineeCurrSubject$ = new BehaviorSubject<ClientSubject>(null);
+	insertTraineeCurrPhase$ = new BehaviorSubject<ClientPhase>(null);
+	insertTraineeCurrSubject$ = new BehaviorSubject<ClientSubject>(null);
 
-	public formSubjectList$: Observable<ClientSubject[]>;
+	formSubjectList$: Observable<ClientSubject[]>;
 
-	public viewSubjectList$: Observable<ClientSubject[]>;
-	public viewScheduleList$: Observable<ClientSchedule[]>;
+	viewSubjectList$: Observable<ClientSubject[]>;
+	viewScheduleList$: Observable<ClientSchedule[]>;
 
-	public insertTraineeSubjectList$: Observable<ClientSubject[]>;
-	public insertTraineeScheduleList$: Observable<ClientSchedule[]>;
+	insertTraineeSubjectList$: Observable<ClientSubject[]>;
+	insertTraineeScheduleList$: Observable<ClientSchedule[]>;
 
-	public traineeInSchedule$: Observable<ClientTrainee[]>;
+	traineeInSchedule$: Observable<ClientTrainee[]>;
 
-	public loadingFormSchedule$ = new BehaviorSubject<boolean>(false);
-	public loadingFormTraineeInSchedule$ = new BehaviorSubject<boolean>(false);
-	public loadingViewTraineeInSchedule$: Observable<boolean>;
-	public loadingViewSchedule$: Observable<boolean>;
-	public phases$: Observable<ClientPhase[]>;
+	loadingFormSchedule$ = new BehaviorSubject<boolean>(false);
+	loadingFormTraineeInSchedule$ = new BehaviorSubject<boolean>(false);
+	loadingViewTraineeInSchedule$: Observable<boolean>;
+	loadingViewSchedule$: Observable<boolean>;
+	phases$: Observable<ClientPhase[]>;
 
-	public phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];
+	phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];
 
-	public editForm$ = new BehaviorSubject<ClientSchedule>(null);
+	editForm$ = new BehaviorSubject<ClientSchedule>(null);
 
 	constructor(
 		protected store: Store<IAppState>,

@@ -12,7 +12,7 @@ import { IAppState } from 'src/app/app.reducer';
 export class ManageAttendanceIpListComponent extends DashboardContentBase
 implements OnInit, OnDestroy  {
 
-  public ipList: string[] = [];
+  ipList: string[] = [];
 
 	constructor(
 		protected store: Store<IAppState>,

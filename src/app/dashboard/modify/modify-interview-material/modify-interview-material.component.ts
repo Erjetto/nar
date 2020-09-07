@@ -34,22 +34,22 @@ export class ModifyInterviewMaterialComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
     
-	public phaseTypes$: Observable<any[]>;
-	public phases$: Observable<ClientPhase[]>;
-	// public traineesEntity$: Observable<{ [id: string]: ClientTrainee }>;
-	public trainees$: Observable<ClientTrainee[]>;
+	phaseTypes$: Observable<any[]>;
+	phases$: Observable<ClientPhase[]>;
+	// traineesEntity$: Observable<{ [id: string]: ClientTrainee }>;
+	trainees$: Observable<ClientTrainee[]>;
 
-	public interviewMaterials$: Observable<InterviewMaterial[]>;
+	interviewMaterials$: Observable<InterviewMaterial[]>;
 
-	public loadingFormInterviewMaterial$ = new BehaviorSubject<boolean>(false);
-	public loadingViewInterviewMaterial$ = new BehaviorSubject<boolean>(false);
-	public loadingSelectInterviewMaterial$ = new BehaviorSubject<boolean>(false);
+	loadingFormInterviewMaterial$ = new BehaviorSubject<boolean>(false);
+	loadingViewInterviewMaterial$ = new BehaviorSubject<boolean>(false);
+	loadingSelectInterviewMaterial$ = new BehaviorSubject<boolean>(false);
 
-	public currentPhase$ = new BehaviorSubject<ClientPhase>(null);
+	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
-	public isFileUploading$ = new BehaviorSubject<boolean>(false);
-	public uploadingFiles: string[] = ['T999_asdfasdfasdfasdf.pdf', 'T999_asdf.pdf', 'T999_asdf.pdf'];
-	public editForm = new InterviewMaterialDetail();
+	isFileUploading$ = new BehaviorSubject<boolean>(false);
+	uploadingFiles: string[] = ['T999_asdfasdfasdfasdf.pdf', 'T999_asdf.pdf', 'T999_asdf.pdf'];
+	editForm = new InterviewMaterialDetail();
 
 	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
 		super(store);

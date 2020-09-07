@@ -13,9 +13,9 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 })
 export class ViewTraineeDetailComponent extends DashboardContentBase implements OnInit, OnDestroy {
 
-  public viewDateFormat = 'dd MMM yyyy, HH:mm:ss'
+  viewDateFormat = 'dd MMM yyyy, HH:mm:ss'
 
-  public traineeDetail: ClientTraineeData;
+  traineeDetail: ClientTraineeData;
 
   constructor(protected store: Store<IAppState>,) {
     super(store);

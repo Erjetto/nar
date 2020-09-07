@@ -24,14 +24,14 @@ import { takeUntil } from 'rxjs/operators';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModifyAnnouncementComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	public roles$: Observable<Role[]>;
+	roles$: Observable<Role[]>;
 
-	public announcements$: Observable<Message[]>;
-	public announcementsLoading$: Observable<boolean>;
+	announcements$: Observable<Message[]>;
+	announcementsLoading$: Observable<boolean>;
 
-	public chosenFile: File;
-	public loadingFormAnnouncement$ = new BehaviorSubject<boolean>(false);
-	public loadingViewAnnouncements$: Observable<boolean>;
+	chosenFile: File;
+	loadingFormAnnouncement$ = new BehaviorSubject<boolean>(false);
+	loadingViewAnnouncements$: Observable<boolean>;
 
 	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
 		super(store);

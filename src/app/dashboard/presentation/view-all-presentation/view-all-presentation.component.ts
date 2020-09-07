@@ -36,25 +36,25 @@ import { takeUntil, filter, tap, withLatestFrom, switchMap } from 'rxjs/operator
 export class ViewAllPresentationComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
-	public presentations$: Observable<CoreTrainingPresentation[]>;
-	public traineesInSubject$: Subject<string[]> = new Subject();
-	public presentationsForTrainee$: Subject<CoreTrainingPresentation[]> = new Subject();
+	presentations$: Observable<CoreTrainingPresentation[]>;
+	traineesInSubject$: Subject<string[]> = new Subject();
+	presentationsForTrainee$: Subject<CoreTrainingPresentation[]> = new Subject();
 
-	public currentPresentation$: BehaviorSubject<CoreTrainingPresentation> = new BehaviorSubject(
+	currentPresentation$: BehaviorSubject<CoreTrainingPresentation> = new BehaviorSubject(
 		null
 	);
-	public presentationStatus$: Observable<string>;
-	public currentTraineeCode$: Subject<string> = new Subject();
-	public currentSubject$: Subject<ClientSubject> = new Subject();
-	public currentPhase$: Subject<ClientPhase> = new Subject();
+	presentationStatus$: Observable<string>;
+	currentTraineeCode$: Subject<string> = new Subject();
+	currentSubject$: Subject<ClientSubject> = new Subject();
+	currentPhase$: Subject<ClientPhase> = new Subject();
 
-	public filteredTrainees$: Subject<CoreTrainingPresentation[]> = new Subject();
+	filteredTrainees$: Subject<CoreTrainingPresentation[]> = new Subject();
 
-	public phases$: Observable<ClientPhase[]>;
-	public subjects$: Observable<ClientSubject[]>;
+	phases$: Observable<ClientPhase[]>;
+	subjects$: Observable<ClientSubject[]>;
 
-	public subjectsLoading$: Observable<boolean>;
-	public presentationsLoading$: Observable<boolean>;
+	subjectsLoading$: Observable<boolean>;
+	presentationsLoading$: Observable<boolean>;
 
 	constructor(protected store: Store<IAppState>) {
 		super(store);

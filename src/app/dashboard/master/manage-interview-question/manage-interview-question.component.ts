@@ -19,20 +19,20 @@ export class ManageInterviewQuestionComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
 
-    public formInterviewQuestion = this.fb.group({
+    formInterviewQuestion = this.fb.group({
       questionName: ['', Validators.required],
 		  questions: ['[english],[indonesian],[weight]', Validators.required]
     })
 
-	public interviewQuestions$: Observable<ClientInterviewQuestion[]>;
-	public interviewQuestionDetails$: Observable<InterviewQuestionDetail[]>;
-	public interviewQuestionsLoading$: Observable<boolean>;
-	public interviewQuestionDetailsLoading$: Observable<boolean>;
+	interviewQuestions$: Observable<ClientInterviewQuestion[]>;
+	interviewQuestionDetails$: Observable<InterviewQuestionDetail[]>;
+	interviewQuestionsLoading$: Observable<boolean>;
+	interviewQuestionDetailsLoading$: Observable<boolean>;
 
-	public currInterviewQuestion$ = new Subject<ClientInterviewQuestion>();
+	currInterviewQuestion$ = new Subject<ClientInterviewQuestion>();
 
-	public loadingViewInterviewQuestions$: Observable<boolean>;
-	public loadingFormInterviewQuestions$ = new BehaviorSubject<boolean>(false);
+	loadingViewInterviewQuestions$: Observable<boolean>;
+	loadingFormInterviewQuestions$ = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		protected store: Store<IAppState>,

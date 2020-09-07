@@ -30,13 +30,13 @@ import { NgForm } from '@angular/forms';
 export class ManageUserRoleComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	// GetRoles	GetUserInRoles	GetGeneralAssistantRole
 
-	public roles$: Observable<Role[]>;
-	public userInRoles$: Observable<ClientUserInRoles[]>;
-	public userInRolesFiltered$ = new BehaviorSubject<ClientUserInRoles[]>([]);
-  public searchText$ = new BehaviorSubject<string>('');
+	roles$: Observable<Role[]>;
+	userInRoles$: Observable<ClientUserInRoles[]>;
+	userInRolesFiltered$ = new BehaviorSubject<ClientUserInRoles[]>([]);
+  searchText$ = new BehaviorSubject<string>('');
   
-	public loadingFormUserInRole$ = new BehaviorSubject<boolean>(false);
-	public loadingViewUserInRole$: Observable<boolean>;
+	loadingFormUserInRole$ = new BehaviorSubject<boolean>(false);
+	loadingViewUserInRole$: Observable<boolean>;
 
 	constructor(
 		protected store: Store<IAppState>,

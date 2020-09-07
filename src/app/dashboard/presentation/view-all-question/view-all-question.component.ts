@@ -4,7 +4,14 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { Observable, Subject, combineLatest } from 'rxjs';
 
-import { MasterStateAction, fromMasterState, MainStateAction, fromMainState, PresentationStateAction, fromPresentationState } from 'src/app/shared/store-modules';
+import {
+	MasterStateAction,
+	fromMasterState,
+	MainStateAction,
+	fromMainState,
+	PresentationStateAction,
+	fromPresentationState,
+} from 'src/app/shared/store-modules';
 
 import {
 	CoreTrainingPresentation,
@@ -51,7 +58,6 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 						subjectId: subjects[0].SubjectId,
 					})
 				);
-      });
-    
+			});
 	}
 }

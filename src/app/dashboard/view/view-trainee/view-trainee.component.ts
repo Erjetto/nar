@@ -29,13 +29,13 @@ import { MockData } from 'src/app/shared/mock-data';
 })
 export class ViewTraineeComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {
-	public viewMode: 'thumbnail' | 'list' = 'thumbnail';
+	viewMode: 'thumbnail' | 'list' = 'thumbnail';
 
-	public phases$: Observable<ClientPhase[]>;
-	public trainees$: Observable<ClientTraineeReputation[]>;
-	public filteredTrainees$: Observable<ClientTraineeReputation[]>;
+	phases$: Observable<ClientPhase[]>;
+	trainees$: Observable<ClientTraineeReputation[]>;
+	filteredTrainees$: Observable<ClientTraineeReputation[]>;
 
-	public searchText = '';
+	searchText = '';
 
 	constructor(protected store: Store<IAppState>) {
 		super(store);

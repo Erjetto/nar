@@ -27,21 +27,21 @@ import { CardComponent } from 'src/app/shared/components/card/card.component';
 })
 export class ManageCaseComponent extends DashboardContentBase implements OnInit, OnDestroy {
 
-	public viewDateFormat = 'HH:mm, dd MMM yyyy';
+	viewDateFormat = 'HH:mm, dd MMM yyyy';
 
-	public currentPhase$: Subject<ClientPhase> = new Subject();
-	public currentSubject$: Subject<ClientSubject> = new Subject();
-	public currentSchedule$: Subject<ClientSchedule> = new Subject();
+	currentPhase$: Subject<ClientPhase> = new Subject();
+	currentSubject$: Subject<ClientSubject> = new Subject();
+	currentSchedule$: Subject<ClientSchedule> = new Subject();
 
-	public phases$: Observable<ClientPhase[]>;
-	public subjects$: Observable<ClientSubject[]>;
-	public schedules$: Observable<ClientSchedule[]>;
-	public manageCaseLoading$: Observable<boolean>;
+	phases$: Observable<ClientPhase[]>;
+	subjects$: Observable<ClientSubject[]>;
+	schedules$: Observable<ClientSchedule[]>;
+	manageCaseLoading$: Observable<boolean>;
 
-	public caseList$: Observable<Case[]>;
-	public caseListLoading$: Observable<boolean>;
+	caseList$: Observable<Case[]>;
+	caseListLoading$: Observable<boolean>;
 
-	public caseForm$: BehaviorSubject<Case> = new BehaviorSubject(null);
+	caseForm$: BehaviorSubject<Case> = new BehaviorSubject(null);
 
 	constructor(protected store: Store<IAppState>) {
 		super(store);

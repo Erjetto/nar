@@ -11,10 +11,10 @@ import { IAppState } from '../app.reducer';
 import { isEmpty } from 'lodash';
 
 export class DashboardContentBase implements OnDestroy {
-	protected currentRole$: Observable<Role>;
-	protected currentGeneration$: Observable<ClientGeneration>;
+	currentRole$: Observable<Role>;
+	currentGeneration$: Observable<ClientGeneration>;
 
-	protected destroyed$: Subject<any> = new Subject();
+	destroyed$: Subject<any> = new Subject();
 
 	constructor(protected store: Store<IAppState>) {
 		this.store.dispatch(MasterStateAction.FetchPhases());

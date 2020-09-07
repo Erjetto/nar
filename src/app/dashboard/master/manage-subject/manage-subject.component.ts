@@ -21,23 +21,23 @@ import { NgModel, NgForm } from '@angular/forms';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageSubjectComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	public subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
-	public currentSubjects$: Observable<ClientSubject[]>;
-	public phases$: Observable<ClientPhase[]>;
+	subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
+	currentSubjects$: Observable<ClientSubject[]>;
+	phases$: Observable<ClientPhase[]>;
 
-	public loadingViewSubject$: Observable<boolean>;
-	public loadingFormSubject$ = new BehaviorSubject<boolean>(false);
+	loadingViewSubject$: Observable<boolean>;
+	loadingFormSubject$ = new BehaviorSubject<boolean>(false);
 
-	public currentPhase$ = new BehaviorSubject<ClientPhase>(null);
-	public editForm$ = new BehaviorSubject<ClientSubject>(null);
+	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
+	editForm$ = new BehaviorSubject<ClientSubject>(null);
 
-	public size = [
+	size = [
 		{ key: 'byte', val: 1 },
 		{ key: 'kB', val: 1024 },
 		{ key: 'MB', val: 1024 * 1024 },
 		{ key: 'GB', val: 1024 * 1024 * 1024 },
 	];
-	public currentSize = this.size[0];
+	currentSize = this.size[0];
 
 	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
 		super(store);

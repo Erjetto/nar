@@ -31,14 +31,14 @@ export class AnswerScheduleComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {
 	@ViewChild('form') form: NgForm;
 
-	public addSchedulePlaceholder = '';
+	addSchedulePlaceholder = '';
 
-	public questionModel: SubcoCandidateQuestionModel;
-	public dateFormat = 'yyyy-MM-dd HH:mm';
-	public viewDateFormat = 'yyyy MMM dd HH:mm';
+	questionModel: SubcoCandidateQuestionModel;
+	dateFormat = 'yyyy-MM-dd HH:mm';
+	viewDateFormat = 'yyyy MMM dd HH:mm';
 
-	public trainerSchedule$: Observable<SubcoCandidateAnswerModel[]>;
-	public selectedSchedule$: Observable<SubcoCandidateAnswerModel>;
+	trainerSchedule$: Observable<SubcoCandidateAnswerModel[]>;
+	selectedSchedule$: Observable<SubcoCandidateAnswerModel>;
 
 	constructor(protected store: Store<IAppState>) {
 		super(store);

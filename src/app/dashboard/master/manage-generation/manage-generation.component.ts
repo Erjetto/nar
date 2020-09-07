@@ -20,13 +20,13 @@ import { takeUntil, tap } from 'rxjs/operators';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageGenerationComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	public generations$: Observable<ClientGeneration[]>;
-	public generations: ClientGeneration[];
+	generations$: Observable<ClientGeneration[]>;
+	generations: ClientGeneration[];
 
-	public editForm$ = new BehaviorSubject<ClientGeneration>(null);
+	editForm$ = new BehaviorSubject<ClientGeneration>(null);
 
-	public loadingFormGen$ = new BehaviorSubject<boolean>(false);
-	public loadingViewGen$: Observable<boolean>;
+	loadingFormGen$ = new BehaviorSubject<boolean>(false);
+	loadingViewGen$: Observable<boolean>;
 
 	constructor(
 		protected store: Store<IAppState>,

@@ -13,9 +13,9 @@ import { IAppState } from 'src/app/app.reducer';
 })
 export class ModifyInterviewScheduleComponent extends DashboardContentBase
 implements OnInit, OnDestroy  {
-	public statusClass = { Acc: 'acc', Rej: 'reject', Pos: 'pos' };
+	statusClass = { Acc: 'acc', Rej: 'reject', Pos: 'pos' };
 
-	public interviewScheduleReport: ClientInterviewReport;
+	interviewScheduleReport: ClientInterviewReport;
 
 
 	constructor(

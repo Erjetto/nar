@@ -47,22 +47,22 @@ import { NgForm } from '@angular/forms';
 export class ManageTopBottomVoteComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
-	public viewDateFormat = 'dd MMM yyyy';
+	viewDateFormat = 'dd MMM yyyy';
 
-	public voteSchedules$: Observable<TopBottomVoteSchedule[]>;
-	public traineeVotes$: Observable<TopBottomVote[]>;
-	public trainerVotes$: Observable<TrainerTopBottomVote[]>;
+	voteSchedules$: Observable<TopBottomVoteSchedule[]>;
+	traineeVotes$: Observable<TopBottomVote[]>;
+	trainerVotes$: Observable<TrainerTopBottomVote[]>;
 
-	public searchText = '';
-	public currentVote: 'trainer' | 'trainee' = 'trainee';
+	searchText = '';
+	currentVote: 'trainer' | 'trainee' = 'trainee';
 
-	public loadingViewVoteSchedule$: Observable<boolean>;
-	public loadingViewVoteResult$: Observable<boolean>;
-	public loadingFormVoteSchedule$ = new BehaviorSubject<boolean>(false);
+	loadingViewVoteSchedule$: Observable<boolean>;
+	loadingViewVoteResult$: Observable<boolean>;
+	loadingFormVoteSchedule$ = new BehaviorSubject<boolean>(false);
 
-	public traineesEntity: { [id: string]: ClientTrainee }; // for get trainee name by id
-	public trainees$ = new BehaviorSubject<ClientTrainee[]>([]); // for get trainee name by id
-	public editForm$ = new BehaviorSubject<TopBottomVoteSchedule>(null);
+	traineesEntity: { [id: string]: ClientTrainee }; // for get trainee name by id
+	trainees$ = new BehaviorSubject<ClientTrainee[]>([]); // for get trainee name by id
+	editForm$ = new BehaviorSubject<TopBottomVoteSchedule>(null);
 
 	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
 		super(store);

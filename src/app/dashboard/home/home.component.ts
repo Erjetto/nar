@@ -37,14 +37,14 @@ import { GeneralService } from 'src/app/shared/services/new/general.service';
 })
 export class HomeComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {
-	public phases$: Observable<ClientPhase[]>;
+	phases$: Observable<ClientPhase[]>;
   
-	public currentPhase$: Subject<ClientPhase> = new Subject();
-	public statistics$: Subject<ClientStatistic[]> = new Subject();
+	currentPhase$: Subject<ClientPhase> = new Subject();
+	statistics$: Subject<ClientStatistic[]> = new Subject();
 
-	public isLoading$: Observable<boolean>;
-	// public isLoading = {isLoading: true};
-	public destroyed$: Subject<any> = new Subject();
+	isLoading$: Observable<boolean>;
+	// isLoading = {isLoading: true};
+	destroyed$: Subject<any> = new Subject();
 
 	constructor(
 		protected store: Store<IAppState>,

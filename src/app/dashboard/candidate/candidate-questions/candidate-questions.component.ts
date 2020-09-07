@@ -16,7 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 export class CandidateQuestionsComponent extends DashboardContentBase
 	implements OnInit, OnDestroy {
 
-	public questions: string[] = []; // For flexible input
+	questions: string[] = []; // For flexible input
 
 	constructor(protected store: Store<IAppState>) {
 		super(store);

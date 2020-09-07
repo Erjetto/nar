@@ -12,16 +12,16 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
   styleUrls: ['./view-evaluation.component.scss']
 })
 export class ViewEvaluationComponent extends DashboardContentBase implements OnInit, OnDestroy {
-  public detailedViewDateFormat = 'dd-MM-yyyy HH:mm:ss'
-  public viewDateFormat = 'dd MMM yyyy'
+  detailedViewDateFormat = 'dd-MM-yyyy HH:mm:ss'
+  viewDateFormat = 'dd MMM yyyy'
 
-  public currentDate = new Date()
+  currentDate = new Date()
 
-  public evalType = ['Tidiness', 'Case Making', 'Presentation', 'Book', 'Attendance', 'Others']
+  evalType = ['Tidiness', 'Case Making', 'Presentation', 'Book', 'Attendance', 'Others']
 
-  public todaysPresentation: TraineePresentation[];
-  public attendanceReport: ClientTraineeAttendanceReport;
-  public evaluations: ClientEvaluation;
+  todaysPresentation: TraineePresentation[];
+  attendanceReport: ClientTraineeAttendanceReport;
+  evaluations: ClientEvaluation;
 
   constructor(protected store: Store<IAppState>) { super(store); }
 

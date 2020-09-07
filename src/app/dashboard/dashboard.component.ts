@@ -25,24 +25,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	@HostBinding('class') hostClass = 'd-flex flex-column';
 
 	// @HostBinding('class.dark-theme') isDark = true;
-	public isDark = true;
+	isDark = true;
 
-	public destroyed$ = new Subject<void>();
+	destroyed$ = new Subject<void>();
 
-	public menuList: Route[];
-	public currentHeaderMenu = 'Home';
+	menuList: Route[];
+	currentHeaderMenu = 'Home';
 
-	public user = new User();
+	user = new User();
 
-	public constant = {
+	constant = {
 		role: RoleFlags,
 	};
 
-	public genList$: Observable<ClientGeneration[]>;
-	public roleList$: Observable<Role[]>;
+	genList$: Observable<ClientGeneration[]>;
+	roleList$: Observable<Role[]>;
 
-	public selectedGen$: Observable<string>;
-	public selectedRole$: Observable<string>;
+	selectedGen$: Observable<string>;
+	selectedRole$: Observable<string>;
 
 	constructor(
     private cookieService: CookieService,

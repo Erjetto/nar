@@ -21,23 +21,23 @@ import { map, takeUntil } from 'rxjs/operators';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManagePhaseComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	public binusianPrefix = (new Date().getFullYear() % 100) + 3;
-	public editDateFormat = 'yyyy-MM-dd';
-	public viewDateFormat = 'EEEE, MMM dd yyyy';
+	binusianPrefix = (new Date().getFullYear() % 100) + 3;
+	editDateFormat = 'yyyy-MM-dd';
+	viewDateFormat = 'EEEE, MMM dd yyyy';
 
-	public phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];
+	phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];
 
-	public editForm$ = new BehaviorSubject<ClientPhase>(null);
-	public currentPhase$ = new BehaviorSubject<ClientPhase>(null);
+	editForm$ = new BehaviorSubject<ClientPhase>(null);
+	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
-	public traineeInPhaseEntity$: Observable<{ [phaseId: string]: ClientTrainee[] }>;
-	public traineeInPhase$: Observable<ClientTrainee[]>;
-	public phases$: Observable<ClientPhase[]>;
+	traineeInPhaseEntity$: Observable<{ [phaseId: string]: ClientTrainee[] }>;
+	traineeInPhase$: Observable<ClientTrainee[]>;
+	phases$: Observable<ClientPhase[]>;
 
-	public loadingInsertPhase$ = new BehaviorSubject<boolean>(false);
-	public loadingInsertTraineeInPhase$ = new BehaviorSubject<boolean>(false);
-	public loadingViewTraineeInPhase$: Observable<boolean>;
-	public loadingViewPhases$: Observable<boolean>;
+	loadingInsertPhase$ = new BehaviorSubject<boolean>(false);
+	loadingInsertTraineeInPhase$ = new BehaviorSubject<boolean>(false);
+	loadingViewTraineeInPhase$: Observable<boolean>;
+	loadingViewPhases$: Observable<boolean>;
 
 	constructor(
 		protected store: Store<IAppState>,
