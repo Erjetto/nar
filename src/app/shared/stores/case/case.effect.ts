@@ -30,7 +30,8 @@ export class CaseStateEffects {
 		ofType(CaseStateAction.FetchCases),
 		pluck('scheduleId'),
 		switchMap((scheduleId: string) => this.leaderService.GetCase({ scheduleId })),
-		mergeMap((results) => of(CaseStateAction.FetchCasesSuccess({ payload: results })))
+    mergeMap((results) => of(CaseStateAction.FetchCasesSuccess({ payload: results }))),
+    share()
 	);
 
 	// @Effect()

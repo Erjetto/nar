@@ -103,13 +103,13 @@
 					</form>
 				</div>
 				<hr />
-				<div class="col">
-					<ng-container *ngFor="let question of questionModel.Questions; let i = index">
+				<div class="col v-list-m-12 v-list-bordered">
+					<div *ngFor="let question of questionModel.Questions; let i = index">
 						<p class="font-weight-bold">
 							{{ i + 1 + '. ' + question }}
 						</p>
-						<p>{{ ((selectedSchedule$ | async)?.Answers)[i] }}</p>
-					</ng-container>
+						<p class="pl-4" style="white-space: pre-wrap;">{{ ((selectedSchedule$ | async)?.Answers)[i] }}</p>
+					</div>
 				</div>
 			</rd-card>
 		</div>

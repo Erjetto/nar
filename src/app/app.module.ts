@@ -13,8 +13,10 @@ import { DashboardModule } from 'src/app/dashboard/dashboard.module';
 import { AppRoutingModule } from './app-routing.module';
 import { metaReducers } from 'src/app/app.reducer';
 import { SharedModule } from 'src/app/shared/shared.module';
+
 import { ErrorHandlerInterceptor } from 'src/app/shared/interceptors/error-handler-interceptor';
 import { LogInterceptor } from 'src/app/shared/interceptors/log-interceptor';
+import { AfterRequestInterceptor } from 'src/app/shared/interceptors/after-request-interceptor';
 
 @NgModule({
 	declarations: [AppComponent, LoginComponent],
@@ -33,6 +35,7 @@ import { LogInterceptor } from 'src/app/shared/interceptors/log-interceptor';
 		BrowserAnimationsModule,
 	],
 	providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AfterRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlerInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
     CookieService,

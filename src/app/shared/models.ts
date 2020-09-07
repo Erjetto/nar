@@ -752,6 +752,22 @@ export class TraineeComment extends BaseModel {
 		});
 	}
 }
+
+export class TraineeCommentHistory extends BaseModel {
+	constructor(
+		public TraineeId = '',
+		public NoteId = '',
+		public TraineeCode = '',
+		public Date: Date = null,
+		public Comment = '',
+		public By = ''
+	) {
+		super();
+	}
+	static fromJson(data?: any): TraineeCommentHistory {
+		return Object.assign(new TraineeCommentHistory(), data);
+	}
+}
 // export class EvaluationNote extends BaseModel {
 //   constructor(
 //     public Note = '',
@@ -1469,6 +1485,68 @@ export class ClientInterviewResultDetail extends BaseModel {
 	}
 }
 
+export class InterviewResultDetail extends BaseModel {
+	constructor(public Number = 0, public Value = 0) {
+		super();
+	}
+	static fromJson(data?: any): InterviewResultDetail {
+		return Object.assign(new InterviewResultDetail(), data);
+	}
+}
+
+export class InterviewTraineeDetail extends BaseModel {
+	constructor(
+		public Materials: InterviewMaterialDetail[] = [],
+		public Phases: InterviewPhase[] = [],
+		public Notes: ClientNote[] = []
+	) {
+		super();
+	}
+	static fromJson(data?: any): InterviewResultDetail {
+		return Object.assign(new InterviewResultDetail(), data, {
+			Materials: map(data?.Materials, InterviewMaterialDetail.fromJson),
+			Phases: map(data?.Phases, InterviewMaterialDetail.fromJson),
+			Notes: map(data?.Notes, InterviewMaterialDetail.fromJson),
+		});
+	}
+}
+
+export class InterviewPhase extends BaseModel {
+	constructor(
+		public Phase = '',
+		public Subjects: InterviewSubject[] = [],
+		public Permission = '',
+		public Late = '',
+		public Alpha = '',
+		public ForgottoAbsence = ''
+	) {
+		super();
+	}
+	static fromJson(data?: any): InterviewPhase {
+		return Object.assign(new InterviewPhase(), data, {
+			Subjects: map(data?.Subjects, InterviewSubject.fromJson),
+		});
+	}
+}
+
+export class InterviewSubject extends BaseModel {
+	constructor(
+		public Subject = '',
+		public TotalOnlineScore = '',
+		public FinalScore = '',
+		public FinalScoreRank = '',
+		public Remedial = '',
+		public OnsiteScore = '',
+		public TotalCase = 0,
+		public SolvedCase = 0
+	) {
+		super();
+	}
+	static fromJson(data?: any): InterviewSubject {
+		return Object.assign(new InterviewSubject(), data);
+	}
+}
+
 //#endregion
 
 //#region Note
@@ -1553,6 +1631,59 @@ export class ClientNoteDetail extends BaseModel {
 	}
 	static fromJson(data?: any): ClientNoteDetail {
 		return Object.assign(new ClientNoteDetail(), data);
+	}
+}
+
+//#endregion
+
+//#region Log
+export class LogRoomPIC extends BaseModel {
+	constructor(
+		public Id = '',
+		public Room = '',
+		public UserId = '',
+		public ComputerSeat = '',
+		public Log = '',
+		public Presentation = '',
+		public SavedDate: Date = null
+	) {
+		super();
+	}
+	static fromJson(data?: any): LogRoomPIC {
+		return Object.assign(new LogRoomPIC(), data, {
+			SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
+		});
+	}
+}
+
+export class LogBookPICData extends BaseModel {
+	constructor(
+		public Trainee = '',
+    public Correct = '',
+    public Wrong = '',
+    public Note = '',
+	) {
+		super();
+	}
+	static fromJson(data?: any): LogBookPICData {
+		return Object.assign(new LogBookPICData(), data);
+	}
+}
+
+export class LogBookPIC extends BaseModel {
+	constructor(
+    public Id = '',
+    public Data = '',
+    public Subject = '',
+    public PIC = '',
+    public SavedDate: Date = null
+	) {
+		super();
+	}
+	static fromJson(data?: any): LogBookPIC {
+		return Object.assign(new LogBookPIC(), data, {
+			SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
+		});
 	}
 }
 

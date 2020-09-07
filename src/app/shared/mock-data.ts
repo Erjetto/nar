@@ -17822,4 +17822,427 @@ export const MockData = {
     }
   ],
   //#endregion
+
+//#region SubcoCandidate
+  GetQuestionsForTrainerGeneration: {
+    "__type": "SubcoCandidateQuestionModel:#BPlusTraining.Logic",
+    "GenerationId": "51fb670e-2468-ea11-abcb-d8d385fcda38",
+    "Id": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+    "Questions": [
+      "Sebutkan tujuan anda mencalonkan diri jadi SubCo Core Training!",
+      "Sebutkan point positif dan negatif dari kepribadian Anda!",
+      "Sebutkan point positif dan negatif dari training yang ada selama ini (NAR sebelum-sebelumnya)!",
+      "Uraikan perencanaan training secara detail yang akan anda jalankan di Core Training NAR20-2?",
+      "Jika ada trainer yang ditugaskan anda untuk melakukan pembuatan soal dengan deadline selama 2 minggu, trainer tersebut belum melakukan pembuatan soal hingga hari deadline, dan anda memperpanjang deadline tersebut selama 1 minggu, ternyata di hari deadline yang baru, progress pembuatan soal masih 10%. Tindakan apakah yang akan Anda lakukan?",
+      "Apa tujuan dari evaluasi?",
+      "Apakah penyampaian evaluasi training harus dibawa dengan emosi tinggi?",
+      "Apakah anda memiliki rencana evaluasi yang lebih baik?",
+      "Lama evaluasi yang dipublikasikan ke trainee adalah 2 jam, tetapi pada kenyataannya lama evaluasi yang berjalan melebihi batas tersebut. Karena melihat lama evaluasi sering melebihi waktu yang ditentukan, RecSel membuat keputusan untuk mengurangi waktu evaluasi. RecSel meminta anda yang sebagai SubCo untuk menyampaikan ke trainer, anda-pun mengetahui bahwa trainer tidak setuju atas keputusan tersebut. Tindakan apa yang akan anda lakukan?",
+      "Apakah ada kebijakan baru untuk Core training dari Anda sendiri untuk Core Training 20-2 ini (yang belum pernah diterapkan sebelumnya)? Jelaskan secara detail."
+    ]
+  },
+
+  GetAnswersFromTrainerGeneration: [
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Saya ingin mencoba hal baru, ingin mencari pengalaman",
+        "Saya orangnya perfeksionis, selalu mengusahakan yang terbaik, akan tetapi memerlukan waktu yang cukup lama untuk membuat keputusan karena banyaknya pertimbangan yang harus dievaluasi sebelum keputusan dibuat",
+        "NAR sebelumnya menurut saya sangat membangun ikatan solidaritas antar sesama trainee karena selama berhari-hari berjuang bersama. Akan tetapi, NAR menurut saya tugas BP harus dikurangi (tidak setiap hari) karena mengakibatkan materi tidak terserap dengan baik selama sesi",
+        "Saya berencana mengurangi BP agar trainee dapat mendapatkan materi dengan baik selama sesi. Misalnya, BP hanya akan dikumpulkan pada hari terakhir. Jika tidak memungkinkan, standar BP akan dikurangi. Karena menurut saya trainee juga perlu waktu istirahat setelah training seharian.",
+        "Saya akan menanyakan terlebih dahulu mengapa ia melakukan hal tersebut. Jika alasan masuk akal, saya akan berdiskusi dengan reksel mengenai apa yang harus dilakukan.",
+        "Evaluasi bertujuan untuk memperbaiki kesalahan agar kesalahan diminimalkan terjadi saat mengajar",
+        "Tidak. Cukup diberi penegasan dan alasan yang tepat. Kecuali jika kesalahan dilakukan berulang kali.",
+        "Tidak terpikirkan, menurut saya evaluasi sudah cukup baik.",
+        "Saya akan mencoba meminta reksel mempertimbangkan kembali waktunya dengan penerapan BP hanya di akhir hari subjek saja",
+        "Kebijakan untuk mengurangi BP agar trainee memiliki waktu lebih banyak untuk beristirahat. BP dapat diakses pada hari pertama dan dikumpulkan pada hari terakhir pagi hari subjek tersebut."
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "3d352b6c-8c6e-4415-94da-077ee09e771a",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "MR19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Belajar lebih dalam mengenai materi tersebut dan mendidik trainee lebih intense.",
+        "P: Saya bertanggung jawab kepada tugas yang diberikan kepada saya.\nN: Saya kadang kali suka lupa tentang jadwal yang ada, namun solusi yang cukup efektif adalah saya membuat timer/jadwal di HP untuk membantu saya ingat.",
+        "P: NAR membentuk karakter serta kemampuan kognitif cukup efektif.\nN: Saya masih sering melihat kurang komunikasi antara trainer, seperti dalam pengecheckan buku trainee soal nama Trainer yang kurang konsisten.",
+        "Langkah pertama adalah observasi para trainee. Saya akan lebih mengobservasi trainee ke sisi karakter trainee. Karena berdasar pengalaman saya, masalah kognitif masih dapat dibenahi seiring dengan berjalannya waktu. Namun untuk masalah karakter itu sangat sulit untuk diubah. Jadi setelah saya mengobservasi karakter dari trainee-trainee yang ada, baru saya akan tentukan perlakuan bagaimana cara mendidik mereka sesuai kebutuhan.",
+        "Sebagai Subco sudah seharusnya memiliki tanggung jawab untuk memilih pembuat soal serta dalam memastikan soal tersebut jadi tepat waktu. Jadi saat dia telah deadline, saya juga mencoba membuat soal terlebih dahulu. Jadi ketika hal di atas benar-benar terjadi, ya saya tidak dapat berbuat apa-apa kepada si pembuat soal karena memang sudah bebal. Tapi solusi yang terbaik menurut saya (agak diluar konteks pertanyaan) adalah melakukan tindakan preventif dengan memilih pembuat soal yang terpercara dan kompeten, serta di sisi Subco selalu sering-sering mengecheck progress tiap-tiap soal yang di buat.",
+        "Tentu sudah jelas mengevaluasi apa yang kita telah lakukan satu hari itu. Tanpa ada evaluasi kita akan sangat sulit untuk berkembang, karena kita tidak dapat sadar dimana posisi kita saat itu, baik secara karakter maupun kognitif.",
+        "Tergantung situasi dan kondisi. Jika memang ada suatu kondisi dimana para trainee sudah benar-benar keterlaluan/melenceng dari target training, kita perlu mengingatkan mereka agak keras. Di satu sisi sebagai seperti orang tua agar mereka lebih baik (karena mereka calon keluarga SLC) di sisi lain kita memerlukan penerus SLC yang kompeten di bidang karakter dan kognitif untuk mengajar mahasiswa.",
+        "Saya rasa cara yang sudah ada cukup untuk mendidik secara karakter dan kognitif, namun paling lebih disesuaikan saja emosi para trainer, bukan marah/menggunakan nada tinggi atau bahkan kata-kata yang tidak pantas karena ingin atau kepentingan pribadi, namun seharusnya evaluasi ditujukan untuk membangun trainee.",
+        "Saya tidak tahu apa alasan trainer tidak setuju dalam pengurangan jam evaluasi. Namun saya juga kurang setuju dengan ditentukannya jam evaluasi. Jadi di satu sisi, ketika RecSel telah menentukan lama evaluasi 2 jam, namun pada kenyataannya hampir setiap hari lebih dari 2 jam, hal tersebut menurut saya seperti tidak menaati peraturan yang dibuat sendiri. Jadi saya netral terhadap trainer dan RecSel. Saya memiliki pendapat bahwa ada baiknya kontrol dari RecSel meski trainer tidak senang. Jika RecSel merasa evaluasi sudah cukup, maka cukup. Jangan karena trainer tidak senang evaluasi dihentikan, maka evaluasi diteruskan begitu saja. Saya tekankan lagi, jika evaluasi bukan didasarkan untuk membangun trainee, maka evaluasi merupakan hal yang salah sasaran. Namun, jika memang ternyata evaluasi diperlukan lebih dari 2 jam, maka jangan mempublikasikan 2 jam ke trainee. Bilang saja mulai dari jam 5 hingga selesai.",
+        "Menurut saya adalah kebijakan mengenai waktu evaluasi yang perlu disesuaikan dengan 'keperluan' saja, bukan 'keinginan'. Perlu adanya kebijakan RecSel yang tepat dan berani serta komunikasi dengan Subco agar evaluasi dilaksanakan sesuai dengan target, yaitu membangun trainee. Karena jika tidak tepat sasaran, maka trainee tidak akan terbangun dengan baik dan hasilnya akan berdampak buruk di masa mendatang.\nJadi jika secara riil kebijakannya adalah mengganti waktu evaluasi saat dipublikasikan yaitu mulai dari jam 5 (misalnya) hingga selesai. Atau kebijakan untuk menghentikan evaluasi jika memang sudah cukup (tidak mencari-cari kesalahan trainee)."
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "cfd1ca65-df3d-4c31-bc24-131b4f63e17c",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "TJ19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Pastinya ingin mengembangkan trainee\"nya menjadi lebih baik.",
+        "1. Positive\n - Mudah menyesuaikan kondisi\n - Kerjaan pasti dikejar cepat biasanya\n \n2. Negative\n - Ambil sebuah decision mikirnya sangat luas, sehingga agak lambat dalam mengambil decision\n - Sedikit emosian\n - sedikit keras kepala",
+        "1. Positive\n - Apa yang didapatkan lumayan banyak di core, jadinya mental juga terlatih\n - Menurut saya sangat membantu pada saat cara saya belajar\n2. Negative\n - Paling utama pastinya kesehatan jadinya tidak terjaga, mungkin ada yang seperti keturunan dari keluarga yang memiliki penyakit seperti diabetes, itu kalau si trainee termasuk, itu bisa memburukkan kondisinya, karena bisa memicu anak itu terkena penyakit\n - kadang pada saat soal onsite itu kurang terasa, materi apa yang kita pelajari pada saat sesi (terlalu over, karena memang sengaja di overkill)",
+        "- PIC ruang pastinya kalau bisa diusahakan dibukakan 4-5. Kalau masi banyak yang tidak lulus presentasi, pastiny diusahakan kalau bisa dibuka lebih dari 4-5.\nHari pertamanya pastinya buka 4-5, kalau hari keduanya masi banyak yang tidak lulus, diusahakan dibuka lebih banyak dari pada 4-5.\n- Pertanyaan Subco tidak diwajibkan pada saat presentasi, tapi pada saat eval hari pertama jika tidak bisa dikasi lepas dlu, tapi jika di hari kedua tidak bisa, mungkin minta solusi. dan seterusnya. sampai jika tidak ada, mugnkin kasih konsekuensi jika di bolehkan recsel\n- Eval usahain membahas yang lebih penting, dan kalau bisa secepatnya selesaikan. Jika hal yang tidak terlalu penting, mungkin pembahasannya itu dikurangi.\n- Ditekankan Wajib untuk menghafal nama trainer minimal 20 orang keatas (ditambah lagi dari subject sebelumnya). \n- Tanda tangan agak dikurangin juga (sebisanya saja), lebih fokus ke kualitas.\n- Pertanyaan forum wajib 1 hari, 1 orang itu kalau bisa min 7+ pertanyaan (Jika pertanyaan banyak) keatas. Kalau pada hari akhir subject mereka masi banyak pertanyaan forum yang tidak terjawab, 1 orang diwajibkan min harus 15+ pertanyaan dijawab",
+        "- Pastinya pertama yang akan dilakukan itu push trainernya, mungkin membantu dia, Karena ini juga pekerjaan kita/tanggung jawab kita juga sebagai subco. Dia telat mungkin karena kerjaannya ada hal yang lebih penting\n- Kalau mungkin masih tidak bisa dilakuin oleh trainer, pastinya akan diskusikan juga kepada recsel\"nya.",
+        "- Untuk memperbaiki kesalahan mereka\n- Membantu mereka melatih softskillnya seperti cara ngomongnya, mental, tanggung jawab, berpikir ke worstcarse, dll. Kalau untuk softskill seperti ngomong bisa keliataan pada saat mereka menjawab pertanyaan, jika pada saat mereka ditanyakan dan ini juga membantu mereka untuk berpikir kritis dan latih mental.\nyang pastinya di tujuan evaluasi ini pasti membantu mereka mengembangkan softskill mereka.",
+        "Sebaiknya tidak, Karena salah satunya pastinya merusak kesehatan dan juga bisa jadi keceplosan atau salah ngomong juga. Dengan emosi tinggi itu juga ada positifnya, salah satunya pasti mereka menjadi melatih mental mereka dan jadi lebih fokus.",
+        "Tidak. Tapi mungkin ada pertimbangan apa yang akan dibahas itu lebih ke hal yang terlalu penting saja. Misalnya bahas ada sebuah hal yang dianggap sepele, padahal itu krisis. Dan juga hal yang kesalahannya yang tidak fatal itu mungkin akan dikurangi, tidak dibahas terlau detail/perbesarin.",
+        "- Pastinya pasti coba diskusi sama para trainer\", apa yang perlu ditimbangkan jika membuat waktu evaluasinya kepanjangan. terutama Waktu istirahat untuk trainee terpotong dan juga pengerjaan BPnya (dan juga Konsekuensi jika ada), dan ada pandemi ini juga tidak baik untuk mereka trainee. Kalau mungkin masih tidak bisa harusnya diajak diskusi bersama dengan recsel juga. Kalau masih tidak bisa (worst worst casenya), saya akan mengambil keputusan, untuk setuju kurangin waktu 2 jam evaluasinya, karena ini keputusan recsel juga(karena recsel yang bener\" mengurus semua training NAR).",
+        "- tidak"
+      ],
+      "EndDate": "/Date(1590552000000+0700)/",
+      "Id": "76a1c771-bee8-4718-88b8-252f2bf68ef1",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "CT19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Karena Mau dan diberikan kesempatan",
+        "Point positif: \ncalm\nPoint negatif:\nmuka suka kurang serius",
+        "positif:\npenyampaian materi dan pelatihan\nnegatif:\nbanyak N-user pada trainee\nsikap terpuruk sehingga TBTB\nTrainer yang bercampur emosi dan menyebabkan eval menjadi lama\nTrainee yang lama dalam menjawab dan kurang inisiatif",
+        "training dengan situasi yang lebih santai (lebih sedikit marah) namun lebih serius dan fokus",
+        "1. tanya apa penyebabnya?\n2. menegur dan mengharuskan progress diselesaikan dalam h+1",
+        "membahas kesalahan yang telah terjadi supaya kedepannya tidak terjadi kesalahan yang sama kembali",
+        "antara iya dan tidak, karena evaluasi dengan serius dan tegas lebih baik dibandingkan dengan emosi dan perasaan yang mengakibatkan ketidak efektifan",
+        "membahas materi dengan lebih berpatokan dengan rundown",
+        "Memastikan rundown semakin sesuai dengan yang telah direncanakan dan memberi pemahaman atas kondisi yang terjadi",
+        "Pembahasan per 1 topik paling lama maksimal 15 menit (diusahakan lebih cepat sehingga apabila ad suatu kejadian mendadak yang memerlukan waktu supaya tidak mengakibatkan eval selesai jam 9 / 10 malam"
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "7ec67909-818e-4bf6-b225-517dde9dffbb",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "LH19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Mau mencoba hal baru",
+        "Positif mikir gak pakai perasaan \nNegatif Kalau niat niat sekali kalau enggak niat enggak niat sekali",
+        "Positif push orang untuk riset dan keluar dari zona nyaman\nNegatif bisa ngasih luka batin di core",
+        "Untuk training semuanya masi sama seperti biasa gapapa tapi kadang ada beberapa materi boleh diextend sedikit waktu materinya biar bener-bener siap untuk presentasi",
+        "Kuchat setiap hari kutelpon setiap hari",
+        "Recap kesalahan yang terjadi pada hari tersebut dan BP juga serta cari cara untuk perbaikan kesalahan",
+        "Tidak harus tapi kalau dibilangin masih bebal ya gimana lagi",
+        "Dibawakan dengan tegas tidak berulang-ulang tunjuk trainee untuk menjawab agar tidak kelamaan nunggu jawaban dari trainee",
+        "Sbgai subco",
+        "Gaada kebijakan baru sih"
+      ],
+      "EndDate": "/Date(1590552000000+0700)/",
+      "Id": "16d287f3-bf81-40c4-813d-54812e16544f",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "BE19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "aku ingin belajar hal baru, sekalian belajar memanage (soalnya salah satu pilihan promosi aku itu subco)",
+        "positif:\n- suka belajar hal baru\n- mostly available\n- cepat respond (kecuali email)\n\nnegatif:\n- kalo dalam keadaan tertekan kemampuan memanage aku kurang\n- lama belajar hal baru\n- suka procrastinating",
+        "positif:\n- materinya sudah bagus\n- interaksi dari trainer ke tranie udah oke\n- membangun soft skill\n\nnegatif:\n- rawan sakit\n- trainer yang kurang konsisten\n- soal onsite yang butuh research kebanyakan",
+        "awal awal menyiapkan pertanyaan subco, memastikan semua materi itu sudah baik dan soalnya sudah berstandar",
+        "aku bakalan tanya knp, truss aku coba liat skala dari soal itu kalo masih bisa di selesaikan dengan bantuan angkatan.  kalo tidak bisa, soal akan dibuat seadanya dengan memenuhi standar materi bila waktu mencukupi bisa di tambahkan fitur lagi",
+        "untuk membahas kesalahan trainie agar tidak terulangi.",
+        "iya dan tidak, iya soalnya dengan emosi tinggi itu tranie jadi tidak ngantuk dan pasti mengikuti eval, tapi itu bukan berarti harus ber emosi tinggi bila bisa di sampaikan singkat padat dan jelas atau masalahnya baru 1x atau masalah sepele enga perlu di bahas lama lama",
+        "mengurangi teriak teriak dan langsung membahas masalah utama",
+        "keputusan recsel itu absolute bila memang di tentukan buat mengurangi waktu eval pembahasan masalah enga bisa teralu di perpanjang. saat eval nanti akan di struktur agar tidak makan waktu lama lama tapi bila memang ada masalah yang cukup besar aku bakalan ngomong ke recsel untuk menanyakan apakah ini boleh di bahas lebih lama",
+        "aku pribadi ingin menyediakan makanan seprti roti dan air untuk tranie yang memang bilang dari awal memiliki sakit lambung. menghilagkan nilai nilai receh di bp seperti login register"
+      ],
+      "EndDate": "/Date(1590552000000+0700)/",
+      "Id": "a01332db-f559-4107-a709-5dd497fc8114",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "JE19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Agar dapat membimbing trainee",
+        "Positif\n- rapi\n- suka mencari hal-hal baru\n\nNegatif\n- suka berpindah ke hal yg lebih menarik",
+        "kebanyakan eval terlalu lama sehingga trainee akan lebih capek dan lebih sussah mengerjakan BP. dan eval kalau bisa membahas yang penting-penting saja.",
+        "semuanya harus dibuat rapi. mulai dari buku dan pakaian.\nmateri di deliver dengan baik sehingga trainee tidak bingung\nketika eval membahas hang penting saja dan mengurangi yang kurang penting",
+        "menyuruhya agar dapat menyelesaikannya hari itu juga karena sudah diperpanjang 1 minggu dan soal tersebut harus di cek lagi dan harus di rekap jadi harus selesai dalam hari itu juga",
+        "membahas kesalahan yang terjadi agar trainee tidak mengulangi kesalahan yang sama. serta memberikan nasehat agar mereka tidak melakukan yang salah lagi.",
+        "tidak. karena jika eval bisa dibawa dengan emosi yang biasa saja akan lebih baik.",
+        "mungkin",
+        "memberitahu mereka tujuan evaluasi bukan untuk melama-lamakan trainee tetapi untuk membahas kesalahan mereka agar tidak melakukan kesalahan yang sama, serta mendisiplinkan trainee",
+        "ketika eval jika memberikan pertanyaan ke trainee, biarkan trainee menjawab dengan selesai dahulu. serta mengurangi jerit atau teriak ketika di eval, ketika memang tidak diperlukan"
+      ],
+      "EndDate": "/Date(1590552000000+0700)/",
+      "Id": "16d88847-7e33-4ef4-a7a0-73453ad2c1c9",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "VC19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Karena saya ingin mendidik calon calon asisten baru dengan baik dan benar",
+        "Positif : \n- tidak gampang menyerah\n- berdedikasi untuk mengajar\n- tidak setengah-setengah\nNegatif : \n- kadang lepas kontrol\n- suka menunda\n- mengganggap beberapa hal dengan sepele",
+        "Positif : \n- membangun karakter\n- membangun hard skill\n- mengembangkan cara berkomunikasi dengan yang lain\n- pengalaman yang baik\nNegatif : \n- banyak hal yang tidak perlu dibahas sehingga menghabiskan waktu\n- terlalu banyak suara bising yang tidak sampai di benak\n- kata-kata yang benar-benar menempel kurang\n- saya rasa training sebelumnya menganggap jika kita memarahi terus menerus dengan suara yang lantang dapat membuat orang sadar akan perbuatannya dan saya rasa hal itu tidak benar",
+        "Pertama memperkenalkan diri dulu dan memberikan poin seperti minimal pengerjaan BP, soal Subco yang ditekankan harus dikuasai, kelengkapan buku, beserta memberikan ekspektasi atas performa dan perilaku dari trainee. Kemudian, setelah semua itu telah diatur, saya ingin memberikan kesempatan kepada trainee untuk melakukan yang terbaik dalam pengerjaan Onsite, BP, dan presentasi. Saya harap dapat memberikan pengajar yang saya terbaik untuk mendidik mereka dengan materi dan pembawaan yang bagus, dan saya berharap mereka dapat membantu satu sama lain saat yang lain membutuhkan. Walaupun mereka membuat beberapa kesalahan, saya ingin teguran agar lebih dipelankan tetapi tetap memberikan kesan kepada trainee. Hal ini karena saya ingin melihat jika dengan metode ini trainee akan sadar akan kesalahannya dan diharapkan untuk meminimalisir kesalahan tersebut. Saya juga pikir jika kita memberikan teguran keras dari awal, maka kita harus menjaga momentum tersebut sehingga trainee dapat beradaptasi dengan sifat teguran tersebut dan alhasil tidak akan mendapatkan pesan yang ingin disampaikan oleh trainer. Itu pengalaman saya sendiri hari pertama, dan berubah setelah mendapatkan Subco dengan metode yang lumayan berbeda. Di hari awal saya berencana untuk memulangkan trainee lebih awal agar BP yang mereka kerjakan bisa berjalan dengan baik, apalagi karena ini adalah hari pertama dan materi yang tercantum pada BP masih relatif gampang Jika pada hari esoknya trainee-trainee apalagi yang sebelumnya sudah ditegur masih melakukan hal yang sama, saya akan mulai lebih tegas lagi dengan mereka dan ketegasan dan metode kita akan lebih keras lagi seiring hari berlanjut. Dan pada akhirnya di hari terakhir saya berharap bisa mengubah mereka menjadi jauh lebih baik dari hari pertama, walaupun dari awal sudah bagus, agar pada subject berikutnya ekspektasi kita akan angkatan yang kita didik tidak menurun.",
+        "Saya akan menegurnya apalagi karena jika pembuatan soal masih 10% setelah extend, apa yang telah dia lakukan selama jadwal deadline di awal? Tentu jika saya memutuskan untuk memperpanjang deadline pasti ada alasan yang tepat seperti mungkin dia juga ada deadline dari Subco atau ada hal lain yang mengganggu progres-nya. Namun jika hal itu masih berlanjut tentu itu sudah keterlaluan, karena sebagai asisten sudah sepatutnya kita bisa memanage waktu kita dan mengetahui kemampuan kita sendiri agar bisa menyesuaikan dengan bobot yang diberikan kepada kita. Dan karena ini hari deadline, tidak ada pilihan lain selain kita harus nerf soalnya agar soal bisa dipublish tepat waktu.",
+        "Mendidik trainee agar mereka mengetahui kesalahan mereka dan memberikan saran agar mereka bisa memperbaiki kesalahan yang telah mereka perbuat. Serta melatih soft skill mereka agar berani berbicara. Dengan eval pun kita bisa mengetahui kemampuan dari trainee dan mengklarifikasi mengenai peristiwa yang terjadi selama training berjalan",
+        "Tidak, karena tidak hanya dengan cara itu kita bisa menyampaikan pesan kita kepada trainee dan membuat mereka mengurangi kesalahan mereka.",
+        "Mulai eval dengan tenang dan tetap tegas dan mempertahankannya sampai mereka membuat kesalahan yang fatal. Tidak memarahi mereka terus-terusan agar mereka tidak jenuh dengan perkataan yang disampaikan dengan emosi yang tinggi dan suara yang tidak perlu. Membuat eval yang mendidik trainee, bukan membuat mereka tegang saja.",
+        "Mendiskusikan kepada RecSel mengenai mengapa eval memerlukan waktu yang lebih dibanding yang diberikan oleh mereka. Tentunya saya akan meyakinkan trainer lain jika memang trainee ini melakukan training dengan baik dan setidaknya mendekati ekspektasi kita. Tentu hal itu sulit dicapai dan jika menurut saya trainee memerlukan waktu lebih untuk evaluasi, saya harus meyakinkan pihak RecSel. Tetapi hal ini semua bisa dihindari jika kita bisa mendidik trainee dengan baik.",
+        "Kurangi marah dengan teriak terus menerus. Ini bukan karena saya takut saat dimarahi saat Core Training, tetapi saya rasa memang tidak efektif. Tidak terlalu menempel di benak saya jika pesan yang ingin disampaikan dengan sangat lantang."
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "f45f8100-5cff-4fa0-b00b-7f23ad1b886c",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "ZZ19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Ingin melatih trainee agar siap saat menjadi asisten",
+        "Positif\n- Mengerjakan tepat waktu\n- Rasa ingin tahu tinggi\n- Dapat mengatur prioritas\nNegatif\n- Kesulitan memilih kata saat berbicara\n- Perlu berpikir lama saat ada yang tidak terduga",
+        "Positif\n- Trainer memberi materi detail\n- Website tidak bermasalah\n- Presentasi melatih untuk mengajar\nNegatif\n- Terkadang ada trainee yang presentasi disaat ia harus ijin kelas saat latihan",
+        "Menyiapkan soal dan menentukan pengajar. revisi soal. membuka untuk daftar pic ruangan. mengawas dan mencatat trainee. membuka ruangan untuk presentasi. evaluasi lihat dari catatan sebelumnya ingatkan kesalahan yang sedang, besar lalu kecil. sedang sesuai BP lalu besar seperti mencontek atau yang unik. kecil seperti tidak lupa menghapus papan tulis",
+        "dalam 1/2 deadline saya tanyakan progress terlebih dahulu. kalau dihari deadline masih 10% diberi tambahan 1 hari untuk menyelesaikan. kalau masih belom, saya pegang",
+        "Memberi tahu kesalahan dan belajar dari kesalahan itu. Membentuk habit saat diingatkan berkali-kali",
+        "Emosi dibutuhkan seperti kesalahan yang besar dan fatal yang perlu ditekankan. Kalau di emosi tinggi terus tidak baik untuk trainer dan trainee.",
+        "Evaluasi secara garis besar akan sama seperti sebelumnya. sisanya tergantung situasi dan kondisi",
+        "Memberi tahu kepada trainernya untuk to the point. Bisa dibilang memadatkan apa yang perlu disampaikan.",
+        "Belum ada"
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "6d91cf29-9bfe-4eb8-8fa7-88f08001cdde",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "HS19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "1. Pengalaman mungkin sekali seumur hidup menjadi subco core training\n2. Ingin coba\n3. Menantang diri sendiri untuk belajar lebih",
+        "Positif: berintegritas,  sabar, tekun, bertanggung jawab, berkepala dingin\n\nNegatif : Belum bisa memanage waktu dengan baik, terkadang meremehkan suatu pekerjaan (kerjaan yang saya berikan waktu sempit (karena banyak kerjaan lain) untuk dikerjakan ternyata memakan waktu jauh lebih banyak). Terkadang malas menegur orang yang menurut saya melanggar aturan.",
+        "Positif: \n1. Trainee berkembang dengan pesat pada saat core\n2. materi yang dipadatkan beserta tumpukan dosa dan tugas sudah mencakup worst case menjadi seorang asisten. \n3. Trainee Ada masa berkenalan dengan asisten jadi ketika masuk tidak terlalu canggung. \n4. Materi yang ada di core training itu dipakai semua ketika menjadi asisten.\n5. Karena semua kurang tidur, cape secara mental dan fisik, dan sebagainya maka sebagian tentu saja menampilkan sikap terburuknya dan kita jadi lebih mengenal angkatan sendiri.\n6. Mau tidak mau harus bekerja sama dengan angkatan yg mnurut saya berguna ketika menjadi asisten\n\nNegatif: \n1. saya tidak yakin metode bentak bentakin trainee itu benar benar efisien. Dan sejauh ini menjadi asisten belum pernah di bentak bentak leader atau senior. (Belum pernah dengar juga) \n2. Meskipun tidak berkata kasar tapi kemungkinan trainer menggunakan kata kata yang sedikit menghina seperti sampah (menurut saya ini sedikit berbeda dengan kata 'hina' krn dengan kata 'hina' yang menjadi objek menurut saya adalah traainee dalam mengerjakan ini hina hasilnya. Tapi dengan sampah ini berarti si trainee (orangnya) yang sampah) . Jadi maksudnya mungkin celaan dari trainer bisa dipersempit jangan mencela si orangnya tapi hasil pekerjaan orang tersebut dan kenapa bisa seperti itu. \n3. Kadang ketika presentasi itu yang jahil dalam 1 ruangan ada banyak, misal ada yang berenang, main main di jendela, loncat loncat, ngegosip smua dalam 1 ruangan dan terkadang pic tidak menyuruh trainer yang menganggu itu diam jadinya trainee lebi sibuk mencoba menenangkan kelas daripada membawa materinya.",
+        null,
+        "Di perpanjang lagi sedikit misalnya 3 hari dan tiap hari ditanyain gimana progress nya suda sampai mana, ada masalah apa, kemudian jika memungkinkan member deadline deadline kecil misalnya hari ini kalo bisa fitur A ini di kelarin ya. \n\nJika boleh berandai andai sepertinya saya akan sudah mulai menanyakan progress tiap berapa hari ketika di extend pertama kali (yang seminggu itu). \n\nJadinya seperti nagih nagih tetapi menurut saya tidak enak ditagih orang itu jadi pasti dikerjakan. Dan mungkin kalau memungkinkan ya di kurangi juga misalnya idenya dia bikin 4 minigame dalam 1 website, dikurangi jadi 3 atau 2 saja.",
+        "Membahas apa yang terjadi (atau baru diketahui) di hari itu. \nMulai dari absen masuk, istirahat, pulang\nKemudian hasil pengerjaaan soal, hasil presentasi, dan sebagainya. \n\nDi sini trainer bisa mendapat masalahnya trainee itu apa dari sudut pandang si trainee (misalnya tidak lulus presentasi karena tidak menguasai materi). Kemudian trainer memberikan solusi juga (misalnya disuru tanya trainernya ketika lagi sesi pengajaran dan diberi tahu meskipun sudah lewat waktunya juga tanya saja jika tidak mengerti) \n\nTrainee juga diajak mereview kinerja mereka (dan angkatan) seharian itu, jika ada masalah mungkin trainer dapat memberi solusi atau memberi kesempatan pada trainee dan angkatannya untuk memberi solusi dari masalah mereka sendiri. \n\nJadi harapan dengan evaluasi adalah trainee bisa belajr dan tidak mengulangi kesalahan mereka lagi karena sudah diberi solusi.",
+        "Tidak perlu karena tujuan evaluasi bukan untuk marahin trainee\nDan terutama karena saya tidak yakin marahin trainee itu efisien, saya rasa lebih baik diberi konsekuensi/solusi lain daripada trainer buang buang energi untuk marah marah. \n\nTapi mungkin ada perlunya juga karena ada manusia manusia yang jika belum di marahin dia bebal, tapi ini mungkin pilihan di akhir akhir",
+        "Menurut saya yang sebelum sebelumnya diterapkan sudah oke, hanya saja kadang stuck di 1 bagian dibahas lama sekali",
+        "Memberi tahu trainer dan mencoba menyusun rundown evaluasi yang lebih efisien. Meminta trainer jangan sampai pembahasan stuck terlalu lama di satu bagian, datang juga ke evaluasi untuk mengingatkan trainer lain",
+        "Belum ada"
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "8c049662-7889-4738-ba78-954c93305139",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "IX19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Supaya bisa mendapat pengalaman baru",
+        "Positif \nlumayan sabar sehingga tetap bisa fokus dan tidak terbawa suasana (terutama pada saat eval)\nNegatif\nPelupa",
+        "Positif \nTrainee yang dihasilkan biasanya sudah meninggalkan perilaku-perilaku negatif yang biasanya ada pada mereka akibat pressure core training\nNegatif\nDari nar yang sebelum sebelumnya tidak diperjelas apa saja yang boleh / tidak boleh dilakukan subco maupun trainer lain tanpa persetujuan atau arahan recsel sehingga terjadinya konflik atau memperlambat eval. Terutama pada saat recsel tak ada satupun yang ada di ruang eval.",
+        "Training (durasi tergantung jumlah materi)\nOnsite (dilakukan setelah training selama 1 shift)\nBreak\nTraining sesi 2 (jika ada)\nOnsite sesi 2 (jika ada)\nEvaluation",
+        "Tanya alasan deadline dan kalau memang trainernya ada kendala maka bisa dialokasikan ke orang lain",
+        "Untuk memastikan kesalahan yang dilakukan trainee tidak terjadi lagi di hari hari kedepannya",
+        "Tidak, tapi dalam kasus tertentu trainer juga harus bisa galak supaya trainee itu sadar kalau yang dibahas itu penting dan dilarang keras untuk diulangi.",
+        "Menurut saya sebelum eval asli sebaiknya diadakan briefing singkat dulu oleh subco kepada trainer subject tersebut dan recsel supaya dapat dibahas kira kira hari ini yang penting dibahas apa. Dan hari ini bakal dilakukan apa aja. Supaya mencegak kecanggungan pada saat eksekusi evaluasi",
+        "Bicarakan baik baik dengan trainer",
+        "Tidak ada"
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "14725c64-d852-4ad0-8594-a6bfebd557fc",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "OS19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Ingin melatih sikap tanggungjawab saya untuk NAR20-2",
+        "Positif\n- Perfeksionis\n- Bertanggungjawab\nNegatif\n- Moody suka turun naik jika sendiri",
+        "Positif\n- Melatih mental, fisik, dan otak\nNegatif\n- Melelahkan",
+        "Ingin merencanakan training yang efisien dan tidak membuat trainee terlalu kelelahan dengan melakukan evaluasi dengan efektif, sehinggga trainee dapat mengerjakan tugas bawa pulang dengan efisien",
+        "Push asisten terebut seharian agar beliau dapat menyelesaikan tugasnya, saya tunggu hingga 23:59",
+        "Membahas kesalahan yang telah diperbuat serta merencanakan solusi atas kesalahan yang telah diperbuat",
+        "Tidak",
+        "Merancang evaluasi seefektif mungkin, mengurangi berkata-kata yang kurang diperlakukan, jika hal tersebut dilakukan oleh trainer lain, berusaha untuk menegur trainer tersebut agar tidak berbuat hal tersebut lagi guna evaluasi yang lebih efektif.",
+        "Membicarakan apa alasan trainer tersebut tidak setuju dengan hal tersebut. Mencari jalan tengah, dengan mempertimbangkan hal-hal positif dan negatif terhadap waktu evaluasi NAR20-2.",
+        "Mungkin saat ini baru mencanangkan waktu evaluasi yang lebih efektif seperti yag telah saya uraikan di atas. Terima kasih."
+      ],
+      "EndDate": "/Date(1590552000000+0700)/",
+      "Id": "b9f06cc6-30dc-468a-a8f8-a9c0c752cef1",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "EI19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "-untuk mendapatkan involvement point\n-untuk mengembangkan softskill (communication dan leadership) dan harskill",
+        "positif\n-sabar\n-tegas (tergantung kondisi dan situasi)\n-bertanggung jawab dengan tugas yang diberikan\n-bisa jaga omongan (kata kasar)\n\nnegatif\n-lambat dalam memahami sesuatu (tergantung kondisi dan situasi)\n-leadership kurang\n-mageran",
+        "positif\n-softskill banyak\n-hardskill banyak\n-pengalaman banyak\n-rundown training bagus\n-fasilitas bagus\n\nnegatif\n-hal - hal yang gk penting dibawah ke eval\n-terlalu banyak jokes gk penting di eval\n-trainer masih ada yang skip - skip\n-trainer masih ada yang tidak konsisten",
+        "-mempersiapkan diri buat jadi trainer mulai dari softskill maupun hardskill\n-belajar tegas, konsisten, cepat, dan adil dalam melakukan sesuatu\n-kenali trainee dengan seksama (hapalin nama, code trainee, dan jurusan)\n-aware dengan update info training",
+        "Solusi 1\nMemberikan tambahan 1 hari lagi untuk melakukan pekerjaan trainer yang bersangkutan (apabila soal belum dipakai untuk 3 hari kedepan)\n\nSolusi 2\nmembantu trainer yang bersangkutan untuk mengerjakan pembuatan soal (kasih ide atau hint biar cepat kelar)\n\nSolusi 3 - Sebelum kejadian terjadi\nMenagih hasil mininal 50% 4 hari sebelum deadline (misalnya deadline 8 hari, tagihin hari ke 4 50% udh harus jadi [best case])",
+        "-memberitahu kesalahan yang dilakukan trainee agar diperbaiki dan tidak diulangi kedepannya\n-membantu trainee menciptakan solusi untuk kesalahan mereka (memberi tempat dan kesempatan kepada trainee untuk menyampaikan ide)\n-menilai progress trainee (secara tidak langsung memberi tahu perkembangan trainee, secara tidak langsung satu trainee bisa nilai trainee yang lain)",
+        "sebenarnya dibawa dengan emosi tinggi perlu agar trainee yang melakukan kesalahan berulang - rulang jadi takut dan tidak berani mengulanginya. Namun saya lebih prefer tegas sih dari pada main emosi karena klo tegas (misalnya kalo udh kesalahannya diulang berkali - kali yauda daripada marah - marah mending mintain solusi, lebih berguna buat perkembangan mereka dibanding marah - marah tapi mereka takut trus down saat core) lebih cocok buat latih mental mereka dibandingkan dengan emosi yang buat mereka takut dan down untuk ikut core training.\nAnggapannya strict aja gak usah main emosi",
+        "-hal - hal gak penting jangan dibawa ke eval\n-jokes jangan dibawa ke eval\n-jangan ada bandingin angkatan sebelum - sebelumnya (fokus ke angkatan mereka aja 20-2)\n-mungkin buat peraturan yang ada bisa lebih ditepati sih kalo ngak mereka anggap kita boong ya mereka juga bisa boong gitu\n-konsistensi dijaga kalo dieval\n-hal - hal yang sama (kesalahan) cukup diulang max 2 kali aja (gak usah dibahas langsung mintain konsekuensi aja atau naikin level konsekuensi sebelumnya) , jika sudah pernah dibahas biar hemat waktu\n-kalo minta trainee jawab klo salah jawab gk usah dimarahin skip aja (kecuali pertanyaan subco atau dianya gk fokus pas eval)\n-point diatas klo gk mau diterapin full boleh setengah sih, jadi pas awal doank buat liat inisiatif mereka ada gk? soalnya kalo awal - awal udh dimarahin gara - gara salah jawab ujung - ujungnya yg bisa jawab tapi ragu dan takut nanti",
+        "rujuk kereksel buat balikin aja ke peraturan yg lama. klo menurut saya sendiri klo dikurangin ngak ngaruh dikarenakan eval berlangsung sesuai dengan banyak sesalahan yang di bahas (kesalahan yang diulang 3x boleh diskip sih). Belum lagi ada ngaretnya biasa jadi mending ditetapkan menjadi 2 jam atau lebih bagus jangan bilang 2 jam tapi minimal biar trainee ngak bilang kita boong\nDan yang perlu dikurangin bukan waktu tapi hal - hal yang gk penting di eval kek jokes dan hal berulang",
+        "Belum ada, mungkin jika ada bisa saya sampaikan ke reksel.\ndan palingan yang diperhatikan masalah - masalah eval yang sudah saya sebut di jawaban untuk pertanyaan no 7 dan 8"
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "3a621a9c-af7d-4b16-9f14-b64667d494f3",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "JX19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Saya mendaftar 3 subject yang berhubungan dengan web, saya ingin jadi SubCo dengan tujuan agar trainee tidak hanya sekedar \"bisa\" dalam web tapi juga ingin membuat mereka tertarik dengan teknologi yang ada di bidang web. Tidak hanya sekedar syntax namun saya juga ingin mereka bisa memahami bagaimana cara membuat web dengan UI/UX yang baik, juga men-develop sebuah web application yang terstruktur yang mudah dimengerti oleh anggota tim.",
+        "Positif:\nDisiplin masalah tugas, Suka berbagi ilmu-ilmu menarik, Perfeksionis, tergantung perspektif orang namun saya anggap perfeksionis itu positif dengan anggapan selalu melakukan lebih banyak agar hasil memuaskan dimata saya.\nNegatif:\nPengetahuan saya bukan \"luas\" tapi \"dalam\".",
+        "Positif:\nMembangun mental, mendapatkan banyak sekali ilmu, berkenalan dengan calon-calon rekan kerja yang bisa dibilang teammate, mengubah pola pikir yang jelek\nNegatif:\nTerkadang eval itu bahas hal yang menurut saya kurang penting dan bisa di \"skip\" aja biar tidak buang waktu.",
+        "Tidak cuma ingin agar trainee sekedar \"bisa\" atau \"ngerti\" syntax, tapi memacu mereka biar tetep cari lebih lanjut lagi dan fokus ke satu ilmu. Saya ingin mereka kalo buat design itu yang UI/UX nya bagus, ga sekedar fungsionalitas saja. Struktur code mereka juga rapih biar kedepannya kalau mereka bekerja dalam tim, code mereka juga gampang dimengerti oleh tim nya. Inti nya \"Gimana sih caranya biar web application saya itu enak digunakan user dan enak dikembangkan developer\"",
+        "- Pembuatan soal di tanya terus, dan minta update progress per jangka waktu tertentu dulu jadi bisa mengeliminasi kejadian \"lupa\". \n- Usahakan mereka punya ide dulu soalnya mau buat apa, fitur nya apa aja, bisa apa aja, jadi kita bisa bantu manage waktu per fitur\n- Jika deadline terus dasarnya ini sebagian salah saya sebagai subco karena tidak mem \"push\" trainer tersebut agar tepat waktu dan saya harusnya bertanggung jawab juga.\n- Menanyakan alasan deadline, mungkin ada kerjaan lain kah atau alasan lain,\n- Tapi kita tetap tegur trainer tersebut, karena tidak menjalankan tugas yang diberikan dengan baik.\n- Namun kalau sudah deadline, dan soal masih 10% bisa saja saya bantu kelarkan, kan saya juga subco nya jadi pasti saya bisa bantu setidaknya sampai dianggap layak dan minimal menyangkup semua kriteria CO.",
+        "- Membangun mental\n- Introspeksi dan perbaiki sifat",
+        "Tidak, eval itu kalau bisa jangan dijadikan pelampiasan emosi. Menurut saya juga trainer selama ini kalau \"marah\" itu karena kecewa dan mereka ingin kita berubah dari sikap ketidakpedulian ato kesombongan, bukan marah dengan alesan sepele seperti \"ih ini trainee ngeselin\". Trainer yang baik itu yang marah nya itu membangun bukan menjatuhkan",
+        "Kurangin bahas yang tidak terlalu penting, contoh simple nya aja dulu ada trainee yang di eval karena makan \"steak 76\" dan dia seperti kebingungan, untuk menghindari itu dan takutnya dia salah paham, lebih baik kita straight to the point aja bahas agar mereka perbaikin time management mereka. Kalo trainer bisa mengurangi pembahasan yang berputar-putar kan bisa hemat waktu, trainee bisa pulang lebih cepat dan kerjakan BP mereka",
+        "- Umumkan ke trainer-trainer tersebut agar jangan bahas hal yang muter-muter dan ga jelas tujuannya. Nanya-nanya cuma sekedar \"iseng tanpa tujuan\". \n- Kurangi marah-marah tanpa konteks, tanpa tau situasi, sering terjadi seperti trainer A baru masuk pertengahan eval terus ikut-ikut \"marah\" padahal tidak sesuai konteks nya atau menanyakan ulang pertanyaan yang sudah dijawab oleh trainee sebelum trainer A tersebut datang.\n- Nasehati dan ingatkan ulang kalau di eval itu kita membangun, bukan menjatuhkan.",
+        "- Kalau kita sering ketemunya konsekuensi kalo mereka melakukan kesalahan, kita belum pernah berikan \"reward\" kalau mereka melakukan tindakan benar, palingan cuma \"tepuk tangan\". Saya ingin coba mulai memberikan reward-reward kecil kalau mereka dapat menyelesaikan tugas dengan baik, contoh nya kalau presentasi lulus smua BP kasih potongan nilai X% di hari itu. Mungkin agak sulit, tapi setidaknya ada yang memicu mereka untuk kerja keras selain agar tidak dapat \"hukuman\" .\n- Lalu saya tidak tahu ini sebelumnya ada atau tidak, tapi saya ingin mencoba untuk mengkoordinasikan waktu yang digunakan untuk pembahasan di eval. \n- Hilangkan pembahasan yang cuma menyombongkan diri atau meng-compare diri (trainer) dengan trainee. Contohnya \"Saya aja kerjain soal kayak gitu 5 menit\" atau seperti \"Cuma gitu doang, dulu angkatan saya ...\". Karena sejujurnya itu ga penting buat di ungkit, kebanyakan tidak membangun, cuma menjatuhkan. Lebih baik kalo mereka tidak bisa sesuatu, ditanya dulu alesannya, bagaimana solusinya, dan jaminan nya apa.\n- Kalau bisa saat memilih pengajar sesi pastikan pembawaan pengajar bisa maksimum, dan tidak \"seadanya\", pastikan trainee itu serius tapi tetap \"enjoy\". Kalau dulu pernah diajar ko AX, kurang lebih seperti itu pembawaan nya, pasti trainee bisa nangkep lebih banyak. Jangan bawain materi yang \"mempersulit\" sesuatu hal yang simple"
+      ],
+      "EndDate": "/Date(1590519600000+0700)/",
+      "Id": "bde16723-3e7a-439f-bbc1-c7c21034d03b",
+      "StartDate": "/Date(1590462000000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "AE19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "tujuan utamanya adalah untuk merasakan rasanya menjadi seorang yang mengatur suatu hal lagi, karena terakhir saya melakukan ini adalah di SMA, tujuan lainnya adalah untuk mengembangkan soft skill saya sendiri dalam decision making",
+        "positif : \n- tepat waktu\n- patuh pada aturan yang ada\n- tegas\n- pekerja keras\n\nnegatif : \n- emosional\n- kurang penyabar",
+        "positif :\n- materi yang diberikan tetap padat dan terjada kualitasnya\n- trainet - trainer selama ini tegas\n- pertanyaan dan komentar yang diberikan semua bersifat membangun dan menurut saya cukup bagus\n- semua asisten dan staff di SLC semuanya mau meluangkan waktu untuk melakukan perkenalan dan lainnya yang dimana menurut saya ini hal yang baik untuk mempercepat eval untuk bagian kenalan\n\nnegatif : \n- time management yang kurang, terutama saat ingin memulai eval, dan perpindahan sesi, kadang suka ngaret, terutama juga di nar 20-1 sebelumnya sampai jam eval diundur hanya untuk memberikan trainee waktu makan yang menurut saya tidak begitu perlu\n- saya merasa core training sedikit melembut dari core training sebelumnya (karena saya merasa core training 19-2 dan 20-1 lebih lembek daripada core training yang pernah saya ikuti saat NAR 19-1)\n- intermezo menurut saya mulai mendominasi untuk evaluasi dimana membuat beberapa hal yang menurut saya lebih penting untuk dibahas jadi diskip",
+        "untuk training kali ini perencanaan saya adalah untuk membuat trainingnya lebih padat sehingga tidak membuang waktu untuk hal - hal yang kurang penting yang saya rasa kemudian hal ini dapat mengefek kepada lebih cepatnya pulang para trainee. Hal ini ingin saya capai karena menurut saya pulangnya trainee selama training yang saya ikuti (19-1, 19-2, 20-1) jam pulang sangat tidak teratur (bisa sampai jam 11 malam lewat) yang dimana saya rasa ini juga kurang baik untuk para trainee karena mereka memiliki kerjaan yang banyak. Namun saya tidak bertujuan untuk membuatnya pulang terlalu cepat, maksimal rencananya saya akan membuat jam pulang sekitar jam 10 - 11 apabila memang ada masalah yang ingin dibahas.\n\nuntuk presentasi saya juga bertujuan untuk membuat komentar tetap membangun dan tidak menurun, karena pada core training yang sudak saya ikuti (19-1, 19-2, 20-1) menurut saya di angkatan 19-1 dan 19-2 banyak komentar-komentar yang sifatnya lebih kearah menyindir dibanding kan membangun, meskipun sebenarnya komentar tersebut memiliki maksud yang baik, namun tetap saja kita tidak tau apa yang dipikirkan oleh trainee saat mendapat komentar seperti itu. Yang ingin saya capai adalah tidak adanya pandangan buruk trainee terhadap SLC, karena tidak ada yang tahu apa yang dibicarakan mungkin oleh para trainee dibelakang trainer",
+        "tindakan yang paling mungkin saya lakukan adalah memberikan intruksi langsung kepada trainer tersebut mengenai pembuatan soal agar lebih cepat. Namun, apabila menurut saya trainer ini tidak mungkin dapat menyelesaikannya dalam waktu tertentu yang sudah saya tentukan. Saya akan mengambil alih tugas case making tersebut dan menyelesaikannya, tentu saja saya tidak ingin kualitas dari soal menjadi menurun hanya karena deadline case making dari trainer. Namun tetap saja, keputusan untuk mengambil alih ini saya pertimbangkan juga dengan seberapa padatnya pekerjaan saya saat itu. Apabila saya rasa terlalu padat, saya akan memberikan pekerjaan tersebut ke trainer lain yang menurut saya lebih mungkin untuk menyelesaikan pekerjaan tersebut secara cepat dan lebih terpercaya",
+        "tujuan dari evaluasi adalah untuk membahas mengenai masalah - masalah yang dialami oleh para trainee selama training berlangsung dan berusaha untuk memberikan solusi untuk masalah tersebut. Tentu saja tujuan lainnya adalah untuk mendidik dan memberikan worst case dari menjadi seorang asisten karena kita tidak tahu seperti apa mahasiswa pada aslinya, bisa saja mahasiswa asli lebih galak dan mungkin lebih kasar dibandingkan trainer, sehingga evaluasi juga bertujuan untuk membentuk mental dari para trainee sehingga dapat menghadapi berbagai macam kondisi di dunia kerjanya nanti. Tujuan lainnya adalah untuk mendidik trainee untuk taat pada aturan dan disiplin serta jujur karena menurut saya 3 kepribadian ini adalah yang paling penting dalam dunia kerja, terutama pendidikan",
+        "menurut saya, iya butuh, dengan batasan tertentu. Karena tujuan dari emosi yang dilemparkan pada para trainee adalah untuk melatih mental dari trainee itu sendiri untuk tidak terlalu lembek dan membuatnya menjadi taat pada aturan serta lebih disiplin. Menurut saya emosi tinggi lebih cocok digunakan dibandingkan dengan dibicarakan secara halus, karena menurut saya untuk membentuk suatu kepribadian, dibbutuhkan rasa takut akan sesuatu",
+        "rencana saya adalah untuk membuat evaluasi sebisa mungkin seperti evaluasi pada NAR 20-1, karena pada NAR 20-1 menurut saya evaluasi dibawakan dengan sangat baik, terarah, dan juga tidak terlalu banyak intermezo, yang dimana menurut saya adalah bentuk dari evaluasi yang baik. Rencana saya juga membuat evaluasi lebih keras dan lebih tegas lagi dalam membuat keputusan dalam evaluasi",
+        "karena saya berada dalam posisi sebagai seorang subco yang dimana berarti saya memiliki kendali untuk evaluasi, yang akan saya lakukan adalah untuk menekan evaluasi sepadat mungkin sehingga tidak berlangsung terlalu lama, tentunya evaluasi dijalankan dengan tidak terburu - buru karena bisa saja terjadi miss. Apabila saya merasa akan melebihi waktu yang diberikan oleh reksel yang akan saya lakukan adalah meminta ijin terlebih dahulu pada reksel, dan kemungkinan yang akan saya lakukan adalah meminta untuk meng-extend waktu evaluasi apabila memang msih ada hal penting yang ingin dibahas, karena menurut saya hal penting tidak bisa ditinggalkan hanya karena batas waktu, dan juga pulang cepat menurut saya bukanlah solusi yang baik untuk membangun trainee",
+        "kebijakan yang ingin saya terapkan adalah presentasi diubah menjadi 1 batch, maksudnya adalah dalam 1 sesi onsite, presentasi cukup dibuka 1 batch saja, dan dibuka ruangnya lebih banyak. Alasannya adalah saya tidak begitu suka dengan alasan presentasi saat onsitenya jelek. Karena menurut saya sistem yang dilakukan sebelumnya memang dirasa cukup memakan waktu para trainee untuk melakukan persiapan presentasi, belum lagi waktu presentasi yang bisa jadi sangat lama yang membuat progress dari onsite trainee tersebut sangat rendah. Dengan sistem sekarang menurut saya hanya akan memberikan alasan tambahan untuk para trainee saat dibahas mengenai onsite yang jelek"
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "a51a4acb-3475-4efc-a903-c903f35ed648",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "WS19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "saya ingin melatih kemampuan mengatur jadwal saya, dan saya ingin membuat subject yang saya pegang dapat di mengerti oleh semua trainee.",
+        "positif:\n- mengerjakan pekerjaan hingga tuntas\n- dapat mengambil keputusan dengan cepat\n- dapat mengatasi masalah dadakan\n- tegas\nnegatif:\n- terkadang panik\n- agak bingung merangkai kata- kata ketika menyampaikan sesuatu",
+        "positif:\n- melatih trainee hardskill dan soft skill dari trainee\n- melatih kemampuan belajar cepat trainee dan analisa kesalahan\n- membantu trainee mendapat masukan yang mampu mengubah cara belajar maupun berpikirnya\n- melatih trainee untuk bekerja lebih efisien\n- melatih trainer untuk berpikir bijak sehingga dapat memberikan masukan yang baik kepada trainee\nnegatif:\n- sering ada trainee yang kelelahan hingga sakit karena tidak kuat menghadapi training yang berat\n- trainee merasa dipelonco karena di bentak dan kehilangan semangat training\n- properti lab yang rusak karena eval",
+        "saya mungkin akan menjalankan training seperti yang sudah ada pada training-  training sebelumnya, tetapi saya akan lebih menekankan kepada trainer untuk tidak terlalu menekan trainee karena dapat membuat mental trainee down, sehingga menurunkan semangat mengikuti training. saya juga akan mempersiapkan materi untuk subjek yang saya pegang dan memantau jalannya training sehingga training dapat berjalan dengan baik dan materi tersampaikan dengan baik agar para trainee mampu mengerti apa yang diajarkan selama sesi materi. tentunya untuk menyampaikan materi dengan baik dibutuhkan pengajar yang paling berkompeten sehingga saya akan meminta bantuan dari teman- teman yang saya tahu keahliannya berada di subjek dan materi tersebut untuk mengajar.",
+        "saya akan menegur trainer tersebut dan jika ia masih tidak peduli saya akan meminta trainer lain untuk menghandle pembuatan soal tersebut. tentunya saya akan tetap memilih trainer yang ahli dalam bidang soal tersebut sehingga soalnya akan bagus. jika tetap tidak ada yang bisa maka saya sendiri yang akan menghandle pembuatan soal tersebut walaupun harus mengebut pembuatan soal tersebut. solusi saya yang lain adalah membagi pembuatan soal tersebut menjadi pembuatan aplikasi dan dokumentasi soal sehingga pekerjaan dapat di fokuskan dan mengurangi kesalahan yang ada.",
+        "membantu trainee menyadari kesalahan yang mereka perbuat sehingga dapat diperbaiki ke depannya dengan harapan kesalahan tersebut tidak di ulangi trainee lagi. evaluasi juga dapat melatih fokus trainer sehingga trainer dapat lebih mengenal trainee yang ada dan melihat kemampuan softskill dan hardskill serta etitut dari masing- masing trainee yang ada.",
+        "tidak karena dengan emosi tinggi hanya akan meredupkan semangat para trainee. ada saatnya evaluasi dibawakan dengan emosi karena beberapa orang ada yang tidak peduli jika di sampaikan dengan lembut. penggunaan emosi pun harus di perhatikan tergantung dengan kesalahan yang trainee tersebut lakukan, jika trainee melakukan kesalahan pertama kali dan sifatnya tidak fatal dapat disampaikan dengan lembut dan jika ia berubah maka artinya ia memiliki niat tinggi untuk menjadi asisten sedangkan jika ia masih mangulangi kesalan yang sama dan bersikap tidak peduli maka perlu di sampaikan dengan lebih keras.",
+        "saya akan mengatur rundown evaluasi dengan lebih baik dan melakukan listing terhadap kesalahan yang saya temukan dan berdasarkan laporan teman- teman sekalian, sehingga proses evaluasi akan berjalan lebih baik dan tidak terputar- putar. saya juga akan mengurangi proses bertanya ke trainee dengan kesalahan yang sama dan mengatur agar tiap event dalam rundown tersebut selesai sesuai perkiraan yang akan saya buat.",
+        "menjelaskan mengapa evaluasi harus dilakukan sesuai waktu yang ada dan menanyakan mengapa trainer tidak setuju dengan waktu evaluasi yang di tentukan recsel. menurut saya kemungkinan trainer tidak setuju karena mereka tidak bisa menguji atau menanyakan suatu hal kepada trainee. saya akan menjelaskan bahwa presentasi dibuat dengan waktu tertentu agar trainee yang lain mendapatkan giliran maju presentasi sehingga semua trainee mempunyai nilai presentasi, serta trainee yang belum lulus dapat maju presentai sekali lagi untuk memperbagus nilainya. presentasi yang lama juga akan membuat trainee merasa down dan kehilangan semangat, serta dapat mengurangi waktu pengerjaan onsite mereka sehingga nilai yang mereka dapatkan tidak maksimal akibat tertahan terlalu lama di ruang presentasi.",
+        "menetapkan waktu presentasi yang lebih ketat dan mengatur agar proses eval berjalan dengan baik dengan sebisa mungkin mengurangi trainer yang memotong pembicaraan trainee saat menjawab pertanyaan. say juga akan melakukan patroli ketika proses presentasi berlangsung agar proses tersebut berjalan dengan baik dan mengurangi adanya gangguan- gangguan yang membuat trainee merasa down saat presentasi. saya juga ingin agar para trainee memberikan listing siapa saja yang mengalami masalah penyakit (misal magg) agar dapat saya pantau selama eval berlangsung agar trainee tersebut dapat tetap baik- baik saja."
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "891c4a3b-5e7c-4850-98a9-d27a04d4c455",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "MV19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "- Belajar memanage situasi dan kondisi\n- Belajar lebih mantap mengenai subject yang didapat\n- Tertarik mencoba hal yang baru",
+        "Positif :\n- Penasehat yang baik\n- Langsung to the point\n- Baik / ramah\n- Berani mengambil/menerima resiko dari suatu keputusan\n\nNegatif:\n- Terkadang suka malas\n- Pelupa\n- Takut mengambil keputusan yang salah",
+        "Positif:\n- Trainee tau akan kesalahan yang dibuat\n- Trainee bisa berkembang menjadi lebih baik\n\nNegatif:\n- Masih terkadang membahas hal-hal yang tidak diperlukan\n- Masalah biasa dipenjang lebarkan / memakan waktu",
+        "Bagusnya core training itu masalah-masalah lama yang sudah sering berulang-ulang tidak perlu dipanjang lebarkan biar tidak makan waktu (langsung ditegasin saja), masalah baru saja mungkin bisa dipanjang lebarkan tapi diperkirakan juga waktunya (biar tidak kelamaan juga)",
+        "Kalau saya, panjangkan 1 hari deadlinenya tapi bakal dipantau oleh saya sendiri agar ada progress (kerja disamping saya)",
+        "Tujuannya agar trainee tau kesalahannya dan tidak mengulanginya lagi, dan biar tau progress perkembangan dari trainee sampai mana",
+        "Sebenarnya tidak perlu sampai emosi tinggi, cukup terlihat seperti orang marah saja. karena terkadang ada trainee itu tidak mau berubah / masih melakukan kesalahan yang sama kalau belum dimarahin atau ditegasin",
+        "Kalau bisa ketika evaluasinya bahas mengenai masalah tidak perlu memakan waktu yang lama. Karena bukan cuman 1 masalah yang dibahas, tetapi masih ada banyak masalah yang perlu dibahas.",
+        "Bertanya kepada trainer atas alasan ketidaksetujuannya, dan mencoba membahas / membicarakannya bersama dengan baik",
+        "Tidak ada"
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "b2df4398-bbd6-47bf-953f-d4876f138261",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "YT19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Tujuan saya menjadi SubCo Core Training adalah untuk membagikan pengalaman dan ilmu yang saya miliki ke calon asisten. Dengan pengalaman dan ilmu tersebut saya harapkan mereka dapat belajar hal baru. Dan saya ingin melatih leadership saya untuk dapat mengatur waktu dan membagi tugas ke trainer secara objektif.",
+        "Point Positif \n- Cepat dalam belajar dan dapat mengerjakan 2 hal dalam waktu bersamaan\n- Dapat bekerja secara individual dan secara berkelompok\n- Mengerjakan tugas jauh sebelum deadline\n- Lebih memikirkan proses dibandingkan dengan hasil\n- Perfeksionis dalam membuat sesuatu sehingga hasil terlihat rapih\n- Suka mempelajarin hal sampai terdalam sehingga lebih mengerti\n- Berani bertanggung jawab atas hal yang saya lakukan\n\nPoint Negatif\n- Suka tegang sehingga lebih mudah berkeringat\n- Terkadang butuh waktu untuk membuat keputusan karena memikirkan jangka panjang\n- Butuh merangkai kata kata untuk menghindari salah kata",
+        "Point Positif \n- Belajar untuk dapat membagi waktu lebih baik\n- Mengurangin sifat perfeksionis yang dapat membuang waktu\n- Belajar dari kesalahan sehingga tidak melakukan kesalahan yg sama\n- Cepat dalam belajar \n\nPoint Negatif\n- Tidak dapat berada di satu tempat hanya duduk diam, perlu jalan jalan\n- Tidak bisa konsen untuk waktu yg lama",
+        "Seperti Core Training NAR19-2, saya hampir selalu hadir dalam setiap eval dan melihat perkembangan trainee. Namun karena sekarang telah menjadi trainer, saya akan membuat soal dan soal tersebut dibuat simple mungkin dengan tingkat kesulitan yg dapat menbangun trainee. Dan saya akan mengikuti eval sebisa saya dan aktif dalam pelaksaan core, seperti memberikan solusi yg dapat membangun.",
+        "Saya akan menemani ia dalam membuat soal, sehingga apabila ia memiliki kendala dalam membuat soal, saya dapat membantunya menyelesaikan masalah tersebut. Dengan demikian, progress menjadi lebih cepat. Dan setelah soal selesai dibuat, saya akan memberitau ia untuk tidak melakukan hal seperti ini lagi karena dapat merugikan orang lain dan menghabat sebuah kegiatan.",
+        "Tujuan dari evaluasi menurut saya adalah untuk memperbaiki diri menjadi pribadi yang lebih baik. Kesalahan dibahas bukan untuk memperburuk diri, melainkan menyadarkan kita bahwa hal ini salah dan tidak berniat untuk melakukannya kembali. Selain itu, evaluasi juga dapat menyelesaikan sesuatu masalah secara bersama-sama, dan apabila ada yang tidak setuju dapat dirundingkan untuk mencari jalan tengah.",
+        "Jawabannya tentu tidak. Karena emosi tidak dapat menyelesaikan masalah. Emosi juga membuat training bukan mendidik tapi malah menakuti sehingga dapat menimbulkan luka batin pada trainee. Bayangkan ketika mereka masuk, mereka bekerja sama dengan orang yang memarahi mereka dulu. Tentu rasanya tidak enak karena masih ada luka yang mengganjal. Namun, kita tidak dapat menghindari bahwa terkadang kita tidak sadar terbawa emosi. Hal yang perlu dilakukan adalah saling mengingatkan apabila ada yang mulai emosi. Mungkin keluar sebentar dapat melegakan jiwa dan raga, dan apabila sudah reda emosinya, dapat kembali ke ruang training.",
+        "Saya selalu mempersiapkan sesuatu sebelum melakukannya sehingga memiliki rencana evaluasi yang baik. Bagi saya evaluasi yang baik adalah evaluasi yang pesannya dapat sampai ke pikiran mereka sehingga apa yang dibahas menjadi lebih bermakna.",
+        "Sebagai seorang yang bekerja tentu kita harus patuh pada atasan. Namun, apabila banyak yang tidak setuju, kita dapat rundingkan untuk mencari jalan tengah. Cari tahu alasan mereka kenapa tidak setuju dan hal apa yang belum dibahas. Kemudian setelah data dikumpulkan, baru dicari solusinya. Apa yang ini harus dibahas ? Apa yang ini dapat disingkat dalam membahasanya ? Mengapa yang ini perlu waktu lama untuk dibahas ?",
+        "Menurut saya, ketika evaluasi trainee dibuat untuk tidak meninggalkan ruangan karena dapat dijadikan alasan untuk kabur sesaat. Alangkah baiknya apabila evaluasi dimulai jam 6 sehinggal trainee punya waktu makan dan ibadah. Memang memundurkan waktu lebih lama, tapi trainee tidak punya alasan untuk meninggalkan ruang, kecuali ke toilet."
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "16d53e7a-ca7d-4cf8-9910-d8ce1fa62cf0",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "RX19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Ingin mencoba mengatur sebuah materi yang kokoh yang akan menjadi landasan ketika asisten sudah mulai bekerja nanti dan ingin mengasah juga keterampilan dalam mengatur banyak hal.",
+        "Positif: Saya cukup tenang jika terdapat keadaan mendesak, merasa tidak enak jika terdapat pekerjaan yang belum selesai. Negatif: saya orangnya sedikit ceroboh",
+        "Positif: Banyak, hal yang paling menonjol pastinya dari core training ini trainee pasti dilatih sisi hard skill, time management, dan mental.\n   Negatif: Kemungkinan membahas yang sudah dibahas di evaluasi",
+        "Pastinya jadwalnya hampir sama seperti core training sebelumnya hari special, dimana akan diberikan projek atau hari biasa lainnya. \n\tuntuk sesi pengajaran sebisa mungkin trainer mengajarkan hal yang lebih jika ada waktu.\n\tuntuk pembuatan soal itu sendiri yang pastinya bisa membangun trainee dalam fondasi materi yang diberikan dan memberi gambaran sedikit tentang kasus kasus yang mungkin dapat diselesaikan dengan materi ini.\n\tuntuk onsite diharapkan traineenya dapat mengerjakan minimal apa yang diajarkan oleh pengajar.\n\tuntuk evaluasi itu sendiri, di hari awal kalau bisa ditekankan tentang kesalahan kesalahan yang sering terjadi. jadi di kemudian nanti kita bisa memperkecil kemungkinan salah yang dilakukan. menghindari pembahasaan materi yang dievaluasikan secara redundan",
+        "Seharusnya dari hari awal sudah di notice progres soalnya. tetapi jika sudah dekat deadline, pertama tama saya akn bertanya, apakah progres dia akan lambat jika ada orang yang membantu dia atau sebaliknya ?. karena menurut saya, tidak setiap orang kalau dibantu itu progresnya akan semakin cepat kl misalkan dia emang membutuhkan bantuan saya akan membantunya.",
+        "Tujuan evaluasi itu agar kita dapat memperbaiki diri dari sisi trainee maupun trainer. Karena melalui evaluasi kita dapat bertukar pikiran tentang  solusi bagaimana mengatasi masalah ini dan lain lain.",
+        "Emosi tinggi itu wajar ketika seseorang yang memiliki ekspetasi yang tidak dapt terpenuhi. Tapi pengontrolan diri disini harus cukup dilatih juga. karena pikiran yang dipikirkan dengan tenang akan jauh lebih masuk akal dari pada dibawa emosi. Jadi menurut saya emosi boleh tapi tidak terlalu parah juga",
+        "Untuk evaluasi sebelumnya itu sudah cukup. karena yah evaluasi tersebut untuk tempat mengevaluasi diri, mungkin harus lebih sedikit santai tapi serius",
+        "pertama, Pastinya saya memintai alasan kenapa mereka tidak setuju, apakah masuk akal atau tidak ? dan coba berdiskusi dengan recsel lagi, setelah itu memberikan alasan yang logis untuk trainer yang tidak setuju. Kedua, menghindari ketika ada masalah yang sama dan dibahas berulang ulang kali. Menurut saya, evaluasi juga lama ketika trainee nya juga tidak aktif, kita bisa menggunakan cara yang dapat membuat trainee aktif, contohnya waktu angkatan saya \"Mengangkat tangan jika tidak ada yang mau menjawab\" tetapi hal ini saya akan lakukan jika bener bener tidak aktif yang membuat waktu eval semakin lama.",
+        "-"
+      ],
+      "EndDate": "/Date(1590544800000+0700)/",
+      "Id": "ad3f7f27-67df-4df0-8b38-e2f46f800dd0",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "LF19-2"
+    },
+    {
+      "__type": "SubcoCandidateAnswerModel:#BPlusTraining.Logic",
+      "Answers": [
+        "Secara jujur , ingin merasakan rasanya tanggung jawab dalam suatu subject dan ingin para trainee berhasil di subject tersebut.",
+        "Positif:\n-Tenang\n-Mendengarkan masukan dari luar\n-berani bertanggung jawab\n\nNegatif:\n-sering kali merasa ragu akan keputusan diri sendiri jika tidak ada masukan dari luar",
+        "Negatif:\n-Pernah ada saat nya soal yang di berikan terlalu kuli dan tidak mengembangkan pengetahuin trainee, saya merasa ini negatif.\n-Pernah ada juga di dalam eval pembahasan di ulang ulang dalam 1 kali eval.\n\nPositif:\n-Dalam Evaluasi banyak hal pada keputusan subco yang membuat trainee sadar akan kelemahan nya, hal ini menurut saya bagus karena pada kebenaran nya waktu nar itu kita jadi evaluasi angkatan secara baik\n-Pernah ada dalam sesi presentasi , pic presentasi mengajarkan trainee tentang materi itu bahkan lebih, hal ini ku dapat info katanya sudah dalam persetujuan trainee dan subco. sehingga trainee bisa lebih paham dan membantu teman nya (saya rasa ini point positf)",
+        "Untuk perencanaan saya memikirkan dalam suatu subject perencaaan nya sebagai berikut:\n\nsaya ingin memanfaatkan hari pertama dan kedua subject untuk melihat potensi dari trainee, hal itu ingin saya lakukan dengan cara menaruh soal yang bisa dikerjakan dengan research di luar yang di ajarkan di binus. hal itu saya maksud kan ingin melihat kemampuan research trainee yang mana yang lebih unggul dalam melakukan research. tak lepas dari itu saya pasti meminta informasi dari subco sebelum nya tentang hal ini juga. \n\nSetelah itu saya akan menitipkan beberapa pertanyaan kepada pic presentasi yang seharus nya bisa di jawab trainee jika mereka melakukan research / teman nya itu memberi tau hasil research nya. dalam 2-3 hari  dengan cara itu dalam 1 subject saya rasa bisa melihat potensi trainee yang memiliki kemampuan berbagi dan research yang baik.\n\ndi balik hal itu saya juga merencanakan pertanyaan subco yang cukup berbeda, dimana pertanyaan nya selain berlandaskan teori umum subject, pertanyaan harus berlandaskan perkembangan jaman dalam subject tersebut. Hal itu saya maksudkan agar trainee juga mengerti dan paham apa fungsi dan perkemebangan di subject ini.",
+        "Dalam hal ini, ada 2 cara yang saya lakukan, pertama sebelum saya meminta trainer ini saya akan menanyakan trainer tentang kesibukan nya dalam 2 minggu dan kesanggupan nyaselama 2 minggu tersebut. Seteleah itu saya akan membantu agar meminimalisir deadline atau null progress demgan cara saya yang akan menentukan beberapa kriteria / fitur yang akan saya request ke pembuat soal. dengan begitu dalam 2 minggu saya bisa memfollow up terus si trainer dalam pembuatan soal. sehingga trainer bisa terhindar dalam deadline.\n\nkedua jika seandai nya terjadi seperti di kasus pertanyaan yang sudah di perpanjang tapi progress masih 10%, saya akan menanyakan kesanggupan si trainer untuk menyelesaikan dengan waktu extend yang masih bisa diberikan sebelum deadline sebenar nya. jika seandai nya trainer tidak bisa menyanggupi, saya akan meminta izin kepada trainer yang saya tugaskan untuk memberikan soal tersebut kepada saya trainer lain yang bisa agar dapat membantu nya.",
+        "dari evaluasi yang saya rasakan di core, tujuan nya ialah untuk mengetahui  kesalahan apa saja yang terjadi di hari ini dan sebelum nya baik itu diri sendiri atau sebuah kelompok tersebut, hal itu berfungsi agar kita tidak melakukan kesalahan di kejadian yang akan datang. dan memperkuat satu sama lain.",
+        "Menurut saya dalam hal komunikasi di evaluasi, pembawaan dengan emosi tergolong sah. tapi akan tidak berguna jika kita melakukan penyampaian dengan termakan emosi. hal yang paling bagus menurut saya (secara pengalaman) penyampain evaluasi akan lebih bagus jika dengan sindirian atau perkataan yang menusuk/mudah di ingat trainee dalam artian sindiran atau kritikan itu positif dibandingkan dengan emosi / marah marah.",
+        "Hal yang saya ingin rencanakan dalam evaluasi tersebut. saya ingin trainer tidak menggunakan emosi mereka dengan cara marah marah, saya ingin mereka melampiaskan emosi mereka dengan cara yang tepat. salah satunya sindiran positif. Serta saya ingin melihat masukan dari trainee tentang apa arti angkatan / teman kerja di dalam evaluasi, salah satu rencana saya adalah membongkar trainee yang masih solo pada saat evaluasi berjalan. sisanya menurut saya cukup baik dari evaluasi yang sebelum sebelum nya.",
+        "Dalam hal ini, jika saya sebagai subco saya seharus nya sudah paham tentang apa yang terjadi di dalam evaluasi sebelum nya yang berjalan sehingga melebihi batas waktu tersebut. hal itu yang akan saya beri tahu kepada RecSel , saat RecSel menyampaikan penguranan waktu evaluasi kepada saya. Tapi jika seandai nya jawaban dari Recsel tentang apa yang terjadi di dalam evaluasi hal itu memang benar sehingga dapat mengurangi waktu evaluasi. saya akan menjelaskan kepada trainer trainer yang ada dan merundingkan nya lagi bersama. Jika seandai nya Trainer merasa tidak setuju saya akan merundingkan nya kepada trainer tersebut disisi mana yang bagian tidak setuju nya, jika saya rasa pendapat trainer tersebut bisa di rundingkan lagi kepada Recsel saya akan memberitau Recsel tentang pendapat trainer tersebut.",
+        "Dalam hal kebijakan di core training 20-2 saya berfikir untuk sebelum evaluasi dimulai, para trainee akan melakukan evaluasi singkat sebelum di mulai hal ini saya rasa cukup efektif dibandingkan trainee langsung melakukan evaluasi tanpa persiapan apa pun setelah tugas yang cukup panajang.."
+      ],
+      "EndDate": "/Date(1590552000000+0700)/",
+      "Id": "66f80614-c0d2-42d9-9e06-e43ecaf0f648",
+      "StartDate": "/Date(1590487200000+0700)/",
+      "SubcoCandidateQuestionId": "f62261d0-fc09-442d-a8ef-bca4e0d47e8b",
+      "TrainerName": "SK19-2"
+    }
+  ],
+//#endregion
 };

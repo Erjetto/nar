@@ -1,25 +1,18 @@
 import {
 	Component,
 	OnInit,
-	ViewChild,
 	HostBinding,
-	ElementRef,
 	OnDestroy,
-	ChangeDetectionStrategy,
 } from '@angular/core';
 import { User, Role, ClientGeneration } from '../shared/models';
-import { GenerationService } from '../shared/services/generation.service';
-import { NgModel } from '@angular/forms';
-import { Subject, Observable, of, interval } from 'rxjs';
+import { Subject, Observable, of } from 'rxjs';
 import { RoleFlags } from '../shared/constants/role.constant';
 import { IAppState } from '../app.reducer';
 import { Store, select } from '@ngrx/store';
 import { MainStateAction, fromMainState, MasterStateAction, fromMasterState } from 'src/app/shared/store-modules';
 import { MenuService } from '../shared/services/menu.service';
 import { Route, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { filter, takeUntil, delay, tap } from 'rxjs/operators';
-import { UserService } from '../shared/services/user.service';
-import { GeneralService } from '../shared/services/new/general.service';
+import { filter, takeUntil } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({

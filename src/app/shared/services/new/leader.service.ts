@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { delay, map, tap } from 'rxjs/operators';
+import { delay, map, tap, mapTo } from 'rxjs/operators';
 import { MockData } from '../../mock-data';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -17,12 +17,13 @@ import {
   SchedulePerWeek,
   Case,
 } from '../../models';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class LeaderService {
-	private baseUrl = 'Leader.svc/';
+	private baseUrl = environment.apiUrl + 'Leader.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public UpdateTraineeActive(data: {
@@ -471,7 +472,8 @@ export class LeaderService {
 		Semester: string;
 		Year: string;
 	}): Observable<boolean> {
-		// return this.httpClient.post(this.baseUrl + 'UpdateGeneration', data)
+    // return throwError('Not implemented yet');
+		return this.httpClient.post(this.baseUrl + 'UpdateGeneration', data).pipe(mapTo(true));
 		return of(true).pipe(delay(500));
 	}
 
