@@ -134,7 +134,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 
     //#region Subscribe to effects
 		// Loading & Reload purpose
-		merge(this.mainEffects.crudSuccess$)
+		this.mainEffects.afterRequest$
 			.pipe(
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.viewCurrSubject$, this.viewCurrSchedule$)

@@ -88,7 +88,7 @@ export class ManageTopBottomVoteComponent
 		//#endregion
 
 		//#region Subscribe to effects
-		this.mainEffects.crudSuccess$
+		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.loadingFormVoteSchedule$.next(false));
     //#endregion
@@ -105,7 +105,7 @@ export class ManageTopBottomVoteComponent
 		text$.pipe(
 			debounceTime(400),
 			distinctUntilChanged(),
-			map((text) => this.store.dispatch(VoteStateAction.SetFilterText({ filterText: text })))
+			tap((text) => this.store.dispatch(VoteStateAction.SetFilterText({ filterText: text })))
 		);
 
 	selectSchedule(row: TopBottomVoteSchedule) {

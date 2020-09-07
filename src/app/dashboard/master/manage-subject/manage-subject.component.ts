@@ -74,7 +74,7 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 
 		//#region Subscribe to effects
 		// Auto reload data
-		this.mainEffects.crudSuccess$
+		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
 			.subscribe(([action, phase]) => {
 				this.loadingFormSubject$.next(false);

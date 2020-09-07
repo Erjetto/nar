@@ -53,7 +53,7 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 		//#endregion
 
 		//#region Subscribe to effects
-		this.mainEffects.crudSuccess$
+		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.loadingFormUserInRole$.next(false));
 		//#endregion
@@ -75,7 +75,7 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 		$text.pipe(
 			debounceTime(500),
 			distinctUntilChanged(),
-			map((text) => this.searchText$.next(text))
+			tap((text) => this.searchText$.next(text))
 		);
 
 	submitUserInRoleForm(form: NgForm) {

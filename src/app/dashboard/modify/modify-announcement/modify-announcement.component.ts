@@ -44,7 +44,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
     //#endregion
     
 		//#region Subscribe to effects
-		this.mainEffects.crudSuccess$
+		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.loadingFormAnnouncement$.next(false));
 		//#endregion

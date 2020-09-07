@@ -75,7 +75,7 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 			.subscribe(() => this.loadingInsertPhase$.next(false));
 
     // Auto fetch after crud 
-		merge(this.mainEffects.crudSuccess$)
+		merge(this.mainEffects.afterRequest$)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
 

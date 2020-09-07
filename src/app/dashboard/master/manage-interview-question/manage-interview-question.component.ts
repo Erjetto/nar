@@ -72,7 +72,7 @@ export class ManageInterviewQuestionComponent
 				)
 			);
 
-		this.mainEffects.crudSuccess$
+		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currInterviewQuestion$))
 			.subscribe(([action, currGenInterview]) => {
 				this.store.dispatch(InterviewStateAction.FetchInterviewQuestions());

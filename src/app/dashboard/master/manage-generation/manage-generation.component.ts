@@ -11,7 +11,7 @@ import {
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { NgForm } from '@angular/forms';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'rd-manage-generation',
@@ -31,6 +31,7 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
+		private masterEffects: MasterStateEffects
 	) {
 		super(store);
 	}
@@ -39,11 +40,16 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 		this.generations$ = this.store.pipe(select(fromMasterState.getGenerations));
 		this.loadingViewGen$ = this.store.pipe(select(fromMasterState.isGenerationsLoading));
 
-		this.mainEffects.crudSuccess$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
-      this.loadingFormGen$.next(false);
-      this.cancelEdit();
-			this.store.dispatch(MasterStateAction.FetchGenerations());
-		});
+		this.mainEffects.afterRequest$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((res) => this.loadingFormGen$.next(false));
+
+		merge(this.masterEffects.createGeneration$, this.masterEffects.updateGeneration$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => {
+				this.cancelEdit();
+				this.store.dispatch(MasterStateAction.FetchGenerations());
+			});
 	}
 
 	selectGeneration(gen: ClientGeneration) {
@@ -51,7 +57,7 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 	}
 
 	submitGenForm(form: NgForm) {
-		const { genName, semesterRadio, lastYear } = form.value;
+    const { genName, semesterRadio, lastYear } = form.value;
 		if (!this.editForm$.value)
 			this.store.dispatch(
 				MasterStateAction.CreateGeneration({

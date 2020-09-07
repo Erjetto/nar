@@ -33,6 +33,7 @@ import { NgForm } from '@angular/forms';
 export class ModifyInterviewMaterialComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
+    
 	public phaseTypes$: Observable<any[]>;
 	public phases$: Observable<ClientPhase[]>;
 	// public traineesEntity$: Observable<{ [id: string]: ClientTrainee }>;
@@ -83,7 +84,7 @@ export class ModifyInterviewMaterialComponent
 				)
 			);
 
-		this.mainEffects.crudSuccess$
+		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
 			.subscribe(([action, currPhase]) => {
 				this.store.dispatch(
