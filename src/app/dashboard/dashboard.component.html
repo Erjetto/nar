@@ -68,18 +68,18 @@
 						[class.menu-active]="isMenuActive(menu)"
 						[routerLink]="'/' + menu.path"
 					>
-						{{ menu.data.name }}
+						{{ menu.data?.name }}
 					</a>
 					<!-- Has submenu -->
 					<a *ngSwitchCase="false" class="menu-item" [class.menu-active]="isMenuActive(menu)">
-						{{ menu.data.name }}
+						{{ menu.data?.name }}
 						<div class="sub-menu">
 							<a
 								class="hover-text-blue menu-item sub-menu__item"
 								*ngFor="let submenu of menu.children"
 								[routerLink]="['/', menu.path, submenu.path]"
 							>
-								{{ submenu.data.name }}
+								{{ submenu.data?.name }}
 							</a>
 						</div>
 					</a>

@@ -116,7 +116,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	}
 
 	isMenuActive(menu: Route) {
-		return menu.data.name === this.currentHeaderMenu;
+		return menu.data?.name === this.currentHeaderMenu;
 	}
 
 	onChangeRole(evt: Event) {

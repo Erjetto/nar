@@ -23,13 +23,13 @@ import { ManageUserRoleComponent } from './master/manage-user-role/manage-user-r
 import { ManageAttendanceIpListComponent } from './master/manage-attendance-ip-list/manage-attendance-ip-list.component';
 import { ManageScheduleComponent } from './master/manage-schedule/manage-schedule.component';
 import { ModifyAnnouncementComponent } from './modify/modify-announcement/modify-announcement.component';
-import { ModifyMaterialComponent } from './modify/modify-material/modify-material.component';
 import { ModifyInterviewScheduleComponent } from './modify/modify-interview-schedule/modify-interview-schedule.component';
 import { ModifyInterviewMaterialComponent } from './modify/modify-interview-material/modify-interview-material.component';
 import { ViewAllQuestionComponent } from './presentation/view-all-question/view-all-question.component';
 import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
 import { ScoringComponent } from './presentation/scoring/scoring.component';
 import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
+import { TraineeScheduleComponent } from './modify/trainee-schedule/trainee-schedule.component';
 
 @NgModule({
 	declarations: [
@@ -54,7 +54,6 @@ import { ViewQuestionComponent } from './presentation/view-question/view-questio
 		ManageAttendanceIpListComponent,
 
 		ModifyAnnouncementComponent,
-		ModifyMaterialComponent,
 		ModifyInterviewScheduleComponent,
 		ModifyInterviewMaterialComponent,
 
@@ -62,6 +61,7 @@ import { ViewQuestionComponent } from './presentation/view-question/view-questio
 		ViewAllQuestionComponent,
 		ViewAllPresentationComponent,
 		ScoringComponent,
+		TraineeScheduleComponent,
 	],
 	imports: [
 		SharedModule,

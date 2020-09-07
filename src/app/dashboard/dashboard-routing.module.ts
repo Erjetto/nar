@@ -5,10 +5,7 @@ import { AuthGuard } from '../shared/guards/auth.guard';
 import { RoleGuard } from '../shared/guards/role.guard';
 import { RoleFlags, RoleGroups } from '../shared/constants/role.constant';
 import { HomeComponent } from './home/home.component';
-import {
-	Endpoints,
-	PathMatchings,
-} from '../shared/constants/endpoint.constant';
+import { Endpoints, PathMatchings } from '../shared/constants/endpoint.constant';
 import { CandidateQuestionsComponent } from './candidate/candidate-questions/candidate-questions.component';
 import { AnswerScheduleComponent } from './candidate/answer-schedule/answer-schedule.component';
 import { ManageCaseComponent } from './manage/case/manage-case.component';
@@ -24,13 +21,13 @@ import { ManageUserRoleComponent } from './master/manage-user-role/manage-user-r
 import { ManageAttendanceIpListComponent } from './master/manage-attendance-ip-list/manage-attendance-ip-list.component';
 import { ManageScheduleComponent } from './master/manage-schedule/manage-schedule.component';
 import { ModifyAnnouncementComponent } from './modify/modify-announcement/modify-announcement.component';
-import { ModifyMaterialComponent } from './modify/modify-material/modify-material.component';
 import { ModifyInterviewScheduleComponent } from './modify/modify-interview-schedule/modify-interview-schedule.component';
 import { ModifyInterviewMaterialComponent } from './modify/modify-interview-material/modify-interview-material.component';
 import { ScoringComponent } from './presentation/scoring/scoring.component';
 import { ViewAllQuestionComponent } from './presentation/view-all-question/view-all-question.component';
 import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
 import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
+import { TraineeScheduleComponent } from './modify/trainee-schedule/trainee-schedule.component';
 
 export const routes: Routes = [
 	{
@@ -116,9 +113,12 @@ export const routes: Routes = [
 						},
 					},
 					{
-						path: 'material',
-						component: ModifyMaterialComponent,
-						data: { roles: RoleFlags.AssistantSupervisor, name: 'Material' },
+						path: 'trainee-schedule',
+						component: TraineeScheduleComponent,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Trainee Schedule',
+						},
 					},
 					{
 						path: 'interview-material',
@@ -192,44 +192,49 @@ export const routes: Routes = [
 			// 	component: null,
 			// 	data: { roles: RoleFlags.Trainee, name: 'Interview' },
 			// },
-			// {
-			// 	path: 'log',
-			// 	data: { roles: RoleFlags.Trainee, name: 'Log' },
-			// 	children: [
-			// 		{
-			// 			path: 'room',
-			// 			component: null,
-			// 			data: { roles: RoleGroups.SENIOR_ROLES, name: 'Room' },
-			// 		},
-			// 		{
-			// 			path: 'room/detail/:id',
-			// 			component: null,
-			// 			data: { roles: RoleGroups.SENIOR_ROLES },
-			// 		},
-			// 		{
-			// 			path: 'book',
-			// 			component: null,
-			// 			data: { roles: RoleGroups.SENIOR_ROLES, name: 'Book' },
-			// 		},
-			// 		{
-			// 			path: 'book/detail/:id',
-			// 			component: null,
-			// 			data: { roles: RoleGroups.SENIOR_ROLES },
-			// 		},
-			// 	],
-			// },
-			// {
-			// 	path: 'Room',
-			// 	children: [
-			// 		{
-			// 			path: 'room-active',
-			// 			data: {
-			// 				roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
-			// 				name: 'Room Active',
-			// 			},
-			// 		},
-			// 	],
-			// },
+			{
+				path: 'log',
+				data: { roles: RoleFlags.Trainee, name: 'Log' },
+				children: [
+					{
+						path: 'room',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Room (-)' },
+					},
+					{
+						path: 'room/detail/:id',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleGroups.SENIOR_ROLES },
+					},
+					{
+						path: 'book',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Book (-)' },
+					},
+					{
+						path: 'book/detail/:id',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleGroups.SENIOR_ROLES },
+					},
+				],
+			},
+			{
+				path: 'Room',
+				children: [
+					{
+						path: 'room-active',
+						redirectTo: '/home',
+						data: {
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
+							name: 'Room Active (-)',
+						},
+					},
+				],
+			},
 			{
 				path: 'manage',
 				data: { name: 'Manage' },
@@ -247,11 +252,12 @@ export const routes: Routes = [
 							name: 'Top Bottom Vote',
 						},
 					},
-					// 		{
-					// 			path: 'trainee',
-					// 			component: null,
-					// 			data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee' },
-					// 		},
+					{
+						path: 'trainee',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee (-)' },
+					},
 				],
 			},
 			// {
@@ -264,7 +270,7 @@ export const routes: Routes = [
 			{
 				path: 'presentation',
 				data: {
-          roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
+					roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
 					name: 'Presentation',
 				},
 				children: [
@@ -307,50 +313,53 @@ export const routes: Routes = [
 							roles: RoleGroups.ALL,
 						},
 					},
-					// {
-					// 	path: 'new',
-					// 	component: null,
-					// 	data: { roles: RoleFlags.Trainee, name: 'New Presentations' },
-					// },
-					// {
-					// 	path: 'my-presentations',
-					// 	component: null,
-					// 	data: { roles: RoleFlags.Trainee, name: 'My Presentations' },
-					// },
-					// {
-					// 	path: 'question/:generationId/:trainerId/:questionId',
-					// 	component: null,
-					// 	data: {
-					// 		roles:
-					// 			RoleGroups.SENIOR_ROLES |
-					// 			RoleFlags.JuniorTrainer |
-					// 			RoleFlags.Trainee,
-					// 	},
-					// },
-					// {
-					// 	path: 'report',
-					// 	component: null,
-					// 	data: { roles: RoleGroups.SENIOR_ROLES, name: 'Report' },
-					// },
-					// {
-					// 	path: 'report-trainer',
-					// 	component: null,
-					// 	data: {
-					// 		roles: RoleFlags.AssistantSupervisor,
-					// 		name: 'Report Trainer',
-					// 	},
-					// },
+					{
+						path: 'new',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleFlags.Trainee, name: 'New Presentations (-)' },
+					},
+					{
+						path: 'my-presentations',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleFlags.Trainee, name: 'My Presentations (-)' },
+					},
+					{
+						path: 'question/:generationId/:trainerId/:questionId',
+						redirectTo: '/home',
+						// component: null,
+						data: {
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer | RoleFlags.Trainee,
+						},
+					},
+					{
+						path: 'report',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Report (-)' },
+					},
+					{
+						path: 'report-trainer',
+						redirectTo: '/home',
+						// component: null,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Report Trainer (-)',
+						},
+					},
 				],
 			},
 			{
 				path: 'view',
 				data: { name: 'View' },
 				children: [
-					// {
-					// 	path: 'score',
-					// 	component: null,
-					// 	data: { roles: RoleGroups.SENIOR_ROLES, name: 'Score' },
-					// },
+					{
+						path: 'score',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Score (-)' },
+					},
 					{
 						path: 'trainee',
 						component: ViewTraineeComponent,
@@ -398,54 +407,58 @@ export const routes: Routes = [
 			// 		},
 			// 	],
 			// },
-			// {
-			// 	path: 'trainee',
-			// 	data: { name: 'Trainee' },
-			// 	children: [
-			// 		{
-			// 			path: 'data',
-			// 			component: null,
-			// 			data: { roles: RoleFlags.AssistantSupervisor, name: 'Data' },
-			// 		},
-			// 		{
-			// 			path: 'schedule',
-			// 			component: null,
-			// 			data: {
-			// 				roles:
-			// 					RoleFlags.AssistantSupervisor |
-			// 					RoleFlags.SubjectCoordinator,
-			// 				name: 'Schedule',
-			// 			},
-			// 		},
-			// 		{
-			// 			path: 'schedule-header',
-			// 			component: null,
-			// 			data: {
-			// 				roles:
-			// 					RoleFlags.AssistantSupervisor |
-			// 					RoleFlags.SubjectCoordinator,
-			// 				name: 'Schedule Header',
-			// 			},
-			// 		},
-			// 		{
-			// 			path: 'binusian-data',
-			// 			component: null,
-			// 			data: {
-			// 				roles: RoleFlags.AssistantSupervisor,
-			// 				name: 'Binusian Data',
-			// 			},
-			// 		},
-			// 	],
-			// },
+			{
+				path: 'trainee',
+				data: { name: 'Trainee' },
+				children: [
+					{
+						path: 'data',
+						redirectTo: '/home',
+						// component: null,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'Data (-)' },
+					},
+					{
+						path: 'schedule',
+						redirectTo: '/home',
+						// component: null,
+						data: {
+							roles: RoleFlags.AssistantSupervisor | RoleFlags.SubjectCoordinator,
+							name: 'Schedule (-)',
+						},
+					},
+					{
+						path: 'schedule-header',
+						redirectTo: '/home',
+						// component: null,
+						data: {
+							roles: RoleFlags.AssistantSupervisor | RoleFlags.SubjectCoordinator,
+							name: 'Schedule Header (-)',
+						},
+					},
+					{
+						path: 'binusian-data',
+						redirectTo: '/home',
+						// component: null,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Binusian Data (-)',
+						},
+					},
+				],
+			},
 			{
 				path: 'candidate',
 				data: { name: 'Candidate' },
 				children: [
-					// {
-					// 	path: 'fill-answer',
-					// 	component: null,
-					// 	data: { roles: RoleFlags.Trainer, name: 'Fill Answer' },
-					// },
+					{
+						path: 'fill-answer',
+						redirectTo: '/home',
+						// component: null,
+						data: {
+							roles: RoleGroups.ALL,
+							name: 'Fill Answer (-)',
+						},
+					},
 					{
 						path: 'candidate-questions',
 						component: CandidateQuestionsComponent,
