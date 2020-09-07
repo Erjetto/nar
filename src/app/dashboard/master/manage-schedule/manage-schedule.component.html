@@ -7,52 +7,49 @@
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
-				<form #scheduleForm="ngForm">
+				<form [formGroup]="scheduleForm">
 					<div class="row form-group">
-						<label for="selectPhase" class="col-4 col-form-label"> Phase </label>
+						<label class="col-4 col-form-label"> Phase </label>
 						<div class="col">
 							<ng-select
 								id="selectPhase"
 								name="selectPhase"
 								[items]="phases$ | async"
 								[clearable]="false"
-								[bindLabel]="'Description'"
+								bindLabel="Description"
 								[searchable]="false"
-								[ngModel]="formCurrPhase$ | async"
-								(change)="formCurrPhase$.next($event)"
-							></ng-select>
+								formControlName="phase"
+                ></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="selectSubject" class="col-4 col-form-label"> Subject </label>
+						<label class="col-4 col-form-label"> Subject </label>
 						<div class="col">
 							<ng-select
 								id="selectSubject"
 								name="selectSubject"
 								[items]="formSubjectList$ | async"
 								[clearable]="false"
-								[bindLabel]="'Name'"
+								bindLabel="Name"
 								[searchable]="false"
-								[ngModel]="(formSubjectList$ | async)[0]"
+								formControlName="subject"
 							></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label class="col-4 col-form-label"> Schedule Type </label>
-						<div class="col">
+						<div class="col col-form-label">
 							<div class="custom-control custom-radio">
 								<input
 									type="radio"
 									id="dailyRadio"
-									name="scheduleTypeRadio"
 									class="custom-control-input"
 									value="daily"
-									ngModel
-									#scheduleTypeRadio="ngModel"
+									formControlName="scheduleType"
 								/>
-								<label class="custom-control-label" for="dailyRadio"> Daily </label>
+								<label class="custom-control-label"> Daily </label>
 							</div>
-							<div class="custom-control custom-radio">
+							<!-- <div class="custom-control custom-radio">
 								<input
 									type="radio"
 									id="specificRadio"
@@ -60,30 +57,25 @@
 									class="custom-control-input"
 									value="specific"
 									ngModel
+                  formControlName="scheduleType"
+                  />
 									#scheduleTypeRadio="ngModel"
-								/>
-								<label class="custom-control-label" for="specificRadio"> Specific </label>
-							</div>
+								<label class="custom-control-label"> Specific </label>
+							</div> -->
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="scheduleName" class="col-4 col-form-label"> Schedule Name </label>
+						<label class="col-4 col-form-label"> Schedule Name </label>
 						<div class="col">
-							<input type="text" class="form-control" name="scheduleName" />
+							<input type="text" class="form-control" formControlName="scheduleName" />
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="scheduleCount" class="col-4 col-form-label"> Schedule Count </label>
+						<label class="col-4 col-form-label"> Schedule Count </label>
 						<div class="col-3">
-							<input
-								type="number"
-								class="form-control"
-								name="scheduleCount"
-								[(ngModel)]="scheduleCount"
-								(change)="updateMeetingForm()"
-							/>
+							<input type="number" min="1" class="form-control" formControlName="scheduleCount" />
 						</div>
-						<div class="col">
+						<!-- <div class="col" *ngIf="scheduleTypeRadio.value === 'specific'">
 							<div class="custom-control custom-checkbox">
 								<input
 									type="checkbox"
@@ -92,14 +84,29 @@
 									class="custom-control-input"
 									value="canSelfRegister"
 								/>
-								<label class="custom-control-label" for="canSelfRegisterCheck">
+								<label class="custom-control-label">
 									Can Self-Register
 								</label>
 							</div>
+						</div> -->
+					</div>
+					<div class="row form-group" formArrayName="scheduleDates">
+						<div
+							class="row"
+							*ngFor="let date of scheduleDates.controls; let i = index"
+							[hidden]="scheduleCount <= i"
+							[formGroupName]="i"
+						>
+							<label class="col-4 col-form-label">
+								{{ i == 0 ? 'Schedule Date' : '' }}
+							</label>
+							<div class="col">
+								<input type="date" class="form-control" name="scheduleDate" required />
+							</div>
 						</div>
 					</div>
-					<div class="row form-group" *ngIf="scheduleTypeRadio.value === 'specific'">
-						<label for="scheduleStart" class="col-4 col-form-label"> Start </label>
+					<!-- <div class="row form-group" *ngIf="scheduleTypeRadio.value === 'specific'">
+						<label class="col-4 col-form-label"> Start </label>
 						<div class="col">
 							<input type="date" class="form-control" name="scheduleStart" />
 						</div>
@@ -131,17 +138,17 @@
 								(change)="updateMeetingForm()"
 							/>
 						</div>
-					</div>
-					<div
+					</div> -->
+					<!-- <div
 						class="v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8 p-2"
 						*ngIf="meetings.length > 0"
 					>
-						<div *ngFor="let meeting of meetings">
+						<div *nmeeting of meetings">
 							<h6>
 								Meeting {{ meeting.MeetingNo + 1 }} - Var
 								{{ meeting.VariationNo + 1 }}
 							</h6>
-							<div class="row" *ngFor="let detail of meeting.Detail">
+							<div class="row" *ndetail of meeting.Detail">
 								<div class="row form-group">
 									<label class="col-4 col-form-label col-form-label-sm"> Date </label>
 									<div class="col">
@@ -201,40 +208,27 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- <div class="row justify-content-around">
 						<button class="btn btn-primary">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert Schedule
 						</button>
           </div> -->
 					<div class="row justify-content-around mt-2">
-						<button
-							class="btn btn-primary"
-							*ngIf="!(editForm$ | async)"
-							(click)="submitScheduleForm(scheduleForm)"
-						>
+						<button class="btn btn-primary" *ngIf="!(editForm$ | async)" (click)="submitScheduleForm()">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create
 						</button>
-						<button
-							class="btn btn-primary"
-							(click)="submitScheduleForm(scheduleForm)"
-							*ngIf="editForm$ | async"
-						>
+						<!-- <button class="btn btn-primary" *ngIf="editForm$ | async" (click)="submitScheduleForm()">
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
-						</button>
-						<rd-confirmable-button
-							*ngIf="editForm$ | async"
-							(confirm)="deleteSchedule(scheduleForm)"
-						>
+						</button> -->
+						<rd-confirmable-button *ngIf="editForm$ | async">
 							<div class="description">
 								<textarea
-									class="form-control"
-									name="reasonText"
-									id="reasonText"
+                  class="form-control"
+                  formControlName="deleteReason"
 									placeholder="Input reasons here..."
 									cols="30"
 									rows="4"
-									ngModel
 								></textarea>
 							</div>
 							<button class="btn btn-danger">
@@ -247,14 +241,14 @@
 			<rd-card [cardTitle]="'Insert Trainee in Schedule'">
 				<form #insertTraineeInScheduleForm="ngForm">
 					<div class="row form-group">
-						<label for="selectPhase" class="col-4 col-form-label">Phase</label>
+						<label class="col-4 col-form-label">Phase</label>
 						<div class="col">
 							<ng-select
 								id="selectPhase"
 								name="selectPhase"
 								[items]="phases$ | async"
 								[clearable]="false"
-								[bindLabel]="'Description'"
+								bindLabel="Description"
 								[searchable]="false"
 								[ngModel]="insertTraineeCurrPhase$ | async"
 								(change)="insertTraineeCurrPhase$.next($event)"
@@ -262,14 +256,14 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="selectSubject" class="col-4 col-form-label">Subject</label>
+						<label class="col-4 col-form-label">Subject</label>
 						<div class="col">
 							<ng-select
 								id="selectSubject"
 								name="selectSubject"
 								[items]="insertTraineeSubjectList$ | async"
 								[clearable]="false"
-								[bindLabel]="'Name'"
+								bindLabel="Name"
 								[searchable]="false"
 								[ngModel]="insertTraineeCurrSubject$ | async"
 								(change)="insertTraineeCurrSubject$.next($event)"
@@ -277,21 +271,21 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="selectSchedule" class="col-4 col-form-label">Schedule</label>
+						<label class="col-4 col-form-label">Schedule</label>
 						<div class="col">
 							<ng-select
 								id="selectSchedule"
 								name="selectSchedule"
 								[items]="insertTraineeScheduleList$ | async"
 								[clearable]="false"
-								[bindLabel]="'ScheduleName'"
+								bindLabel="ScheduleName"
 								[searchable]="false"
 								[ngModel]="(insertTraineeScheduleList$ | async)[0]"
 							></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="traineeText" class="col-4 col-form-label">Trainee</label>
+						<label class="col-4 col-form-label">Trainee</label>
 						<div class="col">
 							<textarea
 								name="traineeText"
@@ -331,7 +325,7 @@
 							name="selectPhase"
 							[items]="phases$ | async"
 							[clearable]="false"
-							[bindLabel]="'Description'"
+							bindLabel="Description"
 							[searchable]="false"
 							[ngModel]="viewCurrPhase$ | async"
 							(change)="viewCurrPhase$.next($event)"
@@ -343,7 +337,7 @@
 							name="selectSubject"
 							[items]="viewSubjectList$ | async"
 							[clearable]="false"
-							[bindLabel]="'Name'"
+							bindLabel="Name"
 							[searchable]="false"
 							[ngModel]="viewCurrSubject$ | async"
 							(change)="viewCurrSubject$.next($event)"
@@ -360,23 +354,31 @@
 								<th>Self Register</th>
 								<th>Start Registration</th>
 								<th>End Registration</th>
+								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr *ngIf="(viewScheduleList$ | async)?.length === 0">
 								<td colspan="6">No schedules yet</td>
 							</tr>
-							<tr
-								*ngFor="let schedule of viewScheduleList$ | async"
-								class="cursor-pointer"
-								(click)="selectSchedule(schedule)"
-							>
+							<tr *ngFor="let schedule of viewScheduleList$ | async" class="cursor-pointer">
+								<!-- (click)="selectSchedule(schedule)" -->
 								<td>{{ schedule.ScheduleName }}</td>
 								<td>{{ schedule.scheduleType }}</td>
 								<td>{{ schedule.ScheduleDates[0] | date: viewDateFormat }}</td>
 								<td>{{ schedule.CanSelfRegister || '-' }}</td>
 								<td>{{ (schedule.Start | date: viewDateFormat) || '-' }}</td>
 								<td>{{ (schedule.End | date: viewDateFormat) || '-' }}</td>
+								<td>
+									<rd-confirmable-button
+										[description]="'Delete ' + schedule.ScheduleName + '?'"
+										(confirm)="deleteSchedule(schedule)"
+									>
+										<button class="btn btn-xs btn-danger">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+										</button>
+									</rd-confirmable-button>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -393,7 +395,7 @@
 							name="selectSchedule"
 							[items]="viewScheduleList$ | async"
 							[clearable]="false"
-							[bindLabel]="'ScheduleName'"
+							bindLabel="ScheduleName"
 							[searchable]="false"
 							[ngModel]="viewCurrSchedule$ | async"
 							(change)="viewCurrSchedule$.next($event)"
