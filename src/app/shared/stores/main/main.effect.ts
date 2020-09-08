@@ -61,6 +61,16 @@ export class MainStateEffects {
 		ofType(MainStateAction.AfterRequest),
 		share()
 	);
+	@Effect({ dispatch: false })
+	requestFailed$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.RequestFailed),
+		share()
+	);
+	@Effect({ dispatch: false })
+	requestSuccess$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.RequestSuccess),
+		share()
+	);
 
 	// // Kalau {dispatch: true}, action akan infinite-loop dispatch
 	// @Effect({ dispatch: false })

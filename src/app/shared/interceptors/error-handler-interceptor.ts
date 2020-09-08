@@ -23,7 +23,8 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
 		return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         // this.store.dispatch(MainStateAction.FailMessage(error.message));
-        this.store.dispatch(MainStateAction.RequestFailedMessage(error));
+        // this.store.dispatch(MainStateAction.RequestFailedMessage(error));
+        // this.store.dispatch(MainStateAction.RequestFailed());
         return throwError(error)
       })
 		);

@@ -1,6 +1,10 @@
 import { createAction, props, Action } from '@ngrx/store';
 import { Message } from '../../models';
 import { HttpErrorResponse } from '@angular/common/http';
+import { JsonPipe } from '@angular/common';
+
+export const Login = createAction('[MainState] Login', props<{ name: string; password: string }>());
+export const Logout = createAction('[MainState] Logout');
 
 export const ChangeRole = createAction('[MainState] ChangeRole', props<{ name: string }>());
 export const ChangeGeneration = createAction(
@@ -18,12 +22,10 @@ export const ToastMessage = createAction(
 export const RemoveMessage = createAction('[MainState] PopMessage', props<{ index: number }>());
 
 export const FetchAnnouncements = createAction('[MainState] FetchAnnouncements');
-
 export const FetchAnnouncementsSuccess = createAction(
 	'[MainState] FetchAnnouncementsSuccess',
 	props<{ announcements: Message[] }>()
 );
-
 export const CreateAnnouncement = createAction(
 	'[MainState] CreateAnnouncement',
 	props<{ memberType: string; title: string; content: string; file: string }>()
@@ -38,6 +40,8 @@ export const UploadFileFailed = createAction('[MainState] UploadFileFailed');
 
 //#region Global
 export const AfterRequest = createAction('[MainState] AfterRequest');
+export const RequestFailed = createAction('[MainState] RequestFailed');
+export const RequestSuccess = createAction('[MainState] RequestSuccess');
 // export const CreateSuccess = createAction('[MainState] CreateSuccess');
 // export const UpdateSuccess = createAction('[MainState] UpdateSuccess');
 // export const DeleteSuccess = createAction('[MainState] DeleteSuccess');
@@ -53,14 +57,20 @@ export const SuccessfullyMessage = (doingWhat: string): Action =>
 export const RequestFailedMessage = (error: HttpErrorResponse): Action =>
 	ToastMessage({
 		messageType: 'danger',
-		message: `Request Failed : ${error.message}`
+		message: `Request Failed : ${error.message}`,
 	});
 
-export const ErrorGetMessage = (what: string): Action =>
+export const UnexpectedResultMessage = (doingWhat: string, result: any): Action =>
 	ToastMessage({
 		messageType: 'danger',
-		message: 'Failed to get ' + what,
+		message: `Unexpected result from ${doingWhat} : ${JSON.stringify(result)}`,
 	});
+
+// export const ErrorGetMessage = (what: string): Action =>
+// 	ToastMessage({
+// 		messageType: 'danger',
+// 		message: 'Failed to get ' + what,
+// 	});
 
 export const FailMessage = (doingWhat: string, why?: string): Action =>
 	ToastMessage({
@@ -68,11 +78,11 @@ export const FailMessage = (doingWhat: string, why?: string): Action =>
 		message: 'Failed ' + doingWhat + (!!why ? ': ' + why : ''),
 	});
 
-export const EmptyGetMessage = (what: string): Action =>
-	ToastMessage({
-		messageType: 'danger',
-		message: what + ' is empty',
-	});
+// export const EmptyGetMessage = (what: string): Action =>
+// 	ToastMessage({
+// 		messageType: 'danger',
+// 		message: what + ' is empty',
+// 	});
 
 export const NotImplementedMessage = (doingWhat: string): Action =>
 	ToastMessage({
