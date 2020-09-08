@@ -1,1 +1,97 @@
-<p>login works!</p>
+<!-- <div class="center-container"> -->
+<div class="bg"></div>
+<canvas></canvas>
+<div class="container">
+	<form [formGroup]="loginForm" (submit)="tryLogin()">
+		<div class="row pt-0 pb-5">
+			<img src="../../assets/images/ribbon.png" />
+			<img src="../../assets/images/CI NAR.png" class="m-4" width="120" height="100" />
+		</div>
+		<!-- <h1>Login Messier Account</h1> -->
+
+		<input id="username" type="hidden" name="username" />
+		<input id="password" type="hidden" name="password" />
+
+		<fieldset>
+			<input class="usernameInput" type="text" placeholder="Username" autofocus />
+			<!-- <i class="fa fa-user"></i> -->
+			<fa-icon [icon]="['fas', 'user']"></fa-icon>
+		</fieldset>
+
+		<fieldset>
+			<input id="passowrdInput" type="password" placeholder="Password" />
+			<!-- <i class="fa fa-key"></i> -->
+			<fa-icon [icon]="['fas', 'key']"></fa-icon>
+		</fieldset>
+
+		<div>
+			<input id="isPersistent" type="checkbox" />
+			<label for="isPersistent">Remember Me</label>
+		</div>
+
+		<button type="submit">LOG IN</button>
+
+		<div id="errorMessage"></div>
+	</form>
+</div>
+<!-- </div> -->
+<!-- <canvas></canvas>
+<div class="container">
+	<div class="item-center">
+		<form>
+			<div class="row">
+				<div class="col"></div>
+			</div>
+			<div class="row form-group">
+				<div class="col"></div>
+			</div>
+			<div class="row form-group">
+				<div class="col"></div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div ng-controller="LoginController" class="container login-container">
+	<div class="item-center">
+		<form ng-submit="login()" name="formLogin" class="form-login">
+			<i class="CI-banner"></i>
+			<span class="logo-binus"></span>
+
+			<div class="input-control" s>
+				<input
+					ng-model="username"
+					name="username"
+					placeholder="Username"
+					tabindex="1"
+					required
+					autofocus
+				/>
+				<i class="fa fa-user"></i>
+			</div>
+
+			<div class="input-control">
+				<input
+					ng-model="password"
+					name="password"
+					type="password"
+					placeholder="Password"
+					tabindex="2"
+					required
+				/>
+				<i class="fa fa-lock"></i>
+			</div>
+
+			<div>
+				<input type="checkbox" id="remembeMe" ng-model="isRemember" />
+				<label for="remembeMe">Remember Me</label>
+			</div>
+
+			<button tabindex="3">Login</button>
+		</form>
+	</div>
+
+	<footer class="text-center">
+		Copyright &copy; 2012 - Research and Development, SLC - Binus University
+	</footer>
+</div> -->
