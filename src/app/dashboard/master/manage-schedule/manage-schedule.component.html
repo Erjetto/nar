@@ -1,8 +1,8 @@
 <div class="container">
 	<div class="row">
 		<div class="col-4">
-			<rd-card [cardTitle]="(editForm$ | async) ? 'Edit Schedule' : 'Insert New Schedule'">
-				<div rdCardBadges class="" *ngIf="editForm$ | async">
+			<rd-card [cardTitle]="isEditing ? 'Edit Schedule' : 'Insert New Schedule'">
+				<div rdCardBadges class="" *ngIf="isEditing">
 					<button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
@@ -12,25 +12,24 @@
 						<label class="col-4 col-form-label"> Phase </label>
 						<div class="col">
 							<ng-select
-								id="selectPhase"
-								name="selectPhase"
 								[items]="phases$ | async"
 								[clearable]="false"
+								placeholder="Phase"
 								bindLabel="Description"
 								[searchable]="false"
 								formControlName="phase"
-                ></ng-select>
+							></ng-select>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label class="col-4 col-form-label"> Subject </label>
 						<div class="col">
 							<ng-select
-								id="selectSubject"
-								name="selectSubject"
 								[items]="formSubjectList$ | async"
 								[clearable]="false"
+								placeholder="Subject"
 								bindLabel="Name"
+								bindValue="SubjectId"
 								[searchable]="false"
 								formControlName="subject"
 							></ng-select>
@@ -215,17 +214,26 @@
 						</button>
           </div> -->
 					<div class="row justify-content-around mt-2">
-						<button class="btn btn-primary" *ngIf="!(editForm$ | async)" (click)="submitScheduleForm()">
+						<button
+							class="btn btn-primary"
+							*ngIf="!isEditing"
+							[disabled]="!scheduleForm.valid"
+							(click)="submitScheduleForm()"
+						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create
 						</button>
 						<!-- <button class="btn btn-primary" *ngIf="editForm$ | async" (click)="submitScheduleForm()">
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
 						</button> -->
-						<rd-confirmable-button *ngIf="editForm$ | async">
+						<rd-confirmable-button
+							*ngIf="isEditing"
+							[canConfirm]="scheduleForm.controls['deleteReason'].value !== ''"
+							(confirm)="deleteSchedule()"
+						>
 							<div class="description">
 								<textarea
-                  class="form-control"
-                  formControlName="deleteReason"
+									class="form-control"
+									formControlName="deleteReason"
 									placeholder="Input reasons here..."
 									cols="30"
 									rows="4"
@@ -248,7 +256,8 @@
 								name="selectPhase"
 								[items]="phases$ | async"
 								[clearable]="false"
-								bindLabel="Description"
+                bindLabel="Description"
+                placeholder="Phase"
 								[searchable]="false"
 								[ngModel]="insertTraineeCurrPhase$ | async"
 								(change)="insertTraineeCurrPhase$.next($event)"
@@ -264,6 +273,7 @@
 								[items]="insertTraineeSubjectList$ | async"
 								[clearable]="false"
 								bindLabel="Name"
+                placeholder="Subject"
 								[searchable]="false"
 								[ngModel]="insertTraineeCurrSubject$ | async"
 								(change)="insertTraineeCurrSubject$.next($event)"
@@ -279,6 +289,7 @@
 								[items]="insertTraineeScheduleList$ | async"
 								[clearable]="false"
 								bindLabel="ScheduleName"
+                placeholder="Schedule"
 								[searchable]="false"
 								[ngModel]="(insertTraineeScheduleList$ | async)[0]"
 							></ng-select>
@@ -310,9 +321,19 @@
 			<rd-card [cardTitle]="'Schedule in Subject'" [isLoading]="loadingViewSchedule$ | async">
 				<div rdCardBadges>
 					<rd-confirmable-button
-						(confirm)="deleteAllSchedule()"
+            (confirm)="deleteAllSchedule()"
+            [canConfirm]="deleteAllReason !== ''"
 						*ngIf="(viewScheduleList$ | async)?.length > 0"
-					>
+          >
+							<div class="description">
+                <textarea
+									class="form-control"
+									placeholder="Input reasons here..."
+									cols="30"
+                  rows="4"
+                  [(ngModel)]="deleteAllReason"
+								></textarea>
+							</div>
 						<button class="btn btn-sm btn-danger">
 							<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete All Schedule
 						</button>
@@ -354,31 +375,23 @@
 								<th>Self Register</th>
 								<th>Start Registration</th>
 								<th>End Registration</th>
-								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr *ngIf="(viewScheduleList$ | async)?.length === 0">
 								<td colspan="6">No schedules yet</td>
 							</tr>
-							<tr *ngFor="let schedule of viewScheduleList$ | async" class="cursor-pointer">
-								<!-- (click)="selectSchedule(schedule)" -->
+							<tr
+								*ngFor="let schedule of viewScheduleList$ | async"
+								class="cursor-pointer"
+								(click)="selectSchedule(schedule)"
+							>
 								<td>{{ schedule.ScheduleName }}</td>
 								<td>{{ schedule.scheduleType }}</td>
 								<td>{{ schedule.ScheduleDates[0] | date: viewDateFormat }}</td>
 								<td>{{ schedule.CanSelfRegister || '-' }}</td>
 								<td>{{ (schedule.Start | date: viewDateFormat) || '-' }}</td>
 								<td>{{ (schedule.End | date: viewDateFormat) || '-' }}</td>
-								<td>
-									<rd-confirmable-button
-										[description]="'Delete ' + schedule.ScheduleName + '?'"
-										(confirm)="deleteSchedule(schedule)"
-									>
-										<button class="btn btn-xs btn-danger">
-											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
-										</button>
-									</rd-confirmable-button>
-								</td>
 							</tr>
 						</tbody>
 					</table>
