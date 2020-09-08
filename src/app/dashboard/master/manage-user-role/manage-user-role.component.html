@@ -11,7 +11,7 @@
 								[items]="roles$ | async"
 								[searchable]="false"
 								[clearable]="false"
-								[bindLabel]="'roleName'"
+								bindLabel="roleName"
 								[ngModel]="(roles$ | async)[0]"
 							></ng-select>
 						</div>

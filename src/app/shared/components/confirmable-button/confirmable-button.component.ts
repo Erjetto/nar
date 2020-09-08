@@ -19,7 +19,8 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ConfirmableButtonComponent implements OnInit {
 	@ViewChild('pop') popOver: NgbPopover;
-	@Input() description = '';
+  @Input() description = '';
+  @Input() canConfirm = true;
 	@Output() confirm = new EventEmitter();
 	public isConfirming = false;
 

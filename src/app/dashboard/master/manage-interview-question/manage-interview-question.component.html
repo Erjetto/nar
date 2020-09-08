@@ -51,7 +51,7 @@
 							[items]="interviewQuestions$ | async"
 							[searchable]="false"
 							[clearable]="false"
-							[bindLabel]="'InterviewQuestionName'"
+							bindLabel="InterviewQuestionName"
 							[ngModel]="currInterviewQuestion$ | async"
 							(change)="currInterviewQuestion$.next($event)"
 						></ng-select>

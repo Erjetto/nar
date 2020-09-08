@@ -11,7 +11,7 @@
 									<ng-select
 										name="selectMemberType"
 										[items]="roles$ | async"
-										[bindLabel]="'roleName'"
+										bindLabel="roleName"
 										[searchable]="false"
 										[clearable]="false"
 										[ngModel]="(roles$ | async)[0]"

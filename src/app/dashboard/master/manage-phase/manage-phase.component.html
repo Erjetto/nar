@@ -85,7 +85,7 @@
 								name="selectPhase"
 								[items]="phases$ | async"
 								[clearable]="false"
-								[bindLabel]="'Description'"
+								bindLabel="Description"
 								[searchable]="false"
 								[ngModel]="(phases$ | async)[0]"
 								required
@@ -166,7 +166,7 @@
 							name="selectPhaseType"
 							[items]="phaseTypes$ | async"
 							[clearable]="false"
-							[bindLabel]="'val'"
+							bindLabel="val"
 							[searchable]="false"
 							[ngModel]="(phaseTypes$ | async)[0]" required
 							(change)="onChangePhaseType($event)"
@@ -178,7 +178,7 @@
 							name="selectPhase"
 							[items]="phases$ | async"
 							[clearable]="false"
-							[bindLabel]="'Description'"
+							bindLabel="Description"
 							[searchable]="false"
 							[ngModel]="currentPhase$ | async"
 							required

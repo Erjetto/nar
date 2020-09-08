@@ -14,7 +14,7 @@ import {
 	map,
 	switchMapTo,
 	catchError,
-  exhaustMap,
+	exhaustMap,
 } from 'rxjs/operators';
 
 import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
@@ -60,21 +60,24 @@ export class MasterStateEffects {
 	getRoles$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchRoles),
 		switchMapTo(this.leaderService.GetRoles()),
-		mergeMap((res) => of(MasterStateAction.FetchRolesSuccess({ payload: res }))), share()
+		mergeMap((res) => of(MasterStateAction.FetchRolesSuccess({ payload: res }))),
+		share()
 	);
 
 	@Effect()
 	getUserInRoles$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchUserInRoles),
 		switchMapTo(this.leaderService.GetUserInRoles()),
-		mergeMap((res) => of(MasterStateAction.FetchUserInRolesSuccess({ payload: res }))), share()
+		mergeMap((res) => of(MasterStateAction.FetchUserInRolesSuccess({ payload: res }))),
+		share()
 	);
 
 	@Effect()
 	getGenerations$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchGenerations),
 		switchMapTo(this.leaderService.GetGenerations()),
-		mergeMap((res) => of(MasterStateAction.FetchGenerationsSuccess({ payload: res }))), share()
+		mergeMap((res) => of(MasterStateAction.FetchGenerationsSuccess({ payload: res }))),
+		share()
 	);
 	@Effect()
 	getSubjects$: Observable<Action> = this.actions$.pipe(
@@ -85,13 +88,15 @@ export class MasterStateEffects {
 		),
 		mergeMap(({ phaseId, res }) =>
 			of(MasterStateAction.FetchSubjectsSuccess({ payload: res, phaseId }))
-		), share()
+		),
+		share()
 	);
 	@Effect()
 	getPhases$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchPhases),
 		switchMapTo(this.generalService.GetPhasesCurrentGeneration()),
-		mergeMap((res) => of(MasterStateAction.FetchPhasesSuccess({ payload: res }))), share()
+		mergeMap((res) => of(MasterStateAction.FetchPhasesSuccess({ payload: res }))),
+		share()
 	);
 
 	@Effect()
@@ -103,7 +108,8 @@ export class MasterStateEffects {
 		),
 		mergeMap(({ phaseId, res }) =>
 			of(MasterStateAction.FetchTraineeInPhaseSuccess({ payload: res, phaseId }))
-		), share()
+		),
+		share()
 	);
 
 	@Effect()
@@ -115,7 +121,8 @@ export class MasterStateEffects {
 		),
 		mergeMap(({ subjectId, res }) =>
 			of(MasterStateAction.FetchSchedulesSuccess({ payload: res, subjectId }))
-		), share()
+		),
+		share()
 	);
 
 	@Effect()
@@ -129,7 +136,8 @@ export class MasterStateEffects {
 		),
 		mergeMap(({ scheduleId, res }) =>
 			of(MasterStateAction.FetchTraineeInScheduleSuccess({ payload: res, scheduleId }))
-		), share()
+		),
+		share()
 	);
 
 	//#endregion
@@ -145,17 +153,19 @@ export class MasterStateEffects {
 					message: 'Failed in creating user role: Not implemented yet',
 				})
 			)
-		), share()
+		),
+		share()
 	);
 	@Effect()
 	createGeneration$: Observable<Action> = this.actions$.pipe(
-    ofType(MasterStateAction.CreateGeneration),
+		ofType(MasterStateAction.CreateGeneration),
 		switchMap((data) => this.leaderService.SaveGeneration(data)),
 		mergeMap((res) =>
 			res === true
 				? of(MainStateAction.SuccessfullyMessage('created generation'))
 				: of(MainStateAction.FailMessage('creating generation'))
-		), share()
+		),
+		share()
 	);
 	@Effect()
 	createPhase$: Observable<Action> = this.actions$.pipe(
@@ -165,7 +175,8 @@ export class MasterStateEffects {
 			res === true
 				? of(MainStateAction.SuccessfullyMessage('created phase'))
 				: of(MainStateAction.FailMessage('creating phase'))
-		), share()
+		),
+		share()
 	);
 	@Effect()
 	createTraineeInPhase$: Observable<Action> = this.actions$.pipe(
@@ -177,7 +188,8 @@ export class MasterStateEffects {
 			res != null
 				? of(MainStateAction.SuccessfullyMessage('created trainee in phase'))
 				: of(MainStateAction.FailMessage('Creating Trainee in Phase'))
-		), share()
+		),
+		share()
 	);
 	@Effect()
 	createSubject$: Observable<Action> = this.actions$.pipe(
@@ -199,12 +211,23 @@ export class MasterStateEffects {
 						)
 					);
 			else return of(MainStateAction.FailMessage('creating subject'));
-		}), share()
+		}),
+		share()
 	);
 	@Effect()
 	createSchedule$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.CreateSchedule),
-		switchMap((data) => of(MainStateAction.NotImplementedMessage('creating Schedule'))), share()
+		ofType(MasterStateAction.CreateDailySchedule, MasterStateAction.CreateSpecificSchedule),
+		switchMap((data) =>
+			data.type === MasterStateAction.CreateDailySchedule.type
+				? this.leaderService.SaveSchedule(data)
+				: this.leaderService.SaveSpecificSchedule(data)
+		),
+		mergeMap((res) =>
+			res != null
+				? of(MainStateAction.SuccessfullyMessage('created schedule'))
+				: of(MainStateAction.UnexpectedResultMessage('creating schedule', res))
+		),
+		share()
 	);
 
 	@Effect()
@@ -214,7 +237,8 @@ export class MasterStateEffects {
 		switchMap(([data, trainees]) => {
 			// If there's a trainee who can't be found in trainee list, toast error message
 			const invalidTrainees = data.binusianNumbers.filter(
-				(b) => trainees.find((t: ClientTrainee) => t.TraineeNumber === b) == null, share()
+				(b) => trainees.find((t: ClientTrainee) => t.TraineeNumber === b) == null,
+				share()
 			);
 			if (invalidTrainees.length > 0)
 				return from(
@@ -235,7 +259,8 @@ export class MasterStateEffects {
 								: MainStateAction.FailMessage('Saving trainee to schedule')
 						)
 					);
-		}), share()
+		}),
+		share()
 	);
 	//#endregion
 
@@ -244,14 +269,15 @@ export class MasterStateEffects {
 	updateGeneration$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.UpdateGeneration),
 		switchMap((data) =>
-      // this.leaderService.UpdateGeneration(data)
-      of(true)
+			// this.leaderService.UpdateGeneration(data)
+			of(true)
 		),
 		mergeMap((res) =>
 			res != null
 				? of(MainStateAction.SuccessfullyMessage('updating generation'))
 				: of(MainStateAction.FailMessage('updating generation'))
-		), share()
+		),
+		share()
 	);
 	@Effect()
 	updatePhase$: Observable<Action> = this.actions$.pipe(
@@ -261,7 +287,8 @@ export class MasterStateEffects {
 			res != null
 				? of(MainStateAction.SuccessfullyMessage('updating phase'))
 				: of(MainStateAction.FailMessage('updating phase'))
-		), share()
+		),
+		share()
 	);
 	// @Effect()
 	// updateSubject$: Observable<Action> = this.actions$.pipe(
@@ -285,7 +312,8 @@ export class MasterStateEffects {
 			res
 				? of(MainStateAction.SuccessfullyMessage('deleted phase'))
 				: of(MainStateAction.FailMessage('deleted phase'))
-		), share()
+		),
+		share()
 	);
 
 	@Effect()
@@ -296,13 +324,15 @@ export class MasterStateEffects {
 			res != null
 				? of(MainStateAction.SuccessfullyMessage('deleted trainee in phase'))
 				: of(MainStateAction.FailMessage('delete trainee in phase'))
-		), share()
+		),
+		share()
 	);
 
 	@Effect()
 	deleteSubject$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.DeleteSubject),
-		switchMap((data) => of(MainStateAction.NotImplementedMessage('deleting phase'))), share()
+		switchMap((data) => of(MainStateAction.NotImplementedMessage('deleting phase'))),
+		share()
 	);
 
 	@Effect()
@@ -313,7 +343,20 @@ export class MasterStateEffects {
 			res != null
 				? of(MainStateAction.SuccessfullyMessage('deleted schedule'))
 				: of(MainStateAction.FailMessage('delete schedule'))
-		), share()
+		),
+		share()
+	);
+
+	@Effect()
+	deleteAllSchedule$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.DeleteAllSchedule),
+		switchMap((data) => this.leaderService.DeleteAllSchedule(data)),
+		mergeMap((res) =>
+			res != null
+				? of(MainStateAction.SuccessfullyMessage('deleted all schedule'))
+				: of(MainStateAction.FailMessage('delete all schedule'))
+		),
+		share()
 	);
 
 	@Effect()
@@ -324,7 +367,8 @@ export class MasterStateEffects {
 			res != null
 				? of(MainStateAction.SuccessfullyMessage('deleted trainee in schedule'))
 				: of(MainStateAction.FailMessage('delete trainee in schedule'))
-		), share()
+		),
+		share()
 	);
 	//#endregion
 

@@ -18,7 +18,7 @@
 								class="col"
 								[items]="phases$ | async"
 								[clearable]="false"
-								[bindLabel]="'Description'"
+								bindLabel="Description"
 								[searchable]="false"
 								[ngModel]="currentPhase$ | async"
 								(change)="currentPhase$.next($event)"

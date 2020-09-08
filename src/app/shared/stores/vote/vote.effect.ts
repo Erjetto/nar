@@ -26,22 +26,16 @@ export class VoteStateEffects {
 	getTopBottomVoteSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(VoteStateAction.FetchTopBottomVoteSchedules),
 		switchMap(() => this.leaderService.GetTopBottomVoteSchedules()),
-		mergeMap((res) =>
-			!isEmpty(res)
-				? of(VoteStateAction.FetchTopBottomVoteSchedulesSuccess({ payload: res }))
-				: of(MainStateAction.ErrorGetMessage('Top bottom votes schedule'))
-		), share()
+		mergeMap((res) => of(VoteStateAction.FetchTopBottomVoteSchedulesSuccess({ payload: res }))),
+		share()
 	);
 
 	@Effect()
 	getTopBottomVoteForSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(VoteStateAction.FetchTopBottomVotesForSchedule),
 		switchMap((data) => this.voteService.GetTopBottomVotesForSchedule(data)),
-		mergeMap((res) =>
-			!isEmpty(res)
-				? of(VoteStateAction.FetchTopBottomVotesForScheduleSuccess({ payload: res }))
-				: of(MainStateAction.ErrorGetMessage('Trainee Top bottom votes'))
-		), share()
+		mergeMap((res) => of(VoteStateAction.FetchTopBottomVotesForScheduleSuccess({ payload: res }))),
+		share()
 	);
 
 	@Effect()
@@ -49,10 +43,9 @@ export class VoteStateEffects {
 		ofType(VoteStateAction.FetchTrainerTopBottomVotesForSchedule),
 		switchMap((data) => this.voteService.GetTrainerTopBottomVotesForSchedule(data)),
 		mergeMap((res) =>
-			!isEmpty(res)
-				? of(VoteStateAction.FetchTrainerTopBottomVotesForScheduleSuccess({ payload: res }))
-				: of(MainStateAction.ErrorGetMessage('Trainer Top bottom votes'))
-		), share()
+			of(VoteStateAction.FetchTrainerTopBottomVotesForScheduleSuccess({ payload: res }))
+		),
+		share()
 	);
 
 	@Effect()
@@ -61,11 +54,10 @@ export class VoteStateEffects {
 		switchMap((data) => this.leaderService.UpdateTopBottomVoteSchedule(data)),
 		mergeMap((res) =>
 			res != null
-				? of(
-						MainStateAction.SuccessfullyMessage('update schedule')
-				  )
+				? of(MainStateAction.SuccessfullyMessage('update schedule'))
 				: of(MainStateAction.FailMessage('deleting schedule'))
-		), share()
+		),
+		share()
 	);
 
 	@Effect()
@@ -74,11 +66,10 @@ export class VoteStateEffects {
 		switchMap((data) => this.leaderService.DeleteTopBottomVoteSchedule(data)),
 		mergeMap((res) =>
 			res === false
-				? of(
-						MainStateAction.SuccessfullyMessage('delete schedule')
-				  )
+				? of(MainStateAction.SuccessfullyMessage('delete schedule'))
 				: of(MainStateAction.FailMessage('deleting schedule'))
-		), share()
+		),
+		share()
 	);
 
 	// @Effect()

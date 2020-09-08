@@ -23,7 +23,7 @@
 		<ng-content select=".description"></ng-content>
 	</div>
 	<div class="btn-group w-100">
-		<button class="btn btn-sm btn-primary rounded-0" (click)="confirm.emit(); popOver.close()">
+		<button class="btn btn-sm btn-primary rounded-0" [disabled]="!canConfirm" (click)="confirm.emit(); popOver.close()">
 			Yes
 		</button>
 		<button class="btn btn-sm btn-secondary rounded-0" (click)="popOver.close()">No</button>

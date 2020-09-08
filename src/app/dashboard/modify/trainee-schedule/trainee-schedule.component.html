@@ -1,1 +1,107 @@
-<p>trainee-schedule works!</p>
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Insert Trainee Training Schedule'">
+				<form #insertTraineeTrainingScheduleForm="ngForm">
+					<div class="row">
+						<div
+							>The input format must be: Trainee number,Attendance date,Time in,Time out,Type
+							<ul style="margin: 0">
+								<li>Trainee number, whose trainee training schedule you wish to set</li>
+								<li>Attendance date, in general date format</li>
+								<li>Time in, when the trainee must enter</li>
+								<li>Time out, when the trainee must leave</li>
+								<li>Type of the attendance, must be 'Room', 'Secretariat', or 'Rest'</li>
+								<li>Schedule Room, where the schedule should be held on</li>
+								<li>
+									For example,
+									<ul>
+										<li>T000,2011-11-30,07:19,17:20,Secretariat,610</li>
+										<li>T999,12/31/2011,11:00,11:45,Rest,610</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col">
+							<textarea name="" id="" class="form-control vertical-text-area h-150px"></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<button class="btn btn-primary">
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
+						</button>
+					</div>
+				</form>
+			</rd-card>
+			<rd-card [cardTitle]="'Insert Trainee Attendance'">
+				<form #insertTraineeAttendanceForm="ngForm">
+					<div class="row">
+						<div
+							>The input format must be: Trainee number,Lecture date,Lecture schedule
+							<ul style="margin: 0">
+								<li>Trainee number, whose trainee lecture schedule you wish to set</li>
+								<li>Lecture date, in general date format</li>
+								<li>Lecture schedule, must not contains comma sign (,)</li>
+								<li>
+									For example,
+									<ul>
+										<li>T000,2011-11-30,07:20-11:00 05MZT 521 Sistem Operasi</li>
+										<li>T999,12/31/2011,19:20-21:00 09PXW 814 Pemrograman Bahasa Tingkat Rendah</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col">
+							<textarea name="" id="" class="form-control vertical-text-area h-150px"></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<button class="btn btn-primary">
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
+						</button>
+					</div>
+				</form>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'Insert Trainee Lecture Schedule'">
+				<form #insertTraineeLectureScheduleForm="ngForm">
+					<div class="row">
+						<div
+							>The input format must be: Trainee number,Lecture date,Lecture schedule
+							<ul style="margin: 0">
+								<li>Trainee number, whose trainee lecture schedule you wish to set</li>
+								<li>Lecture date, in general date format</li>
+								<li>Lecture schedule, must not contains comma sign (,)</li>
+								<li>
+									For example,
+									<ul>
+										<li>T000,2011-11-30,07:20-11:00 05MZT 521 Sistem Operasi</li>
+										<li>T999,12/31/2011,19:20-21:00 09PXW 814 Pemrograman Bahasa Tingkat Rendah</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col">
+							<textarea name="" id="" class="form-control vertical-text-area h-150px"></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<button class="btn btn-primary">
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
+						</button>
+					</div>
+				</form>
+			</rd-card>
+			<!-- <rd-card [cardTitle]="'Insert Announcement'">
+				<form #announcementForm="ngForm"></form>
+			</rd-card> -->
+		</div>
+	</div>
+</div>

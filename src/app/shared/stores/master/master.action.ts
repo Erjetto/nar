@@ -6,7 +6,7 @@ import {
 	ClientSubject,
 	ClientSchedule,
 	ClientUserInRoles,
-  ClientTrainee,
+	ClientTrainee,
 } from '../../models';
 
 //#region Fetch
@@ -99,7 +99,7 @@ export const CreateTraineeInPhase = createAction(
 	}>()
 );
 export const CreateSubject = createAction(
-	'[MasterState] CreateSubjects',
+	'[MasterState] CreateSubject',
 	props<{
 		name: string;
 		phaseId: string;
@@ -107,16 +107,30 @@ export const CreateSubject = createAction(
 		maxFileSize: number;
 	}>()
 );
-export const CreateSchedule = createAction(
-	'[MasterState] CreateSchedules',
+export const CreateDailySchedule = createAction(
+	'[MasterState] CreateDailySchedule',
 	props<{
 		subjectId: string;
-		scheduleType: string;
-		scheduleCount: number;
 		scheduleName: string;
-		dataSchedule: any;
+		scheduleDates: string[];
+	}>()
+);
+export const CreateSpecificSchedule = createAction(
+	'[MasterState] CreateSpecificSchedule',
+	props<{
+		subjectId: string;
+		scheduleName: string;
+		dataSchedule: {
+			Capacity: string;
+			MeetingNo: number;
+			Room: string;
+			SubjectId: string;
+			VariationNo: number;
+			Detail: { ScheduleDate: string; ShiftStart: number; ShiftEnd: number }[];
+		};
 		start: string;
 		end: string;
+		canSelfRegis: boolean;
 		excTrainee: string[];
 	}>()
 );
@@ -186,7 +200,10 @@ export const DeleteSchedule = createAction(
 	'[MasterState] DeleteSchedules',
 	props<{ scheduleId: string; reason: string }>()
 );
-export const DeleteAllSchedule = createAction('[MasterState] DeleteAllSchedules');
+export const DeleteAllSchedule = createAction(
+	'[MasterState] DeleteAllSchedules',
+	props<{ reason: string }>()
+);
 export const DeleteTraineeInSchedule = createAction(
 	'[MasterState] DeleteTraineeInSchedule',
 	props<{ ScheduleId: string; TraineeId: string }>()

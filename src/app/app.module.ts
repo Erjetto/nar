@@ -4,7 +4,7 @@ import { NgModule, COMPILER_OPTIONS } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { CookieService } from "ngx-cookie-service";
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from 'src/app/login/login.component';
@@ -16,7 +16,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 import { ErrorHandlerInterceptor } from 'src/app/shared/interceptors/error-handler-interceptor';
 import { LogInterceptor } from 'src/app/shared/interceptors/log-interceptor';
-import { AfterRequestInterceptor } from 'src/app/shared/interceptors/after-request-interceptor';
+import { StoreDispatcherInterceptor } from 'src/app/shared/interceptors/store-dispatcher-interceptor';
 
 @NgModule({
 	declarations: [AppComponent, LoginComponent],
@@ -35,8 +35,8 @@ import { AfterRequestInterceptor } from 'src/app/shared/interceptors/after-reque
 		BrowserAnimationsModule,
 	],
 	providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AfterRequestInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlerInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: StoreDispatcherInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlerInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
     CookieService,
   ],

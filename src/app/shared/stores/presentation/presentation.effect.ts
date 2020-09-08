@@ -34,11 +34,7 @@ export class PresentationStateEffects {
 	getPresentationsBySubject$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentations),
 		switchMap((data) => this.presentationService.FindCoreTrainingPresentationBySubject(data)),
-		mergeMap((res) =>
-			!isEmpty(res)
-				? of(PresentationStateAction.FetchPresentationsSuccess({ payload: res }))
-				: of(MainStateAction.ErrorGetMessage('presentations'))
-		),
+		mergeMap((res) => of(PresentationStateAction.FetchPresentationsSuccess({ payload: res }))),
 		share()
 	);
 
@@ -46,11 +42,7 @@ export class PresentationStateEffects {
 	getPresentationStatus$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentationStatus),
 		switchMap((data) => this.presentationService.GetPresentationStatus(data)),
-		mergeMap((res) =>
-			!isEmpty(res)
-				? of(PresentationStateAction.FetchPresentationStatusSuccess({ payload: res }))
-				: of(MainStateAction.ErrorGetMessage('presentations'))
-		),
+		mergeMap((res) => of(PresentationStateAction.FetchPresentationStatusSuccess({ payload: res }))),
 		share()
 	);
 }
