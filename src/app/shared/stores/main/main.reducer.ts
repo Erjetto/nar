@@ -1,10 +1,12 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
 import * as MainStateAction from './main.action';
-import { Toast, Message } from '../../models';
+import { Toast, Message, User } from '../../models';
 import { drop, filter, min, max, zip, isArray } from 'lodash';
 
 export interface IMainState {
+	currentUser: User;
+
 	messagesMax: number;
 	messages: Toast[];
 
@@ -16,6 +18,8 @@ export interface IMainState {
 }
 
 export const initialState: IMainState = {
+	currentUser: null,
+
 	messagesMax: 5,
 	messages: [
 		new Toast('info', 'Lorem ipsum dolor sit amet'),
@@ -35,6 +39,12 @@ export const MAINSTATE_REDUCER_NAME = 'MainState';
 
 export const MainStateReducer = createReducer(
 	initialState,
+
+	on(MainStateAction.LoginSuccess, MainStateAction.SetCurrentUser, (state, { user }) => ({
+		...state,
+		currentUser: user,
+	})),
+	on(MainStateAction.LogoutSuccess, (state) => ({ ...state, user: null })),
 
 	on(MainStateAction.ToastMessage, (state, { message, messageType }) => ({
 		...state,
@@ -74,6 +84,8 @@ export const MainStateReducer = createReducer(
 export const getMainState = createFeatureSelector<IMainState>(MAINSTATE_REDUCER_NAME);
 
 export const getMainStateBy = (fn: (_: IMainState) => any) => createSelector(getMainState, fn);
+
+export const getCurrentUser = getMainStateBy((s) => s.currentUser);
 
 export const getToastMessages = getMainStateBy((s) => s.messages);
 export const getAnnouncements = getMainStateBy((s) => s.announcement);

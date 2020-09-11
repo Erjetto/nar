@@ -62,7 +62,7 @@ export class User extends BaseModel {
 	}
 	static fromJson(input?: any): User {
 		return Object.assign(new User(), input, {
-			Role: Role.fromName(input.Role),
+			Role: Role.fromName(input?.Role || 'Guest'),
 		});
 	}
 }
@@ -434,8 +434,8 @@ export class ClientScoreTrainee extends BaseModel {
 	) {
 		super();
 	}
-	static fromJson(data?: any): ClientTraineeView {
-		return Object.assign(new ClientTraineeView(), data);
+	static fromJson(data?: any): ClientScoreTrainee {
+		return Object.assign(new ClientScoreTrainee(), data);
 	}
 }
 
@@ -456,8 +456,8 @@ export class TraineeAttendance extends BaseModel {
 	) {
 		super();
 	}
-	static fromJson(data?: any): ClientTraineeAttendanceReport {
-		return Object.assign(new ClientTraineeAttendanceReport(), data, {
+	static fromJson(data?: any): TraineeAttendance {
+		return Object.assign(new TraineeAttendance(), data, {
 			AttendanceTime: DateHelper.fromCSharpDate(data?.AttendanceTime),
 		});
 	}
@@ -475,8 +475,8 @@ export class ClientTraineeDailyAttendance extends BaseModel {
 	) {
 		super();
 	}
-	static fromJson(data?: any): ClientTraineeAttendanceReport {
-		return Object.assign(new ClientTraineeAttendanceReport(), data, {
+	static fromJson(data?: any): ClientTraineeDailyAttendance {
+		return Object.assign(new ClientTraineeDailyAttendance(), data, {
 			Rest: ClientTraineeAttendanceTimeDetail.fromJson(data?.Rest),
 			Secretariat: ClientTraineeAttendanceTimeDetail.fromJson(data?.Secretariat),
 			Room: ClientTraineeAttendanceTimeDetail.fromJson(data?.Room),

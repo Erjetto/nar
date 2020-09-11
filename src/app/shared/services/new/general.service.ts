@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { delay, map, tap } from 'rxjs/operators';
 import { MockData } from '../../mock-data';
 import {
 	ClientInterviewReport,
@@ -15,8 +15,16 @@ import {
 	ClientTraineeData,
 	ClientTrainee,
 } from '../../models';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { DateHelper } from '../../utilities/date-helper';
+import * as _ from 'lodash';
+
+// const headers = {
+// 	'Content-Type': 'application/json',
+// 	'Access-Control-Allow-Origin': '*',
+// 	'Access-Control-Allow-Methods': 'POST,',
+// };
 
 @Injectable({
 	providedIn: 'root',
@@ -25,24 +33,10 @@ export class GeneralService {
 	private baseUrl = environment.apiUrl + 'General.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
-	public GetCurrentUser(): Observable<User> {
-		return throwError('Not implemented yet');
-	}
-
-	public GetCurrentTime(): Observable<Date> {
-		return throwError('Not implemented yet');
-	}
-
-	public ChangeGeneration(data: { genId: string }): Observable<string> {
-		return throwError('Not implemented yet');
-	}
-
-	public ChangeRole(data: { role: string }): Observable<boolean> {
-		return throwError('Not implemented yet');
-	}
-
-	public LogOut(): Observable<never> {
-		return throwError('Not implemented yet');
+	public GetUserSalt(data: { userName: string }): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetUserSalt', data)
+			.pipe(map((res: any) => res.d + ''));
 	}
 
 	public LogOn(data: {
@@ -50,19 +44,50 @@ export class GeneralService {
 		password: string;
 		isPersistent: boolean;
 	}): Observable<User> {
-		return throwError('Not implemented yet');
+		return this.httpClient.post(this.baseUrl + 'LogOn', data).pipe(
+			map((res: any) => {
+				return User.fromJson(res.d);
+			})
+		);
 	}
 
-	public GetScoreByPhase(data: { phaseId: string }): Observable<ClientScoreTrainee[]> {
-		return throwError('Not implemented yet');
+	public LogOut(): Observable<boolean> {
+		return this.httpClient.post(this.baseUrl + 'LogOut', {}).pipe(map((res: any) => !!res.d));
+	}
+
+	public GetCurrentUser(): Observable<User> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetCurrentUser', {})
+			.pipe(map((res: any) => User.fromJson(res.d)));
+		// return of(new User('ASDF', 'RZ', 'Rheza', 'Assistant Supervisor', 't009'));
+	}
+
+	public GetCurrentTime(): Observable<Date> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetCurrentTime', {})
+			.pipe(map((res: string) => DateHelper.fromCSharpDate(res)));
+	}
+
+	public ChangeGeneration(data: { genId: string }): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'ChangeGeneration', data)
+			.pipe(map((res) => res + ''));
+	}
+
+	public ChangeRole(data: { role: string }): Observable<boolean> {
+		return this.httpClient.post(this.baseUrl + 'ChangeRole', data).pipe(map((res) => !!res));
 	}
 
 	public GetScoreBySubject(data: { subjectId: string }): Observable<ClientScoreTrainee[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetScoreBySubject', data)
+			.pipe(map((res) => _.map(res, ClientScoreTrainee.fromJson)));
 	}
 
 	public GetMaterial(data: { subjectId: string }): Observable<Material[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetMaterial', data)
+			.pipe(map((res) => _.map(res, Material.fromJson)));
 	}
 
 	public GetTraineesInLatestPhase(): Observable<ClientTraineeView[]> {

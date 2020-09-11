@@ -1,10 +1,16 @@
 import { createAction, props, Action } from '@ngrx/store';
-import { Message } from '../../models';
+import { Message, User } from '../../models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
 
-export const Login = createAction('[MainState] Login', props<{ name: string; password: string }>());
+export const Login = createAction(
+	'[MainState] Login',
+	props<{ userName: string; password: string; isPersistent: boolean }>()
+);
+export const LoginSuccess = createAction('[MainState] LoginSuccess', props<{ user: User }>());
 export const Logout = createAction('[MainState] Logout');
+export const LogoutSuccess = createAction('[MainState] LogoutSuccess');
+export const SetCurrentUser = createAction('[MainState] SetCurrentUser', props<{ user: User }>());
 
 export const ChangeRole = createAction('[MainState] ChangeRole', props<{ name: string }>());
 export const ChangeGeneration = createAction(

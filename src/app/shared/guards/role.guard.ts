@@ -10,6 +10,9 @@ import {
 import { Observable } from 'rxjs';
 import { UserService } from '../services/user.service';
 
+// Note: An old file, not reviewed yet
+// Is this even necessary?
+
 @Injectable({
 	providedIn: 'root',
 })

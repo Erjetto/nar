@@ -10,11 +10,11 @@
 				<div class="row justify-content-end pt-1">
 					<b>
 						<span class="cursor" random-salutation>Hi, </span>
-						<span class="text-primary">(user.Name)</span>
+						<span class="text-primary">{{ (currentUser$ | async)?.Name }}</span>
 					</b>
 				</div>
 				<div class="row justify-content-end pt-1">
-					<ng-container *ngIf="user.Role.is(constant.role.AssistantSupervisor)">
+					<ng-container *ngIf="(currentUser$ | async)?.Role.is(constant.role.AssistantSupervisor)">
 						<select [ngModel]="selectedRole$ | async" (change)="onChangeRole($event)">
 							<option *ngFor="let role of roleList$ | async" [value]="role.roleName">
 								{{ role.roleName }}
@@ -89,7 +89,8 @@
 	</div>
 </nav>
 <div class="dashboard__content flex-fill">
-	<router-outlet></router-outlet>
+	<!-- [@routerTransition]="getState(o)" -->
+	<router-outlet #o="outlet"></router-outlet>
 	<footer class="page-footer font-small text-center text-black-50">
 		<span>Copyright &copy; 2020 - Research and Development Team</span>
 		<br />

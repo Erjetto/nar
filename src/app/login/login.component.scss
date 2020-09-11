@@ -1,9 +1,3 @@
-@font-face {
-	font-family: 'Segoe UI';
-	src: url('/src/assets/fonts/segoeui.ttf');
-	// src: url('app/assets/fonts/segoeui.ttf');
-}
-
 $nar-blue-theme: linear-gradient(-30deg, #00d2ff, #3a7bd5);
 $messier-brown-theme: linear-gradient(45deg, #1e130c, #9a8478);
 
@@ -45,185 +39,172 @@ $messier-brown-theme: linear-gradient(45deg, #1e130c, #9a8478);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-	}
+  }
+  
+  .btn {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn::after {
+    display: none;
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
+    
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    margin-left: -50px;
+    
+    /* Center the ripple */
+    top: 50%;
+    left: 50%;
+  
+    animation: ripple 2s;
+    opacity: 0;
+  }
+  .btn:focus:not(:active)::after {
+    display: block;
+  }
+  
+  @keyframes ripple {
+    0% {
+      opacity: 1;
+      transform: scale(0);
+    }
+    60%{
+      transform: scale(10);
+    }
+    100% {
+      opacity: 0;
+    }
+  }
 
 	form {
 		width: 100%;
 		max-width: 350px;
 		min-height: 400px;
 		// background: rgba(0, 0, 0, 0.8);
-		background: #333333dd;
-		color: #aaa;
+		background: #ffffffee;
+		color: #555555;
 		border-radius: 5px;
 		position: relative;
 		z-index: 1;
-		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 		// padding: 75px 0 20px;
-	}
+		fieldset {
+			background: white;
+			// border-top: 1px solid #141519;
+			// border-bottom: 1px solid #353640;
+			border-left: 0;
+			border-right: 0;
+			padding: 15px 23px;
+			position: relative;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+			margin: 0;
+			input {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				color: #3b3535;
+				font-size: 12pt;
+				border: 0;
+				outline: 0;
+				background: transparent;
+				padding: 10px 10px 10px 50px;
+				transition: all 0.25s ease;
 
-	form > h1 {
-		padding: 10px 23px 0;
-		font-size: 1.3em;
-		text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-		transition: all 0.25s ease;
-		margin-bottom: 0px;
-	}
+				& + fa-icon {
+					// transition: all 0.25s ease;
+				}
 
-	form > time {
-		padding: 0 25px 25px;
-		font-size: 10pt;
-		display: block;
-	}
+				&::placeholder,
+				&::-webkit-input-placeholder {
+					color: #555555;
+					// transition: all 0.25s ease;
+				}
+			}
+		}
 
-	form:hover > h1 {
-		color: #c5ddf4;
-	}
+		button {
+      border-radius: 5px;
+			padding: 8px 40px;
+			background: #3a7bd5;
+			color: white;
+			// border: 2px solid #62636f;
+			border-radius: 20px;
+			font-weight: bold;
+			transition: all 0.25s ease;
+			cursor: pointer;
 
-	form > fieldset {
-		background: #2f303a;
-		border-top: 1px solid #141519;
-		border-bottom: 1px solid #353640;
-		border-left: 0;
-		border-right: 0;
-		padding: 15px 23px;
-		position: relative;
-		box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
-		margin: 0;
-	}
+			&:hover,
+			&:focus {
+				// color: #0399df;
+				// border: 2px solid #bcc2d6;
+				background: #0399df;
+				outline: none;
+			}
+		}
 
-	form > fieldset > input {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		color: #b0b6cb;
-		font-size: 12pt;
-		border: 0;
-		outline: 0;
-		background: transparent;
-		padding: 10px 10px 10px 50px;
-		transition: all 0.25s ease;
-	}
+		input[type='checkbox'] + label {
+			position: relative;
+			font-weight: bold;
+			cursor: pointer;
+			user-select: none;
 
-	form > fieldset > input:focus {
-		color: #c5ddf4;
-		outline: none;
-	}
+			&::before {
+				border-radius: 2px;
+				content: '';
+				position: absolute;
+				top: 1px;
+				left: -24px;
+				width: 17px;
+				height: 17px;
+        background: none;
+        border: 2px solid #575867;
+				transition: all 0.25s ease;
+			}
+			&::after {
+				position: absolute;
+				content: '';
+				top: 1px;
+				left: -20px;
+				width: 10px;
+				height: 15px;
+        border-bottom: 5px solid rgba(169, 170, 199, 0);
+        border-right: 5px solid rgba(1, 1, 2, 0);
+				transform: rotate(40deg);
+				transition: all 0.25s ease;
+			}
+		}
 
-	form > fieldset > input + fa-icon {
-		transition: all 0.25s ease;
-	}
+		input[type='checkbox'] {
+			position: relative;
+			z-index: 1;
+			width: 17px;
+			height: 17px;
+			top: 4px;
+			opacity: 0;
 
-	form > fieldset > input:focus + fa-icon {
-		color: #c5ddf4;
-	}
+			&:focus + label::before,
+			&:checked + label::before,
+			&:hover::before {
+        color: #555555;
+        background: none;
+				// background: #7c7d91;
+			}
 
-	form > fieldset > input::-webkit-input-placeholder {
-		color: #606270;
-		transition: all 0.25s ease;
-	}
-
-	form > fieldset > input::-moz-placeholder {
-		color: #606270;
-		transition: all 0.25s ease;
-	}
-
-	form > fieldset > input:focus::-webkit-input-placeholder {
-		color: #c5ddf4;
-	}
-
-	form > fieldset > input:focus::-moz-placeholder {
-		color: #c5ddf4;
-	}
-
-	form > button {
-		margin: 0 23px;
-		padding: 8px 40px;
-		background: rgba(205, 229, 252, 0);
-		color: #bcc2d6;
-		border: 2px solid #62636f;
-		border-radius: 20px;
-		font-weight: bold;
-		transition: all 0.25s ease;
-		cursor: pointer;
-	}
-
-	form > button:hover,
-	form > button:focus {
-		color: #676b7d;
-		border: 2px solid #bcc2d6;
-		background: #cde5fc;
-		outline: none;
-	}
-
-	form > div {
-		padding: 14px 23px;
-	}
-
-	form > div > label {
-		position: relative;
-		font-weight: bold;
-		cursor: pointer;
-		user-select: none;
-	}
-
-	form > div > input[type='checkbox'] {
-		position: relative;
-		z-index: 1;
-		width: 17px;
-		height: 17px;
-		top: 4px;
-		opacity: 0;
-	}
-
-	form > div > label::before {
-		border-radius: 2px;
-		content: '';
-		position: absolute;
-		top: 1px;
-		left: -24px;
-		width: 17px;
-		height: 17px;
-		background: #575867;
-		transition: all 0.25s ease;
-	}
-
-	form > div > label::after {
-		position: absolute;
-		content: '';
-		top: 1px;
-		left: -20px;
-		width: 10px;
-		height: 15px;
-		border-bottom: 5px solid rgba(169, 170, 199, 0);
-		border-right: 5px solid rgba(169, 170, 199, 0);
-		transform: rotate(40deg);
-		transition: all 0.25s ease;
-	}
-
-	form > div > input[type='checkbox']:focus + label,
-	form > div > label:hover {
-		color: #c5ddf4;
-	}
-
-	form > div > input[type='checkbox']:focus + label::before,
-	form > div > input[type='checkbox']:checked + label::before,
-	form > div > label:hover::before {
-		background: #7c7d91;
-	}
-
-	form > div > input:checked + label::after {
-		border-bottom: 5px solid #cde5fc;
-		border-right: 5px solid #cde5fc;
-	}
-
-	form > #errorMessage {
-		color: #cc4f57;
-		padding: 25px;
-		font-weight: bold;
-	}
-
+			&:checked + label::after {
+        border-bottom: 5px solid #274d70;
+        border-right: 5px solid #274d70;
+			}
+		}
+  }
+  
 	canvas {
 		position: absolute;
 		top: 0;
@@ -231,73 +212,84 @@ $messier-brown-theme: linear-gradient(45deg, #1e130c, #9a8478);
 		width: 100%;
 		height: 100%;
 	}
+
 }
 
-// :host(.dark-theme){
-:host {
+:host-context(.dark-theme) {
+	// :host {
 	.bg {
-		// background: $messier-brown-theme;
-		background: $nar-blue-theme;
+		background: $messier-brown-theme;
+		// background: $nar-blue-theme;
 	}
 
 	form {
-    background: #ffffffee;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-	}
+		background: #333333dd;
+		color: #aaa;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 
-	form > fieldset {
-		background: white;
-		border: none;
-		color: #555555;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-	}
+		fieldset {
+			background: #2f303a;
+			border-top: 1px solid #141519;
+			border-bottom: 1px solid #353640;
+			box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+			input {
+				color: #b0b6cb;
 
-	form > fieldset > input {
-    color: #555555;
-	}
+				&::placeholder,
+				&::-webkit-input-placeholder {
+					color: #606270;
+					// transition: all 0.25s ease;
+				}
 
-	form > fieldset > input:focus,
-	form > fieldset > input:focus + fa-icon {
-		color: #777777;
-	}
+				&:focus {
+					color: #c5ddf4;
 
-	// form > fieldset > input::-webkit-input-placeholder,
-	// form > fieldset > input::-moz-placeholder {
-	form > fieldset > input::placeholder {
-		color: #555555;
-	}
+					::placeholder,
+					&::-webkit-input-placeholder {
+            color: #c5ddf4;
+					}
 
-	// form > fieldset > input:focus::-webkit-input-placeholder,
-	// form > fieldset > input:focus::-moz-placeholder {
-	form > fieldset > input:focus::placeholder {
-		color: #777777;
-  }
-  
-	form > div > label::before {
-    border: 2px solid #575867;
-    background: none;
-	}
+					+ fa-icon {
+            color: #c5ddf4;
+					}
+				}
+			}
+		}
 
-	form > div > label::after {
-		border-bottom: 5px solid rgba(169, 170, 199, 0);
-		border-right: 5px solid rgba(1, 1, 2, 0);
-	}
+		button {
+			background: rgba(205, 229, 252, 0);
+			color: #bcc2d6;
+			border: 2px solid #62636f;
 
-	form > div > input:checked + label::after {
-		border-bottom: 5px solid #274d70;
-		border-right: 5px solid #274d70;
-  }
-  
-  
+			&:hover,
+			&:focus {
+				color: #676b7d;
+				border: 2px solid #bcc2d6;
+				background: #cde5fc;
+			}
+		}
 
-	// form > div > input[type='checkbox']:focus + label,
-	form > div > label:hover {
-		color: #555555;
-	}
+		input[type='checkbox'] + label {
+			&::before {
+				background: #575867;
+			}
+			&::after {
+				border-bottom: 5px solid rgba(169, 170, 199, 0);
+				border-right: 5px solid rgba(169, 170, 199, 0);
+			}
+		}
 
-	// form > div > input[type='checkbox']:focus + label::before,
-	form > div > input[type='checkbox']:checked + l   abel::before,
-	form > div > label:hover::before {
-		background: none;
+		input[type='checkbox'] {
+			&:focus + label::before,
+			&:checked + label::before,
+			&:hover::before {
+				background: #7c7d91;
+			}
+
+			&:checked + label::after {
+				border-bottom: 5px solid #cde5fc;
+				border-right: 5px solid #cde5fc;
+			}
+		}
 	}
 }

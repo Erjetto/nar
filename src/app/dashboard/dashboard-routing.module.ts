@@ -28,13 +28,15 @@ import { ViewAllQuestionComponent } from './presentation/view-all-question/view-
 import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
 import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
 import { TraineeScheduleComponent } from './modify/trainee-schedule/trainee-schedule.component';
+import { CurrentUserResolver } from '../shared/resolvers/current-user.resolver';
 
 export const routes: Routes = [
 	{
 		path: '',
 		component: DashboardComponent,
-		// canActivate: [AuthGuard, RoleGuard],
-		// canActivateChild: [AuthGuard, RoleGuard],
+		// resolve: { currentUser: CurrentUserResolver },
+		canActivate: [AuthGuard],
+		// canActivateChild: [AuthGuard],  // Not needed, still triggered when access child
 		// Data for MenuService to prevent Circular import
 		data: { isRootMenu: true },
 		children: [

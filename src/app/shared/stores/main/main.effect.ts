@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
+import { EncryptToBase64 } from 'src/app/shared/utilities/aes';
 
 import * as MainStateAction from './main.action';
 import * as fromMainState from './main.reducer';
 import { Observable, of, throwError } from 'rxjs';
-import { switchMap, mergeMap, pluck, catchError, share } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, catchError, share, map, tap } from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
 import { isArray, flatten } from 'lodash';
+import { GeneralService } from '../../services/new/general.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -17,9 +19,49 @@ import { isArray, flatten } from 'lodash';
 export class MainStateEffects {
 	constructor(
 		private actions$: Actions,
+		private generalService: GeneralService,
 		private announcementService: AnnouncementService,
 		private otherService: OtherService
 	) {}
+
+	@Effect()
+	login$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.Login),
+		switchMap((data) =>
+			this.generalService.GetUserSalt({ userName: data.userName }).pipe(
+				map((salt) => {
+          const pass = EncryptToBase64(salt + data.userName, data.password);
+          return { ...data, password: pass };
+					// { Expected result
+					//   "d": {
+					//     "__type": "User:#BPlusTraining.Logic",
+					//     "ActiveRole": null,
+					//     "Name": "NATASIA",
+					//     "Role": "AssistantSupervisor",
+					//     "TraineeId": "00000000-0000-0000-0000-000000000000",
+					//     "UserId": "00000000-0000-0000-0000-000000000000",
+					//     "UserName": "NS17-1"
+					//   }
+					// }
+				})
+			)
+		),
+		switchMap((data) => this.generalService.LogOn(data)),
+		mergeMap((res) =>
+			!!res
+				? of(MainStateAction.LoginSuccess({ user: { ...res, ActiveRole: res.Role.roleName } }))
+				: of(MainStateAction.FailMessage('to login'))
+		),
+		share()
+	);
+
+	@Effect()
+	logout$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.Logout),
+		switchMap((act) => this.generalService.LogOut()),
+		mergeMap((res) => of(MainStateAction.LogoutSuccess())),
+		share()
+	);
 
 	@Effect()
 	getAnnouncement$: Observable<Action> = this.actions$.pipe(

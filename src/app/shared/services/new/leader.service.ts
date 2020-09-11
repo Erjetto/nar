@@ -282,10 +282,13 @@ export class LeaderService {
 	}
 
 	public GetGenerations(): Observable<ClientGeneration[]> {
-		return of(MockData.GetGenerations).pipe(
-			delay(500),
-			map((r) => r.map(ClientGeneration.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetGenerations', {})
+			.pipe(map((r: any) => _.map(r, ClientGeneration.fromJson)));
+		// return of(MockData.GetGenerations).pipe(
+		// 	delay(500),
+		// 	map((r) => r.map(ClientGeneration.fromJson))
+		// );
 	}
 
 	public GetPhases(data: { generationId: string }): Observable<ClientGeneration[]> {
@@ -306,7 +309,7 @@ export class LeaderService {
 		return this.httpClient.post(this.baseUrl + 'GetSchedules', data).pipe(
 			catchError((error) => of(MockData.GetSchedules)),
 			delay(500),
-      map((r) => _.map(r, ClientSchedule.fromJson))
+			map((r) => _.map(r, ClientSchedule.fromJson))
 		);
 	}
 

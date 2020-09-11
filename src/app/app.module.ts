@@ -17,6 +17,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ErrorHandlerInterceptor } from 'src/app/shared/interceptors/error-handler-interceptor';
 import { LogInterceptor } from 'src/app/shared/interceptors/log-interceptor';
 import { StoreDispatcherInterceptor } from 'src/app/shared/interceptors/store-dispatcher-interceptor';
+import { UserCookieInterceptor } from './shared/interceptors/user-cookie-interceptor';
 
 @NgModule({
 	declarations: [AppComponent, LoginComponent],
@@ -35,6 +36,7 @@ import { StoreDispatcherInterceptor } from 'src/app/shared/interceptors/store-di
 		BrowserAnimationsModule,
 	],
 	providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: UserCookieInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: StoreDispatcherInterceptor, multi: true },
     // { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlerInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
