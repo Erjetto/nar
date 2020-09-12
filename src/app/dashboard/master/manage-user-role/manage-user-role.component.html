@@ -17,12 +17,13 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="traineeText" class="col-4 col-form-label">Users</label>
+						<label for="trainerText" class="col-4 col-form-label">Users</label>
 						<div class="col">
 							<textarea
-								name="traineeText"
-								id="traineeText"
-								class="form-control"
+								name="trainerText"
+								id="trainerText"
+                class="form-control"
+                placeholder="XX00-0 separated by '\n'"
 								style="resize: vertical; width: 100%"
 								ngModel
 							></textarea>
@@ -41,11 +42,9 @@
 				<div class="row form-group">
 					<div class="col-4">
 						<input
-							type="text"
 							class="form-control"
-							id="searchTrainee"
-							placeholder="Search"
-							[ngbTypeahead]="onTypeSearch"
+              placeholder="Search by initial"
+              (change)="searchText$.next($event.target.value)"
 						/>
 					</div>
 				</div>

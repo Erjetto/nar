@@ -11,7 +11,7 @@ import {
 	ClientGeneration,
 } from 'src/app/shared/models';
 
-import { MasterStateAction, fromMasterState, CaseStateAction, fromCaseState } from 'src/app/shared/store-modules';
+import { MasterStateAction, fromMasterState, CaseStateAction, fromCaseState, MainStateEffects } from 'src/app/shared/store-modules';
 
 import { take, filter, tap, first, switchMap, takeUntil, map } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -43,7 +43,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 
 	caseForm$: BehaviorSubject<Case> = new BehaviorSubject(null);
 
-	constructor(protected store: Store<IAppState>) {
+	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
 		super(store);
 	}
 
@@ -84,7 +84,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		//#endregion
 
 		//#region auto fetch new subject,schedule & case
-		this.currentGeneration$
+		this.mainEffects.changeGen$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((res) => this.store.dispatch(MasterStateAction.FetchPhases()));
 
@@ -117,7 +117,9 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		this.caseForm$.next(null);
   }
   
-  downloadFile(){}
+  downloadFile(){
+    
+  }
 
   updateCase(){
     // this.store.dispatch(CaseStateAction)

@@ -7,11 +7,13 @@ import { EncryptToBase64 } from 'src/app/shared/utilities/aes';
 import * as MainStateAction from './main.action';
 import * as fromMainState from './main.reducer';
 import { Observable, of, throwError } from 'rxjs';
-import { switchMap, mergeMap, pluck, catchError, share, map, tap } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, catchError, share, map, tap, mapTo } from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
 import { isArray, flatten } from 'lodash';
 import { GeneralService } from '../../services/new/general.service';
+import { CookieService } from 'ngx-cookie-service';
+import { Cookies } from '../../constants/cookie.constants';
 
 @Injectable({
 	providedIn: 'root',
@@ -20,7 +22,7 @@ export class MainStateEffects {
 	constructor(
 		private actions$: Actions,
 		private generalService: GeneralService,
-		private announcementService: AnnouncementService,
+		private cookieService: CookieService,
 		private otherService: OtherService
 	) {}
 
@@ -30,8 +32,8 @@ export class MainStateEffects {
 		switchMap((data) =>
 			this.generalService.GetUserSalt({ userName: data.userName }).pipe(
 				map((salt) => {
-          const pass = EncryptToBase64(salt + data.userName, data.password);
-          return { ...data, password: pass };
+					const pass = EncryptToBase64(salt + data.userName, data.password);
+					return { ...data, password: pass };
 					// { Expected result
 					//   "d": {
 					//     "__type": "User:#BPlusTraining.Logic",
@@ -49,9 +51,36 @@ export class MainStateEffects {
 		switchMap((data) => this.generalService.LogOn(data)),
 		mergeMap((res) =>
 			!!res
-				? of(MainStateAction.LoginSuccess({ user: { ...res, ActiveRole: res.Role.roleName } }))
-				: of(MainStateAction.FailMessage('to login'))
+				? of(MainStateAction.LoginSuccess({ user: res }))
+				: of(MainStateAction.FailMessage('to login', 'Invalid username or password'))
 		),
+		share()
+	);
+
+	@Effect()
+	changeRole$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.ChangeRole),
+		switchMap((act) =>
+			this.generalService.ChangeRole({ role: act.role.roleName }).pipe(map((res) => ({ act, res })))
+		),
+		mergeMap(({ act, res }) => {
+			localStorage.setItem(Cookies.CURR_ROLE, act.role.roleName);
+			return of(MainStateAction.ChangeRoleSuccess({ role: act.role }));
+		}),
+		share()
+	);
+
+	@Effect()
+	changeGen$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.ChangeGeneration),
+		switchMap((act) =>
+			this.generalService.ChangeGeneration({ genId: act.genId }).pipe(map((res) => ({ act, res })))
+		),
+		mergeMap(({ act, res }) => {
+			localStorage.setItem(Cookies.CURR_GEN_ID, act.genId);
+			return of(MainStateAction.ChangeGenerationSuccess({ genId: act.genId }));
+		}),
+		tap(() => console.log('Changed generation')),
 		share()
 	);
 
@@ -66,7 +95,7 @@ export class MainStateEffects {
 	@Effect()
 	getAnnouncement$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.FetchAnnouncements),
-		switchMap(() => this.announcementService.GetMessage()),
+		switchMap(() => this.generalService.GetMessageCurrentGeneration()),
 		mergeMap((announcements) => of(MainStateAction.FetchAnnouncementsSuccess({ announcements }))),
 		share()
 	);

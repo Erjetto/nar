@@ -3,7 +3,7 @@ import { Role, ClientUserInRoles } from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
 import { debounce, cloneDeep, filter } from 'lodash';
 import { distinctUntilChanged, debounceTime, map, takeUntil, tap } from 'rxjs/operators';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -33,14 +33,16 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 	roles$: Observable<Role[]>;
 	userInRoles$: Observable<ClientUserInRoles[]>;
 	userInRolesFiltered$ = new BehaviorSubject<ClientUserInRoles[]>([]);
-  searchText$ = new BehaviorSubject<string>('');
-  
+	searchText$ = new BehaviorSubject<string>('');
+	// searchTextTrigger$ = new BehaviorSubject<string>('');
+
 	loadingFormUserInRole$ = new BehaviorSubject<boolean>(false);
 	loadingViewUserInRole$: Observable<boolean>;
 
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
+		private masterEffects: MasterStateEffects
 	) {
 		super(store);
 	}
@@ -63,30 +65,42 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(([users, searchText]) =>
 				this.userInRolesFiltered$.next(
-					users.filter((u) => `${u.UserName} ${u.Role}`.toLowerCase().indexOf(searchText) !== -1)
+					users.filter((u) => `${u.UserName} ${u.Role}`.toLowerCase().includes(searchText))
 				)
-      );
-      
+			);
+
+		merge(
+			this.masterEffects.createUserInRole$,
+			this.masterEffects.deleteUserInRole$,
+			this.mainEffects.changeGen$
+		)
+			.pipe(takeUntil(this.destroyed$), tap(console.log))
+			.subscribe((act) => {
+				this.store.dispatch(MasterStateAction.FetchUserInRoles());
+			});
+
 		this.store.dispatch(MasterStateAction.FetchRoles());
 		this.store.dispatch(MasterStateAction.FetchUserInRoles());
 	}
 
-	onTypeSearch = ($text: Observable<string>) =>
-		$text.pipe(
-			debounceTime(500),
-			distinctUntilChanged(),
-			tap((text) => this.searchText$.next(text))
-		);
+	// onTypeSearch = ($text: Observable<string>) =>
+	// 	$text.pipe(
+	// 		debounceTime(500),
+	// 		distinctUntilChanged(),
+	// 		tap((text) => this.searchText$.next(text))
+	// 	);
 
 	submitUserInRoleForm(form: NgForm) {
-		const { selectRole, traineeText } = form.value;
+		const { selectRole, trainerText } = form.value;
 		this.store.dispatch(
 			MasterStateAction.CreateUserInRole({
-				userRoleId: selectRole.RoleId,
-				userRoles: traineeText.split('\n'),
+				userRoleId: selectRole.roleId,
+				usernames: trainerText.split('\n'),
 			})
 		);
 	}
 
-	deleteUserInRole(u: ClientUserInRoles) {}
+	deleteUserInRole(u: ClientUserInRoles) {
+		this.store.dispatch(MasterStateAction.DeleteUserInRole({ userInRoleId: u.UserInRoleId }));
+	}
 }

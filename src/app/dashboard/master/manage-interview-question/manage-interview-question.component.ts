@@ -4,7 +4,13 @@ import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { MainStateEffects, fromInterviewState, InterviewStateAction } from 'src/app/shared/store-modules';
+import {
+	MainStateEffects,
+	fromInterviewState,
+	InterviewStateAction,
+	MasterStateEffects,
+	InterviewStateEffects,
+} from 'src/app/shared/store-modules';
 import { Observable, BehaviorSubject, Subject, combineLatest } from 'rxjs';
 import { takeUntil, map, withLatestFrom, tap } from 'rxjs/operators';
 import { NgForm, FormBuilder, Validators } from '@angular/forms';
@@ -18,11 +24,10 @@ import { NgForm, FormBuilder, Validators } from '@angular/forms';
 export class ManageInterviewQuestionComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
-
-    formInterviewQuestion = this.fb.group({
-      questionName: ['', Validators.required],
-		  questions: ['[english],[indonesian],[weight]', Validators.required]
-    })
+	formInterviewQuestion = this.fb.group({
+		questionName: ['', Validators.required],
+		questions: ['[english],[indonesian],[weight]', Validators.required],
+	});
 
 	interviewQuestions$: Observable<ClientInterviewQuestion[]>;
 	interviewQuestionDetails$: Observable<InterviewQuestionDetail[]>;
@@ -37,12 +42,14 @@ export class ManageInterviewQuestionComponent
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
+		private interviewEffects: InterviewStateEffects,
 		private fb: FormBuilder
 	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
+		//#region Bind to store
 		this.interviewQuestions$ = this.store.pipe(select(fromInterviewState.getInterviewQuestions));
 		this.interviewQuestionDetails$ = this.store.pipe(
 			select(fromInterviewState.getInterviewQuestionDetails)
@@ -56,34 +63,44 @@ export class ManageInterviewQuestionComponent
 		this.loadingViewInterviewQuestions$ = combineLatest([
 			this.interviewQuestionDetailsLoading$,
 			this.interviewQuestionsLoading$,
-		]).pipe(map(([a, b]) => a || b));
-
+    ]).pipe(map(([a, b]) => a || b)); 
+    //#endregion 
+    
+    //#region Auto select first in array
 		this.interviewQuestions$.pipe(takeUntil(this.destroyed$)).subscribe((genInterview) => {
 			this.currInterviewQuestion$.next(genInterview[0]);
 		});
+		//#endregion
 
+    //#region Auto fetch
 		this.currInterviewQuestion$ // Fetch interview question details
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((currGen) =>
-				this.store.dispatch(
-					InterviewStateAction.FetchInterviewQuestionDetails({
-						interviewQuestionId: currGen.InterviewQuestionId,
-					})
-				)
-			);
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((currGen) =>
+      this.store.dispatch(
+        InterviewStateAction.FetchInterviewQuestionDetails({
+          interviewQuestionId: currGen.InterviewQuestionId,
+        })
+      )
+    );
+  //#endregion
 
-		this.mainEffects.afterRequest$
-			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currInterviewQuestion$))
-			.subscribe(([action, currGenInterview]) => {
-				this.store.dispatch(InterviewStateAction.FetchInterviewQuestions());
-				this.loadingFormInterviewQuestions$.next(false);
-			});
+		//#region Subscribe to effects
+		this.interviewEffects.createInterviewQuestion$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.store.dispatch(InterviewStateAction.FetchInterviewQuestions()));
+
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe((action) => {
+			this.loadingFormInterviewQuestions$.next(false);
+		});
+		//#endregion
 
 		this.store.dispatch(InterviewStateAction.FetchInterviewQuestions());
 	}
 
 	submitInterviewQuestionForm() {
 		this.loadingFormInterviewQuestions$.next(true);
-		this.store.dispatch(InterviewStateAction.CreateInterviewQuestion(this.formInterviewQuestion.value));
+		this.store.dispatch(
+			InterviewStateAction.CreateInterviewQuestion(this.formInterviewQuestion.value)
+		);
 	}
 }

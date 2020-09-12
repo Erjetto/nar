@@ -51,23 +51,6 @@ export class CandidateStateEffects {
 			)
 		),
 		share()
-	);
-
-	@Effect()
-	generationChanged$: Observable<Action> = this.actions$.pipe(
-		ofType(MainStateAction.ChangeGeneration),
-		// withLatestFrom(
-		//   this.store.pipe(select(fromCandidateState.getCandidateState)),
-		//   (action: Action, state: fromCandidateState.ICandidateState) => state
-		// ),
-		switchMap((action) =>
-			of(CandidateStateAction.FetchAnswers(), CandidateStateAction.FetchQuestions())
-		),
-		share()
-	);
-	// @Effect()
-	// changeGeneration = this.actions$.pipe(
-	//   ofType(CandidateStateAction.ChangeGeneration),
-
-	// )
+  );
+  
 }

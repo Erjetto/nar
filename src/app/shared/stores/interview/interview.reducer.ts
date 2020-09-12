@@ -5,52 +5,68 @@ import {
 	ClientInterviewQuestion,
 	InterviewQuestionDetail,
 	InterviewMaterial,
-  ClientInterviewSchedule,
-  ClientInterviewReport,
-  ClientInterviewResult,
+	ClientInterviewSchedule,
+	ClientInterviewReport,
+	ClientInterviewResult,
 } from '../../models';
 
-
 export interface IInterviewState {
-
 	interviewQuestions: ClientInterviewQuestion[];
-  interviewQuestionDetails: InterviewQuestionDetail[];
+	interviewQuestionDetails: InterviewQuestionDetail[];
 	loadingInterviewQuestions: boolean;
-  loadingInterviewQuestionDetails: boolean;
-  
+	loadingInterviewQuestionDetails: boolean;
 
-  //#region From modify tab?
-  interviewMaterials: InterviewMaterial[];
-  interviewSchedules: ClientInterviewSchedule[];
-  interviewSchedulesReport: ClientInterviewReport;
-  interviewResult: ClientInterviewResult;
+	//#region From modify tab?
+	interviewMaterials: InterviewMaterial[];
+	interviewSchedules: ClientInterviewSchedule[];
+	interviewSchedulesReport: ClientInterviewReport;
+	interviewResult: ClientInterviewResult;
 
-  loadingInterviewMaterials: boolean;
-  loadingInterviewSchedules: boolean;
+	loadingInterviewMaterials: boolean;
+	loadingInterviewSchedules: boolean;
 
-  //#endregion
+	//#endregion
 }
 
 export const initialState: IInterviewState = {
 	interviewQuestions: [],
-  interviewQuestionDetails: [],
+	interviewQuestionDetails: [],
 	loadingInterviewQuestions: false,
-  loadingInterviewQuestionDetails: false,
-  
+	loadingInterviewQuestionDetails: false,
 
-  interviewMaterials: [],
-  interviewSchedules: [],
-  interviewSchedulesReport: null,
-  interviewResult: null,
+	interviewMaterials: [],
+	interviewSchedules: [],
+	interviewSchedulesReport: null,
+	interviewResult: null,
 
-  loadingInterviewMaterials: false,
-  loadingInterviewSchedules: false,
+	loadingInterviewMaterials: false,
+	loadingInterviewSchedules: false,
 };
 
 export const INTERVIEWSTATE_REDUCER_NAME = 'InterviewState';
 
 export const InterviewStateReducer = createReducer(
 	initialState,
+
+	on(InterviewStateAction.FetchInterviewQuestions, (state) => ({
+		...state,
+		loadingInterviewQuestions: true,
+	})),
+
+	on(InterviewStateAction.FetchInterviewQuestionDetails, (state) => ({
+		...state,
+		loadingInterviewQuestionDetails: true,
+	})),
+
+	on(InterviewStateAction.FetchInterviewSchedules, (state) => ({
+		...state,
+		loadingInterviewSchedules: true,
+	})),
+
+	on(InterviewStateAction.FetchInterviewMaterials, (state) => ({
+		...state,
+		loadingInterviewMaterials: true,
+	})),
 
 	on(InterviewStateAction.FetchInterviewQuestionsSuccess, (state, { payload }) => ({
 		...state,
@@ -68,20 +84,22 @@ export const InterviewStateReducer = createReducer(
 		...state,
 		interviewSchedules: payload,
 		loadingInterviewSchedules: false,
-  })),
-  
-  on(InterviewStateAction.FetchInterviewMaterialsSuccess, (state,{payload}) => ({
-    ...state,
-    interviewMaterials: payload,
-    loadingInterviewMaterials: false,
-  }))
+	})),
+
+	on(InterviewStateAction.FetchInterviewMaterialsSuccess, (state, { payload }) => ({
+		...state,
+		interviewMaterials: payload,
+		loadingInterviewMaterials: false,
+	}))
 );
 
-export const getInterviewState = createFeatureSelector<IInterviewState>(INTERVIEWSTATE_REDUCER_NAME);
+export const getInterviewState = createFeatureSelector<IInterviewState>(
+	INTERVIEWSTATE_REDUCER_NAME
+);
 
 export const getInterviewStateBy = (fn: (_: IInterviewState) => any) =>
-  createSelector(getInterviewState, fn);
-  
+	createSelector(getInterviewState, fn);
+
 //#region Interview tab
 export const getInterviewQuestions = getInterviewStateBy((s) => s.interviewQuestions);
 export const getInterviewQuestionDetails = getInterviewStateBy((s) => s.interviewQuestionDetails);
@@ -128,4 +146,3 @@ export const isInterviewSchedulesLoading = getInterviewStateBy((s) => s.loadingI
 // 			}
 // 		})
 // 	);
-

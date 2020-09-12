@@ -53,7 +53,7 @@ export class ManageTopBottomVoteComponent
 	traineeVotes$: Observable<TopBottomVote[]>;
 	trainerVotes$: Observable<TrainerTopBottomVote[]>;
 
-	searchText = '';
+	searchText$ = new BehaviorSubject<string>('');
 	currentVote: 'trainer' | 'trainee' = 'trainee';
 
 	loadingViewVoteSchedule$: Observable<boolean>;
@@ -91,22 +91,18 @@ export class ManageTopBottomVoteComponent
 		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.loadingFormVoteSchedule$.next(false));
-    //#endregion
-    
-    combineLatest([])
+		//#endregion
+
+		this.searchText$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((text) =>
+				this.store.dispatch(VoteStateAction.SetFilterText({ filterText: text }))
+			);
 
 		this.store.dispatch(BinusianStateAction.FetchTrainees());
 		this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
 	}
 
-	// Arrow function because normal function refer 'this' as null because
-	// onTypeSearch is bound to the input
-	onTypeSearch = (text$: Observable<string>) =>
-		text$.pipe(
-			debounceTime(400),
-			distinctUntilChanged(),
-			tap((text) => this.store.dispatch(VoteStateAction.SetFilterText({ filterText: text })))
-		);
 
 	selectSchedule(row: TopBottomVoteSchedule) {
 		this.editForm$.next(row);
@@ -137,7 +133,7 @@ export class ManageTopBottomVoteComponent
 		else
 			this.store.dispatch(
 				VoteStateAction.UpdateTopBottomVoteSchedule({
-          scheduleId: this.editForm$.value.ScheduleId,
+					scheduleId: this.editForm$.value.ScheduleId,
 					scheduleName: ScheduleName,
 					voteCount: AmountVote,
 					startDate: StartDate,

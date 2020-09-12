@@ -19,6 +19,7 @@ import {
 	BinusianStateAction,
 	fromVoteState,
 	fromInterviewState,
+  InterviewStateEffects,
 } from 'src/app/shared/store-modules';
 import { takeUntil, withLatestFrom, filter, map } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
@@ -51,7 +52,7 @@ export class ModifyInterviewMaterialComponent
 	uploadingFiles: string[] = ['T999_asdfasdfasdfasdf.pdf', 'T999_asdf.pdf', 'T999_asdf.pdf'];
 	editForm = new InterviewMaterialDetail();
 
-	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
+	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects, private interviewEffects: InterviewStateEffects) {
 		super(store);
 	}
 
@@ -84,7 +85,7 @@ export class ModifyInterviewMaterialComponent
 				)
 			);
 
-		this.mainEffects.afterRequest$
+		this.interviewEffects.createInterviewSchedule$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
 			.subscribe(([action, currPhase]) => {
 				this.store.dispatch(

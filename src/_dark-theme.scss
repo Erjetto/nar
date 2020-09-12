@@ -20,7 +20,12 @@
 	.form-control::placeholder {
 		background-color: $header-bg-color-dark !important;
 		color: white !important;
-	}
+  }
+  
+  .form-control:disabled, .form-control[readonly]{
+    background-color: #999999 !important;
+  }
+
 	.table-hover tbody tr:hover {
 		color: unset;
 	}

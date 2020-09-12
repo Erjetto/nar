@@ -68,6 +68,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	variations = 1;
 	meetingPerWeek = 0;
 	meetings: {
+		// Meeting is for specific schedule type, which is ignored for now
 		Capacity: number;
 		Detail: { ScheduleDate: string; ShiftStart: number; ShiftEnd: number }[];
 		MeetingNo: number;
@@ -194,29 +195,36 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			// in case of failed request
 			this.loadingFormSchedule$.next(false);
 			this.loadingFormTraineeInSchedule$.next(false);
-		});
+    });
+    
+    // Auto reload phases
+		this.mainEffects.changeGen$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(() => {
+      this.store.dispatch(MasterStateAction.FetchPhases())
+    });
 
+		// Auto reload schedule
 		merge(
 			this.masterEffects.createSchedule$,
 			this.masterEffects.deleteSchedule$,
-			this.masterEffects.deleteAllSchedule$
+			this.masterEffects.deleteAllSchedule$,
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrSubject$))
-			.subscribe(([act, sub]) =>
-				!!sub
-					? this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: sub.SubjectId }))
-					: ''
-			);
+			.subscribe(([act, sub]) => {
+				if (!!sub)
+					this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: sub.SubjectId }));
+			});
 
+		// Auto reload trainees in schedule
 		merge(this.masterEffects.createTraineeInSchedule$, this.masterEffects.deleteTraineeInSchedule$)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrSchedule$))
-			.subscribe(([act, sch]) =>
-				!!sch
-					? this.store.dispatch(
-							MasterStateAction.FetchTraineeInSchedule({ scheduleId: sch.ScheduleId })
-					  )
-					: ''
-			);
+			.subscribe(([act, sch]) => {
+				if (!!sch)
+					this.store.dispatch(
+						MasterStateAction.FetchTraineeInSchedule({ scheduleId: sch.ScheduleId })
+					);
+			});
 
 		//#endregion
 
@@ -232,8 +240,9 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 					MasterStateAction.FetchTraineeInSchedule({ scheduleId: schedule.ScheduleId })
 				)
 			);
+		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
-//#region Easy get scheduleForm
+	//#region Easy get scheduleForm
 	get isEditing() {
 		return !!this.scheduleForm.get('currentSchedule').value;
 	}
@@ -243,7 +252,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	get scheduleCount(): number {
 		return this.scheduleForm.get('scheduleCount').value as number;
 	}
-//#endregion
+	//#endregion
 
 	getPhaseType(key) {
 		return this.phaseTypes.find((p) => p.key === key).val;
@@ -272,11 +281,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 
 	submitScheduleForm() {
 		// if (!this.editForm$.value)
-		const {
-			subject,
-			scheduleName,
-			scheduleDates,
-		} = this.scheduleForm.value;
+		const { subject, scheduleName, scheduleDates } = this.scheduleForm.value;
 
 		this.store.dispatch(
 			MasterStateAction.CreateDailySchedule({
@@ -295,12 +300,12 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 				reason: deleteReason,
 			})
 		);
-  }
+	}
 
-  // tslint:disable-next-line: member-ordering
-  deleteAllReason = '';
+	// tslint:disable-next-line: member-ordering
+	deleteAllReason = '';
 	deleteAllSchedule() {
-		this.store.dispatch(MasterStateAction.DeleteAllSchedule({reason: this.deleteAllReason}));
+		this.store.dispatch(MasterStateAction.DeleteAllSchedule({ reason: this.deleteAllReason }));
 		this.loadingFormSchedule$.next(true);
 	}
 
@@ -350,7 +355,6 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			);
 		this.loadingFormTraineeInSchedule$.next(true);
 	}
-
 
 	cancelEdit() {
 		// this.editForm$.next(null);

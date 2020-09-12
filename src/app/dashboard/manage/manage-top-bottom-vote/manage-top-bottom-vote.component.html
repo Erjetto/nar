@@ -160,10 +160,8 @@
 						<input
 							type="text"
 							class="form-control"
-							id="searchTrainee"
-							placeholder="Search"
-							[ngbTypeahead]="onTypeSearch"
-							[(ngModel)]="searchText"
+              placeholder="Search voter/voted"
+              (change)="searchText$.next($event.target.value)"
 						/>
 					</div>
 				</div>
@@ -174,7 +172,7 @@
 								<h5 class="row vote-item__voter">
 									<ngb-highlight
 										[result]="getTrainee(voter.TraineeId)?.codeAndName"
-										[term]="searchText"
+										[term]="searchText$.value"
 									></ngb-highlight>
 								</h5>
 								<div class="pl-4 row" *ngIf="voter.TopVotes.length > 0">
@@ -185,11 +183,11 @@
 												<span class="">
 													<ngb-highlight
 														[result]="getTrainee(vote.TraineeId)?.codeAndName"
-														[term]="searchText"
+														[term]="searchText$.value"
 													></ngb-highlight>
 												</span>
 												<p style="font-size: small">
-													<ngb-highlight [result]="vote.Reason" [term]="searchText"></ngb-highlight>
+													<ngb-highlight [result]="vote.Reason" [term]="searchText$.value"></ngb-highlight>
 												</p>
 											</div>
 										</div>
@@ -203,11 +201,11 @@
 												<span class="">
 													<ngb-highlight
 														[result]="getTrainee(vote.TraineeId)?.codeAndName"
-														[term]="searchText"
+														[term]="searchText$.value"
 													></ngb-highlight>
 												</span>
 												<p style="font-size: small">
-													<ngb-highlight [result]="vote.Reason" [term]="searchText"></ngb-highlight>
+													<ngb-highlight [result]="vote.Reason" [term]="searchText$.value"></ngb-highlight>
 												</p>
 											</div>
 										</div>
@@ -220,7 +218,7 @@
 						<div class="vote-item row border-bottom" *ngFor="let voter of trainerVotes$ | async">
 							<div class="col">
 								<h5 class="row vote-item__voter">
-									<ngb-highlight [result]="voter.TrainerName" [term]="searchText"></ngb-highlight>
+									<ngb-highlight [result]="voter.TrainerName" [term]="searchText$.value"></ngb-highlight>
 								</h5>
 								<div class="pl-4 row" *ngIf="voter.TopVotes.length > 0">
 									<div class="col">
@@ -230,11 +228,11 @@
 												<span class="">
 													<ngb-highlight
 														[result]="getTrainee(vote.TraineeId)?.codeAndName"
-														[term]="searchText"
+														[term]="searchText$.value"
 													></ngb-highlight>
 												</span>
 												<p style="font-size: small">
-													<ngb-highlight [result]="vote.Reason" [term]="searchText"></ngb-highlight>
+													<ngb-highlight [result]="vote.Reason" [term]="searchText$.value"></ngb-highlight>
 												</p>
 											</div>
 										</div>
@@ -248,11 +246,11 @@
 												<span class="">
 													<ngb-highlight
 														[result]="getTrainee(vote.TraineeId)?.codeAndName"
-														[term]="searchText"
+														[term]="searchText$.value"
 													></ngb-highlight>
 												</span>
 												<p style="font-size: small">
-													<ngb-highlight [result]="vote.Reason" [term]="searchText"></ngb-highlight>
+													<ngb-highlight [result]="vote.Reason" [term]="searchText$.value"></ngb-highlight>
 												</p>
 											</div>
 										</div>

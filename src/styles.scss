@@ -6,6 +6,12 @@
 @import './variables';
 @import './dark-theme';
 
+@font-face {
+	font-family: 'Segoe UI';
+	src: url('./assets/fonts/segoeui.ttf');
+	// src: url('/src/assets/fonts/segoeui.ttf');
+}
+
 html,
 body {
   min-height: 100vh;

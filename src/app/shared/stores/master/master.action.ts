@@ -71,7 +71,7 @@ export const FetchTraineeInScheduleSuccess = createAction(
 // export const CreateRole = createAction('[MasterState] CreateRoles');
 export const CreateUserInRole = createAction(
 	'[MasterState] CreateUserInRoles',
-	props<{ userRoleId: string; userRoles: string[] }>()
+	props<{ userRoleId: string; usernames: string[] }>()
 );
 export const CreateGeneration = createAction(
 	'[MasterState] CreateGenerations',
@@ -146,8 +146,6 @@ export const CreateTraineeInSchedule = createAction(
 //#endregion
 
 //#region Update
-// export const UpdateRole = createAction('[MasterState] UpdateRoles');
-// export const UpdateUserInRole = createAction('[MasterState] UpdateUserInRoles');
 export const UpdateGeneration = createAction(
 	'[MasterState] UpdateGenerations',
 	props<{
@@ -166,10 +164,14 @@ export const UpdatePhase = createAction(
 		StartDate: string;
 	}>()
 );
-// export const UpdateSubject = createAction(
-// 	'[MasterState] UpdateSubjects',
-// 	props<{ phaseId: string }>()
-// );
+export const UpdateSubject = createAction(
+	'[MasterState] UpdateSubject',
+	props<{
+    subjectId: string;
+		value?: boolean;
+		maxFileSize?: number;
+	}>()
+);
 // export const UpdateSchedule = createAction(
 // 	'[MasterState] UpdateSchedules',
 // 	props<{ subjectId: string }>()
@@ -182,7 +184,10 @@ export const UpdatePhase = createAction(
 
 //#region Delete
 // export const DeleteRole = createAction('[MasterState] DeleteRoles');
-export const DeleteUserInRole = createAction('[MasterState] DeleteUserInRoles');
+export const DeleteUserInRole = createAction(
+	'[MasterState] DeleteUserInRole',
+	props<{ userInRoleId: string }>()
+);
 // export const DeleteGeneration = createAction('[MasterState] DeleteGenerations');
 export const DeletePhase = createAction('[MasterState] DeletePhase', props<{ PhaseId: string }>());
 export const DeleteTraineeInPhase = createAction(

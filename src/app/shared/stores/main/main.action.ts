@@ -1,5 +1,5 @@
 import { createAction, props, Action } from '@ngrx/store';
-import { Message, User } from '../../models';
+import { Message, User, ClientGeneration, Role } from '../../models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
 
@@ -12,10 +12,16 @@ export const Logout = createAction('[MainState] Logout');
 export const LogoutSuccess = createAction('[MainState] LogoutSuccess');
 export const SetCurrentUser = createAction('[MainState] SetCurrentUser', props<{ user: User }>());
 
-export const ChangeRole = createAction('[MainState] ChangeRole', props<{ name: string }>());
+export const ChangeRole = createAction('[MainState] ChangeRole', props<{ role: Role }>());
 export const ChangeGeneration = createAction(
 	'[MainState] ChangeGeneration',
-	props<{ name: string }>()
+	props<{ genId: string }>()
+);
+
+export const ChangeRoleSuccess = createAction('[MainState] ChangeRoleSuccess', props<{ role: Role }>());
+export const ChangeGenerationSuccess = createAction(
+	'[MainState] ChangeGenerationSuccess',
+	props<{ genId: string }>()
 );
 
 export const ToastMessage = createAction(

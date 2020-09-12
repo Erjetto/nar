@@ -11,8 +11,10 @@ import {
 	fromMasterState,
 	MasterStateEffects,
 	MainStateEffects,
+	MasterStateReducer,
 } from 'src/app/shared/store-modules';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil, first } from 'rxjs/operators';
+import { isEmpty } from 'lodash';
 
 @Component({
 	selector: 'rd-manage-phase',
@@ -64,23 +66,27 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 		//#endregion
 
 		//#region Subscribe to effects
-		// loading
-		this.masterEffects.createTraineeInPhase$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.loadingInsertTraineeInPhase$.next(false));
-
-		// loading
-		merge(this.masterEffects.createPhase$, this.masterEffects.updatePhase$)
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.loadingInsertPhase$.next(false));
-
-    // Auto fetch after crud 
+		// Remove Loading
 		merge(this.mainEffects.afterRequest$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => {
+				this.loadingInsertPhase$.next(false);
+				this.loadingInsertTraineeInPhase$.next(false);
+			});
+
+		// Reload Phase List
+		merge(
+			this.masterEffects.createPhase$,
+			this.masterEffects.updatePhase$,
+			this.masterEffects.deletePhase$,
+			this.mainEffects.changeGen$
+		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
 
 		//#endregion
 
+		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
 	getPhaseType(key) {
@@ -95,7 +101,7 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 					name: phaseName,
 					beginDate,
 					endDate,
-					phaseType: this.phaseTypes[0].val,
+					phaseType: 'ar',
 				})
 			);
 		else
@@ -147,7 +153,9 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 	getTraineeInPhaseFromEntity(phaseObservable: Observable<ClientPhase>) {
 		return combineLatest([this.traineeInPhaseEntity$, phaseObservable]).pipe(
 			map(([entity, currPhase]) => {
+				// If no curr phase yet, then skip fetch
 				if (!currPhase) return [];
+				// if entity has it, then pass value
 				if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
 				else {
 					this.store.dispatch(

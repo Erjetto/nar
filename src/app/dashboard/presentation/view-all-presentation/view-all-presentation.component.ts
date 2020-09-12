@@ -85,14 +85,14 @@ export class ViewAllPresentationComponent
 		this.subjects$ // Auto fetch presentation
 			.pipe(
 				filter((res) => !isEmpty(res)),
-				withLatestFrom(this.currentGeneration$),
+				withLatestFrom(this.currentGenerationId$),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe(([subjects, gen]) => {
 				this.currentSubject$.next(subjects[0]);
 				this.store.dispatch(
 					PresentationStateAction.FetchPresentations({
-						generationId: gen.GenerationId,
+						generationId: gen,
 						subjectId: subjects[0].SubjectId,
 					})
 				);

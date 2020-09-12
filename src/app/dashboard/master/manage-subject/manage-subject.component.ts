@@ -11,7 +11,7 @@ import {
 	MasterStateEffects,
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
-import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { map, takeUntil, withLatestFrom, tap } from 'rxjs/operators';
 import { NgModel, NgForm } from '@angular/forms';
 
 @Component({
@@ -39,7 +39,11 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 	];
 	currentSize = this.size[0];
 
-	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
+	constructor(
+		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private masterEffects: MasterStateEffects
+	) {
 		super(store);
 	}
 
@@ -74,14 +78,26 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 
 		//#region Subscribe to effects
 		// Auto reload data
-		this.mainEffects.afterRequest$
+		this.mainEffects.changeGen$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
+
+		merge(
+			this.masterEffects.createSubject$,
+			this.masterEffects.deleteSubject$,
+			this.masterEffects.updateSubject$
+		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
 			.subscribe(([action, phase]) => {
-				this.loadingFormSubject$.next(false);
-				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }));
+				if (!!phase)
+					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }));
 			});
 
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+			this.loadingFormSubject$.next(false);
+		});
 		//#endregion
+		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
 	convertFileSize(size, currentInput: NgModel) {
@@ -106,15 +122,19 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 					maxFileSize: maxFileSize * selectFileSize.val,
 				})
 			);
-		else
+		else {
+			const currSubj = this.editForm$.value;
+			const hasPresentationChanged = currSubj.HasPresentation !== hasPresentation;
+			const maxFileSizeChanged = currSubj.MaxFileSize !== maxFileSize * selectFileSize.val;
+
 			this.store.dispatch(
-				MasterStateAction.CreateSubject({
-					name: subjectName,
-					phaseId: selectPhase,
-					value: hasPresentation,
-					maxFileSize: maxFileSize * selectFileSize.val,
+				MasterStateAction.UpdateSubject({
+					subjectId: this.editForm$.value.SubjectId,
+					value: hasPresentationChanged ? hasPresentation : null,
+					maxFileSize: maxFileSizeChanged ? maxFileSize * selectFileSize.val : null,
 				})
 			);
+		}
 		this.loadingFormSubject$.next(true);
 	}
 

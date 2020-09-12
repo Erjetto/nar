@@ -1,7 +1,7 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
 import * as MainStateAction from './main.action';
-import { Toast, Message, User } from '../../models';
+import { Toast, Message, User, ClientGeneration, Role } from '../../models';
 import { drop, filter, min, max, zip, isArray } from 'lodash';
 
 export interface IMainState {
@@ -11,10 +11,11 @@ export interface IMainState {
 	messages: Toast[];
 
 	announcement: Message[]; // Home Message
+  isLoadingAnnouncements: boolean;
 	uploadedFiles: { fileid: string; filename: string }[];
 
-	currentRole: string;
-	currentGeneration: string;
+	currentRole: Role;
+	currentGenerationId: string;
 }
 
 export const initialState: IMainState = {
@@ -29,10 +30,11 @@ export const initialState: IMainState = {
 	],
 	uploadedFiles: [],
 
-	announcement: [],
+  announcement: [],
+  isLoadingAnnouncements: false,
 
-	currentGeneration: '20-1',
-	currentRole: 'AssistantSupervisor',
+	currentGenerationId: null,
+	currentRole: null,
 };
 
 export const MAINSTATE_REDUCER_NAME = 'MainState';
@@ -42,8 +44,10 @@ export const MainStateReducer = createReducer(
 
 	on(MainStateAction.LoginSuccess, MainStateAction.SetCurrentUser, (state, { user }) => ({
 		...state,
-		currentUser: user,
-	})),
+		currentUser: { ...user, ActiveRole: user.Role.roleName },
+		currentRole: user.Role,
+  })),
+  
 	on(MainStateAction.LogoutSuccess, (state) => ({ ...state, user: null })),
 
 	on(MainStateAction.ToastMessage, (state, { message, messageType }) => ({
@@ -60,19 +64,25 @@ export const MainStateReducer = createReducer(
 		messages: filter(state.messages, (v, i) => i !== index),
 	})),
 
-	on(MainStateAction.ChangeGeneration, (state, { name }) => ({
+	on(MainStateAction.ChangeGeneration, (state, { genId }) => ({
 		...state,
-		currentGeneration: name,
+		currentGenerationId: genId,
 	})),
 
-	on(MainStateAction.ChangeRole, (state, { name }) => ({
+	on(MainStateAction.ChangeRole, (state, { role }) => ({
 		...state,
-		currentRole: name,
+		currentRole: role,
 	})),
 
 	on(MainStateAction.FetchAnnouncementsSuccess, (state, { announcements }) => ({
 		...state,
+		isLoadingAnnouncements: true,
+	})),
+  
+  on(MainStateAction.FetchAnnouncementsSuccess, (state, { announcements }) => ({
+		...state,
 		announcement: announcements,
+		isLoadingAnnouncements: false,
 	})),
 
 	on(MainStateAction.UploadFileSuccess, (state, { fileids, filenames }) => ({
@@ -89,6 +99,7 @@ export const getCurrentUser = getMainStateBy((s) => s.currentUser);
 
 export const getToastMessages = getMainStateBy((s) => s.messages);
 export const getAnnouncements = getMainStateBy((s) => s.announcement);
+export const isAnnouncementsLoading = getMainStateBy((s) => s.isLoadingAnnouncements);
 
-export const getCurrentGeneration = getMainStateBy((s) => s.currentGeneration);
+export const getCurrentGenerationId = getMainStateBy((s) => s.currentGenerationId);
 export const getCurrentRole = getMainStateBy((s) => s.currentRole);

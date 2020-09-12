@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
-import { Observable, from, of } from 'rxjs';
+import { Observable, from, of, forkJoin } from 'rxjs';
 import {
 	switchMap,
 	withLatestFrom,
@@ -86,6 +86,31 @@ export class MasterStateEffects {
 		switchMap((phaseId) =>
 			this.generalService.GetSubjects({ phaseId }).pipe(map((res) => ({ phaseId, res })))
 		),
+		switchMap(({ phaseId, res }) =>
+			res.length === 0
+				? of({ phaseId, res }) // Kalo ngga ada subject skip GetMaxFileSize
+				: forkJoin(
+						// Get maximum file size for each subject
+						// Expectation: {'DB Id': 10000, 'Laravel Id': 1000000, 'C Id': 100,...}
+						// Pake Object instead of array karena takut urutannya sembarangan
+						// Possible Bug: Ada yg GetMaxFileSize nya error jadi ngga dapat semua
+						res.reduce(
+							(acc, sbj) => ({
+								...acc,
+								[sbj.SubjectId]: this.leaderService.GetMaximumFileSize({
+									subjectId: sbj.SubjectId,
+								}),
+							}),
+							{}
+						)
+				  ).pipe(
+						map((values: any) => {
+							// if no filesize, then -1
+							res.forEach((s) => (s.MaxFileSize = values[s.SubjectId] || -1));
+							return { phaseId, res };
+						})
+				  )
+		),
 		mergeMap(({ phaseId, res }) =>
 			of(MasterStateAction.FetchSubjectsSuccess({ payload: res, phaseId }))
 		),
@@ -146,13 +171,11 @@ export class MasterStateEffects {
 	@Effect()
 	createUserInRole$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateUserInRole),
-		switchMap((data) =>
-			of(
-				MainStateAction.ToastMessage({
-					messageType: 'danger',
-					message: 'Failed in creating user role: Not implemented yet',
-				})
-			)
+		switchMap((data) => this.leaderService.SaveUserInRoles(data)),
+		mergeMap((res) =>
+			!!res
+				? of(MainStateAction.SuccessfullyMessage('created users'))
+				: of(MainStateAction.FailMessage('creating users'))
 		),
 		share()
 	);
@@ -195,23 +218,11 @@ export class MasterStateEffects {
 	createSubject$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateSubject),
 		switchMap((data) => this.leaderService.SaveSubject(data).pipe(map((res) => ({ res, data })))),
-		mergeMap(({ res, data }) => {
-			// Nested Observable BAD? Do something?
-			if (res)
-				return this.leaderService
-					.SaveMaximumFileSize({
-						fileSize: data.maxFileSize + '',
-						subjectId: '',
-					})
-					.pipe(
-						mergeMap((result) =>
-							result
-								? of(MainStateAction.SuccessfullyMessage('created subject'))
-								: of(MainStateAction.FailMessage('creating subject limit size'))
-						)
-					);
-			else return of(MainStateAction.FailMessage('creating subject'));
-		}),
+		mergeMap(({ res, data }) =>
+			res
+				? of(MainStateAction.SuccessfullyMessage('created subject'))
+				: of(MainStateAction.FailMessage('creating subject'))
+		),
 		share()
 	);
 	@Effect()
@@ -290,16 +301,26 @@ export class MasterStateEffects {
 		),
 		share()
 	);
-	// @Effect()
-	// updateSubject$: Observable<Action> = this.actions$.pipe(
-	// 	ofType(MasterStateAction.UpdateSubject),
-	// 	switchMap((data) => this.leaderService.UpdateSubject(data)),
-	// 	mergeMap((res) =>
-	// 		res != null
-	// 			? of(MainStateAction.SuccessfullyMessage('updating phase'))
-	// 			: of(MainStateAction.FailMessage('updating phase'))
-	// 	), share()
-	// );
+	@Effect()
+	updateSubject$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.UpdateSubject),
+		switchMap(({ subjectId, value, maxFileSize }) =>
+			// this.leaderService.SaveMaximumFileSize({ subjectId, fileSize: maxFileSize })
+			forkJoin([
+				// There are no normal UpdateSubject, sigh...
+				value !== null ? this.leaderService.SaveSubjectDetail({ subjectId, value }) : of(true),
+				maxFileSize !== null
+					? this.leaderService.SaveMaximumFileSize({ subjectId, fileSize: maxFileSize })
+					: of(true),
+			])
+		),
+		mergeMap((res: any[]) =>
+			res.every((v) => !!v)
+				? of(MainStateAction.SuccessfullyMessage('updating phase'))
+				: of(MainStateAction.FailMessage('updating phase'))
+		),
+		share()
+	);
 
 	//#endregion
 
@@ -367,6 +388,18 @@ export class MasterStateEffects {
 			res != null
 				? of(MainStateAction.SuccessfullyMessage('deleted trainee in schedule'))
 				: of(MainStateAction.FailMessage('delete trainee in schedule'))
+		),
+		share()
+	);
+
+	@Effect()
+	deleteUserInRole$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.DeleteUserInRole),
+		switchMap((data) => this.leaderService.DeleteUserInRoles(data)),
+		mergeMap((res) =>
+			res != null
+				? of(MainStateAction.SuccessfullyMessage('deleted user'))
+				: of(MainStateAction.FailMessage('delete user'))
 		),
 		share()
 	);
