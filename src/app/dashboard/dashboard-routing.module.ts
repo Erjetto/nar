@@ -225,7 +225,8 @@ export const routes: Routes = [
 				],
 			},
 			{
-				path: 'Room',
+        path: 'room',
+        data: {name : 'Room'},
 				children: [
 					{
 						path: 'room-active',
@@ -457,7 +458,7 @@ export const routes: Routes = [
 						redirectTo: '/home',
 						// component: null,
 						data: {
-							roles: RoleGroups.ALL,
+							roles: RoleFlags.Trainer,
 							name: 'Fill Answer (-)',
 						},
 					},
@@ -465,7 +466,7 @@ export const routes: Routes = [
 						path: 'candidate-questions',
 						component: CandidateQuestionsComponent,
 						data: {
-							roles: RoleGroups.ALL,
+							roles: RoleFlags.AssistantSupervisor,
 							name: 'Manage Questions',
 						},
 					},

@@ -5,61 +5,65 @@
 				[cardTitle]="'Recent Trainee Comments'"
 			>
 			</rd-card>
-		</div> -->
-		<div class="col flex-grow-1">
-			<div class="row">
-				<rd-card [cardTitle]="'Trainee Statistic'" class="col">
-					<div class="row mb-2">
-						<div class="col-1 col-form-label">
-							<b>Phase</b>
-						</div>
-						<div class="col-3">
-							<ng-select
-								class="col"
-								[items]="phases$ | async"
-								[clearable]="false"
-								bindLabel="Description"
-								[searchable]="false"
-								[ngModel]="currentPhase$ | async"
-								(change)="currentPhase$.next($event)"
-							></ng-select>
-						</div>
-						<!-- <select [(ngModel)]="selectedPhase" (change)="reloadView()">
-							<option
-								*ngFor="let phase of phases$ | async"
-								[value]="phase.Description"
+    </div> -->
+		<div class="col">
+			<rd-card [cardTitle]="'Trainee Statistic'" [isLoading]="loadingTraineeStatistic$ | async">
+				<div class="row mb-2">
+					<div class="col-1 col-form-label">
+						<b>Phase</b>
+					</div>
+					<div class="col-3">
+						<ng-select
+							class="col"
+							[items]="phases$ | async"
+							[clearable]="false"
+							bindLabel="Description"
+							[searchable]="false"
+							[ngModel]="currentPhase$ | async"
+							(change)="currentPhase$.next($event)"
+						></ng-select>
+					</div>
+				</div>
+				<div class="row">
+					<table class="mr-2" *ngFor="let stat of statistics$ | async">
+						<thead>
+							<tr>
+								<td>{{ stat.Type }}</td>
+								<td class="text-right">#</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let data of stat.Detail">
+								<td>{{ data.Description }}</td>
+								<td class="text-right">{{ data.Count }}</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td>Total</td>
+								<td class="text-right">{{ stat.Total }}</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Announcements'" [isLoading]="loadingAnnouncements$ | async">
+				<div class="row" *ngFor="let msg of announcements$ | async">
+					<div class="col">
+						<h4>{{ msg.Title }}</h4>
+						<div [innerHTML]="msg.Note"></div>
+						<p *ngIf="msg.HasFile">
+							<a [title]="'Download ' + msg.FileName" [href]="'File.svc/GetFile/' + msg.FileId"
+								>Download Link</a
 							>
-								{{ phase.Description }}
-							</option>
-            </select> -->
+						</p>
 					</div>
-					<div class="row">
-						<table class="mr-2" *ngFor="let stat of statistics$ | async">
-							<thead>
-								<tr>
-									<td>{{ stat.Type }}</td>
-									<td class="text-right">#</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let data of stat.Detail">
-									<td>{{ data.Description }}</td>
-									<td class="text-right">{{ data.Count }}</td>
-								</tr>
-							</tbody>
-							<tfoot>
-								<tr>
-									<td>Total</td>
-									<td class="text-right">{{ stat.Total }}</td>
-								</tr>
-							</tfoot>
-						</table>
-					</div>
-				</rd-card>
-			</div>
-			<div class="row">
-				<rd-card [cardTitle]="'Announcements'" class="col"> </rd-card>
-			</div>
+				</div>
+			</rd-card>
 		</div>
 	</div>
 </div>

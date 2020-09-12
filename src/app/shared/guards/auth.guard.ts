@@ -14,6 +14,7 @@ import { map } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { MainStateAction, fromMainState } from '../store-modules';
+import { User } from '../models';
 
 @Injectable({
 	providedIn: 'root',
@@ -29,10 +30,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 		next: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot
 	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-		return this.store.pipe(select(fromMainState.getCurrentUser)).pipe(
-			map((user) => {
-        return true;
-				if (!!user) {
+		return this.generalService.GetCurrentUser().pipe(
+			map((user: User) => {
+				if (user) {
+					this.store.dispatch(MainStateAction.SetCurrentUser({ user }));
 					return true;
 				} else {
 					this.router.navigateByUrl('/login');

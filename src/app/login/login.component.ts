@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '../app.reducer';
 import { MainStateAction, MainStateEffects } from '../shared/store-modules';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({
@@ -35,9 +35,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 			.subscribe(() => this.isLoggingIn.next(false));
 
 		this.mainEffects.login$ // Redirect on login success
-			.pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyed$))
 			.subscribe((act) => {
-				if (act.type === MainStateAction.LoginSuccess.type) this.router.navigateByUrl('/dashboard');
+        if (act.type === MainStateAction.LoginSuccess.type) 
+          this.router.navigateByUrl('/home');
 			});
 	}
 

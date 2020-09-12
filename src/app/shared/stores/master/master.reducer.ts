@@ -10,7 +10,7 @@ import {
 	ClientUserInRoles,
 	ClientTrainee,
 } from '../../models';
-
+import { MainStateAction } from '../../store-modules';
 
 export interface IMasterState {
 	roles: Role[];
@@ -38,8 +38,7 @@ export interface IMasterState {
 	loadingPhases: boolean;
 	loadingTraineeInPhase: boolean;
 	loadingSchedules: boolean;
-  loadingTraineeInSchedule: boolean;
-  
+	loadingTraineeInSchedule: boolean;
 }
 
 export const initialState: IMasterState = {
@@ -79,6 +78,13 @@ export const MASTERSTATE_REDUCER_NAME = 'MasterState';
 export const MasterStateReducer = createReducer(
 	initialState,
 
+  // Remove all data when generation changed
+	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
+		...initialState,
+		generations: state.generations,
+		roles: state.roles,
+	})),
+
 	on(MasterStateAction.FetchRoles, (state) => ({
 		...state,
 		loadingRoles: true,
@@ -117,24 +123,24 @@ export const MasterStateReducer = createReducer(
 	on(MasterStateAction.FetchTraineeInSchedule, (state) => ({
 		...state,
 		loadingTraineeInSchedule: true,
-  })),
-  
+	})),
+
 	on(MasterStateAction.FetchRolesSuccess, (state, { payload }) => ({
 		...state,
-    roles: payload,
-    loadingRoles: false,
+		roles: payload,
+		loadingRoles: false,
 	})),
 
 	on(MasterStateAction.FetchUserInRolesSuccess, (state, { payload }) => ({
 		...state,
-    userInRoles: payload,
-    loadingUserInRoles: false,
+		userInRoles: payload,
+		loadingUserInRoles: false,
 	})),
 
 	on(MasterStateAction.FetchGenerationsSuccess, (state, { payload }) => ({
 		...state,
-    generations: payload,
-    loadingGenerations: false,
+		generations: payload,
+		loadingGenerations: false,
 	})),
 
 	on(MasterStateAction.FetchPhasesSuccess, (state, { payload }) => ({
@@ -169,14 +175,14 @@ export const MasterStateReducer = createReducer(
 		traineeInSchedule: payload,
 		loadingTraineeInSchedule: false,
 		traineesInScheduleEntity: { ...state.traineesInScheduleEntity, [scheduleId]: payload },
-	})),
+	}))
 );
 
 export const getMasterState = createFeatureSelector<IMasterState>(MASTERSTATE_REDUCER_NAME);
 
 export const getMasterStateBy = (fn: (_: IMasterState) => any) =>
-  createSelector(getMasterState, fn);
-  
+	createSelector(getMasterState, fn);
+
 //#region entity
 export const getSubjectsEntity = getMasterStateBy((s) => s.subjectsByPhaseEntity);
 export const getTraineesInPhaseEntity = getMasterStateBy((s) => s.traineesInPhaseEntity);
@@ -206,7 +212,6 @@ export const isSchedulesLoading = getMasterStateBy((s) => s.loadingSchedules);
 export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTraineeInSchedule);
 //#endregion
 
-
 // export const getSubjectFromEntity = (
 // 	subjectsEntity: Observable<{ [phaseId: string]: ClientSubject[] }>,
 //   phaseObservable: Observable<ClientPhase>,
@@ -235,4 +240,3 @@ export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTrain
 // 			}
 // 		})
 // 	);
-

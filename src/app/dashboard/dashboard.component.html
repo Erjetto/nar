@@ -15,13 +15,13 @@
 				</div>
 				<div class="row justify-content-end pt-1">
 					<ng-container *ngIf="(currentUser$ | async)?.Role.is(constant.role.AssistantSupervisor)">
-						<select [ngModel]="selectedRole$ | async" (change)="onChangeRole($event)">
+						<select [ngModel]="(selectedRole$ | async)?.roleName" (change)="onChangeRole($event.target.value)">
 							<option *ngFor="let role of roleList$ | async" [value]="role.roleName">
 								{{ role.roleName }}
 							</option>
 						</select>
-						<select [ngModel]="selectedGen$ | async" (change)="onChangeGen($event)">
-							<option *ngFor="let gen of genList$ | async" [value]="gen.Description">
+						<select [ngModel]="(selectedGenId$ | async)" (change)="onChangeGen($event.target.value)">
+							<option *ngFor="let gen of genList$ | async" [value]="gen.GenerationId">
 								{{ gen.Description }}
 							</option>
 						</select>

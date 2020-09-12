@@ -1,7 +1,6 @@
-
 import { Component, OnInit, HostBinding, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { User, Role, ClientGeneration } from '../shared/models';
-import { Subject, Observable, of } from 'rxjs';
+import { Subject, Observable, of, interval, merge } from 'rxjs';
 import { RoleFlags } from '../shared/constants/role.constant';
 import { IAppState } from '../app.reducer';
 import { Store, select } from '@ngrx/store';
@@ -10,13 +9,15 @@ import {
 	fromMainState,
 	MasterStateAction,
 	fromMasterState,
-  MainStateEffects,
+	MainStateEffects,
 } from 'src/app/shared/store-modules';
 import { MenuService } from '../shared/services/menu.service';
 import { Route, Router, ActivatedRoute, NavigationEnd, RouterOutlet } from '@angular/router';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil, distinctUntilChanged, first, tap, mapTo } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { trigger, transition, query, style, group, animate } from '@angular/animations';
+import { Cookies } from '../shared/constants/cookie.constants';
+import { isEmpty } from 'lodash';
 
 @Component({
 	selector: 'rd-dashboard',
@@ -32,10 +33,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	destroyed$ = new Subject<void>();
 
 	menuList: Route[];
+	currentRoute: Route;
 	currentActiveHeader = '';
+	// Not working yet
 	pageTitle = document.head.getElementsByTagName('title')[0];
-
-	user = new User();
 
 	constant = {
 		role: RoleFlags,
@@ -45,8 +46,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	genList$: Observable<ClientGeneration[]>;
 	roleList$: Observable<Role[]>;
 
-	selectedGen$: Observable<string>;
-	selectedRole$: Observable<string>;
+	selectedGenId$: Observable<string>;
+	selectedRole$: Observable<Role>;
 
 	constructor(
 		private store: Store<IAppState>,
@@ -58,13 +59,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-    this.initiateTheme();
-
-		// Temporary
-    // Get user from user service later
-		this.user.Role = Role.fromName(RoleFlags.AssistantSupervisor);
-		this.user.ActiveRole = Role.fromName(RoleFlags.AssistantSupervisor).roleName;
-		this.menuList = this.menuService.getMenuForRole(this.user.Role.roleNumber);
+		this.initiateTheme();
+		this.currentActiveHeader = this.route.snapshot.firstChild.data.name;
 
 		// Change currentMenu's name for every route change
 		// Assumes every menu has data.name
@@ -79,52 +75,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			});
 		window.onpopstate = (evt) => (this.isBack = true);
 
+		// Redirect to login when logout
 		this.mainEffects.logout$.pipe(takeUntil(this.destroyed$)).subscribe((act) => {
-      console.log(act);
-      if (act.type === MainStateAction.LogoutSuccess.type) 
-        this.router.navigateByUrl('/login');
+			if (act.type === MainStateAction.LogoutSuccess.type) this.router.navigateByUrl('/login');
 		});
 
-    // Get data from MainState
-    this.currentUser$ = this.store.pipe(select(fromMainState.getCurrentUser));
-		// if (this.user.Role.is(RoleFlags.AssistantSupervisor)) {
-			this.selectedGen$ = this.store.pipe(select(fromMainState.getCurrentGeneration));
-			this.selectedRole$ = this.store.pipe(select(fromMainState.getCurrentRole));
+		// Get data from MainState
+		this.currentUser$ = this.store.pipe(select(fromMainState.getCurrentUser));
+		this.genList$ = this.store.pipe(select(fromMasterState.getGenerations));
+		this.roleList$ = of(Role.allRoles);
 
-			this.genList$ = this.store.pipe(select(fromMasterState.getGenerations));
-			this.roleList$ = of(Role.allRoles);
+		//#region For SPV
+		this.selectedGenId$ = this.store.pipe(select(fromMainState.getCurrentGenerationId));
+		this.selectedRole$ = this.store.pipe(select(fromMainState.getCurrentRole));
+		this.selectedRole$
+			.pipe(takeUntil(this.destroyed$), distinctUntilChanged())
+			.subscribe((role) => {
+				this.menuList = this.menuService.getMenuForRole(role);
+				// If current role has no current active menu, then redirect
+				if (this.menuList.every((r) => r.data.name !== this.currentActiveHeader))
+					this.router.navigateByUrl('/home');
+			});
+		//#endregion
 
-			// Trigger fetch data
-			this.store.dispatch(MasterStateAction.FetchGenerations());
-			this.store.dispatch(
-				MainStateAction.ChangeRole({
-					name: this.user.ActiveRole,
-				})
-			);
+		this.initiateRoleAndGen();
 
-			// TODO: Check how the old nar gets active role and current gen
-		// }
-	}
-
-	initiateTheme() {
-    // Check from cookies first
-    
-		if (this.cookieService.get('use-dark-theme') !== '')
-			this.toggleGreyMode(this.cookieService.get('use-dark-theme') === 'true');
-		else if (window.matchMedia) {
-      // Get default theme from OS
-      this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			this.toggleGreyMode(this.isDark);
-		}
-	}
-
-	toggleGreyMode(to?: boolean) {
-		this.isDark = to != null ? to : !this.isDark;
-
-		if (this.isDark) document.body.classList.add('dark-theme');
-		else document.body.classList.remove('dark-theme');
-
-		this.cookieService.set('use-dark-theme', this.isDark ? 'true' : 'false', Number.MAX_SAFE_INTEGER, '/');
+		// Trigger fetch data
+		this.store.dispatch(MasterStateAction.FetchGenerations());
 	}
 
 	ngOnDestroy(): void {
@@ -136,16 +113,84 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		return menu.data?.name === this.currentActiveHeader;
 	}
 
-	onChangeRole(evt: Event) {
-		this.store.dispatch(MainStateAction.ChangeRole({ name: evt.target['value'] }));
+	onChangeRole(value: string) {
+		this.store.dispatch(MainStateAction.ChangeRole({ role: Role.from(value) }));
 	}
 
-	onChangeGen(evt: Event) {
-		this.store.dispatch(MainStateAction.ChangeGeneration({ name: evt.target['value'] }));
+	onChangeGen(value: string) {
+		this.store.dispatch(MainStateAction.ChangeGeneration({ genId: value }));
 	}
 
 	signOut() {
 		this.store.dispatch(MainStateAction.Logout());
+	}
+
+	initiateRoleAndGen() {
+		if (!!localStorage.getItem('current-role'))
+			this.store.dispatch(
+				MainStateAction.ChangeRole({
+					role: Role.from(localStorage.getItem('current-role')),
+				})
+			);
+		else
+			this.currentUser$
+				.pipe(
+					filter((v) => !isEmpty(v)),
+					first()
+				)
+				.subscribe((u: User) =>
+					this.store.dispatch(
+						MainStateAction.ChangeRole({
+							role: u.Role,
+						})
+					)
+				);
+
+		if (!!localStorage.getItem('current-gen-id'))
+			this.store.dispatch(
+				MainStateAction.ChangeGeneration({
+					genId: localStorage.getItem('current-gen-id'),
+				})
+			);
+		else
+			this.genList$
+				.pipe(
+					filter((v) => !isEmpty(v)),
+					first()
+				)
+				.subscribe((genList) =>
+					this.store.dispatch(
+						MainStateAction.ChangeGeneration({
+							genId: genList[0].GenerationId,
+						})
+					)
+				);
+	}
+
+	initiateTheme() {
+		// Check from cookies first
+
+		if (this.cookieService.check(Cookies.DARK_THEME))
+			this.toggleGreyMode(this.cookieService.get(Cookies.DARK_THEME) === 'true');
+		else if (window.matchMedia) {
+			// Get default theme from OS
+			this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			this.toggleGreyMode(this.isDark);
+		}
+	}
+
+	toggleGreyMode(to?: boolean) {
+		this.isDark = to != null ? to : !this.isDark;
+
+		if (this.isDark) document.body.classList.add('dark-theme');
+		else document.body.classList.remove('dark-theme');
+
+		this.cookieService.set(
+			Cookies.DARK_THEME,
+			this.isDark ? 'true' : 'false',
+			Number.MAX_SAFE_INTEGER,
+			'/'
+		);
 	}
 
 	//#region Animation for page
@@ -186,7 +231,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	//#endregion
 }
 
-//#region Page animation
+//#region Page animation [UNUSED]
 const rightToLeftScreenSlide = [
 	query(':enter, :leave', style({ position: 'fixed', width: '100vw', height: '100vh' })),
 	group([

@@ -1,10 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
+import { Cookies } from './shared/constants/cookie.constants';
 
 @Component({
   selector: 'rd-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'nar';
+  isDark = true;
+
+  constructor(
+		private cookieService: CookieService,){
+
+  }
+
+  ngOnInit(){
+		this.initiateTheme();
+    
+  }
+
+	toggleGreyMode(to?: boolean) {
+		this.isDark = to != null ? to : !this.isDark;
+
+		if (this.isDark) document.body.classList.add('dark-theme');
+		else document.body.classList.remove('dark-theme');
+
+		this.cookieService.set(Cookies.DARK_THEME, this.isDark ? 'true' : 'false', Number.MAX_SAFE_INTEGER, '/');
+	}
+
+	initiateTheme() {
+    // Check from cookies first
+		if (this.cookieService.check(Cookies.DARK_THEME))
+			this.toggleGreyMode(this.cookieService.get(Cookies.DARK_THEME) === 'true');
+		else if (window.matchMedia) {
+      // Get default theme from OS
+      this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			this.toggleGreyMode(this.isDark);
+		}
+	}
 }
