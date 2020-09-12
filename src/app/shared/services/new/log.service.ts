@@ -3,6 +3,8 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { LogBookPICData } from '../../models';
+import * as _ from 'lodash';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +14,18 @@ export class LogService {
 	constructor(protected httpClient: HttpClient) {}
 
   public GetTraineeLogBookRecapBaseOnSubject(data: { trainee: string, subject: string }): Observable<LogBookPICData[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineeLogBookRecapBaseOnSubject', data)
+			.pipe(map((res: any) => _.map(res.d, LogBookPICData.fromJson)));
 	}
   public DeleteLogBookRecap(data: { id: string; }): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteLogBookRecap', data)
+			.pipe(map((res: any) => res.d === true));
 	}
   public GetLogBookRecap(): Observable<any> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetLogBookRecap', {})
+			.pipe(map((res: any) => res.d));
 	}
 }

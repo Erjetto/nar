@@ -5,6 +5,7 @@ import { MockData } from '../../mock-data';
 import { Message } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import * as _ from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -19,7 +20,9 @@ export class AnnouncementService {
 		fileId: string;
 		memberType: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveMessageWithFile', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveMessage(data: {
@@ -27,7 +30,9 @@ export class AnnouncementService {
 		title: string;
 		memberType: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveMessage', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public UpdateMessage(data: {
@@ -36,11 +41,15 @@ export class AnnouncementService {
 		title: string;
 		mType: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateMessage', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteMessage(data: { messageId: string }): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteMessage', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public UpdateMessageWithNoFile(data: {
@@ -49,7 +58,9 @@ export class AnnouncementService {
 		title: string;
 		mType: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateMessageWithNoFile', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public UpdateMessageWithFile(data: {
@@ -59,13 +70,14 @@ export class AnnouncementService {
 		mType: string;
 		fileId: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateMessageWithFile', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public GetMessage(): Observable<Message[]> {
-		return of(MockData.GetMessage).pipe(
-			delay(500),
-			map((r) => r.map(Message.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateMessageWithFile', {})
+			.pipe(map((res: any) => _.map(res.d, Message.fromJson)));
 	}
 }

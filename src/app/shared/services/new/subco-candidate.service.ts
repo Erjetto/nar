@@ -5,6 +5,7 @@ import { SubcoCandidateQuestionModel, SubcoCandidateAnswerModel } from '../../mo
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { MockData } from '../../mock-data';
+import * as _ from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -15,37 +16,45 @@ export class SubcoCandidateService {
 
 	// Offset -2 generation
 	public GetQuestionsForTrainerGeneration(): Observable<SubcoCandidateQuestionModel> {
-		return of(MockData.GetQuestionsForTrainerGeneration).pipe(
-			delay(500),
-			map(SubcoCandidateQuestionModel.fromJson)
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetQuestionsById', {})
+			.pipe(map((res: any) => SubcoCandidateQuestionModel.fromJson(res.d)));
 	}
 
 	public GetQuestionsById(data: { questionId: string }): Observable<SubcoCandidateQuestionModel> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetQuestionsById', data)
+			.pipe(map((res: any) => SubcoCandidateQuestionModel.fromJson(res.d)));
 	}
 
 	public SaveQuestionsForTrainer(data: { questions: string[] }): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveQuestionsForTrainer', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public GetAnswersFromTrainerGeneration(): Observable<SubcoCandidateAnswerModel[]> {
-		return of(MockData.GetAnswersFromTrainerGeneration).pipe(
-			delay(500),
-			map(res => res.map(SubcoCandidateAnswerModel.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetAnswersFromTrainerGeneration', {})
+			.pipe(map((res: any) => _.map(res.d, SubcoCandidateAnswerModel.fromJson)));
 	}
 
 	public GetAnswersFromTrainer(): Observable<SubcoCandidateAnswerModel> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetAnswersFromTrainer', {})
+			.pipe(map((res: any) => SubcoCandidateAnswerModel.fromJson(res.d)));
 	}
 
 	public SaveAnswers(data: { answerId: string; answers: string[] }): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveAnswers', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public CreateSchedules(data: { schedules: SubcoCandidateAnswerModel[] }): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'CreateSchedules', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public UpdateSchedule(data: {
@@ -53,14 +62,20 @@ export class SubcoCandidateService {
 		startDate: Date;
 		endDate: Date;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateSchedule', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteSchedule(data: { answerId: string }): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteSchedule', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public ExportCurrentGenAnswersToExcel(): Observable<string> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteSchedule', {})
+			.pipe(map((res: any) => res.d + ''));
 	}
 }

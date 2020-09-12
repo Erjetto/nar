@@ -19,6 +19,7 @@ import {
 } from '../../models';
 import { environment } from 'src/environments/environment';
 import * as _ from 'lodash';
+import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
 	providedIn: 'root',
@@ -32,7 +33,9 @@ export class LeaderService {
 		isActive: boolean;
 		reason: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateTraineeActive', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public UpdateTraineeScore(data: {
@@ -42,29 +45,40 @@ export class LeaderService {
 		newScore: number;
 		reason: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateTraineeScore', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	// ClientTraineeBeeAttendanceOverall
 	public GetOverall(data: { startDate: string; endDate: string }): Observable<any> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetOverall', data)
 	}
 
 	public GetAllCaseBySubject(data: { subjectId: string }): Observable<ClientCaseTrainer[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetAllCaseBySubject', data)
+			.pipe(map((res: any) => _.map(res.d, ClientCaseTrainer.fromJson)));
 	}
 
 	// RegisteredSchedule[]
 	public GetRegisteredSchedule(data: { subjectId: string }): Observable<any[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetOverall', data)
+			.pipe(map((res: any) => res.d as any[]));
 	}
 
-	public GetAllTraineeAnswer(data: { caseId: string }): Observable<ClientUploadAnswer> {
-		return throwError('Not implemented yet');
+	public GetAllTraineeAnswer(data: { caseId: string }): Observable<ClientUploadAnswer[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetAllTraineeAnswer', data)
+			.pipe(map((res: any) => _.map(res.d, ClientUploadAnswer.fromJson)));
 	}
 
 	public CheckCurrentTrainee(data: { traineeList: string[] }): Observable<string[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetAllTraineeAnswer', data)
+			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
 	}
 
 	public SaveSchedule(data: {
@@ -72,24 +86,32 @@ export class LeaderService {
 		scheduleName: string;
 		scheduleDates: string[];
 	}): Observable<ClientSchedule[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveSchedule', data)
+			.pipe(map((res: any) => _.map(res.d, ClientSchedule.fromJson)));
 	}
 
 	public ChangeSelfRegisterOfSpecificSchedule(data: {
 		scheduleId: string;
 		flag: boolean;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'ChangeSelfRegisterOfSpecificSchedule', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public GetDatesInSchedules(data: { scheduleId: string }): Observable<Date[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetDatesInSchedules', data)
+			.pipe(map((res: any) => _.map(res.d, DateHelper.fromCSharpDate)));
 	}
 
 	public GetSpecificScheduleRegistration(data: {
 		scheduleId: string;
 	}): Observable<SchedulePerWeek> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetSpecificScheduleRegistration', data)
+			.pipe(map((res: any) => SchedulePerWeek.fromJson(res.d)));
 	}
 
 	public UpdateCaseIncludingFile(data: {
@@ -101,7 +123,9 @@ export class LeaderService {
 		fileId: string;
 		scheduleDate: string;
 	}): Observable<string[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateCaseIncludingFile', data)
+			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
 	}
 
 	public UpdateCase(data: {
@@ -112,7 +136,9 @@ export class LeaderService {
 		trainerDays: string;
 		scheduleDate: string;
 	}): Observable<string[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateCase', data)
+			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
 	}
 
 	public SaveCase(data: {
@@ -125,7 +151,9 @@ export class LeaderService {
 		trainerDays: string;
 		scheduleDate: string;
 	}): Observable<string[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveCase', data)
+			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
 	}
 
 	public SaveMaterial(data: {
@@ -133,14 +161,18 @@ export class LeaderService {
 		subjectId: string;
 		materialName: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveMaterial', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveHasPresentation(data: {
 		subjectId: string;
 		presentation: boolean;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveHasPresentation', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveFinalScore(data: {
@@ -148,16 +180,22 @@ export class LeaderService {
 		subjectId: string;
 		data: string[];
 	}): Observable<string[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveFinalScore', data)
+			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
 	}
 
 	public GetFinalScore(data: { phaseId: string; subjectId: string }): Observable<string[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetFinalScore', data)
+			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
 	}
 
 	// ClientTraineeInScheduleSpecific
 	public GetTraineeScheduleSpecific(data: { phase: string; subject: string }): Observable<any> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetFinalScore', data)
+			.pipe(map((res: any) => res.d));
 	}
 
 	public UpdateMaterialWithFile(data: {
@@ -166,7 +204,9 @@ export class LeaderService {
 		fileId: string;
 		material: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateMaterialWithFile', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public UpdateMaterialWithNoFile(data: {
@@ -174,7 +214,9 @@ export class LeaderService {
 		materialId: string;
 		material: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateMaterialWithNoFile', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public UpdateMaterial(data: {
@@ -182,27 +224,33 @@ export class LeaderService {
 		materialId: string;
 		materialName: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateMaterial', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveGeneralAssistantRole(data: { value: string }): Observable<string> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveGeneralAssistantRole', data)
+			.pipe(map((res: any) => res.d + ''));
 	}
 
 	public DeleteSchedule(data: { scheduleId: string; reason: string }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteSchedule', data)
-			.pipe(map((res) => res === true));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteAllSchedule(data: { reason: string }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteAllSchedule', data)
-			.pipe(map((res) => res === true));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeletePhase(data: { PhaseId: string }): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeletePhase', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteMaterial(data: {
@@ -210,14 +258,18 @@ export class LeaderService {
 		materialId: string;
 		reason: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteMaterial', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteTraineeInSchedule(data: {
 		ScheduleId: string;
 		TraineeId: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteTraineeInSchedule', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteCase(data: {
@@ -225,7 +277,9 @@ export class LeaderService {
 		caseId: string;
 		reason: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteCase', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	// QUESTION: Will passing Date work?
@@ -236,7 +290,9 @@ export class LeaderService {
 		voteCount: number;
 		isForTrainer: boolean;
 	}): Observable<TopBottomVoteSchedule> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveTopBottomVoteSchedule', data)
+			.pipe(map((res: any) => TopBottomVoteSchedule.fromJson(res.d)));
 	}
 
 	public UpdateTopBottomVoteSchedule(data: {
@@ -247,155 +303,162 @@ export class LeaderService {
 		voteCount: number;
 		isForTrainer: boolean;
 	}): Observable<TopBottomVoteSchedule> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateTopBottomVoteSchedule', data)
+			.pipe(map((res: any) => TopBottomVoteSchedule.fromJson(res.d)));
 	}
 
 	public DeleteTopBottomVoteSchedule(data: { scheduleId: string }): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteTopBottomVoteSchedule', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	// ZipModel
 	public GetAllTraineeAnswerByZip(data: { caseId: string; correctorId?: string }): Observable<any> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetAllTraineeAnswerByZip', data)
 	}
 
 	//#region Get Data
 	// SimpleTraineeData[]
 	public GetTraineesSimpleData(): Observable<ClientTrainee[]> {
-		return of(MockData.GetTraineesByPhase).pipe(
-			delay(500),
-			map((r) => r.map(ClientTrainee.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineesSimpleData', {})
+			.pipe(map((r: any) => _.map(r.d, ClientTrainee.fromJson)));
 	}
 	public GetTraineesByPhase(data: { phaseId: string }): Observable<ClientTrainee[]> {
-		return of(MockData.GetTraineesByPhase).pipe(
-			delay(500),
-			map((r) => r.map(ClientTrainee.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineesByPhase', data)
+			.pipe(map((r: any) => _.map(r.d, ClientTrainee.fromJson)));
 	}
 
 	public GetTraineesBySchedule(data: { scheduleId: string }): Observable<ClientTrainee[]> {
-		return of(MockData.GetTraineesBySchedule).pipe(
-			delay(500),
-			map((r) => r.map(ClientTrainee.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineesBySchedule', data)
+			.pipe(map((r: any) => _.map(r.d, ClientTrainee.fromJson)));
 	}
 
 	public GetGenerations(): Observable<ClientGeneration[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetGenerations', {})
-			.pipe(map((r: any) => _.map(r, ClientGeneration.fromJson)));
-		// return of(MockData.GetGenerations).pipe(
-		// 	delay(500),
-		// 	map((r) => r.map(ClientGeneration.fromJson))
-		// );
+			.pipe(map((r: any) => _.map(r.d, ClientGeneration.fromJson)));
 	}
 
-	public GetPhases(data: { generationId: string }): Observable<ClientGeneration[]> {
-		return of(MockData.GetPhasesCurrentGeneration).pipe(
-			delay(500),
-			map((r) => r.map(ClientGeneration.fromJson))
-		);
+	public GetPhases(data: { generationId: string }): Observable<ClientPhase[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetPhases', data)
+			.pipe(map((r: any) => _.map(r.d, ClientPhase.fromJson)));
 	}
 
 	public GetTopBottomVoteSchedules(): Observable<TopBottomVoteSchedule[]> {
-		return of(MockData.GetTopBottomVoteSchedules).pipe(
-			delay(500),
-			map((r) => r.map(TopBottomVoteSchedule.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetTopBottomVoteSchedules', {})
+			.pipe(map((r: any) => _.map(r.d, TopBottomVoteSchedule.fromJson)));
 	}
 
 	public GetSchedules(data: { subjectId: string }): Observable<ClientSchedule[]> {
-		return this.httpClient.post(this.baseUrl + 'GetSchedules', data).pipe(
-			catchError((error) => of(MockData.GetSchedules)),
-			delay(500),
-			map((r) => _.map(r, ClientSchedule.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetSchedules', data)
+			.pipe(map((r: any) => _.map(r.d, ClientSchedule.fromJson)));
 	}
 
 	public GetCurrentSubject(data: { phaseId: string }): Observable<ClientSubject> {
-		return of(MockData.GetCurrentSubject).pipe(
-			delay(500),
-			map((r) => ClientSubject.fromJson(r))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetCurrentSubject', data)
+			.pipe(map((r: any) => ClientSubject.fromJson(r.d)));
 	}
 
 	public GetCase(data: { scheduleId: string }): Observable<Case[]> {
-		return of(MockData.GetCase).pipe(
-			delay(500),
-			map((r) => r.map(Case.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetCase', data)
+			.pipe(map((r: any) => _.map(r.d, Case.fromJson)));
 	}
 
 	public GetRoles(): Observable<Role[]> {
-		return of(MockData.GetRoles).pipe(
-			delay(500),
-			map((r) => r.map(Role.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetRoles', {})
+			.pipe(map((r: any) => _.map(r.d, Role.fromJson)));
 	}
 
 	public GetUserInRoles(): Observable<ClientUserInRoles[]> {
-		return of(MockData.GetUserInRoles).pipe(
-			delay(500),
-			map((r) => r.map(ClientUserInRoles.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetUserInRoles', {})
+			.pipe(map((r: any) => _.map(r.d, ClientUserInRoles.fromJson)));
 	}
 
-	public GetMaximumFileSize(): Observable<number> {
-		return of(MockData.GetMaximumFileSize).pipe(delay(500));
+	public GetMaximumFileSize(data: { subjectId: string }): Observable<number> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetMaximumFileSize', data)
+			.pipe(map((r: any) => Number(r.d)));
 	}
 
 	public GetGeneralAssistantRole(): Observable<boolean> {
-		return of(MockData.GetGeneralAssistantRole).pipe(delay(500));
+		return this.httpClient
+			.post(this.baseUrl + 'GetGeneralAssistantRole', {})
+			.pipe(map((r: any) => !!r.d));
 	}
 	//#endregion
 
 	//#region Save
-	public SaveGeneration(data: { generationName: string; semester: string; year: string }) {
-		// return this.httpClient.post(this.baseUrl + 'SaveGeneration', data)
-		return of(true).pipe(delay(500));
+	public SaveGeneration(data: {
+		generationName: string;
+		semester: string;
+		year: string;
+	}): Observable<boolean> {
+		return this.httpClient.post(this.baseUrl + 'SaveGeneration', data).pipe(map((r: any) => !!r.d));
 	}
 
 	// datas: ['CompSci, Assistant, 3, 150025626,...', ...]
-	public SaveTraineesInGeneration(data: { datas: string[] }) {
-		// return this.httpClient.post(this.baseUrl + 'SaveTraineesInGeneration', data)
-		return of(true).pipe(delay(500));
+	public SaveTraineesInGeneration(data: { datas: string[] }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveTraineesInGeneration', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
 	// datas: ['1503251513, ar, T001', ...]
-	public SaveChangeMemberType(data: { datas: string[] }) {
-		// return this.httpClient.post(this.baseUrl + 'SaveChangeMemberType', data)
-		return of(true).pipe(delay(500));
+	public SaveChangeMemberType(data: { datas: string[] }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveChangeMemberType', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
-	public SavePhase(data: { name: string; beginDate: string; endDate: string; type: string }) {
-		// return this.httpClient.post(this.baseUrl + 'SavePhase', data)
-		return of(true).pipe(delay(500));
+	public SavePhase(data: {
+		name: string;
+		beginDate: string;
+		endDate: string;
+		type: string;
+	}): Observable<boolean> {
+		return this.httpClient.post(this.baseUrl + 'SavePhase', data).pipe(map((res: any) => !!res.d));
 	}
 
 	public SaveTraineesToPhase(data: {
 		binusianNumbers: string[];
 		phaseId: string;
 		isAddToSchedule: boolean;
-	}) {
+	}): Observable<boolean> {
 		// Possible result -> array of existing error
-		// return this.httpClient.post(this.baseUrl + 'SaveTraineesToPhase', data)
-		return of(true).pipe(delay(500));
+		return this.httpClient
+			.post(this.baseUrl + 'SaveTraineesToPhase', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
-	public SaveSubject(data: { name: string; phaseId: string; value: boolean }) {
-		// return this.httpClient.post(this.baseUrl + 'SaveSubject', data)
-		return of(true).pipe(delay(500));
+	public SaveSubject(data: { name: string; phaseId: string; value: boolean }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveSubject', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
-	public SaveMaximumFileSize(data: { fileSize: string; subjectId: string }) {
-		// return this.httpClient.post(this.baseUrl + 'SaveMaximumFileSize', data)
-		return of(true).pipe(delay(500));
+	public SaveMaximumFileSize(data: { fileSize: number; subjectId: string }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveMaximumFileSize', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
-	public SaveSubjectDetail(data: { subjectId: string; value: boolean }) {
-		// return this.httpClient.post(this.baseUrl + 'SaveSubjectDetail', data)
-		return of(true).pipe(delay(500));
+	public SaveSubjectDetail(data: { subjectId: string; value: boolean }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveSubjectDetail', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
 	public SaveSpecificSchedule(data: {
@@ -405,9 +468,10 @@ export class LeaderService {
 		start: string;
 		end: string;
 		excTrainee: string[];
-	}) {
-		// return this.httpClient.post(this.baseUrl + 'SaveSpecificSchedule', data) // checked
-		return of(true).pipe(delay(500));
+	}): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveSpecificSchedule', data)
+			.pipe(map((res: any) => !!res.d)); // checked
 	}
 
 	public SaveTraineesToSchedule(data: {
@@ -415,19 +479,25 @@ export class LeaderService {
 		phaseId: string;
 		subjectId: string;
 		scheduleId: string;
-	}) {
-		// return this.httpClient.post(this.baseUrl + 'SaveTraineesToSchedule', data)
-		return of(true).pipe(delay(500));
+	}): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveTraineesToSchedule', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
-	public SaveInterviewQuestions(data: { questionName: string; questions: string[] }) {
-		// return this.httpClient.post(this.baseUrl + 'SaveInterviewQuestions', data)
-		return of(true).pipe(delay(500));
+	public SaveInterviewQuestions(data: {
+		questionName: string;
+		questions: string[];
+	}): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveInterviewQuestions', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
-	public SaveUserInRoles(data: { userRoleId: string; userRoles: string[] }) {
-		// return this.httpClient.post(this.baseUrl + 'SaveInterviewQuestions', data)
-		return of(true).pipe(delay(500));
+	public SaveUserInRoles(data: { userRoleId: string; usernames: string[] }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveUserInRoles', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
 	//#endregion
@@ -440,9 +510,9 @@ export class LeaderService {
 		Semester: string;
 		Year: string;
 	}): Observable<boolean> {
-		// return throwError('Not implemented yet');
-		return this.httpClient.post(this.baseUrl + 'UpdateGeneration', data).pipe(mapTo(true));
-		return of(true).pipe(delay(500));
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateGeneration', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
 	public UpdatePhase(data: {
@@ -450,32 +520,37 @@ export class LeaderService {
 		EndDate: string;
 		PhaseId: string;
 		StartDate: string;
-	}) {
-		// return this.httpClient.post(this.baseUrl + 'UpdatePhase', data)
-		return of(true).pipe(delay(500));
+	}): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'UpdatePhase', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 	//#endregion
 
 	//#region Delete
 
-	public DeleteTraineeInPhase(data: { PhaseId: string; TraineeId: string }) {
-		// return this.httpClient.post(this.baseUrl + 'DeleteTraineeInPhase', data)
-		return of(true).pipe(delay(500));
+	public DeleteTraineeInPhase(data: { PhaseId: string; TraineeId: string }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteTraineeInPhase', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
-	public DeleteSubject(data: { subjectId: string }) {
-		// return this.httpClient.post(this.baseUrl + 'DeleteSubject', data)
-		return of(true).pipe(delay(500));
+	public DeleteSubject(data: { subjectId: string }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteSubject', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 
-	public DeleteAllSubjects() {
-		// return this.httpClient.post(this.baseUrl + 'DeleteSubject', data)
-		return of(true).pipe(delay(500));
+	public DeleteAllSubjects(): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteAllSubject', {})
+			.pipe(map((res: any) => !!res.d));
 	}
 
-	public DeleteUserInRoles(data: { userInRoleId: string }) {
-		// return this.httpClient.post(this.baseUrl + 'DeleteUserInRoles', data)
-		return of(true).pipe(delay(500));
+	public DeleteUserInRoles(data: { userInRoleId: string }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteUserInRoles', data)
+			.pipe(map((res: any) => !!res.d));
 	}
 	//#endregion
 }

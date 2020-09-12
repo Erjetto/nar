@@ -44,22 +44,19 @@ export class GeneralService {
 		password: string;
 		isPersistent: boolean;
 	}): Observable<User> {
-		return this.httpClient.post(this.baseUrl + 'LogOn', data).pipe(
-			map((res: any) => {
-				return User.fromJson(res.d);
-			})
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'LogOn', data)
+			.pipe(map((res: any) => User.fromJson(res.d)));
 	}
 
 	public LogOut(): Observable<boolean> {
-		return this.httpClient.post(this.baseUrl + 'LogOut', {}).pipe(map((res: any) => !!res.d));
+		return this.httpClient.post(this.baseUrl + 'LogOut', {}).pipe(map((res: any) => res.d === true));
 	}
 
 	public GetCurrentUser(): Observable<User> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetCurrentUser', {})
 			.pipe(map((res: any) => User.fromJson(res.d)));
-		// return of(new User('ASDF', 'RZ', 'Rheza', 'Assistant Supervisor', 't009'));
 	}
 
 	public GetCurrentTime(): Observable<Date> {
@@ -71,46 +68,53 @@ export class GeneralService {
 	public ChangeGeneration(data: { genId: string }): Observable<string> {
 		return this.httpClient
 			.post(this.baseUrl + 'ChangeGeneration', data)
-			.pipe(map((res) => res + ''));
+			.pipe(map((res: any) => res + ''));
 	}
 
 	public ChangeRole(data: { role: string }): Observable<boolean> {
-		return this.httpClient.post(this.baseUrl + 'ChangeRole', data).pipe(map((res) => !!res));
+		return this.httpClient.post(this.baseUrl + 'ChangeRole', data).pipe(map((res: any) => res === true));
 	}
 
 	public GetScoreBySubject(data: { subjectId: string }): Observable<ClientScoreTrainee[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetScoreBySubject', data)
-			.pipe(map((res) => _.map(res, ClientScoreTrainee.fromJson)));
+			.pipe(map((res: any) => _.map(res.d, ClientScoreTrainee.fromJson)));
 	}
 
 	public GetMaterial(data: { subjectId: string }): Observable<Material[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetMaterial', data)
-			.pipe(map((res) => _.map(res, Material.fromJson)));
+			.pipe(map((res: any) => _.map(res.d, Material.fromJson)));
 	}
 
 	public GetTraineesInLatestPhase(): Observable<ClientTraineeView[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineesInLatestPhaseg', {})
+			.pipe(map((res: any) => _.map(res.d, ClientTraineeView.fromJson)));
 	}
 
 	public GetTrainees(): Observable<ClientTrainee[]> {
-		return of(MockData.GetTrainees).pipe(
-			delay(500),
-			map((r) => r.map(ClientTrainee.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetTrainees', {})
+			.pipe(map((res: any) => _.map(res.d, ClientTrainee.fromJson)));
 	}
 
 	public GetTraineeData(data: { traineeId: string }): Observable<ClientTraineeData> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineeData', data)
+			.pipe(map((res: any) => ClientTraineeData.fromJson(res.d)));
 	}
 
 	public GetCurrentSubject(data: { phaseId: string }): Observable<ClientSubject> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetCurrentSubject', data)
+			.pipe(map((res: any) => ClientSubject.fromJson(res.d)));
 	}
 
 	public GetSubjectsWithPresentation(data: { phaseId: string }): Observable<ClientSubject[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetSubjectsWithPresentation', data)
+			.pipe(map((res: any) => _.map(res.d, ClientSubject.fromJson)));
 	}
 
 	// Notification
@@ -134,37 +138,32 @@ export class GeneralService {
 	}
 
 	public GetPhasesCurrentGeneration(): Observable<ClientPhase[]> {
-		return of(MockData.GetPhasesCurrentGeneration).pipe(
-			delay(500),
-			map((r) => r.map(ClientPhase.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetPhasesCurrentGeneration', {})
+			.pipe(map((res: any) => _.map(res.d, ClientPhase.fromJson)));
 	}
 
 	public GetPhasesCurrentGenerationWithType(data: { type: string }): Observable<ClientPhase[]> {
-		return of(MockData.GetPhasesCurrentGenerationWithType).pipe(
-			delay(500),
-			map((r) => r.map(ClientPhase.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetPhasesCurrentGenerationWithType', data)
+			.pipe(map((res: any) => _.map(res.d, ClientPhase.fromJson)));
 	}
 
 	public GetMessageCurrentGeneration(): Observable<Message[]> {
-		return of(MockData.GetMessageCurrentGeneration).pipe(
-			delay(500),
-			map((r) => r.map(Message.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetMessageCurrentGeneration', {})
+			.pipe(map((res: any) => _.map(res.d, Message.fromJson)));
 	}
 
 	public GetStatisticTrainee(data: { phaseId: string }): Observable<ClientStatistic[]> {
-		return of(MockData.GetStatisticTrainee).pipe(
-			delay(500),
-			map((r) => r.map(ClientStatistic.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetStatisticTrainee', data)
+			.pipe(map((res: any) => _.map(res.d, ClientStatistic.fromJson)));
 	}
 
 	public GetSubjects(data: { phaseId: string }): Observable<ClientSubject[]> {
-		return of(MockData.GetSubjects).pipe(
-			delay(500),
-			map((r) => r.map(ClientSubject.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetSubjects', data)
+			.pipe(map((res: any) => _.map(res.d, ClientSubject.fromJson)));
 	}
 }

@@ -3,14 +3,23 @@ import { Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { MockData } from '../../mock-data';
 import { HttpClient } from '@angular/common/http';
-import { TopBottomVote, TrainerTopBottomVote, ClientTraineeReputationPaging, ClientTraineeData, EvaluationNote, ClientEvaluation, TraineeComment } from '../../models';
+import {
+	TopBottomVote,
+	TrainerTopBottomVote,
+	ClientTraineeReputationPaging,
+	ClientTraineeData,
+	EvaluationNote,
+	ClientEvaluation,
+	TraineeComment,
+} from '../../models';
 import { environment } from 'src/environments/environment';
+import * as _ from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class NoteService {
-  private baseUrl = environment.apiUrl + 'Note.svc/';
+	private baseUrl = environment.apiUrl + 'Note.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public SaveNote(data: {
@@ -18,7 +27,9 @@ export class NoteService {
 		note: string;
 		reputation: number;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveNote', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public GetTraineesReputationByPhase(data: {
@@ -26,57 +37,60 @@ export class NoteService {
 		index: number;
 		search: string;
 	}): Observable<ClientTraineeReputationPaging> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveNote', data)
+			.pipe(map((res: any) => ClientTraineeReputationPaging.fromJson(res.d)));
 	}
 
-	public GetTraineeDataForTrainer(data: {
-		traineeId: string;
-	}): Observable<ClientTraineeData> {
-		return throwError('Not implemented yet');
+	public GetTraineeDataForTrainer(data: { traineeId: string }): Observable<ClientTraineeData> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineeDataForTrainer', data)
+			.pipe(map((res: any) => ClientTraineeData.fromJson(res.d)));
 	}
 
-	public GetEvaluationNotesContain(data: {
-		str: string;
-	}): Observable<EvaluationNote[]> {
-		return throwError('Not implemented yet');
+	public GetEvaluationNotesContain(data: { str: string }): Observable<EvaluationNote[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetAllCaseBySubject', data)
+			.pipe(map((res: any) => _.map(res.d, EvaluationNote.fromJson)));
 	}
 
-	public DeleteReputationNote(data: {
-		traineeId: string;
-		noteId: string;
-	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+	public DeleteReputationNote(data: { traineeId: string; noteId: string }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteReputationNote', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
-	public GetEvaluation(data: {
-		sdate: string;
-	}): Observable<ClientEvaluation> {
-		return throwError('Not implemented yet');
+	public GetEvaluation(data: { sdate: string }): Observable<ClientEvaluation> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetEvaluation', data)
+			.pipe(map((res: any) => ClientEvaluation.fromJson(res.d)));
 	}
 
-	public SaveEvaluationNote(data: {
-		notes: string;
-		sdate: Date;
-	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+	public SaveEvaluationNote(data: { notes: string; sdate: Date }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SaveEvaluationNote', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
-	public DeleteEvaluationNote(data: {
-		noteId: string;
-		sdate: Date;
-	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+	public DeleteEvaluationNote(data: { noteId: string; sdate: Date }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteEvaluationNote', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public GetTraineeCommentHistory(): Observable<TraineeComment> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetEvaluation', {})
+			.pipe(map((res: any) => TraineeComment.fromJson(res.d)));
 	}
 
 	public DeleteTraineeCommentHistory(data: {
 		traineeId: string;
 		noteId: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteTraineeCommentHistory', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	// public GetTraineesWithPagingReputationByPhase(data: {
@@ -86,13 +100,11 @@ export class NoteService {
 	// 	type: Date;
 	// }): Observable<ClientTraineeBeeReputation> {
 	// 	return throwError('Not implemented yet');
-  // }
+	// }
 
 	// public GetTraineeBeeCount(data: {
 	// 	phaseId: string;
 	// }): Observable<number> {
 	// 	return throwError('Not implemented yet');
-  // }
-  
-
+	// }
 }
