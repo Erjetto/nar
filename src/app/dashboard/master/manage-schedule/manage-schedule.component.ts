@@ -63,7 +63,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		scheduleName: ['', Validators.required],
 		scheduleCount: [1, Validators.min(1)],
 		scheduleDates: this.fb.array(['']),
-		deleteReason: ['', Validators.required],
+		deleteReason: [''],
 	});
 	variations = 1;
 	meetingPerWeek = 0;
@@ -195,20 +195,18 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			// in case of failed request
 			this.loadingFormSchedule$.next(false);
 			this.loadingFormTraineeInSchedule$.next(false);
-    });
-    
-    // Auto reload phases
-		this.mainEffects.changeGen$
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe(() => {
-      this.store.dispatch(MasterStateAction.FetchPhases())
-    });
+		});
+
+		// Auto reload phases
+		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+			this.store.dispatch(MasterStateAction.FetchPhases());
+		});
 
 		// Auto reload schedule
 		merge(
 			this.masterEffects.createSchedule$,
 			this.masterEffects.deleteSchedule$,
-			this.masterEffects.deleteAllSchedule$,
+			this.masterEffects.deleteAllSchedule$
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrSubject$))
 			.subscribe(([act, sub]) => {
@@ -281,8 +279,9 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 
 	submitScheduleForm() {
 		// if (!this.editForm$.value)
-		const { subject, scheduleName, scheduleDates } = this.scheduleForm.value;
 
+		const { subject, scheduleName, scheduleDates } = this.scheduleForm.value;
+		return;
 		this.store.dispatch(
 			MasterStateAction.CreateDailySchedule({
 				subjectId: subject,
@@ -310,9 +309,14 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	updateScheduleDates(count: number) {
-		const diff = count - this.scheduleDates.length;
-
-		if (diff > 0) this.scheduleDates.push(this.fb.control(''));
+    // If needed more
+		while (count - this.scheduleDates.length > 0) {
+      this.scheduleDates.push(this.fb.control(''));
+    }
+    // If needed less
+		while (count - this.scheduleDates.length < 0) {
+			this.scheduleDates.removeAt(this.scheduleDates.length - 1);
+		}
 
 		return;
 		// - this.meetings.length;

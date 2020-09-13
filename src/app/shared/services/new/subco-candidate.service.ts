@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { MockData } from '../../mock-data';
 import * as _ from 'lodash';
+import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
 	providedIn: 'root',
@@ -17,7 +18,7 @@ export class SubcoCandidateService {
 	// Offset -2 generation
 	public GetQuestionsForTrainerGeneration(): Observable<SubcoCandidateQuestionModel> {
 		return this.httpClient
-			.post(this.baseUrl + 'GetQuestionsById', {})
+			.post(this.baseUrl + 'GetQuestionsForTrainerGeneration', {})
 			.pipe(map((res: any) => SubcoCandidateQuestionModel.fromJson(res.d)));
 	}
 
@@ -53,7 +54,21 @@ export class SubcoCandidateService {
 
 	public CreateSchedules(data: { schedules: SubcoCandidateAnswerModel[] }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'CreateSchedules', data)
+			.post(this.baseUrl + 'CreateSchedules', {
+				schedules: _.map(
+					data.schedules,
+					// Reformat date to old Microsoft format because this backend is oooold
+					// TODO: Move this to new interceptor (HandleDateInterceptor)
+					({ Id, SubcoCandidateQuestionId, TrainerName, Answers, StartDate, EndDate }) => ({
+						Id,
+						SubcoCandidateQuestionId,
+						TrainerName,
+						Answers,
+						StartDate: DateHelper.toCSharpDate(StartDate),
+						EndDate: DateHelper.toCSharpDate(EndDate),
+					})
+				),
+			})
 			.pipe(map((res: any) => res.d === true));
 	}
 
@@ -75,7 +90,7 @@ export class SubcoCandidateService {
 
 	public ExportCurrentGenAnswersToExcel(): Observable<string> {
 		return this.httpClient
-			.post(this.baseUrl + 'DeleteSchedule', {})
+			.post(this.baseUrl + 'ExportCurrentGenAnswersToExcel', {})
 			.pipe(map((res: any) => res.d + ''));
 	}
 }

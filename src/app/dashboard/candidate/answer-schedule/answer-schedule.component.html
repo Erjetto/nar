@@ -3,14 +3,16 @@
 		<div class="col-5">
 			<div class="row">
 				<div class="col">
-					<rd-card [cardTitle]="'Manage Schedules for (generation 1 year lower)'">
+					<rd-card
+						[cardTitle]="'Manage Schedules for (generation 1 year lower)'"
+						[isLoading]="loadingViewSchedule$ | async"
+					>
 						<div class="row">
 							<table class="table table-sm table-striped table-hover text-center">
 								<thead>
 									<tr>
 										<th>Name</th>
 										<th>Date</th>
-										<!-- <th width="100px">Actions</th> -->
 									</tr>
 								</thead>
 								<tbody>
@@ -19,19 +21,26 @@
 									</tr>
 									<tr
 										*ngFor="let schedule of trainerSchedule$ | async"
-										(click)="onSelectSchedule(schedule)"
+										(click)="selectSchedule(schedule)"
 										class="cursor-pointer"
 									>
-										<td>{{ schedule.TrainerName }}</td>
-										<td>
-											{{ schedule.StartDate | date: viewDateFormat }} -
-											{{ schedule.EndDate | date: viewDateFormat }}
-										</td>
+                    <td>{{ schedule.TrainerName }}</td>
+                    <!-- Hilangkan tahun jika di tahun ini -->
+										<ng-container [ngSwitch]="schedule.StartDate.getFullYear() !== currentYear">
+											<td *ngSwitchCase="true">
+												{{ schedule.StartDate | date: viewDateFormat }} -
+												{{ schedule.EndDate | date: viewDateFormat }}
+											</td>
+											<td *ngSwitchCase="false">
+												{{ schedule.StartDate | date: viewDateFormatWithoutYear }} -
+												{{ schedule.EndDate | date: viewDateFormatWithoutYear }}
+											</td>
+										</ng-container>
 									</tr>
 								</tbody>
 							</table>
 						</div>
-						<div class="row mt-2">
+						<div class="row mt-2" (click)="exportToExcel()">
 							<button class="btn text-white bg-excel">Export into Excel</button>
 						</div>
 					</rd-card>
@@ -39,15 +48,19 @@
 			</div>
 			<div class="row">
 				<div class="col">
-					<rd-card [cardTitle]="'Add Schedules for (gen 1 lower)'" [expanded]="false">
+					<rd-card
+						[cardTitle]="'Add Schedules for (gen 1 lower)'"
+						[expanded]="false"
+						[isLoading]="loadingFormSchedule$ | async"
+					>
 						<div class="col v-list-m-12">
 							<div class="row">
-								<textarea class="form-control" style="resize: vertical">{{
+								<textarea class="form-control" style="resize: vertical" #scheduleCsv>{{
 									addSchedulePlaceholder
 								}}</textarea>
 							</div>
 							<div class="row">
-								<button class="btn btn-primary">
+								<button class="btn btn-primary" (click)="createSchedule(scheduleCsv.value)">
 									<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Schedule(s)
 								</button>
 							</div>
@@ -64,51 +77,59 @@
 				(toggleExpand)="closeViewSchedule()"
 			>
 				<div class="col">
-					<form #form="ngForm">
+					<form #scheduleForm="ngForm">
+						<input type="hidden" name="answerId" [ngModel]="(selectedSchedule$ | async)?.Id" />
 						<div class="form-group row">
-							<label class="col-2 col-form-label" for="trainer-name">Trainer</label>
+							<label class="col-2 col-form-label" for="trainerName">Trainer</label>
 							<input
 								class="form-control col"
 								type="text"
-								name="trainer-name"
-								[value]="(selectedSchedule$ | async)?.TrainerName"
+								name="trainerName"
+								[ngModel]="(selectedSchedule$ | async)?.TrainerName"
+								disabled
 							/>
 						</div>
 						<div class="form-group row">
-							<label class="col-2 col-form-label" for="answer-schedule">Start Time</label>
+							<label class="col-2 col-form-label" for="startTime">Start Time</label>
 							<input
 								type="datetime"
 								class="form-control col"
-								name="start-time"
-								[value]="(selectedSchedule$ | async)?.StartDate | date: dateFormat"
+								name="startTime"
+								[ngModel]="(selectedSchedule$ | async)?.StartDate | date: dateFormat"
 							/>
 						</div>
 						<div class="form-group row">
-							<label class="col-2 col-form-label" for="answer-schedule">End Time</label>
+							<label class="col-2 col-form-label" for="endTime">End Time</label>
 							<input
 								type="datetime"
 								class="form-control col"
-								name="end-time"
-								[value]="(selectedSchedule$ | async)?.EndDate | date: dateFormat"
+								name="endTime"
+								[ngModel]="(selectedSchedule$ | async)?.EndDate | date: dateFormat"
 							/>
 						</div>
 						<div class="row justify-content-around">
 							<!-- <input type="submit" value="Save Schedule" class="btn btn-primary"/> -->
-							<button class="btn btn-primary" (click)="saveSchedule(form)">Save Schedule</button>
-							<button class="btn btn-danger" (click)="deleteSchedule(form)">
-								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
-								Delete
+							<button class="btn btn-primary" (click)="saveSchedule(scheduleForm)">
+								Save Schedule
 							</button>
+							<rd-confirmable-button (confirm)="deleteSchedule(scheduleForm)">
+								<button class="btn btn-danger">
+									<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+									Delete
+								</button>
+							</rd-confirmable-button>
 						</div>
 					</form>
 				</div>
 				<hr />
 				<div class="col v-list-m-12 v-list-bordered">
-					<div *ngFor="let question of questionModel.Questions; let i = index">
+					<div *ngFor="let question of questions?.Questions; let i = index">
 						<p class="font-weight-bold">
 							{{ i + 1 + '. ' + question }}
 						</p>
-						<p class="pl-4" style="white-space: pre-wrap;">{{ ((selectedSchedule$ | async)?.Answers)[i] }}</p>
+						<p class="pl-4" style="white-space: pre-wrap">
+							{{ ((selectedSchedule$ | async)?.Answers)[i] || '-' }}
+						</p>
 					</div>
 				</div>
 			</rd-card>

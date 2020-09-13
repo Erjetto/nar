@@ -94,13 +94,19 @@
 							class="row"
 							*ngFor="let date of scheduleDates.controls; let i = index"
 							[hidden]="scheduleCount <= i"
-							[formGroupName]="i"
 						>
 							<label class="col-4 col-form-label">
 								{{ i == 0 ? 'Schedule Date' : '' }}
 							</label>
 							<div class="col">
-								<input type="date" class="form-control" name="scheduleDate" required />
+                <!-- form.value will ignore the disabled value 
+                without having to remove it -->
+								<input
+									type="date"
+                  class="form-control"
+                  [formControlName]="i"
+                  />
+                  <!-- [formControl]="scheduleDates.controls[i]" -->
 							</div>
 						</div>
 					</div>
@@ -256,8 +262,8 @@
 								name="selectPhase"
 								[items]="phases$ | async"
 								[clearable]="false"
-                bindLabel="Description"
-                placeholder="Phase"
+								bindLabel="Description"
+								placeholder="Phase"
 								[searchable]="false"
 								[ngModel]="insertTraineeCurrPhase$ | async"
 								(change)="insertTraineeCurrPhase$.next($event)"
@@ -273,7 +279,7 @@
 								[items]="insertTraineeSubjectList$ | async"
 								[clearable]="false"
 								bindLabel="Name"
-                placeholder="Subject"
+								placeholder="Subject"
 								[searchable]="false"
 								[ngModel]="insertTraineeCurrSubject$ | async"
 								(change)="insertTraineeCurrSubject$.next($event)"
@@ -289,7 +295,7 @@
 								[items]="insertTraineeScheduleList$ | async"
 								[clearable]="false"
 								bindLabel="ScheduleName"
-                placeholder="Schedule"
+								placeholder="Schedule"
 								[searchable]="false"
 								[ngModel]="(insertTraineeScheduleList$ | async)[0]"
 							></ng-select>
@@ -321,19 +327,19 @@
 			<rd-card [cardTitle]="'Schedule in Subject'" [isLoading]="loadingViewSchedule$ | async">
 				<div rdCardBadges>
 					<rd-confirmable-button
-            (confirm)="deleteAllSchedule()"
-            [canConfirm]="deleteAllReason !== ''"
+						(confirm)="deleteAllSchedule()"
+						[canConfirm]="deleteAllReason !== ''"
 						*ngIf="(viewScheduleList$ | async)?.length > 0"
-          >
-							<div class="description">
-                <textarea
-									class="form-control"
-									placeholder="Input reasons here..."
-									cols="30"
-                  rows="4"
-                  [(ngModel)]="deleteAllReason"
-								></textarea>
-							</div>
+					>
+						<div class="description">
+							<textarea
+								class="form-control"
+								placeholder="Input reasons here..."
+								cols="30"
+								rows="4"
+								[(ngModel)]="deleteAllReason"
+							></textarea>
+						</div>
 						<button class="btn btn-sm btn-danger">
 							<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete All Schedule
 						</button>

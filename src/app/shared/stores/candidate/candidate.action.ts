@@ -1,8 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import {
-	SubcoCandidateQuestionModel,
-	SubcoCandidateAnswerModel,
-} from '../../models';
+import { SubcoCandidateQuestionModel, SubcoCandidateAnswerModel } from '../../models';
 
 export const FetchQuestions = createAction('[CandidateState] FetchQuestions');
 export const FetchAnswers = createAction('[CandidateState] FetchAnswers');
@@ -18,12 +15,12 @@ export const FetchAnswersSuccess = createAction(
 
 export const SaveQuestions = createAction(
 	'[CandidateState] SaveQuestions',
-	props<{ payload: string[] }>()
+	props<{ questions: string[] }>()
 );
 
 export const CreateSchedule = createAction(
 	'[CandidateState] CreateSchedule',
-	props<{ payload: string[] }>()
+	props<{ schedules: SubcoCandidateAnswerModel[] }>()
 );
 export const ViewSchedule = createAction(
 	'[CandidateState] ViewSchedule',
@@ -31,12 +28,18 @@ export const ViewSchedule = createAction(
 );
 export const UpdateSchedule = createAction(
 	'[CandidateState] UpdateSchedule',
-	props<{ payload: SubcoCandidateAnswerModel }>()
+	props<{
+		answerId: string;
+		startDate: Date;
+		endDate: Date;
+	}>()
+);
+export const DeleteSchedule = createAction(
+	'[CandidateState] DeleteSchedule',
+	props<{ answerId: string }>()
 );
 
-export const SaveQuestionSuccess = createAction(
-	'[CandidateState] SaveQuestionSuccess'
-);
-export const UpdateScheduleSuccess = createAction(
-	'[CandidateState] UpdateScheduleSuccess'
-);
+export const SaveQuestionSuccess = createAction('[CandidateState] SaveQuestionSuccess');
+export const UpdateScheduleSuccess = createAction('[CandidateState] UpdateScheduleSuccess');
+
+export const ExportAnswersToExcel = createAction('[CandidateState] ExportAnswersToExcel');
