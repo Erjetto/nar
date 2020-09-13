@@ -14,6 +14,7 @@ import {
 	ClientTraineeView,
 	ClientTraineeData,
 	ClientTrainee,
+  ClientGeneration,
 } from '../../models';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -63,6 +64,12 @@ export class GeneralService {
 		return this.httpClient
 			.post(this.baseUrl + 'GetCurrentTime', {})
 			.pipe(map((res: string) => DateHelper.fromCSharpDate(res)));
+	}
+
+	public GetCurrentGeneration(): Observable<ClientGeneration> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetCurrentGeneration', {})
+			.pipe(map((res: any) => ClientGeneration.fromJson(res.d)));
 	}
 
 	public ChangeGeneration(data: { genId: string }): Observable<string> {

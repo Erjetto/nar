@@ -85,9 +85,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.genList$ = this.store.pipe(select(fromMasterState.getGenerations));
 		this.roleList$ = of(Role.allRoles);
 
-		//#region For SPV
 		this.selectedGenId$ = this.store.pipe(select(fromMainState.getCurrentGenerationId));
-		this.selectedRole$ = this.store.pipe(select(fromMainState.getCurrentRole));
+    this.selectedRole$ = this.store.pipe(select(fromMainState.getCurrentRole));
+    
+    // Update menu when change role
 		this.selectedRole$
 			.pipe(takeUntil(this.destroyed$), distinctUntilChanged())
 			.subscribe((role) => {
@@ -96,12 +97,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				if (this.menuList.every((r) => r.data.name !== this.currentActiveHeader))
 					this.router.navigateByUrl('/home');
 			});
+
+		//#region For SPV
+		this.currentUser$
+			.pipe(filter((u) => u.Role.is(RoleFlags.AssistantSupervisor)))
+			.subscribe((u) => {
+				this.initiateRoleAndGen();
+			});
 		//#endregion
 
-		this.initiateRoleAndGen();
-
-		// Trigger fetch data
 		this.store.dispatch(MasterStateAction.FetchGenerations());
+		this.store.dispatch(MainStateAction.FetchCurrentGeneration());
 	}
 
 	ngOnDestroy(): void {
@@ -145,26 +151,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
 						})
 					)
 				);
-
-		if (!!localStorage.getItem('current-gen-id'))
-			this.store.dispatch(
-				MainStateAction.ChangeGeneration({
-					genId: localStorage.getItem('current-gen-id'),
-				})
-			);
-		else
-			this.genList$
-				.pipe(
-					filter((v) => !isEmpty(v)),
-					first()
-				)
-				.subscribe((genList) =>
-					this.store.dispatch(
-						MainStateAction.ChangeGeneration({
-							genId: genList[0].GenerationId,
-						})
-					)
-				);
+		// NOTE: Current Generation already saved in server side, this not needed
+		// if (!!localStorage.getItem('current-gen-id'))
+		// 	this.store.dispatch(
+		// 		MainStateAction.ChangeGeneration({
+		// 			genId: localStorage.getItem('current-gen-id'),
+		// 		})
+		// 	);
+		// else
+		// 	this.genList$
+		// 		.pipe(
+		// 			filter((v) => !isEmpty(v)),
+		// 			first()
+		// 		)
+		// 		.subscribe((genList) =>
+		// 			this.store.dispatch(
+		// 				MainStateAction.ChangeGeneration({
+		// 					genId: genList[0].GenerationId,
+		// 				})
+		// 			)
+		// 		);
 	}
 
 	initiateTheme() {

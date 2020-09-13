@@ -11,12 +11,12 @@ import { IAppState } from '../app.reducer';
 import { isEmpty } from 'lodash';
 
 export class DashboardContentBase implements OnDestroy {
-	currentGenerationId$: Observable<string>;
+	currentGeneration$: Observable<ClientGeneration>;
 
 	destroyed$: Subject<any> = new Subject();
 
 	constructor(protected store: Store<IAppState>) {
-    this.currentGenerationId$ = this.store.pipe(select(fromMainState.getCurrentGenerationId))
+    this.currentGeneration$ = this.store.pipe(select(fromMainState.getCurrentGeneration));
   }
 
 	ngOnDestroy(): void {

@@ -1,19 +1,32 @@
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 import { EncryptToBase64 } from 'src/app/shared/utilities/aes';
 
 import * as MainStateAction from './main.action';
 import * as fromMainState from './main.reducer';
+import * as fromMasterState from '../master/master.reducer';
 import { Observable, of, throwError } from 'rxjs';
-import { switchMap, mergeMap, pluck, catchError, share, map, tap, mapTo } from 'rxjs/operators';
+import {
+	switchMap,
+	mergeMap,
+	pluck,
+	catchError,
+	share,
+	map,
+	tap,
+	mapTo,
+	withLatestFrom,
+} from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
 import { isArray, flatten } from 'lodash';
 import { GeneralService } from '../../services/new/general.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Cookies } from '../../constants/cookie.constants';
+import { IAppState } from 'src/app/app.reducer';
+import { ClientGeneration } from '../../models';
 
 @Injectable({
 	providedIn: 'root',
@@ -21,6 +34,7 @@ import { Cookies } from '../../constants/cookie.constants';
 export class MainStateEffects {
 	constructor(
 		private actions$: Actions,
+		private store: Store<IAppState>,
 		private generalService: GeneralService,
 		private cookieService: CookieService,
 		private otherService: OtherService
@@ -76,11 +90,26 @@ export class MainStateEffects {
 		switchMap((act) =>
 			this.generalService.ChangeGeneration({ genId: act.genId }).pipe(map((res) => ({ act, res })))
 		),
-		mergeMap(({ act, res }) => {
-			localStorage.setItem(Cookies.CURR_GEN_ID, act.genId);
-			return of(MainStateAction.ChangeGenerationSuccess({ genId: act.genId }));
+    withLatestFrom(this.store.pipe(select(fromMasterState.getGenerations))),
+    tap(console.log),
+		mergeMap(([{ act, res }, gens]) => {
+			// localStorage.setItem(Cookies.CURR_GEN_ID, act.genId);
+
+			return of(
+				MainStateAction.ChangeGenerationSuccess({
+					gen: gens.find((g: ClientGeneration) => g.GenerationId === act.genId),
+				})
+			);
 		}),
 		tap(() => console.log('Changed generation')),
+		share()
+	);
+
+	@Effect()
+	getCurrentGen$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.FetchCurrentGeneration),
+		switchMap(() => this.generalService.GetCurrentGeneration()),
+		mergeMap((res) => of(MainStateAction.SetGeneration({ gen: res }))),
 		share()
 	);
 

@@ -11,10 +11,11 @@ export interface IMainState {
 	messages: Toast[];
 
 	announcement: Message[]; // Home Message
-  isLoadingAnnouncements: boolean;
+	isLoadingAnnouncements: boolean;
 	uploadedFiles: { fileid: string; filename: string }[];
 
 	currentRole: Role;
+	currentGeneration: ClientGeneration;
 	currentGenerationId: string;
 }
 
@@ -30,10 +31,11 @@ export const initialState: IMainState = {
 	],
 	uploadedFiles: [],
 
-  announcement: [],
-  isLoadingAnnouncements: false,
+	announcement: [],
+	isLoadingAnnouncements: false,
 
-	currentGenerationId: null,
+	currentGeneration: null,
+	currentGenerationId: '',
 	currentRole: null,
 };
 
@@ -46,8 +48,8 @@ export const MainStateReducer = createReducer(
 		...state,
 		currentUser: { ...user, ActiveRole: user.Role.roleName },
 		currentRole: user.Role,
-  })),
-  
+	})),
+
 	on(MainStateAction.LogoutSuccess, (state) => ({ ...state, user: null })),
 
 	on(MainStateAction.ToastMessage, (state, { message, messageType }) => ({
@@ -64,12 +66,13 @@ export const MainStateReducer = createReducer(
 		messages: filter(state.messages, (v, i) => i !== index),
 	})),
 
-	on(MainStateAction.ChangeGeneration, (state, { genId }) => ({
+	on(MainStateAction.ChangeGenerationSuccess, MainStateAction.SetGeneration, (state, { gen }) => ({
 		...state,
-		currentGenerationId: genId,
+		currentGeneration: gen,
+		currentGenerationId: gen.GenerationId,
 	})),
 
-	on(MainStateAction.ChangeRole, (state, { role }) => ({
+	on(MainStateAction.ChangeRoleSuccess, (state, { role }) => ({
 		...state,
 		currentRole: role,
 	})),
@@ -78,8 +81,8 @@ export const MainStateReducer = createReducer(
 		...state,
 		isLoadingAnnouncements: true,
 	})),
-  
-  on(MainStateAction.FetchAnnouncementsSuccess, (state, { announcements }) => ({
+
+	on(MainStateAction.FetchAnnouncementsSuccess, (state, { announcements }) => ({
 		...state,
 		announcement: announcements,
 		isLoadingAnnouncements: false,
@@ -101,5 +104,6 @@ export const getToastMessages = getMainStateBy((s) => s.messages);
 export const getAnnouncements = getMainStateBy((s) => s.announcement);
 export const isAnnouncementsLoading = getMainStateBy((s) => s.isLoadingAnnouncements);
 
+export const getCurrentGeneration = getMainStateBy((s) => s.currentGeneration);
 export const getCurrentGenerationId = getMainStateBy((s) => s.currentGenerationId);
 export const getCurrentRole = getMainStateBy((s) => s.currentRole);
