@@ -1,6 +1,7 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
 import * as PresentationStateAction from './presentation.action';
+import * as MainStateAction from '../main/main.action';
 import { Toast, Message, CoreTrainingPresentation } from '../../models';
 import { drop, filter, min, max } from 'lodash';
 
@@ -24,6 +25,10 @@ export const PRESENTATIONSTATE_REDUCER_NAME = 'PresentationState';
 
 export const PresentationStateReducer = createReducer(
 	initialState,
+  // Remove all data when generation changed
+	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
+		...initialState,
+	})),
 
 	on(PresentationStateAction.FetchPresentations, (state) => ({
 		...state,

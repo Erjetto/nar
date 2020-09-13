@@ -1,5 +1,6 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import * as BinusianStateAction from './binusian.action';
+import * as MainStateAction from '../main/main.action';
 import { Role, ClientTrainee, ClientTraineeData, ClientUserInRoles } from '../../models';
 
 export interface IBinusianState {
@@ -27,6 +28,10 @@ export const BINUSIANSTATE_REDUCER_NAME = 'BinusianState';
 
 export const BinusianStateReducer = createReducer(
 	initialState,
+  // Remove all data when generation changed
+	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
+		...initialState,
+	})),
 
 	on(BinusianStateAction.FetchTrainees, (state) => ({ ...state, loadingTrainees: true })),
 	on(BinusianStateAction.FetchTraineesSuccess, (state) => ({ ...state, loadingTrainees: false })),

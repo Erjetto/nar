@@ -6,6 +6,7 @@ import {
 } from '@ngrx/store';
 
 import * as CaseStateAction from './case.action';
+import * as MainStateAction from '../main/main.action';
 import { Case, ClientCaseTrainer } from '../../models';
 
 export interface ICaseState {
@@ -28,6 +29,10 @@ export const CASESTATE_REDUCER_NAME = 'CaseState';
 
 export const CaseStateReducer = createReducer(
 	initialState,
+  // Remove all data when generation changed
+	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
+		...initialState,
+	})),
 	on(CaseStateAction.FetchCases, (state) => ({ ...state, loadingCases: true })),
 
 	on(CaseStateAction.FetchCasesSuccess, (state, { payload }) => ({

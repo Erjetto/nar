@@ -10,6 +10,7 @@ import {
 import { getBinusianState, getTrainees, getTraineesEntity } from '../binusian/binusian.reducer';
 import { cloneDeep } from 'lodash';
 import * as VoteStateAction from './vote.action';
+import * as MainStateAction from '../main/main.action';
 
 export interface IVoteState {
 	voteSchedules: TopBottomVoteSchedule[];
@@ -41,6 +42,10 @@ export const VOTESTATE_REDUCER_NAME = 'VoteState';
 
 export const VoteStateReducer = createReducer(
 	initialState,
+  // Remove all data when generation changed
+	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
+		...initialState,
+	})),
 
 	on(VoteStateAction.FetchTopBottomVoteSchedules, (state) => ({
 		...state,

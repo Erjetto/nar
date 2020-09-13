@@ -13,15 +13,23 @@ export const LogoutSuccess = createAction('[MainState] LogoutSuccess');
 export const SetCurrentUser = createAction('[MainState] SetCurrentUser', props<{ user: User }>());
 
 export const ChangeRole = createAction('[MainState] ChangeRole', props<{ role: Role }>());
+export const FetchCurrentGeneration = createAction('[MainState] GetCurrentGeneration');
 export const ChangeGeneration = createAction(
 	'[MainState] ChangeGeneration',
 	props<{ genId: string }>()
 );
 
-export const ChangeRoleSuccess = createAction('[MainState] ChangeRoleSuccess', props<{ role: Role }>());
+export const ChangeRoleSuccess = createAction(
+	'[MainState] ChangeRoleSuccess',
+	props<{ role: Role }>()
+);
 export const ChangeGenerationSuccess = createAction(
 	'[MainState] ChangeGenerationSuccess',
-	props<{ genId: string }>()
+	props<{ gen: ClientGeneration }>()
+);
+export const SetGeneration = createAction( // Change gen without reset store values
+	'[MainState] SetGeneration',
+	props<{ gen: ClientGeneration }>()
 );
 
 export const ToastMessage = createAction(

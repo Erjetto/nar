@@ -1,6 +1,7 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
 import * as MasterStateAction from './master.action';
+import * as MainStateAction from '../main/main.action';
 import {
 	Role,
 	ClientGeneration,
@@ -10,7 +11,6 @@ import {
 	ClientUserInRoles,
 	ClientTrainee,
 } from '../../models';
-import { MainStateAction } from '../../store-modules';
 
 export interface IMasterState {
 	roles: Role[];

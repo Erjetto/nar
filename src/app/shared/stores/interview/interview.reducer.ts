@@ -1,6 +1,7 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
 import * as InterviewStateAction from './interview.action';
+import * as MainStateAction from '../main/main.action';
 import {
 	ClientInterviewQuestion,
 	InterviewQuestionDetail,
@@ -47,6 +48,10 @@ export const INTERVIEWSTATE_REDUCER_NAME = 'InterviewState';
 
 export const InterviewStateReducer = createReducer(
 	initialState,
+  // Remove all data when generation changed
+	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
+		...initialState,
+	})),
 
 	on(InterviewStateAction.FetchInterviewQuestions, (state) => ({
 		...state,
