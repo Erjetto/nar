@@ -25,7 +25,7 @@ export class Role {
 	constructor(public roleName = '', public roleNumber = 0, public roleId = '') {}
 
 	static fromJson(data: any) {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return new Role(data.Name, RoleFlags[data.Name], data.UserRoleId);
 	}
 
@@ -46,7 +46,7 @@ export class ClientUserInRoles extends BaseModel {
 	}
 
 	static fromJson(data: any) {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientUserInRoles(), data);
 	}
 }
@@ -63,7 +63,7 @@ export class User extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): User {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new User(), data, {
 			Role: Role.from(data?.Role || 'Guest'),
 		});
@@ -75,7 +75,7 @@ export class Binusian extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): Binusian {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new Binusian(), data);
 	}
 }
@@ -93,7 +93,7 @@ export class ClientGeneration extends BaseModel {
 		return `${this.Year - 1}/${this.Year}`;
 	}
 	static fromJson(data?: any): ClientGeneration {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientGeneration(), data);
 	}
 }
@@ -109,7 +109,7 @@ export class ClientPhase extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientPhase {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientPhase(), data, {
 			BeginDate: DateHelper.fromCSharpDate(data?.BeginDate),
 			EndDate: DateHelper.fromCSharpDate(data?.EndDate),
@@ -122,7 +122,7 @@ export class ClientPhaseSimple extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientPhaseSimple {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientPhaseSimple(), data);
 	}
 }
@@ -144,7 +144,7 @@ export class ClientSchedule extends BaseModel {
 	}
 
 	static fromJson(data?: any): ClientSchedule {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientSchedule(), data, {
 			Start: DateHelper.fromCSharpDate(data?.Start),
 			End: DateHelper.fromCSharpDate(data?.End),
@@ -164,7 +164,7 @@ export class ClientSubject extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientSubject {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientSubject(), data, {
 			Phase: ClientPhase.fromJson(data?.Phase),
 		});
@@ -184,7 +184,7 @@ export class ClientTrainee extends BaseModel {
 	}
 
 	static fromJson(data?: any): ClientTrainee {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTrainee(), data);
 	}
 
@@ -205,7 +205,7 @@ export class TraineeDeactivateReason extends BaseModel {
 	}
 
 	static fromJson(data?: any): TraineeDeactivateReason {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TraineeDeactivateReason(), data, {
 			Date: DateHelper.fromCSharpDate(data?.Date),
 		});
@@ -224,7 +224,7 @@ export class ClientTraineeDeactivateReason extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeDeactivateReason {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeDeactivateReason(), data, {
 			Date: DateHelper.fromCSharpDate(data?.Date),
 		});
@@ -251,7 +251,7 @@ export class ClientTraineeReputation extends BaseModel {
 	}
 
 	static fromJson(data?: any): ClientTraineeReputation {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeReputation(), data);
 	}
 }
@@ -267,7 +267,7 @@ export class ClientTraineeReputationPaging extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeReputationPaging {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeReputationPaging(), data, {
 			TraineeReputation: data?.TraineeReputation?.map(ClientTraineeReputation.fromJson) ?? [],
 		});
@@ -296,7 +296,7 @@ export class AdditionalTraineeData extends BaseModel {
 		return this.GenerationId + '|' + this.TraineeId;
 	}
 	static fromJson(data?: any): AdditionalTraineeData {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new AdditionalTraineeData(), data);
 	}
 }
@@ -323,7 +323,7 @@ export class ClientTraineeData extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeData {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeData(), data, {
 			Scores: map(data?.Scores, ClientTraineeDataScore.fromJson),
 			Notes: map(data?.Notes, ClientNote.fromJson),
@@ -346,7 +346,7 @@ export class ClientNote extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientNote {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientNote(), data, {
 			SavedAt: DateHelper.fromCSharpDate(data?.SavedAt),
 		});
@@ -364,7 +364,7 @@ export class ClientTraineeDataScore extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeDataScore {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeDataScore(), data);
 	}
 }
@@ -380,7 +380,7 @@ export class ClientTraineeDataAttendance extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeDataAttendance {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeDataAttendance(), data, {
 			AttendanceTime: DateHelper.fromCSharpDate(data?.AttendanceTime),
 		});
@@ -420,7 +420,7 @@ export class ClientPeriodicTraineeAttendance extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeDataAttendance {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeDataAttendance(), data, {
 			Trainee: ClientTrainee.fromJson(data?.Trainee),
 		});
@@ -437,7 +437,7 @@ export class ClientTraineeView extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeView {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeView(), data);
 	}
 }
@@ -456,7 +456,7 @@ export class ClientScoreTrainee extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientScoreTrainee {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientScoreTrainee(), data);
 	}
 }
@@ -479,7 +479,7 @@ export class TraineeAttendance extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TraineeAttendance {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TraineeAttendance(), data, {
 			AttendanceTime: DateHelper.fromCSharpDate(data?.AttendanceTime),
 		});
@@ -499,7 +499,7 @@ export class ClientTraineeDailyAttendance extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeDailyAttendance {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeDailyAttendance(), data, {
 			Rest: ClientTraineeAttendanceTimeDetail.fromJson(data?.Rest),
 			Secretariat: ClientTraineeAttendanceTimeDetail.fromJson(data?.Secretariat),
@@ -521,7 +521,7 @@ export class ClientTraineeAttendanceReport extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeAttendanceReport {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeAttendanceReport(), data, {
 			Attendances: map(data?.Attendances, ClientTraineeAttendance.fromJson),
 			AttendanceSummary: ClientTraineeAttendanceSummary.fromJson(data?.AttendanceSummary),
@@ -541,7 +541,7 @@ export class ClientTraineeAttendanceSummary extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeAttendanceSummary {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeAttendanceSummary(), data);
 	}
 }
@@ -562,7 +562,7 @@ export class ClientTraineeAttendance extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeAttendance {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeAttendance(), data, {
 			AttendanceTimePermission: map(
 				data?.AttendanceTimePermission,
@@ -591,7 +591,7 @@ export class ClientTraineeAttendanceTimeDetail extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeAttendanceTimeDetail {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeAttendanceTimeDetail(), data, {
 			TraineeIn: DateHelper.fromCSharpDate(data?.TraineeIn),
 			TraineeOut: DateHelper.fromCSharpDate(data?.TraineeOut),
@@ -604,7 +604,7 @@ export class ClientTraineeAttendanceDetail extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientTraineeAttendanceDetail {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeAttendanceDetail(), data, {
 			AttendanceDate: DateHelper.fromCSharpDate(data?.AttendanceDate),
 		});
@@ -636,7 +636,7 @@ export class TraineePresentation extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TraineePresentation {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TraineePresentation(), data, {
 			savedAt: DateHelper.fromCSharpDate(data?.savedAt),
 		});
@@ -667,7 +667,7 @@ export class CoreTrainingPresentation extends BaseModel {
 	}
 
 	static fromJson(data: any): CoreTrainingPresentation {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new CoreTrainingPresentation(), data, {
 			Deadline: DateHelper.fromCSharpDate(data?.Deadline),
 			Questions: map(data?.Questions, CoreTrainingPresentationQuestion.fromJson),
@@ -689,7 +689,7 @@ export class CoreTrainingPresentationComment extends BaseModel {
 	}
 
 	static fromJson(data: any): CoreTrainingPresentationComment {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new CoreTrainingPresentationComment(), data, {
 			Histories: map(data?.Histories, DataHistory.fromJson),
 		});
@@ -702,7 +702,7 @@ export class DataHistory extends BaseModel {
 	}
 
 	static fromJson(data: any): DataHistory {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new DataHistory(), data, {
 			SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
 		});
@@ -726,7 +726,7 @@ export class CoreTrainingPresentationQuestion extends BaseModel {
 	}
 
 	static fromJson(data: any): CoreTrainingPresentationQuestion {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new CoreTrainingPresentationQuestion(), data, {
 			Question: CoreTrainingPresentationItem.fromJson(data?.Question),
 			Answers: map(data?.Answers, CoreTrainingPresentationItem.fromJson),
@@ -740,7 +740,7 @@ export class CoreTrainingPresentationQuestionSummary extends BaseModel {
 	}
 
 	static fromJson(data: any): CoreTrainingPresentationQuestionSummary {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new CoreTrainingPresentationQuestionSummary(), data);
 	}
 }
@@ -761,7 +761,7 @@ export class CoreTrainingPresentationItem extends BaseModel {
 	}
 
 	static fromJson(data: any): CoreTrainingPresentationItem {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new CoreTrainingPresentationItem(), data, {
 			Histories: map(data?.Histories, DataHistory.fromJson),
 			Comments: map(data?.Comments, CoreTrainingPresentation.fromJson),
@@ -780,7 +780,7 @@ export class TraineeComment extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TraineeComment {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TraineeComment(), data, {
 			Trainee: ClientTrainee.fromJson(data?.Trainee),
 			NotePositive: map(data?.NotePositive, ClientNoteDetail.fromJson),
@@ -802,7 +802,7 @@ export class TraineeCommentHistory extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TraineeCommentHistory {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TraineeCommentHistory(), data);
 	}
 }
@@ -815,7 +815,7 @@ export class TraineeCommentHistory extends BaseModel {
 //     super();
 //   }
 // 	static fromJson(data?: any): EvaluationNote {
-  // if(isEmpty(data)) return null;
+// if(isEmpty(data)) return null;
 // 		return Object.assign(new EvaluationNote(), data);
 // 	}
 // }
@@ -834,7 +834,7 @@ export class TraineeCommentHistory extends BaseModel {
 // 		super();
 // 	}
 // 	static fromJson(data?: any): ClientScoreTrainee {
-  // if(isEmpty(data)) return null;
+// if(isEmpty(data)) return null;
 // 		return Object.assign(new ClientScoreTrainee(), data);
 // 	}
 // }
@@ -860,7 +860,7 @@ export class Case extends BaseModel {
 		return this.Corrector.map((b) => b.Name).join(', ');
 	}
 	static fromJson(data?: any): Case {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new Case(), data, {
 			Corrector: map(data?.Corrector, Binusian.fromJson),
 			ScheduleDate: DateHelper.fromCSharpDate(data?.ScheduleDate),
@@ -888,7 +888,7 @@ export class ClientCaseTrainer extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientCaseTrainer {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientCaseTrainer(), data, {
 			StartDate: DateHelper.fromCSharpDate(data?.StartDate),
 			ScheduleDate: DateHelper.fromCSharpDate(data?.ScheduleDate),
@@ -903,7 +903,7 @@ export class ClientCaseTrainee extends BaseModel {
 	}
 
 	static fromJson(data?: any): ClientCaseTrainer {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientCaseTrainer(), data, {});
 	}
 }
@@ -925,7 +925,7 @@ export class ClientCaseTraineeDetail extends BaseModel {
 	}
 
 	static fromJson(data?: any): ClientCaseTrainer {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientCaseTrainer(), data, {
 			Deadline: DateHelper.fromCSharpDate(data?.Deadline),
 		});
@@ -947,7 +947,7 @@ export class UploadAnswer extends BaseModel {
 	}
 
 	static fromJson(data?: any): UploadAnswer {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new UploadAnswer(), data, {
 			UploadBy: DateHelper.fromCSharpDate(data?.UploadBy),
 			UploadDate: DateHelper.fromCSharpDate(data?.UploadDate),
@@ -979,7 +979,7 @@ export class ClientUploadAnswer extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientUploadAnswer {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientUploadAnswer(), data, {
 			EntryDate: DateHelper.fromCSharpDate(data?.EntryDate),
 			UploadDate: DateHelper.fromCSharpDate(data?.UploadDate),
@@ -1005,7 +1005,7 @@ export class RealScore extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): RealScore {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new RealScore(), data, {
 			EntryBy: Binusian.fromJson(data?.EntryBy),
 			UpdateBy: Binusian.fromJson(data?.UpdateBy),
@@ -1021,7 +1021,7 @@ export class SubcoCandidateQuestionModel extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): SubcoCandidateQuestionModel {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new SubcoCandidateQuestionModel(), data);
 	}
 }
@@ -1038,7 +1038,7 @@ export class SubcoCandidateAnswerModel extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): SubcoCandidateAnswerModel {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new SubcoCandidateAnswerModel(), data, {
 			StartDate: DateHelper.fromCSharpDate(data?.StartDate),
 			EndDate: DateHelper.fromCSharpDate(data?.EndDate),
@@ -1053,7 +1053,7 @@ export class ClientStatisticDetail extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientStatisticDetail {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientStatisticDetail(), data);
 	}
 }
@@ -1064,7 +1064,7 @@ export class ClientStatistic extends BaseModel {
 	}
 
 	static fromJson(data?: any): ClientStatistic {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientStatistic(), data, {
 			Detail: data?.Detail.map(ClientStatisticDetail.fromJson),
 		});
@@ -1088,11 +1088,17 @@ export class Message extends BaseModel {
 	) {
 		super();
 	}
-	public get contentAndAttachment() {
-		return this.Note + (this.HasFile ? '\n\nAttachments:\n' + this.FileName : '');
+	public get contentAndAttachmentHTML() {
+		return (
+			`<p>${this.Note}</p>` +
+			(this.HasFile
+				? `<p><a title="'Download ${this.FileName}'" href="'File.svc/GetFile/${this.FileId}'">Download Link</a></p>`
+				: '')
+		);
+		// return this.Note + (this.HasFile ? `Attachments here` + this.FileName : '');
 	}
 	static fromJson(data?: any): Message {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new Message(), data, {
 			InsertBy: Binusian.fromJson(data?.InsertBy),
 			InsertOn: DateHelper.fromCSharpDate(data?.InsertOn),
@@ -1110,7 +1116,7 @@ export class InterviewMaterial extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): InterviewMaterial {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new InterviewMaterial(), data, {
 			Trainee: ClientTrainee.fromJson(data?.Trainee),
 			Materials: map(data?.Materials, InterviewMaterialDetail.fromJson),
@@ -1129,7 +1135,7 @@ export class InterviewMaterialDetail extends BaseModel {
 		return `Download '${this.FileName}'`;
 	}
 	static fromJson(data?: any): InterviewMaterialDetail {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new InterviewMaterialDetail(), data);
 	}
 }
@@ -1147,7 +1153,7 @@ export class Material extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): Material {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new Material(), data);
 	}
 }
@@ -1166,7 +1172,7 @@ export class TraineeLectureSchedule extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TraineeLectureSchedule {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TraineeLectureSchedule(), data, {
 			LectureDate: DateHelper.fromCSharpDate(data?.LectureDate),
 		});
@@ -1187,7 +1193,7 @@ export class TraineePermission extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TraineePermission {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TraineePermission(), data, {
 			PermissionDate: DateHelper.fromCSharpDate(data?.PermissionDate),
 		});
@@ -1216,7 +1222,7 @@ export class TraineeSchedule extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TraineeSchedule {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TraineeSchedule(), data, {
 			AttendanceDate: DateHelper.fromCSharpDate(data?.AttendanceDate),
 			InsertedDate: DateHelper.fromCSharpDate(data?.InsertedDate),
@@ -1238,7 +1244,7 @@ export class ClientSpecificSchedule extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientSpecificSchedule {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientSpecificSchedule(), data, {
 			ScheduleDate: DateHelper.fromCSharpDate(data?.ScheduleDate),
 		});
@@ -1255,7 +1261,7 @@ export class SchedulePerWeek extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): SchedulePerWeek {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new SchedulePerWeek(), data, {
 			Schedule: map(data?.Schedule, ScheduleVariation.fromJson),
 			EndDate: DateHelper.fromCSharpDate(data?.EndDate),
@@ -1278,7 +1284,7 @@ export class ScheduleVariation extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ScheduleVariation {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ScheduleVariation(), data, {
 			Detail: map(data?.Details, ScheduleDetail.fromJson),
 		});
@@ -1290,7 +1296,7 @@ export class ScheduleDetail extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ScheduleDetail {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ScheduleDetail(), data, {
 			ScheduleDate: DateHelper.fromCSharpDate(data?.ScheduleDate),
 		});
@@ -1310,7 +1316,7 @@ export class ScheduleDetail extends BaseModel {
 // 		super();
 // 	}
 // 	static fromJson(data?: any): TraineeBeeLectureSchedule {
-  // if(isEmpty(data)) return null;
+// if(isEmpty(data)) return null;
 // 		return Object.assign(new TraineeBeeLectureSchedule(), data);
 // 	}
 // }
@@ -1321,7 +1327,7 @@ export class VoteItem extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): VoteItem {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new VoteItem(), data);
 	}
 }
@@ -1337,7 +1343,7 @@ export class TopBottomVote extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TopBottomVote {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TopBottomVote(), data, {
 			TopVotes: map(data?.TopVotes),
 			BottomVotes: map(data?.BottomVotes),
@@ -1356,7 +1362,7 @@ export class TrainerTopBottomVote extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TrainerTopBottomVote {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TrainerTopBottomVote(), data, {
 			TopVotes: map(data?.TopVotes),
 			BottomVotes: map(data?.BottomVotes),
@@ -1376,7 +1382,7 @@ export class TopBottomVoteSchedule extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): TopBottomVoteSchedule {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new TopBottomVoteSchedule(), data, {
 			StartDate: DateHelper.fromCSharpDate(data?.StartDate),
 			EndDate: DateHelper.fromCSharpDate(data?.EndDate),
@@ -1389,7 +1395,7 @@ export class ClientVoteBestTrainer extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientVoteBestTrainer {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientVoteBestTrainer(), data);
 	}
 }
@@ -1409,7 +1415,7 @@ export class ClientVoteBestTrainerSchedule extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientVoteBestTrainerSchedule {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientVoteBestTrainerSchedule(), data, {
 			StartDate: DateHelper.fromCSharpDate(data?.StartDate),
 			EndDate: DateHelper.fromCSharpDate(data?.EndDate),
@@ -1426,7 +1432,7 @@ export class ClientInterviewQuestion extends BaseModel {
 		super();
 	}
 	static fromJson(data: any) {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientInterviewQuestion(), data);
 	}
 }
@@ -1441,7 +1447,7 @@ export class InterviewQuestionDetail extends BaseModel {
 		super();
 	}
 	static fromJson(data: any) {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new InterviewQuestionDetail(), data);
 	}
 }
@@ -1459,7 +1465,7 @@ export class ClientInterviewReport extends BaseModel {
 	}
 
 	static fromJson(data: any) {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientInterviewReport(), data, {
 			Schedules: map(data?.Schedules, ClientInterviewSchedule.fromJson),
 			StatusTotal: data?.Schedules.reduce(
@@ -1493,7 +1499,7 @@ export class ClientInterviewSchedule extends BaseModel {
 		return this.StartTime + ' - ' + this.EndTime;
 	}
 	static fromJson(data: any) {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientInterviewSchedule(), data, {
 			InterviewDate: DateHelper.fromCSharpDate(data?.InterviewDate),
 		});
@@ -1535,7 +1541,7 @@ export class ClientInterviewResult extends BaseModel {
 		return this.StartTime + ' - ' + this.EndTime;
 	}
 	static fromJson(data: any) {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientInterviewResult(), data, {
 			Questions: map(data?.Questions, ClientInterviewResultDetail.fromJson),
 			InterviewDate: DateHelper.fromCSharpDate(data?.InterviewDate),
@@ -1555,7 +1561,7 @@ export class ClientInterviewResultDetail extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientInterviewResultDetail {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientInterviewResultDetail(), data);
 	}
 }
@@ -1565,7 +1571,7 @@ export class InterviewResultDetail extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): InterviewResultDetail {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new InterviewResultDetail(), data);
 	}
 }
@@ -1579,7 +1585,7 @@ export class InterviewTraineeDetail extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): InterviewTraineeDetail {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new InterviewTraineeDetail(), data, {
 			Materials: map(data?.Materials, InterviewMaterialDetail.fromJson),
 			Phases: map(data?.Phases, InterviewMaterialDetail.fromJson),
@@ -1600,7 +1606,7 @@ export class InterviewPhase extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): InterviewPhase {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new InterviewPhase(), data, {
 			Subjects: map(data?.Subjects, InterviewSubject.fromJson),
 		});
@@ -1621,7 +1627,7 @@ export class InterviewSubject extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): InterviewSubject {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new InterviewSubject(), data);
 	}
 }
@@ -1639,7 +1645,7 @@ export class ClientEvaluation extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientEvaluation {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientEvaluation(), data, {
 			AbsentNote: map(data?.AbsentNote, AbsentNote.fromJson),
 			TraineeComment: map(data?.TraineeComment, TraineeComment.fromJson),
@@ -1662,7 +1668,7 @@ export class AbsentNote extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): AbsentNote {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new AbsentNote(), data, {
 			Trainee: ClientTrainee.fromJson(data?.Trainee),
 		});
@@ -1680,7 +1686,7 @@ export class EvaluationNote extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): EvaluationNote {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new EvaluationNote(), data, {
 			EvaluationDate: DateHelper.fromCSharpDate(data?.EvaluationDate),
 			SavedAt: DateHelper.fromCSharpDate(data?.SavedAt),
@@ -1700,7 +1706,7 @@ export class ClientEvaluationNote extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientEvaluationNote {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientEvaluationNote(), data, {
 			EvaluationDate: DateHelper.fromCSharpDate(data?.EvaluationDate),
 			SavedAt: DateHelper.fromCSharpDate(data?.SavedAt),
@@ -1713,7 +1719,7 @@ export class ClientNoteDetail extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): ClientNoteDetail {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new ClientNoteDetail(), data);
 	}
 }
@@ -1734,7 +1740,7 @@ export class LogRoomPIC extends BaseModel {
 		super();
 	}
 	static fromJson(data?: any): LogRoomPIC {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new LogRoomPIC(), data, {
 			SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
 		});
@@ -1742,32 +1748,27 @@ export class LogRoomPIC extends BaseModel {
 }
 
 export class LogBookPICData extends BaseModel {
-	constructor(
-		public Trainee = '',
-    public Correct = '',
-    public Wrong = '',
-    public Note = '',
-	) {
+	constructor(public Trainee = '', public Correct = '', public Wrong = '', public Note = '') {
 		super();
 	}
 	static fromJson(data?: any): LogBookPICData {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new LogBookPICData(), data);
 	}
 }
 
 export class LogBookPIC extends BaseModel {
 	constructor(
-    public Id = '',
-    public Data = '',
-    public Subject = '',
-    public PIC = '',
-    public SavedDate: Date = null
+		public Id = '',
+		public Data = '',
+		public Subject = '',
+		public PIC = '',
+		public SavedDate: Date = null
 	) {
 		super();
 	}
 	static fromJson(data?: any): LogBookPIC {
-    if(isEmpty(data)) return null;
+		if (isEmpty(data)) return null;
 		return Object.assign(new LogBookPIC(), data, {
 			SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
 		});

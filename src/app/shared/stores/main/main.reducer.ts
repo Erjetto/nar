@@ -2,7 +2,7 @@ import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/
 
 import * as MainStateAction from './main.action';
 import { Toast, Message, User, ClientGeneration, Role } from '../../models';
-import { drop, filter, min, max, zip, isArray } from 'lodash';
+import * as _ from 'lodash';
 
 export interface IMainState {
 	currentUser: User;
@@ -10,7 +10,7 @@ export interface IMainState {
 	messagesMax: number;
 	messages: Toast[];
 
-	announcement: Message[]; // Home Message
+	announcements: Message[]; // Home Message
 	isLoadingAnnouncements: boolean;
 	uploadedFiles: { fileid: string; filename: string }[];
 
@@ -31,7 +31,7 @@ export const initialState: IMainState = {
 	],
 	uploadedFiles: [],
 
-	announcement: [],
+	announcements: [],
 	isLoadingAnnouncements: false,
 
 	currentGeneration: null,
@@ -56,14 +56,14 @@ export const MainStateReducer = createReducer(
 		...state,
 		// Only show the last n toast
 		messages: [
-			...drop(state.messages, max([state.messages.length - state.messagesMax + 1, 0])),
+			..._.drop(state.messages, _.max([state.messages.length - state.messagesMax + 1, 0])),
 			new Toast(messageType, message),
 		],
 	})),
 
 	on(MainStateAction.RemoveMessage, (state, { index }) => ({
 		...state,
-		messages: filter(state.messages, (v, i) => i !== index),
+		messages: _.filter(state.messages, (v, i) => i !== index),
 	})),
 
 	on(MainStateAction.ChangeGenerationSuccess, MainStateAction.SetGeneration, (state, { gen }) => ({
@@ -77,21 +77,26 @@ export const MainStateReducer = createReducer(
 		currentRole: role,
 	})),
 
-	on(MainStateAction.FetchAnnouncementsSuccess, (state, { announcements }) => ({
+	on(MainStateAction.FetchAnnouncements, (state) => ({
 		...state,
 		isLoadingAnnouncements: true,
 	})),
 
 	on(MainStateAction.FetchAnnouncementsSuccess, (state, { announcements }) => ({
 		...state,
-		announcement: announcements,
+		announcements,
 		isLoadingAnnouncements: false,
 	})),
 
 	on(MainStateAction.UploadFileSuccess, (state, { fileids, filenames }) => ({
 		...state,
-		uploadedFiles: zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
-	}))
+		uploadedFiles: _.zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
+	})),
+
+	on(MainStateAction.RemoveUploadedFiles, (state) => ({
+		...state,
+		uploadedFiles: [],
+	})),
 );
 
 export const getMainState = createFeatureSelector<IMainState>(MAINSTATE_REDUCER_NAME);
@@ -101,9 +106,11 @@ export const getMainStateBy = (fn: (_: IMainState) => any) => createSelector(get
 export const getCurrentUser = getMainStateBy((s) => s.currentUser);
 
 export const getToastMessages = getMainStateBy((s) => s.messages);
-export const getAnnouncements = getMainStateBy((s) => s.announcement);
+export const getAnnouncements = getMainStateBy((s) => s.announcements);
 export const isAnnouncementsLoading = getMainStateBy((s) => s.isLoadingAnnouncements);
 
 export const getCurrentGeneration = getMainStateBy((s) => s.currentGeneration);
 export const getCurrentGenerationId = getMainStateBy((s) => s.currentGenerationId);
 export const getCurrentRole = getMainStateBy((s) => s.currentRole);
+
+export const getUploadedFiles = getMainStateBy((s) => s.uploadedFiles);

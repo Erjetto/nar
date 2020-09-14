@@ -27,7 +27,8 @@ export const ChangeGenerationSuccess = createAction(
 	'[MainState] ChangeGenerationSuccess',
 	props<{ gen: ClientGeneration }>()
 );
-export const SetGeneration = createAction( // Change gen without reset store values
+export const SetGeneration = createAction(
+	// Change gen without reset store values
 	'[MainState] SetGeneration',
 	props<{ gen: ClientGeneration }>()
 );
@@ -48,8 +49,29 @@ export const FetchAnnouncementsSuccess = createAction(
 );
 export const CreateAnnouncement = createAction(
 	'[MainState] CreateAnnouncement',
-	props<{ memberType: string; title: string; content: string; file: string }>()
+	props<{
+		note: string;
+		title: string;
+		fileId: string;
+		memberType: string;
+	}>()
 );
+export const UpdateAnnouncement = createAction(
+	'[MainState] UpdateAnnouncement',
+	props<{
+		messageId: string;
+		note: string;
+		title: string;
+		fileId: string;
+		mType: string;
+	}>()
+);
+export const DeleteAnnouncement = createAction(
+	'[MainState] DeleteAnnouncement',
+	props<{ messageId: string }>()
+);
+export const CreateAnnouncementSuccess = createAction('[MainState] CreateAnnouncementSuccess');
+export const UpdateAnnouncementSuccess = createAction('[MainState] UpdateAnnouncementSuccess');
 
 export const UploadFile = createAction('[MainState] UploadFile', props<{ files: FileList }>());
 export const UploadFileSuccess = createAction(
@@ -57,6 +79,7 @@ export const UploadFileSuccess = createAction(
 	props<{ fileids: string[]; filenames: string[] }>()
 );
 export const UploadFileFailed = createAction('[MainState] UploadFileFailed');
+export const RemoveUploadedFiles = createAction('[MainState] RemoveUploadedFiles');
 
 //#region Global
 export const AfterRequest = createAction('[MainState] AfterRequest');
@@ -84,6 +107,18 @@ export const UnexpectedResultMessage = (doingWhat: string, result: any): Action 
 	ToastMessage({
 		messageType: 'danger',
 		message: `Unexpected result from ${doingWhat} : ${JSON.stringify(result)}`,
+	});
+
+export const InfoMessage = (what: string): Action =>
+	ToastMessage({
+		messageType: 'info',
+		message: what,
+	});
+
+export const WarningMessage = (what: string): Action =>
+	ToastMessage({
+		messageType: 'warning',
+		message: what,
 	});
 
 // export const ErrorGetMessage = (what: string): Action =>

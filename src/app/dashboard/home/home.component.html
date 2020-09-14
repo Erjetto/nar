@@ -55,12 +55,12 @@
 				<div class="row" *ngFor="let msg of announcements$ | async">
 					<div class="col">
 						<h4>{{ msg.Title }}</h4>
-						<div [innerHTML]="msg.Note"></div>
-						<p *ngIf="msg.HasFile">
+						<div [innerHTML]="msg.contentAndAttachmentHTML"></div>
+						<!-- <p *ngIf="msg.HasFile">
 							<a [title]="'Download ' + msg.FileName" [href]="'File.svc/GetFile/' + msg.FileId"
 								>Download Link</a
 							>
-						</p>
+						</p> -->
 					</div>
 				</div>
 			</rd-card>

@@ -5,23 +5,12 @@ import { Action, Store, select } from '@ngrx/store';
 import { EncryptToBase64 } from 'src/app/shared/utilities/aes';
 
 import * as MainStateAction from './main.action';
-import * as fromMainState from './main.reducer';
 import * as fromMasterState from '../master/master.reducer';
-import { Observable, of, throwError } from 'rxjs';
-import {
-	switchMap,
-	mergeMap,
-	pluck,
-	catchError,
-	share,
-	map,
-	tap,
-	mapTo,
-	withLatestFrom,
-} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { switchMap, mergeMap, pluck, share, map, tap, withLatestFrom } from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
-import { isArray, flatten } from 'lodash';
+import * as _ from 'lodash';
 import { GeneralService } from '../../services/new/general.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Cookies } from '../../constants/cookie.constants';
@@ -36,7 +25,7 @@ export class MainStateEffects {
 		private actions$: Actions,
 		private store: Store<IAppState>,
 		private generalService: GeneralService,
-		private cookieService: CookieService,
+		private announcementService: AnnouncementService,
 		private otherService: OtherService
 	) {}
 
@@ -77,7 +66,7 @@ export class MainStateEffects {
 		switchMap((act) =>
 			this.generalService.ChangeRole({ role: act.role.roleName }).pipe(map((res) => ({ act, res })))
 		),
-		mergeMap(({ act, res }) => {
+		mergeMap(({ act }) => {
 			localStorage.setItem(Cookies.CURR_ROLE, act.role.roleName);
 			return of(MainStateAction.ChangeRoleSuccess({ role: act.role }));
 		}),
@@ -90,9 +79,9 @@ export class MainStateEffects {
 		switchMap((act) =>
 			this.generalService.ChangeGeneration({ genId: act.genId }).pipe(map((res) => ({ act, res })))
 		),
-    withLatestFrom(this.store.pipe(select(fromMasterState.getGenerations))),
-    tap(console.log),
-		mergeMap(([{ act, res }, gens]) => {
+		withLatestFrom(this.store.pipe(select(fromMasterState.getGenerations))),
+		tap(console.log),
+		mergeMap(([{ act }, gens]) => {
 			// localStorage.setItem(Cookies.CURR_GEN_ID, act.genId);
 
 			return of(
@@ -116,13 +105,13 @@ export class MainStateEffects {
 	@Effect()
 	logout$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.Logout),
-		switchMap((act) => this.generalService.LogOut()),
-		mergeMap((res) => of(MainStateAction.LogoutSuccess())),
+		switchMap(() => this.generalService.LogOut()),
+		mergeMap(() => of(MainStateAction.LogoutSuccess())),
 		share()
 	);
 
 	@Effect()
-	getAnnouncement$: Observable<Action> = this.actions$.pipe(
+	getAnnouncements$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.FetchAnnouncements),
 		switchMap(() => this.generalService.GetMessageCurrentGeneration()),
 		mergeMap((announcements) => of(MainStateAction.FetchAnnouncementsSuccess({ announcements }))),
@@ -130,29 +119,69 @@ export class MainStateEffects {
 	);
 
 	@Effect()
+	createAnnouncement$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.CreateAnnouncement),
+		switchMap((data) => {
+			if (data.fileId) return this.announcementService.SaveMessageWithFile(data);
+			else return this.announcementService.SaveMessage(data);
+		}),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('created announcement'))
+				: of(MainStateAction.FailMessage('creating announcement'))
+		),
+		share()
+	);
+
+	@Effect()
+	updateAnnouncement$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.UpdateAnnouncement),
+		switchMap((data) => {
+			if (data.fileId) return this.announcementService.UpdateMessageWithFile(data);
+			else return this.announcementService.UpdateMessageWithNoFile(data);
+		}),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('updated announcement'))
+				: of(MainStateAction.FailMessage('updating announcement'))
+		),
+		share()
+	);
+
+	@Effect()
+	deleteAnnouncement$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.DeleteAnnouncement),
+		switchMap((data) => this.announcementService.DeleteMessage(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted announcement'))
+				: of(MainStateAction.FailMessage('deleting announcement'))
+		),
+		share()
+	);
+
+	@Effect()
 	uploadFile$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.UploadFile),
 		pluck('files'),
-		switchMap((files) => {
-			// return throwError('Upload file not implemented yet');
-			return this.otherService.UploadCase(files).pipe(catchError((error) => throwError(error)));
-		}),
+		tap(() => this.store.dispatch(MainStateAction.InfoMessage('Uploading files...'))),
+		switchMap((files) => this.otherService.UploadFiles(files)),
 		mergeMap((res) => {
 			if (res != null) {
-				const fileIdsArr: string | string[] = JSON.parse(res.fileid);
-				const fileNamesArr: string | string[] = JSON.parse(res.filename);
+				// If files is possibly string or string[], so make an array then flatten it to force string[]
+				// If it's array, then 2D arr be flattened
+				// If it's string, then it becomes arr
+				const fileIdsArr: string[] = _.flatten([res.fileid]);
+				const fileNamesArr: string[] = _.flatten([res.filename]);
 
 				return of(
+					MainStateAction.SuccessfullyMessage('uploaded file(s) : ' + fileNamesArr.join(', ')),
 					MainStateAction.UploadFileSuccess({
-						fileids: flatten([fileIdsArr]),
-						filenames: flatten([fileNamesArr]),
+						fileids: fileIdsArr,
+						filenames: fileNamesArr,
 					})
 				);
-			} else return of(MainStateAction.UploadFileFailed());
-		}),
-		catchError((error: Error) => {
-			console.log(error);
-			return of(MainStateAction.FailMessage(error.message));
+			} else return of(MainStateAction.UploadFileFailed()); // not needed?
 		}),
 		share()
 	);
