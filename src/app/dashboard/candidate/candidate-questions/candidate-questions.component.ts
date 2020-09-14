@@ -9,7 +9,7 @@ import {
 	CandidateStateEffects,
 	fromMainState,
 } from 'src/app/shared/store-modules';
-import { clone, isEmpty } from 'lodash';
+import * as _ from 'lodash';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { takeUntil, filter, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, merge } from 'rxjs';
@@ -75,7 +75,7 @@ export class CandidateQuestionsComponent extends DashboardContentBase implements
 	}
 
 	updateQuestions(value: string[]) {
-		if (isEmpty(value)) {
+		if (_.isEmpty(value)) {
 			this.questionsArray.clear();
 			return;
     }

@@ -17,7 +17,7 @@ import { filter, takeUntil, distinctUntilChanged, first, tap, mapTo } from 'rxjs
 import { CookieService } from 'ngx-cookie-service';
 import { trigger, transition, query, style, group, animate } from '@angular/animations';
 import { Cookies } from '../shared/constants/cookie.constants';
-import { isEmpty } from 'lodash';
+import * as _ from 'lodash';
 
 @Component({
 	selector: 'rd-dashboard',
@@ -141,7 +141,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		else
 			this.currentUser$
 				.pipe(
-					filter((v) => !isEmpty(v)),
+					filter((v) => !_.isEmpty(v)),
 					first()
 				)
 				.subscribe((u: User) =>
@@ -161,7 +161,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		// else
 		// 	this.genList$
 		// 		.pipe(
-		// 			filter((v) => !isEmpty(v)),
+		// 			filter((v) => !_.isEmpty(v)),
 		// 			first()
 		// 		)
 		// 		.subscribe((genList) =>

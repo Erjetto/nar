@@ -14,11 +14,12 @@ export class OtherService {
   // For links other than given service
 	constructor(protected httpClient: HttpClient) {}
 
-  // TODO: How does upload work?
-  public UploadCase(files: FileList) : Observable<any>{
-    // return of(true);
+  public UploadFiles(files: FileList) : Observable<any>{
     const formData = new FormData();
+    for(let i = 0; i < files.length; i++){
+      formData.append('X-File-Name', files[i]);
+    }
     
-    return this.httpClient.post(this.baseUrl + 'Handler/UploadCase.ashx', {})
+    return this.httpClient.post(this.baseUrl + 'Handler/UploadCase.ashx', formData)
   }
 }

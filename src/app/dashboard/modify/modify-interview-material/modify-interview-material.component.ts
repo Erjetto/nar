@@ -22,7 +22,7 @@ import {
   InterviewStateEffects,
 } from 'src/app/shared/store-modules';
 import { takeUntil, withLatestFrom, filter, map } from 'rxjs/operators';
-import { isEmpty } from 'lodash';
+import * as _ from 'lodash';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -76,7 +76,7 @@ export class ModifyInterviewMaterialComponent
 
 		this.currentPhase$
 			.pipe(
-				filter((v) => !isEmpty(v)),
+				filter((v) => !_.isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((currPhase) =>

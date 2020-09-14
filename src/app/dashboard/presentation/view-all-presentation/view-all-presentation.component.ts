@@ -24,7 +24,7 @@ import {
 	ClientPhase,
 	ClientGeneration,
 } from 'src/app/shared/models';
-import { isEmpty } from 'lodash';
+import * as _ from 'lodash';
 import { takeUntil, filter, tap, withLatestFrom, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -74,7 +74,7 @@ export class ViewAllPresentationComponent
 		//#region auto fetch new subject,schedule & case in first fetch
 		this.phases$ // Auto fetch subject
 			.pipe(
-				filter((res) => !isEmpty(res)),
+				filter((res) => !_.isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((res) => {
@@ -84,7 +84,7 @@ export class ViewAllPresentationComponent
 
 		this.subjects$ // Auto fetch presentation
 			.pipe(
-				filter((res) => !isEmpty(res)),
+				filter((res) => !_.isEmpty(res)),
 				withLatestFrom(this.currentGeneration$),
 				takeUntil(this.destroyed$)
 			)
@@ -101,7 +101,7 @@ export class ViewAllPresentationComponent
 		// When one of these changed, also change filtered trainees
 		combineLatest([this.currentSubject$, this.presentations$])
 			.pipe(
-				filter((values) => values.every((v) => !isEmpty(v))),
+				filter((values) => values.every((v) => !_.isEmpty(v))),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe(([sbj, presentations]) => {
@@ -121,7 +121,7 @@ export class ViewAllPresentationComponent
 		// Update presentations for trainee (number)
 		combineLatest([this.currentSubject$, this.presentations$, this.currentTraineeCode$])
 			.pipe(
-				filter((values) => values.every((v) => !isEmpty(v))),
+				filter((values) => values.every((v) => !_.isEmpty(v))),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe(([sbj, presentations, traineeCode]) => {
@@ -134,7 +134,7 @@ export class ViewAllPresentationComponent
 
 		this.currentPresentation$ // Auto fetch Presentation Status
 			.pipe(
-				filter((res) => !isEmpty(res)),
+				filter((res) => !_.isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((res) => {

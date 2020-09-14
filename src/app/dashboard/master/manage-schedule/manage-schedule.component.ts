@@ -19,7 +19,6 @@ import {
 	MasterStateEffects,
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
-import { cloneDeep, isEmpty } from 'lodash';
 import {
 	NgForm,
 	FormBuilder,
@@ -28,6 +27,7 @@ import {
 	FormControl,
 	AbstractControl,
 } from '@angular/forms';
+import * as _ from 'lodash';
 
 /*
 NOTE: Schedule HAS NO UPDATE
@@ -165,7 +165,8 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 
 		//#region Auto select first in array
 		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((phases) => {
-			if (!this.scheduleForm.get('phase').value) this.scheduleForm.get('phase').setValue(phases[0]);
+      // if (!this.scheduleForm.get('phase').value) 
+      this.scheduleForm.get('phase').setValue(phases[0]);
 
 			this.viewCurrPhase$.next(phases[0]);
 			this.insertTraineeCurrPhase$.next(phases[0]);
@@ -229,7 +230,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		// Get trainee in schedule when change schedule
 		this.viewCurrSchedule$
 			.pipe(
-				filter((v) => !isEmpty(v)),
+				filter((v) => !_.isEmpty(v)),
 				distinctUntilChanged(),
 				takeUntil(this.destroyed$)
 			)
@@ -268,20 +269,15 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	selectSchedule(schedule: ClientSchedule) {
 		this.scheduleForm.patchValue({
 			currentSchedule: schedule,
-			// phase: schedule.ScheduleId,
 			subject: schedule.ScheduleId,
 			scheduleType: schedule.scheduleType,
 			scheduleName: schedule.ScheduleName,
 			scheduleCount: schedule.ScheduleDates?.length,
 		});
-		// this.editForm$.next(schedule);
 	}
 
 	submitScheduleForm() {
-		// if (!this.editForm$.value)
-
 		const { subject, scheduleName, scheduleDates } = this.scheduleForm.value;
-		return;
 		this.store.dispatch(
 			MasterStateAction.CreateDailySchedule({
 				subjectId: subject,
@@ -333,10 +329,10 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 
 		// for (let i = 0; i < this.meetingPerWeek; i++) {
 		// 	for (let j = 0; j < this.variations; j++) {
-		// 		const meeting = cloneDeep(newVariant);
+		// 		const meeting = _.cloneDeep(newVariant);
 		// 		meeting.MeetingNo = i;
 		// 		meeting.VariationNo = j;
-		// 		for (let k = 0; k < this.scheduleCount; k++) meeting.Detail.push(cloneDeep(detail));
+		// 		for (let k = 0; k < this.scheduleCount; k++) meeting.Detail.push(_.cloneDeep(detail));
 
 		// 		this.meetings = [...this.meetings, meeting];
 		// 	}
@@ -361,7 +357,6 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	cancelEdit() {
-		// this.editForm$.next(null);
 		this.scheduleForm.reset();
 	}
 

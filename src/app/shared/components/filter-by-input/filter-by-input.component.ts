@@ -1,8 +1,6 @@
-import { Component, OnInit, OnDestroy, Input, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
-import { EventEmitter } from 'protractor';
-import { cloneDeep, isObject, isEmpty } from 'lodash';
 
 @Component({
 	selector: 'rd-filter-by-input',
@@ -27,7 +25,7 @@ export class FilterByInputComponent implements OnInit, OnDestroy {
 
 		combineLatest([this.searchText$, this.dataToBeFiltered])
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe(([search, data]) => {
+			.subscribe(([]) => {
         // PROBLEM: How to filter recursively with following customization:
         // 1. Able to choose certain property to filter
         // 2. Able to choose whether to remove object in array after first level of obj

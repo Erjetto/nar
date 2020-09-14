@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { max } from 'lodash';
+import * as _ from 'lodash';
 import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { IAppState } from 'src/app/app.reducer';
@@ -101,7 +101,7 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 	}
 
 	convertFileSize(size, currentInput: NgModel) {
-		currentInput.control.setValue(max([(currentInput.value * this.currentSize.val) / size.val, 1]));
+		currentInput.control.setValue(_.max([(currentInput.value * this.currentSize.val) / size.val, 1]));
 		this.currentSize = size;
 	}
 

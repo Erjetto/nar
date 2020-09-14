@@ -90,23 +90,15 @@
 						</div> -->
 					</div>
 					<div class="row form-group" formArrayName="scheduleDates">
-						<div
-							class="row"
-							*ngFor="let date of scheduleDates.controls; let i = index"
-							[hidden]="scheduleCount <= i"
-						>
+						<div class="row" *ngFor="let date of scheduleDates.controls; let i = index">
 							<label class="col-4 col-form-label">
 								{{ i == 0 ? 'Schedule Date' : '' }}
 							</label>
 							<div class="col">
-                <!-- form.value will ignore the disabled value 
+								<!-- form.value will ignore the disabled value 
                 without having to remove it -->
-								<input
-									type="date"
-                  class="form-control"
-                  [formControlName]="i"
-                  />
-                  <!-- [formControl]="scheduleDates.controls[i]" -->
+								<input type="date" class="form-control" [formControlName]="i" />
+								<!-- [formControl]="scheduleDates.controls[i]" -->
 							</div>
 						</div>
 					</div>

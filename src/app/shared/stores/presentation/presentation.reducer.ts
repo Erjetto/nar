@@ -2,8 +2,7 @@ import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/
 
 import * as PresentationStateAction from './presentation.action';
 import * as MainStateAction from '../main/main.action';
-import { Toast, Message, CoreTrainingPresentation } from '../../models';
-import { drop, filter, min, max } from 'lodash';
+import { CoreTrainingPresentation } from '../../models';
 
 export interface IPresentationState {
 	presentationsEntity: { [subjectId: string]: CoreTrainingPresentation[] };
@@ -26,7 +25,7 @@ export const PRESENTATIONSTATE_REDUCER_NAME = 'PresentationState';
 export const PresentationStateReducer = createReducer(
 	initialState,
   // Remove all data when generation changed
-	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
+	on(MainStateAction.ChangeGenerationSuccess, () => ({
 		...initialState,
 	})),
 
@@ -45,7 +44,7 @@ export const PresentationStateReducer = createReducer(
 		),
 	})),
 
-	on(PresentationStateAction.FetchPresentationStatus, (state, { filename }) => ({
+	on(PresentationStateAction.FetchPresentationStatus, (state) => ({
 		...state,
 		presentationStatus: 'Loading...',
 	})),

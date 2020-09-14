@@ -1,33 +1,23 @@
 import {
 	Component,
 	OnInit,
-	ViewChild,
 	ChangeDetectionStrategy,
-	AfterViewInit,
 	OnDestroy,
 } from '@angular/core';
-import { Store, select, ActionsSubject } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, of, Subject, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import {
 	ClientTrainee,
 	TopBottomVoteSchedule,
 	TopBottomVote,
-	VoteItem,
 	TrainerTopBottomVote,
 } from 'src/app/shared/models';
 import {
-	delay,
-	distinctUntilChanged,
-	debounceTime,
-	map,
-	take,
 	takeUntil,
-	tap,
 	filter,
 } from 'rxjs/operators';
-import { CardComponent } from 'src/app/shared/components/card/card.component';
-import { clone, cloneDeep, isEmpty } from 'lodash';
+import * as _ from 'lodash';
 import {
 	VoteStateAction,
 	fromVoteState,
@@ -74,7 +64,7 @@ export class ManageTopBottomVoteComponent
 		this.store
 			.pipe(
 				select(fromBinusianState.getTraineesEntity),
-				filter((v) => !isEmpty(v)),
+				filter((v) => !_.isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((res) => (this.traineesEntity = res));

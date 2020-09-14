@@ -4,10 +4,7 @@ import {
 	style,
 	animate,
 	state,
-	keyframes,
 } from '@angular/animations';
-import { Pair } from './models';
-import { map } from 'lodash';
 
 type Direction = 'left' | 'right' | 'up' | 'down';
 

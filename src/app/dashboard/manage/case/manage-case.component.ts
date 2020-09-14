@@ -15,7 +15,7 @@ import { MasterStateAction, fromMasterState, CaseStateAction, fromCaseState, Mai
 
 import { take, filter, tap, first, switchMap, takeUntil, map } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { isEmpty } from 'lodash';
+import * as _ from 'lodash';
 import { ObservableHelper } from 'src/app/shared/utilities/observable-helper';
 import { CardComponent } from 'src/app/shared/components/card/card.component';
 
@@ -63,21 +63,21 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		//#region auto select first in array
 		this.phases$
 			.pipe(
-				filter((res) => !isEmpty(res)),
+				filter((res) => !_.isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((res) => this.currentPhase$.next(res[0]));
 
 		this.subjects$
 			.pipe(
-				filter((res) => !isEmpty(res)),
+				filter((res) => !_.isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((res) => this.currentSubject$.next(res[0]));
 
 		this.schedules$
 			.pipe(
-				filter((res) => !isEmpty(res)),
+				filter((res) => !_.isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((res) => this.currentSchedule$.next(res[0]));

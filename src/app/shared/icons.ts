@@ -11,6 +11,7 @@ import {
   faMoon,
   faUser,
   faKey,
+  faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 export const fasIcons = [
 	faSignOutAlt,
@@ -25,6 +26,7 @@ export const fasIcons = [
   faMoon,
   faUser,
   faKey,
+  faCheck,
 ];
 
 import {

@@ -1,14 +1,12 @@
-import { Subject, Observable, combineLatest } from 'rxjs';
-import { ActionsSubject, Store, select } from '@ngrx/store';
-import { ofType } from '@ngrx/effects';
+import { Subject, Observable } from 'rxjs';
+import { Store, select } from '@ngrx/store';
 
-import { MainStateAction, fromMainState, MasterStateAction } from 'src/app/shared/store-modules';
+import { fromMainState } from 'src/app/shared/store-modules';
 
-import { takeUntil, filter } from 'rxjs/operators';
 import { OnDestroy } from '@angular/core';
-import { Role, ClientGeneration } from '../shared/models';
+import { ClientGeneration } from '../shared/models';
 import { IAppState } from '../app.reducer';
-import { isEmpty } from 'lodash';
+import * as _ from 'lodash';
 
 export class DashboardContentBase implements OnDestroy {
 	currentGeneration$: Observable<ClientGeneration>;

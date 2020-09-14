@@ -1,18 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Role, ClientUserInRoles } from 'src/app/shared/models';
-import { MockData } from 'src/app/shared/mock-data';
-import { debounce, cloneDeep, filter } from 'lodash';
-import { distinctUntilChanged, debounceTime, map, takeUntil, tap } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
 	fromMasterState,
 	MasterStateAction,
 	MainStateEffects,
 	MasterStateEffects,
-	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { NgForm } from '@angular/forms';
 
@@ -75,7 +72,7 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 			this.mainEffects.changeGen$
 		)
 			.pipe(takeUntil(this.destroyed$), tap(console.log))
-			.subscribe((act) => {
+			.subscribe(() => {
 				this.store.dispatch(MasterStateAction.FetchUserInRoles());
 			});
 

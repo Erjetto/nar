@@ -19,7 +19,7 @@ import {
 	ClientSubject,
 } from 'src/app/shared/models';
 import { filter, withLatestFrom, takeUntil, tap } from 'rxjs/operators';
-import { isEmpty } from 'lodash';
+import * as _ from 'lodash';
 
 @Component({
 	selector: 'rd-view-all-question',
@@ -46,7 +46,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 
 		this.subjects$ // Auto fetch presentation
 			.pipe(
-				filter((res) => !isEmpty(res)),
+				filter((res) => !_.isEmpty(res)),
 				withLatestFrom(this.currentGeneration$),
 				takeUntil(this.destroyed$)
 			)

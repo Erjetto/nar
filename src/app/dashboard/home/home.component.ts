@@ -26,7 +26,7 @@ import {
 
 import { Observable, of, Subject, interval, BehaviorSubject } from 'rxjs';
 import { DashboardContentBase } from '../dashboard-content-base.component';
-import { isEmpty } from 'lodash';
+import * as _ from 'lodash';
 import { GeneralService } from 'src/app/shared/services/new/general.service';
 
 @Component({
@@ -62,7 +62,7 @@ export class HomeComponent extends DashboardContentBase implements OnInit, OnDes
 
 		this.phases$
 			.pipe(
-				filter((v) => !isEmpty(v)),
+				filter((v) => !_.isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((phases) => this.currentPhase$.next(phases[0]));
@@ -70,7 +70,7 @@ export class HomeComponent extends DashboardContentBase implements OnInit, OnDes
 		// On phase change, get statistic trainee
 		this.currentPhase$
 			.pipe(
-				filter((res) => !isEmpty(res)),
+				filter((res) => !_.isEmpty(res)),
 				takeUntil(this.destroyed$),
 				tap(() => this.loadingTraineeStatistic$.next(true)),
 				switchMap((phase) => this.generalService.GetStatisticTrainee({ phaseId: phase.PhaseId }))

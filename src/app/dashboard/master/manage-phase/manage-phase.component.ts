@@ -14,7 +14,7 @@ import {
 	MasterStateReducer,
 } from 'src/app/shared/store-modules';
 import { map, takeUntil, first } from 'rxjs/operators';
-import { isEmpty } from 'lodash';
+import * as _ from 'lodash';
 
 @Component({
 	selector: 'rd-manage-phase',

@@ -1,19 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { MockData } from '../../mock-data';
 import { HttpClient } from '@angular/common/http';
 import {
-	ClientInterviewReport,
 	ClientPhase,
 	ClientSubject,
 	ClientTrainee,
 	CoreTrainingPresentation,
 	TraineePresentation,
-	CoreTrainingPresentationItem,
 	CoreTrainingPresentationQuestionSummary,
 } from '../../models';
-import { Dictionary } from 'lodash';
 import { environment } from 'src/environments/environment';
 import * as _ from 'lodash';
 

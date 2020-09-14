@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, select, Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 
 
 import * as CaseStateAction from './case.action';
-import * as fromCaseState from './case.reducer';
 
 import * as fromMainState from '../main/main.reducer';
 
-import { Observable, from, of } from 'rxjs';
-import { switchMap, withLatestFrom, mergeMap, share, tap, pluck, delay } from 'rxjs/operators';
-import { Case, ClientPhase, ClientSubject, ClientCaseTrainer } from '../../models';
-import { map } from 'lodash';
+import { Observable, of } from 'rxjs';
+import { switchMap, mergeMap, share, pluck } from 'rxjs/operators';
 import { LeaderService } from '../../services/new/leader.service';
 
 @Injectable({
@@ -21,7 +18,6 @@ import { LeaderService } from '../../services/new/leader.service';
 export class CaseStateEffects {
 	constructor(
 		private actions$: Actions,
-		private mainStore: Store<fromMainState.IMainState>,
 		private leaderService: LeaderService
 	) {}
 
