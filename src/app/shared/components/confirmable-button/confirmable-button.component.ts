@@ -22,6 +22,7 @@ export class ConfirmableButtonComponent implements OnInit {
   @Input() description = '';
   @Input() canConfirm = true;
 	@Output() confirm = new EventEmitter();
+	@Output() cancel = new EventEmitter();
 	public isConfirming = false;
 
 	constructor(private el: ElementRef) {}

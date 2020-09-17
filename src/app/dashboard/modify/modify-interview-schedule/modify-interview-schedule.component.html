@@ -9,9 +9,11 @@
 							<div class="col">
 								<ng-select
 									name="selectInterview"
-									[items]="[]"
+									[items]="interviewQuestions$ | async"
+									bindLabel="InterviewQuestionName"
 									[searchable]="false"
 									[clearable]="false"
+									[formControl]="titleSelect"
 								></ng-select>
 							</div>
 						</div>
@@ -24,8 +26,8 @@
 									<div class="col">
 										<textarea
 											name="schedules"
-											class="form-control"
-											style="height: 200px"
+											class="form-control mh-200px"
+											[formControl]="schedulesText"
 										></textarea>
 									</div>
 								</div>
@@ -59,7 +61,7 @@
 				</div>
 				<div class="row justify-content-around">
 					<button class="btn btn-primary">
-						<fa-icon [icon]="['fas', 'plus']"></fa-icon>Insert New Announcement
+						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert Schedules
 					</button>
 				</div>
 			</rd-card>
@@ -67,15 +69,27 @@
 	</div>
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Interview Schedules'">
+			<rd-card
+				[cardTitle]="'Interview Schedules'"
+				[isLoading]="loadingViewInterviewSchedules$ | async"
+			>
 				<div class="row pb-2">
 					<b>Legends: </b>
-					<span class="reject legend"></span> Rej ({{ interviewScheduleReport.StatusTotal.Rej }})
-					<span class="pos legend"></span> Pos ({{ interviewScheduleReport.StatusTotal.Pos }})
-					<span class="acc legend"></span> Acc ({{ interviewScheduleReport.StatusTotal.Acc }})
+					<span class="reject legend"></span> Rej ({{
+						(interviewScheduleReport$ | async)?.StatusTotal.Rej
+					}}) <span class="pos legend"></span> Pos ({{
+						(interviewScheduleReport$ | async)?.StatusTotal.Pos
+					}}) <span class="acc legend"></span> Acc ({{
+						(interviewScheduleReport$ | async)?.StatusTotal.Acc
+					}})
+				</div>
+				<div class="row justify-content-end">
+					<span class="font-italic"
+						>Note: Utk skrg blum bisa kasih reason waktu delete schedule</span
+					>
 				</div>
 				<div class="row">
-					<table class="table table-sm table-hover table-striped table-bordered text-center">
+					<table class="table table-sm table-striped table-bordered text-center">
 						<thead>
 							<tr>
 								<th>Traiee Code</th>
@@ -91,11 +105,11 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngIf="interviewScheduleReport.Schedules.length === 0">
+							<tr *ngIf="(interviewScheduleReport$ | async)?.Schedules.length === 0">
 								<td colspan="10">No schedules yet</td>
 							</tr>
 							<tr
-								*ngFor="let interview of interviewScheduleReport.Schedules"
+								*ngFor="let interview of (interviewScheduleReport$ | async)?.Schedules"
 								class="cursor-pointer"
 							>
 								<td>{{ interview.TraineeCode }}</td>
@@ -118,7 +132,19 @@
 								<td>
 									<rd-confirmable-button
 										[description]="'Delete interview for ' + interview.TraineeName + '?'"
+										[canConfirm]="deleteReasonText.valid"
+										(confirm)="deleteSchedule(interview)"
+										(cancel)="deleteReasonText.reset()"
 									>
+										<div class="description">
+											<textarea
+												class="form-control"
+												[formControl]="deleteReasonText"
+												placeholder="Input reasons here..."
+												cols="30"
+												rows="4"
+											></textarea>
+										</div>
 										<button class="btn btn-danger btn-sm">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 										</button>
