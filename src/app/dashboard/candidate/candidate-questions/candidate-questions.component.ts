@@ -8,6 +8,7 @@ import {
 	MainStateEffects,
 	CandidateStateEffects,
 	fromMainState,
+	fromMasterState,
 } from 'src/app/shared/store-modules';
 import * as _ from 'lodash';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -26,12 +27,11 @@ import { FetchQuestions } from 'src/app/shared/stores/candidate/candidate.action
 export class CandidateQuestionsComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	questionModel$: Observable<SubcoCandidateQuestionModel>;
 	loadingViewQuestions$: Observable<boolean>;
+	genOneYearLower$: Observable<string>;
 
 	questionsForm = this.fb.group({
 		questions: this.fb.array([]),
 	});
-
-	questions: string[] = []; // For flexible input
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -47,9 +47,10 @@ export class CandidateQuestionsComponent extends DashboardContentBase implements
 		this.loadingViewQuestions$ = this.store.pipe(
 			select(fromCandidateState.isLoadingQuestionsModel)
 		);
+		this.genOneYearLower$ = this.store.pipe(select(fromMasterState.getGenerationOneYearLower));
 
 		this.questionModel$
-      .pipe(takeUntil(this.destroyed$), tap(console.log))
+			.pipe(takeUntil(this.destroyed$))
 			.subscribe((model) => this.updateQuestions(model?.Questions));
 		// (this.questions = clone(model?.Questions)));
 
@@ -78,8 +79,8 @@ export class CandidateQuestionsComponent extends DashboardContentBase implements
 		if (_.isEmpty(value)) {
 			this.questionsArray.clear();
 			return;
-    }
-    
+		}
+
 		while (value.length - this.questionsArray.length > 0) {
 			this.questionsArray.push(this.fb.control('', Validators.required));
 		}
@@ -90,6 +91,8 @@ export class CandidateQuestionsComponent extends DashboardContentBase implements
 	}
 
 	saveQuestions() {
-		this.store.dispatch(CandidateStateAction.SaveQuestions({ questions: this.questionsArray.value }));
+		this.store.dispatch(
+			CandidateStateAction.SaveQuestions({ questions: this.questionsArray.value })
+		);
 	}
 }

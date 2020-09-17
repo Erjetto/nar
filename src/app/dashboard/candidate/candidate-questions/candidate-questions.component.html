@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col">
 			<rd-card
-				[cardTitle]="'Manage Questions for (generation 1 year lower)'"
+				[cardTitle]="'Manage Questions for ' + (genOneYearLower$ | async)"
 				[collapsible]="true"
 				[isLoading]="loadingViewQuestions$ | async"
 			>
@@ -50,9 +50,7 @@
 						</tbody>
 					</table>
 				</form>
-				<button class="btn btn-primary" (click)="saveQuestions()">
-					Save Questions
-				</button>
+				<button class="btn btn-primary" (click)="saveQuestions()">Save Questions</button>
 			</rd-card>
 		</div>
 	</div>

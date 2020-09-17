@@ -71,7 +71,7 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 			this.masterEffects.deleteUserInRole$,
 			this.mainEffects.changeGen$
 		)
-			.pipe(takeUntil(this.destroyed$), tap(console.log))
+			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => {
 				this.store.dispatch(MasterStateAction.FetchUserInRoles());
 			});

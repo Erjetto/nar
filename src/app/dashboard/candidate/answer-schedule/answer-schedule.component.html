@@ -4,7 +4,7 @@
 			<div class="row">
 				<div class="col">
 					<rd-card
-						[cardTitle]="'Manage Schedules for (generation 1 year lower)'"
+						[cardTitle]="'Manage Schedules for ' + (genOneYearLower$ | async)"
 						[isLoading]="loadingViewSchedule$ | async"
 					>
 						<div class="row">
@@ -24,8 +24,8 @@
 										(click)="selectSchedule(schedule)"
 										class="cursor-pointer"
 									>
-                    <td>{{ schedule.TrainerName }}</td>
-                    <!-- Hilangkan tahun jika di tahun ini -->
+										<td>{{ schedule.TrainerName }}</td>
+										<!-- Hilangkan tahun jika di tahun ini -->
 										<ng-container [ngSwitch]="schedule.StartDate.getFullYear() !== currentYear">
 											<td *ngSwitchCase="true">
 												{{ schedule.StartDate | date: viewDateFormat }} -
@@ -49,7 +49,7 @@
 			<div class="row">
 				<div class="col">
 					<rd-card
-						[cardTitle]="'Add Schedules for (gen 1 lower)'"
+						[cardTitle]="'Add Schedules for ' + (genOneYearLower$ | async)"
 						[expanded]="false"
 						[isLoading]="loadingFormSchedule$ | async"
 					>

@@ -419,9 +419,9 @@ export class ClientPeriodicTraineeAttendance extends BaseModel {
 	) {
 		super();
 	}
-	static fromJson(data?: any): ClientTraineeDataAttendance {
+	static fromJson(data?: any): ClientPeriodicTraineeAttendance {
 		if (isEmpty(data)) return null;
-		return Object.assign(new ClientTraineeDataAttendance(), data, {
+		return Object.assign(new ClientPeriodicTraineeAttendance(), data, {
 			Trainee: ClientTrainee.fromJson(data?.Trainee),
 		});
 	}

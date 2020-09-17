@@ -33,7 +33,8 @@ import * as _ from 'lodash';
 NOTE: Schedule HAS NO UPDATE
 TODO: 
 - Implement loading when pressing DELETE ALL SCHEDULE
-- Specific is rarely used, consider removing it
+- DeleteAllSchedule not implemented in backend yet
+- UNCHECKED: Delete all schedule, create trainees, delete trainee
 */
 
 @Component({
@@ -58,7 +59,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	scheduleForm = this.fb.group({
 		currentSchedule: [null],
 		phase: ['', Validators.required],
-		subject: ['', Validators.required],
+		subjectId: ['', Validators.required],
 		scheduleType: ['daily'],
 		scheduleName: ['', Validators.required],
 		scheduleCount: [1, Validators.min(1)],
@@ -165,15 +166,14 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 
 		//#region Auto select first in array
 		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((phases) => {
-      // if (!this.scheduleForm.get('phase').value) 
-      this.scheduleForm.get('phase').setValue(phases[0]);
+			this.scheduleForm.get('phase').setValue(phases[0]);
 
 			this.viewCurrPhase$.next(phases[0]);
 			this.insertTraineeCurrPhase$.next(phases[0]);
 		});
 
 		this.formSubjectList$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
-			this.scheduleForm.get('subject').setValue(subjects[0]?.SubjectId);
+			this.scheduleForm.get('subjectId').setValue(subjects[0]?.SubjectId);
 		});
 
 		this.viewSubjectList$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
@@ -211,6 +211,10 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrSubject$))
 			.subscribe(([act, sub]) => {
+        // Reset except phase & subject ng-select
+				const { phase, subjectId } = this.scheduleForm.value;
+        this.scheduleForm.reset({ phase, subjectId });
+        
 				if (!!sub)
 					this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: sub.SubjectId }));
 			});
@@ -269,7 +273,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	selectSchedule(schedule: ClientSchedule) {
 		this.scheduleForm.patchValue({
 			currentSchedule: schedule,
-			subject: schedule.ScheduleId,
+			subjectId: schedule.ScheduleId,
 			scheduleType: schedule.scheduleType,
 			scheduleName: schedule.ScheduleName,
 			scheduleCount: schedule.ScheduleDates?.length,
@@ -277,10 +281,10 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	submitScheduleForm() {
-		const { subject, scheduleName, scheduleDates } = this.scheduleForm.value;
+		const { subjectId, scheduleName, scheduleDates } = this.scheduleForm.value;
 		this.store.dispatch(
 			MasterStateAction.CreateDailySchedule({
-				subjectId: subject,
+				subjectId,
 				scheduleName,
 				scheduleDates,
 			})
@@ -305,11 +309,11 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	updateScheduleDates(count: number) {
-    // If needed more
+		// If needed more
 		while (count - this.scheduleDates.length > 0) {
-      this.scheduleDates.push(this.fb.control(''));
-    }
-    // If needed less
+			this.scheduleDates.push(this.fb.control(''));
+		}
+		// If needed less
 		while (count - this.scheduleDates.length < 0) {
 			this.scheduleDates.removeAt(this.scheduleDates.length - 1);
 		}

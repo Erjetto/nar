@@ -11,9 +11,8 @@ import {
 	fromMasterState,
 	MasterStateEffects,
 	MainStateEffects,
-	MasterStateReducer,
 } from 'src/app/shared/store-modules';
-import { map, takeUntil, first } from 'rxjs/operators';
+import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 @Component({
@@ -67,12 +66,10 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 
 		//#region Subscribe to effects
 		// Remove Loading
-		merge(this.mainEffects.afterRequest$)
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => {
-				this.loadingInsertPhase$.next(false);
-				this.loadingInsertTraineeInPhase$.next(false);
-			});
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+			this.loadingInsertPhase$.next(false);
+			this.loadingInsertTraineeInPhase$.next(false);
+		});
 
 		// Reload Phase List
 		merge(
@@ -83,6 +80,13 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
+
+		// Reload Trainee in Phase
+		merge(this.masterEffects.createTraineeInPhase$, this.masterEffects.deleteTraineeInPhase$)
+			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
+			.subscribe(([, phase]) =>
+				this.store.dispatch(MasterStateAction.FetchTraineeInPhase({ phaseId: phase.PhaseId }))
+			);
 
 		//#endregion
 
@@ -117,13 +121,13 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 	}
 
 	addTraineesInPhase(form: NgForm) {
-		const { selectPhase, traineeText, alsoAddSchedule } = form.value;
 		this.loadingInsertTraineeInPhase$.next(true);
+		const { selectPhase, traineeText, alsoAddSchedule } = form.value;
 		this.store.dispatch(
 			MasterStateAction.CreateTraineeInPhase({
-				binusianNumbers: traineeText,
-				phaseId: selectPhase,
-				isAddToSchedule: alsoAddSchedule,
+				binusianNumbers: traineeText.split('\n'),
+				phaseId: selectPhase.PhaseId,
+				isAddToSchedule: !!alsoAddSchedule,
 			})
 		);
 	}

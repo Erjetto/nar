@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ClientInterviewQuestion, InterviewQuestionDetail } from 'src/app/shared/models';
-import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -63,26 +62,26 @@ export class ManageInterviewQuestionComponent
 		this.loadingViewInterviewQuestions$ = combineLatest([
 			this.interviewQuestionDetailsLoading$,
 			this.interviewQuestionsLoading$,
-    ]).pipe(map(([a, b]) => a || b)); 
-    //#endregion 
-    
-    //#region Auto select first in array
+		]).pipe(map(([a, b]) => a || b));
+		//#endregion
+
+		//#region Auto select first in array
 		this.interviewQuestions$.pipe(takeUntil(this.destroyed$)).subscribe((genInterview) => {
 			this.currInterviewQuestion$.next(genInterview[0]);
 		});
 		//#endregion
 
-    //#region Auto fetch
+		//#region Auto fetch
 		this.currInterviewQuestion$ // Fetch interview question details
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((currGen) =>
-      this.store.dispatch(
-        InterviewStateAction.FetchInterviewQuestionDetails({
-          interviewQuestionId: currGen.InterviewQuestionId,
-        })
-      )
-    );
-  //#endregion
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((currGen) =>
+				this.store.dispatch(
+					InterviewStateAction.FetchInterviewQuestionDetails({
+						interviewQuestionId: currGen.InterviewQuestionId,
+					})
+				)
+			);
+		//#endregion
 
 		//#region Subscribe to effects
 		this.interviewEffects.createInterviewQuestion$

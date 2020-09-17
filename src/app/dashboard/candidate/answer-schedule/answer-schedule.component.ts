@@ -14,12 +14,13 @@ import {
 	MainStateAction,
 	MainStateEffects,
 	CandidateStateEffects,
+  MasterStateEffects,
+  fromMasterState,
 } from 'src/app/shared/store-modules';
-import { DatePipe, registerLocaleData } from '@angular/common';
-import localeID from '@angular/common/locales/id';
 import { take, takeUntil } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
+import { DateHelper } from 'src/app/shared/utilities/date-helper';
 
 @Component({
 	selector: 'rd-answer-schedule',
@@ -43,6 +44,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 
 	loadingViewSchedule$: Observable<boolean>;
 	loadingFormSchedule$ = new BehaviorSubject<boolean>(false);
+	genOneYearLower$: Observable<string>;
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -50,9 +52,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		private candidateEffects: CandidateStateEffects
 	) {
 		super(store);
-		registerLocaleData(localeID);
-		const pipe = new DatePipe('ID');
-		const today = pipe.transform(Date.now(), this.dateFormat);
+		const today = DateHelper.dateToInputFormat(Date.now(), this.dateFormat);
 		this.addSchedulePlaceholder = `${today}, ${today}, XX99-9`;
 	}
 
@@ -61,7 +61,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		this.selectedSchedule$ = this.store.pipe(select(fromCandidateState.getSelectedAnswer));
 		this.questionModel$ = this.store.pipe(select(fromCandidateState.getQuestionModel));
     this.loadingViewSchedule$ = this.store.pipe(select(fromCandidateState.isLoadingAnswersModel));
-    
+    this.genOneYearLower$ = this.store.pipe(select(fromMasterState.getGenerationOneYearLower));    
 		this.questionModel$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
 			this.questions = res;
 		});

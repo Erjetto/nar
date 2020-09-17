@@ -40,13 +40,14 @@
 		<div class="col">
 			<rd-card [cardTitle]="'User In Roles'" [isLoading]="loadingViewUserInRole$ | async">
 				<div class="row form-group">
-					<div class="col-4">
+					<div class="col-6">
 						<input
 							class="form-control"
-              placeholder="Search by initial"
+              placeholder="Search by initial/roles"
               (change)="searchText$.next($event.target.value)"
 						/>
-					</div>
+          </div>
+          <div class="col text-light col-form-label">Note: Press 'Enter' or 'Tab' to start filter</div>
 				</div>
 				<table class="table table-sm table-striped table-hover text-center">
 					<thead>

@@ -9,6 +9,7 @@ import { IAppState } from '../app.reducer';
 import * as _ from 'lodash';
 
 export class DashboardContentBase implements OnDestroy {
+  // TODO: Remove this from derived component, use mainEffects.changeGen$ instead
 	currentGeneration$: Observable<ClientGeneration>;
 
 	destroyed$: Subject<any> = new Subject();

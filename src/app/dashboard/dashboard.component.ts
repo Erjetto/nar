@@ -18,6 +18,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { trigger, transition, query, style, group, animate } from '@angular/animations';
 import { Cookies } from '../shared/constants/cookie.constants';
 import * as _ from 'lodash';
+import { Title } from '@angular/platform-browser';
 
 @Component({
 	selector: 'rd-dashboard',
@@ -55,25 +56,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private mainEffects: MainStateEffects,
 		private cookieService: CookieService,
-		private menuService: MenuService
-	) {}
+    private menuService: MenuService,
+    private titleService: Title
+  ) {}
 
+  getEndRoute(){
+    let root = this.route.snapshot;
+    while(root.firstChild) root = root.firstChild;
+    return root;
+  }
+  
 	ngOnInit(): void {
 		this.initiateTheme();
 		this.currentActiveHeader = this.route.snapshot.firstChild.data.name;
+    this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
 
 		// Change currentMenu's name for every route change
 		// Assumes every menu has data.name
 		this.router.events
 			.pipe(
-				filter((evt) => evt instanceof NavigationEnd),
+        filter((evt) => evt instanceof NavigationEnd),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((e: NavigationEnd) => {
-				this.currentActiveHeader = this.route.snapshot.firstChild.data.name;
-				this.history = [...this.history, e.urlAfterRedirects];
+        const endRoute = this.getEndRoute();
+        // get first level (Master, Modify, Home, etc)
+				this.currentActiveHeader = endRoute.root.firstChild.data.name; 
+        this.history = [...this.history, endRoute.data.name];
+        this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
 			});
-		window.onpopstate = (evt) => (this.isBack = true);
+		window.onpopstate = (evt) => (this.isBack = true); // For animation purpose
 
 		// Redirect to login when logout
 		this.mainEffects.logout$.pipe(takeUntil(this.destroyed$)).subscribe((act) => {
@@ -218,7 +230,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			this.currentState--;
 		} else this.currentState++;
 
-		console.log(this.currentState);
 		return this.currentState;
 	}
 

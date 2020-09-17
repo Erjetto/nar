@@ -6,23 +6,19 @@ import {
 	ViewChild,
 	ElementRef,
 } from '@angular/core';
-import { Role, Message } from 'src/app/shared/models';
-import { MockData } from 'src/app/shared/mock-data';
+import { Message } from 'src/app/shared/models';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { AnnouncementService } from 'src/app/shared/services/new/announcement.service';
 import { Observable, BehaviorSubject, merge } from 'rxjs';
 import {
 	MainStateAction,
 	fromMainState,
-	MasterStateEffects,
 	fromMasterState,
-	MasterStateAction,
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
-import { NgForm, FormBuilder, Validators } from '@angular/forms';
-import { takeUntil, tap, filter } from 'rxjs/operators';
+import { FormBuilder, Validators } from '@angular/forms';
+import { takeUntil, filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 @Component({

@@ -31,7 +31,7 @@
 								bindLabel="Name"
 								bindValue="SubjectId"
 								[searchable]="false"
-								formControlName="subject"
+								formControlName="subjectId"
 							></ng-select>
 						</div>
 					</div>
@@ -46,7 +46,7 @@
 									value="daily"
 									formControlName="scheduleType"
 								/>
-								<label class="custom-control-label"> Daily </label>
+								<label class="custom-control-label" for="dailyRadio"> Daily </label>
 							</div>
 							<!-- <div class="custom-control custom-radio">
 								<input
@@ -55,10 +55,9 @@
 									name="scheduleTypeRadio"
 									class="custom-control-input"
 									value="specific"
-									ngModel
                   formControlName="scheduleType"
+                  disabled
                   />
-									#scheduleTypeRadio="ngModel"
 								<label class="custom-control-label"> Specific </label>
 							</div> -->
 						</div>
