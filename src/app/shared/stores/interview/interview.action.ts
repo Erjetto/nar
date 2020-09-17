@@ -4,7 +4,7 @@ import {
 	InterviewQuestionDetail,
 	ClientInterviewReport,
 	InterviewMaterial,
-  ClientInterviewSchedule,
+	ClientInterviewSchedule,
 } from '../../models';
 
 //#region Fetch
@@ -35,7 +35,25 @@ export const CreateInterviewQuestionDetail = createAction(
 	'[MasterState] CreateInterviewQuestionDetails',
 	props<{ interviewQuestionId: string }>()
 );
-export const CreateInterviewSchedule = createAction('[MasterState] CreateInterviewSchedules');
+export const CreateInterviewSchedule = createAction(
+	'[MasterState] CreateInterviewSchedules',
+	props<{ interviewQuestionId: string; schedules: string[] }>()
+);
+export const CreateInterviewMaterial = createAction(
+	'[MasterState] CreateInterviewMaterial',
+	props<{
+		fileId: string;
+		materialName: string;
+		trainee_Id: string;
+	}>()
+);
+export const MassCreateInterviewMaterial = createAction(
+	'[MasterState] MassCreateInterviewMaterial',
+	props<{
+		fileIds: string[];
+		fileNames: string[];
+	}>()
+);
 //#endregion
 
 //#region Update// export const UpdateInterviewQuestion = createAction(
@@ -58,27 +76,42 @@ export const CreateInterviewSchedule = createAction('[MasterState] CreateIntervi
 // 	'[MasterState] DeleteInterviewQuestionDetails',
 // 	props<{ interviewQuestionId: string }>()
 // );
-// export const DeleteInterviewSchedule = createAction(
-// 	'[MasterState] DeleteInterviewSchedules'
-// );
+export const DeleteInterviewSchedule = createAction(
+	'[MasterState] DeleteInterviewSchedules',
+	props<{
+		interviewScheduleId: string;
+		note: string;
+	}>()
+);
+export const DeleteInterviewMaterial = createAction(
+	'[MasterState] DeleteInterviewMaterial',
+	props<{
+		fileid: string;
+		materialId: string;
+		traineeid: string;
+		reason: string;
+	}>()
+);
 //#endregion
 
 export const FetchInterviewMaterials = createAction(
 	'[MasterState] FetchInterviewMaterials',
 	props<{ phaseId: string }>()
 );
-
-export const FetchInterviewSchedules = createAction(
-	'[MasterState] FetchInterviewSchedules',
-	props<{ phaseId: string }>()
+export const FetchInterviewSchedules = createAction('[MasterState] FetchInterviewSchedules');
+export const FetchInterviewSchedulesReport = createAction(
+	'[MasterState] FetchInterviewSchedulesReport'
 );
 
 export const FetchInterviewMaterialsSuccess = createAction(
 	'[MasterState] FetchInterviewMaterialsSuccess',
 	props<{ payload: InterviewMaterial[] }>()
 );
-
 export const FetchInterviewSchedulesSuccess = createAction(
 	'[MasterState] FetchInterviewSchedulesSuccess',
 	props<{ payload: ClientInterviewSchedule[] }>()
+);
+export const FetchInterviewSchedulesReportSuccess = createAction(
+	'[MasterState] FetchInterviewSchedulesReportSuccess',
+	props<{ payload: ClientInterviewReport }>()
 );

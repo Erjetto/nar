@@ -413,14 +413,14 @@ export class LeaderService {
 	public SaveTraineesInGeneration(data: { datas: string[] }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveTraineesInGeneration', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	// datas: ['1503251513, ar, T001', ...]
 	public SaveChangeMemberType(data: { datas: string[] }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveChangeMemberType', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SavePhase(data: {
@@ -429,36 +429,36 @@ export class LeaderService {
 		endDate: string;
 		type: string;
 	}): Observable<boolean> {
-		return this.httpClient.post(this.baseUrl + 'SavePhase', data).pipe(map((res: any) => !!res.d));
+		return this.httpClient.post(this.baseUrl + 'SavePhase', data).pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveTraineesToPhase(data: {
 		binusianNumbers: string[];
 		phaseId: string;
 		isAddToSchedule: boolean;
-	}): Observable<boolean> {
+	}): Observable<string[]> {
 		// Possible result -> array of existing error
 		return this.httpClient
 			.post(this.baseUrl + 'SaveTraineesToPhase', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d as string[]));
 	}
 
 	public SaveSubject(data: { name: string; phaseId: string; value: boolean }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveSubject', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveMaximumFileSize(data: { fileSize: number; subjectId: string }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveMaximumFileSize', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveSubjectDetail(data: { subjectId: string; value: boolean }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveSubjectDetail', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveSpecificSchedule(data: {
@@ -471,7 +471,7 @@ export class LeaderService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveSpecificSchedule', data)
-			.pipe(map((res: any) => !!res.d)); // checked
+			.pipe(map((res: any) => res.d === true)); // checked
 	}
 
 	public SaveTraineesToSchedule(data: {
@@ -482,7 +482,7 @@ export class LeaderService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveTraineesToSchedule', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveInterviewQuestions(data: {
@@ -491,13 +491,13 @@ export class LeaderService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveInterviewQuestions', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveUserInRoles(data: { userRoleId: string; usernames: string[] }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveUserInRoles', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	//#endregion
@@ -512,7 +512,7 @@ export class LeaderService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdateGeneration', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public UpdatePhase(data: {
@@ -523,7 +523,7 @@ export class LeaderService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdatePhase', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 	//#endregion
 
@@ -532,25 +532,25 @@ export class LeaderService {
 	public DeleteTraineeInPhase(data: { PhaseId: string; TraineeId: string }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteTraineeInPhase', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteSubject(data: { subjectId: string }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteSubject', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteAllSubjects(): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteAllSubject', {})
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteUserInRoles(data: { userInRoleId: string }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteUserInRoles', data)
-			.pipe(map((res: any) => !!res.d));
+			.pipe(map((res: any) => res.d === true));
 	}
 	//#endregion
 }

@@ -4,6 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Role, User } from '../models';
 
+/*
+NOTE: May be unneeded because current user is stored in backend
+*/
+
 @Injectable({
 	providedIn: 'root',
 })

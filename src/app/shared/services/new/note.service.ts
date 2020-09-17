@@ -38,7 +38,7 @@ export class NoteService {
 		search: string;
 	}): Observable<ClientTraineeReputationPaging> {
 		return this.httpClient
-			.post(this.baseUrl + 'SaveNote', data)
+			.post(this.baseUrl + 'GetTraineesReputationByPhase', data)
 			.pipe(map((res: any) => ClientTraineeReputationPaging.fromJson(res.d)));
 	}
 
@@ -50,7 +50,7 @@ export class NoteService {
 
 	public GetEvaluationNotesContain(data: { str: string }): Observable<EvaluationNote[]> {
 		return this.httpClient
-			.post(this.baseUrl + 'GetAllCaseBySubject', data)
+			.post(this.baseUrl + 'GetEvaluationNotesContain', data)
 			.pipe(map((res: any) => _.map(res.d, EvaluationNote.fromJson)));
 	}
 
@@ -80,7 +80,7 @@ export class NoteService {
 
 	public GetTraineeCommentHistory(): Observable<TraineeComment> {
 		return this.httpClient
-			.post(this.baseUrl + 'GetEvaluation', {})
+			.post(this.baseUrl + 'GetTraineeCommentHistory', {})
 			.pipe(map((res: any) => TraineeComment.fromJson(res.d)));
 	}
 

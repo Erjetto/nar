@@ -1,4 +1,4 @@
-import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import { createFeatureSelector, createReducer, createSelector, on, select } from '@ngrx/store';
 
 import * as MasterStateAction from './master.action';
 import * as MainStateAction from '../main/main.action';
@@ -11,6 +11,7 @@ import {
 	ClientUserInRoles,
 	ClientTrainee,
 } from '../../models';
+import { getCurrentGeneration } from '../main/main.reducer';
 
 export interface IMasterState {
 	roles: Role[];
@@ -78,7 +79,7 @@ export const MASTERSTATE_REDUCER_NAME = 'MasterState';
 export const MasterStateReducer = createReducer(
 	initialState,
 
-  // Remove all data when generation changed
+	// Remove all data when generation changed
 	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
 		...initialState,
 		generations: state.generations,
@@ -212,31 +213,10 @@ export const isSchedulesLoading = getMasterStateBy((s) => s.loadingSchedules);
 export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTraineeInSchedule);
 //#endregion
 
-// export const getSubjectFromEntity = (
-// 	subjectsEntity: Observable<{ [phaseId: string]: ClientSubject[] }>,
-//   phaseObservable: Observable<ClientPhase>,
-//   callbackIfEmpty: () => void
-// ) =>
-// 	combineLatest([subjectsEntity, phaseObservable]).pipe(
-// 		map(([entity, currPhase]) => {
-// 			if (!currPhase) return [];
-// 			if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
-// 			else {
-//         callbackIfEmpty();
-// 				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
-// 				return [];
-// 			}
-// 		})
-// 	);
-
-// export const getScheduleFromEntity = (phaseObservable: Observable<ClientPhase>) =>
-// 	combineLatest([this.subjectEntity$, phaseObservable]).pipe(
-// 		map(([entity, currPhase]) => {
-// 			if (!currPhase) return [];
-// 			if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
-// 			else {
-// 				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
-// 				return [];
-// 			}
-// 		})
-// 	);
+//#region Extras
+export const getGenerationOneYearLower = createSelector(
+	getCurrentGeneration,
+	(g: ClientGeneration) =>
+		parseInt(g?.Description.substr(0, 2), 10) - 1 + g?.Description.substr(2)
+);
+//#endregion

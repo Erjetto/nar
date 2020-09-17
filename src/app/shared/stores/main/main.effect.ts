@@ -80,17 +80,14 @@ export class MainStateEffects {
 			this.generalService.ChangeGeneration({ genId: act.genId }).pipe(map((res) => ({ act, res })))
 		),
 		withLatestFrom(this.store.pipe(select(fromMasterState.getGenerations))),
-		tap(console.log),
-		mergeMap(([{ act }, gens]) => {
-			// localStorage.setItem(Cookies.CURR_GEN_ID, act.genId);
-
-			return of(
+		// localStorage.setItem(Cookies.CURR_GEN_ID, act.genId); // gen is saved in server side
+		mergeMap(([{ act }, gens]) =>
+			of(
 				MainStateAction.ChangeGenerationSuccess({
 					gen: gens.find((g: ClientGeneration) => g.GenerationId === act.genId),
 				})
-			);
-		}),
-		tap(() => console.log('Changed generation')),
+			)
+		),
 		share()
 	);
 

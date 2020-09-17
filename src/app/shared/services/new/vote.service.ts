@@ -6,11 +6,12 @@ import {
 	ClientInterviewReport,
 	TopBottomVote,
 	TrainerTopBottomVote,
-  ClientVoteBestTrainerSchedule,
-  ClientVoteBestTrainer,
+	ClientVoteBestTrainerSchedule,
+	ClientVoteBestTrainer,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import * as _ from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -26,23 +27,31 @@ export class VoteService {
 		candidates: string[];
 		quota: number;
 		description: string;
-    voteType: string;
+		voteType: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveVoteBestTrainerSchedule', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public GetVoteBestTrainerSchedule(): Observable<ClientVoteBestTrainerSchedule[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetVoteBestTrainerSchedule', {})
+			.pipe(map((res: any) => _.map(res.d, ClientVoteBestTrainerSchedule.fromJson)));
 	}
 
 	public GetVoteSchedule(): Observable<ClientVoteBestTrainer[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetVoteSchedule', {})
+			.pipe(map((res: any) => _.map(res.d, ClientVoteBestTrainer.fromJson)));
 	}
-  
+
 	public GetVoteBestTrainer(data: {
 		voteBestTrainerScheduleId: string;
 	}): Observable<ClientVoteBestTrainer[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetVoteBestTrainer', data)
+			.pipe(map((res: any) => _.map(res.d, ClientVoteBestTrainer.fromJson)));
 	}
 
 	public UpdateVoteBestTrainerSchedule(data: {
@@ -53,10 +62,12 @@ export class VoteService {
 		quota: number;
 		voteType: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateVoteBestTrainerSchedule', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
-  // ClientVoteBestTrainerSchedule[]
+	// ClientVoteBestTrainerSchedule[]
 	public GetVoteBestTrainerScheduleForCurrentUser(data: {
 		generationId: string;
 		voteBestTrainerScheduleId: string;
@@ -65,43 +76,55 @@ export class VoteService {
 		quota: number;
 		voteType: string;
 	}): Observable<ClientVoteBestTrainerSchedule[]> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetVoteBestTrainerScheduleForCurrentUser', data)
+			.pipe(map((res: any) => _.map(res.d, ClientVoteBestTrainerSchedule.fromJson)));
 	}
 
 	public SaveVote(data: {
 		voteBestTrainerScheduleId: string;
 		binusians: string[];
 	}): Observable<string> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveVote', data)
+			.pipe(map((res: any) => res.d + ''));
 	}
 
-  // ClientGeneralVoteSchedule[]
+	// ClientGeneralVoteSchedule[]
 	public GetGeneralVoteScheduleForCurrentUser(): Observable<any> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetGeneralVoteScheduleForCurrentUser', {})
+			.pipe(map((res: any) => res.d));
 	}
 
-  // ClientGeneralVoteSchedule
+	// ClientGeneralVoteSchedule
 	public GetGeneralVoteScheduleForCurrentUserCount(): Observable<number> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetGeneralVoteScheduleForCurrentUserCount', {})
+			.pipe(map((res: any) => res.d));
 	}
 
-  // ClientVoteOption[]
-	public GetGeneralVote(data: {
-		generalVoteScheduleId: string;
-	}): Observable<any> {
-		return throwError('Not implemented yet');
+	// ClientVoteOption[]
+	public GetGeneralVote(data: { generalVoteScheduleId: string }): Observable<any> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetGeneralVote', {})
+			.pipe(map((res: any) => res.d));
 	}
 
-  // ClientGeneralVoteSchedule[]
+	// ClientGeneralVoteSchedule[]
 	public GetGeneralVoteSchedule(): Observable<any> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'GetGeneralVoteSchedule', {})
+			.pipe(map((res: any) => res.d));
 	}
 
 	public SaveGeneralVote(data: {
 		generalVoteScheduleId: string;
 		options: string[];
 	}): Observable<string> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveGeneralVote', data)
+			.pipe(map((res: any) => res.d + ''));
 	}
 
 	public SaveGeneralVoteSchedule(data: {
@@ -114,7 +137,9 @@ export class VoteService {
 		participant: string;
 		voteType: string;
 	}): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveGeneralVoteSchedule', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveTopBottomVote(data: {
@@ -123,7 +148,9 @@ export class VoteService {
 		topJson: string;
 		bottomJson: string;
 	}): Observable<TopBottomVote> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveTopBottomVote', data)
+			.pipe(map((res: any) => TopBottomVote.fromJson(res.d)));
 	}
 
 	public SaveTrainerTopBottomVote(data: {
@@ -132,24 +159,22 @@ export class VoteService {
 		topJson: string;
 		bottomJson: string;
 	}): Observable<TrainerTopBottomVote> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'SaveTrainerTopBottomVote', data)
+			.pipe(map((res: any) => TrainerTopBottomVote.fromJson(res.d)));
 	}
 
-	public GetTopBottomVotesForSchedule(data: {
-		scheduleId: string;
-	}): Observable<TopBottomVote[]> {
-		return of(MockData.GetTopBottomVotesForSchedule).pipe(
-			delay(500),
-			map((r) => r.map(TopBottomVote.fromJson))
-		);
+	public GetTopBottomVotesForSchedule(data: { scheduleId: string }): Observable<TopBottomVote[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetTopBottomVotesForSchedule', data)
+			.pipe(map((res: any) => _.map(res.d, TopBottomVote.fromJson)));
 	}
 
 	public GetTrainerTopBottomVotesForSchedule(data: {
 		scheduleId: string;
 	}): Observable<TrainerTopBottomVote[]> {
-		return of(MockData.GetTrainerTopBottomVotesForSchedule).pipe(
-			delay(500),
-			map((r) => r.map(TrainerTopBottomVote.fromJson))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetTrainerTopBottomVotesForSchedule', data)
+			.pipe(map((res: any) => _.map(res.d, TrainerTopBottomVote.fromJson)));
 	}
 }

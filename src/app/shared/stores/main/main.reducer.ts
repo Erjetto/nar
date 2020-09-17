@@ -13,6 +13,7 @@ export interface IMainState {
 	announcements: Message[]; // Home Message
 	isLoadingAnnouncements: boolean;
 	uploadedFiles: { fileid: string; filename: string }[];
+	isUploadingFiles: boolean;
 
 	currentRole: Role;
 	currentGeneration: ClientGeneration;
@@ -24,12 +25,13 @@ export const initialState: IMainState = {
 
 	messagesMax: 5,
 	messages: [
-		new Toast('info', 'Lorem ipsum dolor sit amet'),
+		// new Toast('info', 'Lorem ipsum dolor sit amet'),
 		// new Toast('success', 'Fetch data success 2'),
 		// new Toast('warning', 'Fetch data failed 3'),
 		// new Toast('danger', 'Fetch data failed 4'),
 	],
 	uploadedFiles: [],
+	isUploadingFiles: false,
 
 	announcements: [],
 	isLoadingAnnouncements: false,
@@ -88,15 +90,18 @@ export const MainStateReducer = createReducer(
 		isLoadingAnnouncements: false,
 	})),
 
+	on(MainStateAction.UploadFile, (state) => ({ ...state, isUploadingFiles: true })),
+
 	on(MainStateAction.UploadFileSuccess, (state, { fileids, filenames }) => ({
 		...state,
 		uploadedFiles: _.zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
+		isUploadingFiles: false,
 	})),
 
 	on(MainStateAction.RemoveUploadedFiles, (state) => ({
 		...state,
 		uploadedFiles: [],
-	})),
+	}))
 );
 
 export const getMainState = createFeatureSelector<IMainState>(MAINSTATE_REDUCER_NAME);
@@ -114,3 +119,4 @@ export const getCurrentGenerationId = getMainStateBy((s) => s.currentGenerationI
 export const getCurrentRole = getMainStateBy((s) => s.currentRole);
 
 export const getUploadedFiles = getMainStateBy((s) => s.uploadedFiles);
+export const isUploadingFiles = getMainStateBy((s) => s.isUploadingFiles);

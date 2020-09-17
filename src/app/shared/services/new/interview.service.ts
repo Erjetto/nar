@@ -55,7 +55,7 @@ export class InterviewService {
 		schedules: string[];
 	}): Observable<string[]> {
 		return this.httpClient
-			.post(this.baseUrl + 'GetInterviewMaterial', data)
+			.post(this.baseUrl + 'SaveInterviewSchedule', data)
 			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
 	}
 
@@ -130,6 +130,15 @@ export class InterviewService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveInterviewMaterial', data)
+			.pipe(map((res: any) => res === true));
+	}
+
+	public MassSaveInterviewMaterial(data: {
+		fileIds: string[];
+		fileNames: string[];
+	}): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'MassSaveInterviewMaterial', data)
 			.pipe(map((res: any) => res === true));
 	}
 

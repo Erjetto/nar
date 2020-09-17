@@ -32,6 +32,7 @@ import { TraineeAttendanceService } from 'src/app/shared/services/new/trainee-at
 import { TraineeService } from 'src/app/shared/services/new/trainee.service';
 import { VoteService } from 'src/app/shared/services/new/vote.service';
 import { IAppState } from 'src/app/app.reducer';
+import * as _ from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -57,6 +58,15 @@ export class InterviewStateEffects {
 		ofType(InterviewStateAction.FetchInterviewSchedules),
 		switchMap(() => this.interviewService.GetInterviewSchedulesForTrainee()),
 		mergeMap((res) => of(InterviewStateAction.FetchInterviewSchedulesSuccess({ payload: res }))),
+		share()
+	);
+	@Effect()
+	getInterviewSchedulesReport$: Observable<Action> = this.actions$.pipe(
+		ofType(InterviewStateAction.FetchInterviewSchedulesReport),
+		switchMap(() => this.interviewService.GetInterviewSchedules()),
+		mergeMap((res) =>
+			of(InterviewStateAction.FetchInterviewSchedulesReportSuccess({ payload: res }))
+		),
 		share()
 	);
 	@Effect()
@@ -90,6 +100,7 @@ export class InterviewStateEffects {
 	createInterviewQuestion$: Observable<Action> = this.actions$.pipe(
 		ofType(InterviewStateAction.CreateInterviewQuestion),
 		switchMap((data) => this.leaderService.SaveInterviewQuestions(data)),
+
 		mergeMap((res) =>
 			res === true
 				? of(MainStateAction.SuccessfullyMessage('created interview questions'))
@@ -97,18 +108,49 @@ export class InterviewStateEffects {
 		),
 		share()
 	);
-	@Effect()
-	createInterviewQuestionDetail$: Observable<Action> = this.actions$.pipe(
-		ofType(InterviewStateAction.CreateInterviewQuestionDetail),
-		switchMap((data) =>
-			of(MainStateAction.NotImplementedMessage('creating InterviewQuestionDetail'))
-		),
-		share()
-	);
+
+	// @Effect()
+	// createInterviewQuestionDetail$: Observable<Action> = this.actions$.pipe(
+	// 	ofType(InterviewStateAction.CreateInterviewQuestionDetail),
+	// 	switchMap((data) =>
+	// 		of(MainStateAction.NotImplementedMessage('creating InterviewQuestionDetail'))
+	// 	),
+	// 	share()
+	// );
+
 	@Effect()
 	createInterviewSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(InterviewStateAction.CreateInterviewSchedule),
-		switchMap((data) => of(MainStateAction.NotImplementedMessage('creating InterviewSchedule'))),
+		switchMap((data) => this.interviewService.SaveInterviewSchedule(data)),
+		mergeMap((res) =>
+			!_.isEmpty(res)
+				? of(MainStateAction.SuccessfullyMessage('created interview schedules'))
+				: of(MainStateAction.FailMessage('Saving interview schedules'))
+		),
+		share()
+	);
+
+	@Effect()
+	createInterviewMaterials$: Observable<Action> = this.actions$.pipe(
+		ofType(InterviewStateAction.CreateInterviewMaterial),
+		switchMap((data) => this.interviewService.SaveInterviewMaterial(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('created interview material'))
+				: of(MainStateAction.FailMessage('creating interview material'))
+		),
+		share()
+	);
+
+	@Effect()
+	massCreateInterviewMaterials$: Observable<Action> = this.actions$.pipe(
+		ofType(InterviewStateAction.MassCreateInterviewMaterial),
+		switchMap((data) => this.interviewService.MassSaveInterviewMaterial(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('created interview materials'))
+				: of(MainStateAction.FailMessage('creating interview materials'))
+		),
 		share()
 	);
 	//#endregion
@@ -119,5 +161,16 @@ export class InterviewStateEffects {
 
 	//#region delete
 
+	@Effect()
+	deleteInterviewSchedule$: Observable<Action> = this.actions$.pipe(
+		ofType(InterviewStateAction.DeleteInterviewSchedule),
+		switchMap((data) => this.interviewService.DeleteInterviewSchedule(data)),
+		mergeMap((res) =>
+			!_.isEmpty(res)
+				? of(MainStateAction.SuccessfullyMessage('created interview schedules'))
+				: of(MainStateAction.FailMessage('Saving interview schedules'))
+		),
+		share()
+	);
 	//#endregion
 }

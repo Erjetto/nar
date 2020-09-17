@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { SubcoCandidateQuestionModel, SubcoCandidateAnswerModel } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { MockData } from '../../mock-data';
 import * as _ from 'lodash';
 import { DateHelper } from '../../utilities/date-helper';
 

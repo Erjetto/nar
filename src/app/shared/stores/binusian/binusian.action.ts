@@ -3,30 +3,29 @@ import { ClientTrainee, ClientTraineeData } from '../../models';
 
 export const FetchAllTraineesData = createAction('[BinusianState] FetchAllTraineesData');
 export const FetchTrainees = createAction('[BinusianState] FetchTrainees');
-export const FetchTraineesByPhase = createAction(
-	'[BinusianState] FetchTraineesByPhase',
-	props<{ phaseId: string }>()
-);
-export const FetchTraineesBySchedule = createAction(
-	'[BinusianState] FetchTraineesBySchedule',
-	props<{ scheduleId: string }>()
-);
-
 
 export const FetchTraineesSuccess = createAction(
 	'[BinusianState] FetchTraineesSuccess',
 	props<{ payload: ClientTrainee[] }>()
 );
-export const FetchTraineesByPhaseSuccess = createAction(
-	'[BinusianState] FetchTraineesByPhaseSuccess',
-	props<{ payload: ClientTrainee[] }>()
-);
-export const FetchTraineesByScheduleSuccess = createAction(
-	'[BinusianState] FetchTraineesByScheduleSuccess',
-	props<{ payload: ClientTrainee[] }>()
-);
-
 export const FetchTraineesDataSuccess = createAction(
 	'[BinusianState] FetchTraineesDataSuccess',
 	props<{ payload: ClientTraineeData[] }>()
 );
+
+// HMM: Move this to Master because this is unrelated to binusian and it's crud?
+export const CreateTrainingSchedules = createAction(
+	'[BinusianState] CreateTrainingSchedules',
+	props<{ schedules: string[] }>()
+);
+
+export const CreateTraineeAttendances = createAction(
+	'[BinusianState] CreateTraineeAttendances',
+	props<{ attendances: string[] }>()
+);
+
+export const CreateLectureSchedules = createAction(
+	'[BinusianState] CreateLectureSchedules',
+	props<{ schedules: string[] }>()
+);
+

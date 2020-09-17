@@ -53,7 +53,6 @@ export class CandidateStateEffects {
 	@Effect()
 	createAnswerSchedule$: Observable<Action> = this.actions$.pipe(
     ofType(CandidateStateAction.CreateSchedule),
-    tap(console.log),
 		switchMap((data) => this.candidateService.CreateSchedules(data)),
 		mergeMap((res) =>
 			res
@@ -65,7 +64,6 @@ export class CandidateStateEffects {
 	@Effect()
 	updateAnswerSchedule$: Observable<Action> = this.actions$.pipe(
     ofType(CandidateStateAction.UpdateSchedule),
-    tap(console.log),
 		// switchMap((data) => this.candidateService.UpdateSchedule(data)),
 		mergeMap((res) =>
 			res

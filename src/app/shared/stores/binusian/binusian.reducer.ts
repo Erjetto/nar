@@ -7,7 +7,7 @@ export interface IBinusianState {
 	traineesEntity: { [id: string]: ClientTrainee };
 
   trainees: ClientTrainee[];
-  allTraineesData: ClientTraineeData[];
+  traineesData: ClientTraineeData[];
   userInRoles: ClientUserInRoles[];
 
   loadingTrainees: boolean;
@@ -17,7 +17,7 @@ export interface IBinusianState {
 export const initialState: IBinusianState = {
 	traineesEntity: null,
 	trainees: [],
-	allTraineesData: [],
+	traineesData: [],
   userInRoles: [],
   
 	loadingTrainees: false,

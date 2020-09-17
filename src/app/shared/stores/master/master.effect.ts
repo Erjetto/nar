@@ -204,14 +204,27 @@ export class MasterStateEffects {
 	@Effect()
 	createTraineeInPhase$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateTraineeInPhase),
-		switchMap((data) =>
-			this.leaderService.SaveTraineesToPhase(data).pipe(map((res) => ({ res, data })))
-		),
-		mergeMap(({ res, data }) =>
-			res != null
+		switchMap((data) => this.leaderService.SaveTraineesToPhase(data)),
+		mergeMap((res) => {
+			const notTrainee = [];
+			const alreadyExists = [];
+			const failed = [];
+
+			res.forEach((r) => {
+				if (r.includes('not trainee')) notTrainee.push(r.substr(0, 10));
+				else if (r.includes('already exists')) alreadyExists.push(r.substr(0, 10));
+				else if (r.includes('failed')) failed.push(r.substr(0, 10));
+			});
+
+			let message = '';
+			if (notTrainee.length > 0) message += `\nNot a trainee: ${notTrainee.join(', ')}`;
+			if (alreadyExists.length > 0) message += `\nAlready exists: ${alreadyExists.join(', ')}`;
+			if (failed.length > 0) message += `\nFailed: ${failed.join(', ')}`;
+
+			return message === ''
 				? of(MainStateAction.SuccessfullyMessage('created trainee in phase'))
-				: of(MainStateAction.FailMessage('Creating Trainee in Phase'))
-		),
+				: of(MainStateAction.FailMessage('creating Trainee in Phase', message));
+		}),
 		share()
 	);
 	@Effect()
@@ -342,7 +355,7 @@ export class MasterStateEffects {
 		ofType(MasterStateAction.DeleteTraineeInPhase),
 		switchMap((data) => this.leaderService.DeleteTraineeInPhase(data)),
 		mergeMap((res) =>
-			res != null
+			res
 				? of(MainStateAction.SuccessfullyMessage('deleted trainee in phase'))
 				: of(MainStateAction.FailMessage('delete trainee in phase'))
 		),

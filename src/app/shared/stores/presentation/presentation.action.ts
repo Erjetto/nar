@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CoreTrainingPresentation } from '../../models';
+import { CoreTrainingPresentation, TraineePresentation } from '../../models';
 
 export const FetchPresentations = createAction(
 	'[PresentationState] FetchPresentations',
@@ -11,12 +11,21 @@ export const FetchPresentationStatus = createAction(
 	props<{ filename: string }>()
 );
 
+export const FetchPresentationsByDate = createAction(
+	'[PresentationState] FetchPresentationsByDate',
+	props<{ time: string }>()
+);
+
+
 export const FetchPresentationsSuccess = createAction(
 	'[PresentationState] FetchPresentationsSuccess',
 	props<{ payload: CoreTrainingPresentation[] }>()
 );
-
 export const FetchPresentationStatusSuccess = createAction(
 	'[PresentationState] FetchPresentationStatusSuccess',
 	props<{ payload: string }>()
+);
+export const FetchPresentationsByDateSuccess = createAction(
+	'[PresentationState] FetchPresentationsByDateSuccess',
+	props<{ payload: TraineePresentation[] }>()
 );

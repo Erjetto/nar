@@ -25,7 +25,7 @@ export interface IInterviewState {
 
 	loadingInterviewMaterials: boolean;
 	loadingInterviewSchedules: boolean;
-
+  loadingInterviewSchedulesReport: boolean;
 	//#endregion
 }
 
@@ -42,6 +42,7 @@ export const initialState: IInterviewState = {
 
 	loadingInterviewMaterials: false,
 	loadingInterviewSchedules: false,
+	loadingInterviewSchedulesReport: false,
 };
 
 export const INTERVIEWSTATE_REDUCER_NAME = 'InterviewState';
@@ -68,6 +69,11 @@ export const InterviewStateReducer = createReducer(
 		loadingInterviewSchedules: true,
 	})),
 
+	on(InterviewStateAction.FetchInterviewSchedulesReport, (state) => ({
+		...state,
+		loadingInterviewSchedulesReport: true,
+	})),
+
 	on(InterviewStateAction.FetchInterviewMaterials, (state) => ({
 		...state,
 		loadingInterviewMaterials: true,
@@ -89,6 +95,12 @@ export const InterviewStateReducer = createReducer(
 		...state,
 		interviewSchedules: payload,
 		loadingInterviewSchedules: false,
+	})),
+
+	on(InterviewStateAction.FetchInterviewSchedulesReportSuccess, (state, { payload }) => ({
+		...state,
+		interviewSchedulesReport: payload,
+		loadingInterviewSchedulesReport: false,
 	})),
 
 	on(InterviewStateAction.FetchInterviewMaterialsSuccess, (state, { payload }) => ({
@@ -117,9 +129,11 @@ export const isInterviewQuestionDetailsLoading = getInterviewStateBy(
 //#region Modify tab
 export const getInterviewMaterials = getInterviewStateBy((s) => s.interviewMaterials);
 export const getInterviewSchedules = getInterviewStateBy((s) => s.interviewSchedules);
+export const getInterviewSchedulesReport = getInterviewStateBy((s) => s.interviewSchedulesReport);
 
 export const isInterviewMaterialsLoading = getInterviewStateBy((s) => s.loadingInterviewMaterials);
 export const isInterviewSchedulesLoading = getInterviewStateBy((s) => s.loadingInterviewSchedules);
+export const isInterviewSchedulesReportLoading = getInterviewStateBy((s) => s.loadingInterviewSchedulesReport);
 
 //#endregion
 

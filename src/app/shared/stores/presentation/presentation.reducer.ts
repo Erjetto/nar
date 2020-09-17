@@ -2,11 +2,17 @@ import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/
 
 import * as PresentationStateAction from './presentation.action';
 import * as MainStateAction from '../main/main.action';
-import { CoreTrainingPresentation } from '../../models';
+import {
+	CoreTrainingPresentation,
+	ClientEvaluation,
+	ClientTraineeAttendanceReport,
+	TraineePresentation,
+} from '../../models';
 
 export interface IPresentationState {
 	presentationsEntity: { [subjectId: string]: CoreTrainingPresentation[] };
 	presentations: CoreTrainingPresentation[];
+	presentationsByDate: TraineePresentation[];
 
 	presentationStatus: string;
 	loadingPresentations: boolean;
@@ -15,6 +21,7 @@ export interface IPresentationState {
 export const initialState: IPresentationState = {
 	presentationsEntity: {},
 	presentations: [],
+	presentationsByDate: [],
 
 	presentationStatus: '',
 	loadingPresentations: false,
@@ -24,7 +31,7 @@ export const PRESENTATIONSTATE_REDUCER_NAME = 'PresentationState';
 
 export const PresentationStateReducer = createReducer(
 	initialState,
-  // Remove all data when generation changed
+	// Remove all data when generation changed
 	on(MainStateAction.ChangeGenerationSuccess, () => ({
 		...initialState,
 	})),
@@ -52,7 +59,18 @@ export const PresentationStateReducer = createReducer(
 	on(PresentationStateAction.FetchPresentationStatusSuccess, (state, { payload }) => ({
 		...state,
 		presentationStatus: payload,
-	}))
+  })),
+  
+  on(PresentationStateAction.FetchPresentationsByDate, (state) => ({
+    ...state,
+    loadingPresentations: true,
+  })),
+  
+  on(PresentationStateAction.FetchPresentationsByDateSuccess, (state, {payload}) => ({
+    ...state,
+    presentationsByDate: payload,
+    loadingPresentations: false,
+  })),
 );
 
 export const getPresentationState = createFeatureSelector<IPresentationState>(
@@ -65,7 +83,7 @@ export const getPresentationStateBy = (fn: (_: IPresentationState) => any) =>
 export const getPresentations = getPresentationStateBy((s) => s.presentations);
 export const getPresentationStatus = getPresentationStateBy((s) => s.presentationStatus);
 export const isPresentationsLoading = getPresentationStateBy((s) => s.loadingPresentations);
-// export const getAnnouncements = getPresentationStateBy((s) => s.announcement);
 
+export const getPresentationsByDate = getPresentationStateBy((s) => s.presentationsByDate);
 // export const getCurrentGeneration = getPresentationStateBy((s) => s.currentGeneration);
 // export const getCurrentRole = getPresentationStateBy((s) => s.currentRole);
