@@ -8,15 +8,31 @@ import {
 	ClientEvaluation,
 	ClientTraineeData,
 } from '../../models';
+import * as _ from 'lodash';
+import { filter } from 'lodash';
 
 export interface INoteState {
 	evaluations: ClientEvaluation;
+
+	evaluationNoteFilters: {
+		evalType: string;
+		search: string;
+		sort: string;
+		asc: string;
+	};
 
 	loadingEvaluations: boolean;
 }
 
 export const initialState: INoteState = {
 	evaluations: null,
+
+	evaluationNoteFilters: {
+		evalType: '',
+		search: '',
+		sort: '',
+		asc: '',
+	},
 
 	loadingEvaluations: false,
 };
@@ -39,6 +55,11 @@ export const NoteStateReducer = createReducer(
 		...state,
 		evaluations: payload,
 		loadingEvaluations: false,
+	})),
+
+	on(NoteStateAction.SetEvaluationNoteFilter, (state, data) => ({
+		...state,
+		evaluationNoteFilters: data,
 	}))
 );
 
@@ -47,9 +68,34 @@ export const getNoteState = createFeatureSelector<INoteState>(NOTESTATE_REDUCER_
 export const getNoteStateBy = (fn: (_: INoteState) => any) => createSelector(getNoteState, fn);
 
 export const getEvaluations = getNoteStateBy((s) => s.evaluations);
-// export const getNoteStatus = getNoteStateBy((s) => s.noteStatus);
-// export const isNotesLoading = getNoteStateBy((s) => s.loadingNotes);
+export const getEvaluationNoteFilters = getNoteStateBy((s) => s.evaluationNoteFilters);
+export const isEvaluationsLoading = getNoteStateBy((s) => s.loadingEvaluations);
 // export const getAnnouncements = getNoteStateBy((s) => s.announcement);
 
 // export const getCurrentGeneration = getNoteStateBy((s) => s.currentGeneration);
 // export const getCurrentRole = getNoteStateBy((s) => s.currentRole);
+export const getFilteredEvaluationNotes = createSelector(
+	getEvaluations,
+	getEvaluationNoteFilters,
+	(evaluation: ClientEvaluation, filters : any) => {
+    if(_.isEmpty(evaluation?.EvaluationNote)) return [];
+		let evals = [...evaluation.EvaluationNote];
+
+		evals = evals.filter(
+			(e) => e.evalNoteType.includes(filters.evalType || '') && e.Notes.includes(filters.search)
+		);
+		switch (filters.sort) {
+			case 'Date':
+				evals = _.sortBy(evals, 'SavedAt');
+				break;
+			case 'Author':
+				evals = _.sortBy(evals, 'SavedBy');
+				break;
+			case 'Type':
+				evals = _.sortBy(evals, 'evalNoteType');
+				break;
+		}
+		if (!filters.asc) evals = evals.reverse();
+		return evals;
+	}
+);

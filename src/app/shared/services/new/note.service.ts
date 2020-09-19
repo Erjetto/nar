@@ -14,6 +14,7 @@ import {
 } from '../../models';
 import { environment } from 'src/environments/environment';
 import * as _ from 'lodash';
+import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
 	providedIn: 'root',
@@ -68,13 +69,19 @@ export class NoteService {
 
 	public SaveEvaluationNote(data: { notes: string; sdate: Date }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'SaveEvaluationNote', data)
+			.post(this.baseUrl + 'SaveEvaluationNote', {
+				...data,
+				sdate: DateHelper.toCSharpDate(data.sdate),
+			})
 			.pipe(map((res: any) => res.d === true));
 	}
 
-	public DeleteEvaluationNote(data: { noteId: string; sdate: Date }): Observable<boolean> {
+	public DeleteEvaluationNote(data: { noteId: string }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'DeleteEvaluationNote', data)
+			.post(this.baseUrl + 'DeleteEvaluationNote', {
+				...data,
+				sdate: '',
+			})
 			.pipe(map((res: any) => res.d === true));
 	}
 

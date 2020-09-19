@@ -1705,6 +1705,10 @@ export class ClientEvaluationNote extends BaseModel {
 	) {
 		super();
 	}
+	get evalNoteType() { // [ Others ] Lorem ips... -> Others
+    const res = /\[(\w+)\]/.exec(this.Notes);
+    return res ? res[1] : '';
+	 }
 	static fromJson(data?: any): ClientEvaluationNote {
 		if (isEmpty(data)) return null;
 		return Object.assign(new ClientEvaluationNote(), data, {

@@ -1,114 +1,111 @@
 <div class="container-lg">
 	<div class="row">
 		<div class="col-3">
-			<rd-card
-				[cardTitle]="
-					'View Evaluation - ' + (currentDate | date: viewDateFormat)
-				"
-			>
-				<input
-					class="form-control"
-					type="date"
-          name="evaluationDate"
-          [ngModel]="currentDate | date:'yyyy-MM-dd'"
-					(change)="viewEvaluationOnDate($event)"
-				/>
+			<rd-card [cardTitle]="'View Evaluation - ' + currentDate.value">
+				<input class="form-control" type="date" [formControl]="currentDate" />
 			</rd-card>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Evaluation'" [expanded]="false">
+			<rd-card
+				[cardTitle]="'Evaluation'"
+				[expanded]="false"
+				[isLoading]="loadingViewEvaluations$ | async"
+			>
 				<div class="row">
-					<div class="col border-lightgrey border-right">
-            <div class="row form-group border-lightgrey border-bottom justify-content-center">
+					<div class="col border-lightgrey border-right" [formGroup]="filterEvaluationForm">
+						<div class="row form-group border-lightgrey border-bottom justify-content-center">
 							<h6><b>Filter Evaluation View</b></h6>
 						</div>
 						<!-- <span class="row justify-content-end pr-2"><b>Filter</b></span> -->
 						<div class="row form-group">
 							<div class="col-4">
-								<label
-									for="evalTypeSearch"
-									class="col-form-label font-weight-bold"
-								>
+								<label for="evalTypeSearch" class="col-form-label font-weight-bold">
 									Evaluation Type
 								</label>
 							</div>
 							<div class="col">
 								<ng-select
-									id="evalTypeSearch"
-									name="evalTypeSearch"
 									[items]="evalType"
-									[clearable]="false"
-									[searchable]="false"
 									placeholder="All"
+									formControlName="evalType"
 								></ng-select>
 							</div>
 						</div>
 						<div class="row form-group">
 							<div class="col-4">
-								<label
-									for="evalTypeSearch"
-									class="col-form-label font-weight-bold"
-								>
-									Search
-								</label>
+								<label for="evalTypeSearch" class="col-form-label font-weight-bold"> Search </label>
 							</div>
 							<div class="col">
-								<input name="textSearch" id="textSearch" class="form-control" />
+								<input class="form-control" formControlName="search" />
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-3">
-								<label class="col-form-label font-weight-bold">
-									Sort By
-								</label>
+								<label class="col-form-label font-weight-bold"> Sort By </label>
 							</div>
-							<div class="col-1">
-								<button class="btn btn-primary">
-									{{ true ? '&nabla;' : '&Delta;' }}
+							<div class="col-1 mr-3">
+								<button class="btn btn-primary" (click)="toggleSort()">
+									{{ filterEvaluationForm.get('asc').value ? '&Delta;' : '&nabla;' }}
 								</button>
 							</div>
 							<div class="col">
-								<div class="row justify-content-around">
-									<button class="btn btn-primary" [class.active]="true">
+								<div class="row btn-group">
+									<button
+										class="btn btn-primary"
+										[class.active]="sorter.value === 'Date'"
+										(click)="sorter.setValue('Date')"
+									>
 										Date
 									</button>
-									<button class="btn btn-primary">Author</button>
-									<button class="btn btn-primary">Type</button>
+									<button
+										class="btn btn-primary"
+										[class.active]="sorter.value === 'Author'"
+										(click)="sorter.setValue('Author')"
+									>
+										Author
+									</button>
+									<button
+										class="btn btn-primary"
+										[class.active]="sorter.value === 'Type'"
+										(click)="sorter.setValue('Type')"
+									>
+										Type
+									</button>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col-7 col-flex">
-            <div class="row form-group border-lightgrey border-bottom justify-content-center">
+						<div class="row form-group border-lightgrey border-bottom justify-content-center">
 							<h6><b>Insert New Evaluation</b></h6>
 						</div>
 						<!-- <b class="row">Insert new Evaluation</b> -->
-						<form class="row flex-grow-1">
+						<form class="row flex-grow-1" [formGroup]="insertEvaluationForm">
 							<div class="col">
 								<textarea
-									name="evalNote"
-									id="evalNote"
 									class="form-control h-100"
-									style="resize: none;"
+									style="resize: none"
 									placeholder="Notes"
+									formControlName="notes"
 								></textarea>
 							</div>
 							<div class="col-4 v-list-m-12 col-flex justify-content-center">
 								<div class="row">
 									<ng-select
-										id="evalType"
-										name="evalType"
-										class="col"
 										[items]="evalType"
 										[clearable]="false"
-										[searchable]="false"
 										placeholder="Evaluation Type"
+										formControlName="evalType"
 									></ng-select>
 								</div>
 								<div class="row">
-									<button type="submit" class="btn btn-block btn-primary">
+									<button
+										type="submit"
+										class="btn btn-block btn-primary"
+										[disabled]="insertEvaluationForm.invalid"
+									>
 										Insert New Evaluation
 									</button>
 								</div>
@@ -120,17 +117,13 @@
 					<div
 						class="col v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8"
 					>
-						<div class="row" *ngFor="let note of evaluations.EvaluationNote">
+						<div class="row" *ngFor="let note of filteredEvalNotes$ | async">
 							<!-- Need extra col-row due to v-list-m-6 styling 
                 prevents >1 child element -->
 							<div class="col">
 								<div class="row p-2">
 									<div class="col">
-										<div
-											[innerHTML]="
-												note.Notes.substring(note.Notes.indexOf('-') + 2)
-											"
-										></div>
+										<div [innerHTML]="note.Notes.substring(note.Notes.indexOf('-') + 2)"></div>
 										<div class="pl-4 pt-1">
 											<span class="font-weight-bold">- {{ note.SavedBy }}</span>
 											at {{ note.SavedAt | date: detailedViewDateFormat }}
@@ -140,22 +133,20 @@
 										<div class="row">
 											<div class="col text-right">
 												<span class="badge badge-secondary badge-pill w-auto">
-													{{
-														note.Notes.substring(1, note.Notes.indexOf('-') - 2)
-													}}
+													{{ note.evalNoteType }}
 												</span>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col">
 												<!-- *ngIf="note.IsDeleteAble" -->
-												<rd-confirmable-button *ngIf="note.IsDeleteAble">
+												<rd-confirmable-pop-up *ngIf="note.IsDeleteAble">
 													<!-- (confirm)="deleteNote(note)" -->
 													<button class="btn btn-danger">
 														<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
 														Delete
 													</button>
-												</rd-confirmable-button>
+												</rd-confirmable-pop-up>
 											</div>
 										</div>
 									</div>
@@ -169,7 +160,13 @@
 	</div>
 	<div class="row">
 		<div class="col-7">
-			<rd-card [cardTitle]="'Today\'s Presentation'" [expanded]="false">
+			<!-- Can toggle the Presentation Detail to also minimized when this is minimized -->
+			<rd-card
+				[cardTitle]="'Today\'s Presentation'"
+				[expanded]="false"
+				(toggleExpand)="detailCard.toggleMinimized($event === false)"
+				[isLoading]="loadingTodaysPresentation$ | async"
+			>
 				<div class="row justify-content-between">
 					<span class="font-weight-bold">Session 1</span>
 					<span>Passed: (3) Not Passed: (1)</span>
@@ -187,12 +184,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngIf="todaysPresentation.length === 0">
+						<tr *ngIf="(todaysPresentation$ | async)?.length === 0">
 							<td colspan="6">No votes yet</td>
 						</tr>
 						<tr
-							*ngFor="let presentation of todaysPresentation"
-							(click)="onSelectPresentation(presentation)"
+							*ngFor="let presentation of todaysPresentation$ | async"
+							(click)="selectPresentation(presentation)"
 							class="cursor-pointer"
 						>
 							<td>{{ presentation.traineeName }}</td>
@@ -221,12 +218,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngIf="todaysPresentation.length === 0">
+						<tr *ngIf="(todaysPresentation$ | async)?.length === 0">
 							<td colspan="6">No votes yet</td>
 						</tr>
 						<tr
-							*ngFor="let presentation of todaysPresentation"
-							(click)="onSelectPresentation(presentation)"
+							*ngFor="let presentation of todaysPresentation$ | async"
+							(click)="selectPresentation(presentation)"
 							class="cursor-pointer"
 						>
 							<td>{{ presentation.traineeName }}</td>
@@ -241,17 +238,108 @@
 			</rd-card>
 		</div>
 		<div class="col-5">
-			<rd-card [cardTitle]="'Presentation Detail'" [expanded]="false">
+			<rd-card
+				#detailCard
+				[cardTitle]="'Presentation Detail'"
+				[expanded]="presentationDetail$ | async"
+				[collapsible]="presentationDetail$ | async"
+			>
+				<div class="row mb-4">
+					<table class="table table-sm table-striped">
+						<thead>
+							<tr>
+								<th colspan="2">Trainee Information</th>
+								<!-- <th class="col-7"></th> -->
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Trainee</td>
+								<td class="col-8">{{ (presentationDetail$ | async)?.traineeCode }}</td>
+							</tr>
+							<tr>
+								<td>Trainee Name</td>
+								<td>{{ (presentationDetail$ | async)?.traineeName }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<table class="table table-sm table-striped">
+						<thead>
+							<tr>
+								<th colspan="2">Presentation Result</th>
+								<!-- <th></th> -->
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Material</td>
+								<td class="col-8">{{ (presentationDetail$ | async)?.material }}</td>
+							</tr>
+							<tr>
+								<td>Understanding</td>
+								<td>{{ (presentationDetail$ | async)?.understanding }}</td>
+							</tr>
+							<tr>
+								<td>Teaching Methodology</td>
+								<td>{{ (presentationDetail$ | async)?.voice }}</td>
+							</tr>
+							<tr>
+								<td>Class Control</td>
+								<td>{{ (presentationDetail$ | async)?.classControl }}</td>
+							</tr>
+							<tr>
+								<td>Final Score</td>
+								<td>{{ (presentationDetail$ | async)?.score }}</td>
+							</tr>
+							<tr>
+								<td>Status</td>
+								<td>{{ (presentationDetail$ | async)?.status }}</td>
+							</tr>
+							<tr>
+								<td>Notes</td>
+								<td>{{ (presentationDetail$ | async)?.notes }}</td>
+							</tr>
+							<tr>
+								<td>Comment</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+					<div [innerHTML]="(presentationDetail$ | async)?.comment"></div>
+				</div>
 			</rd-card>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Attendance'" class="eval-attendance">
+			<ng-template #editAttendanceTitle>Change Attendance</ng-template>
+			<ng-template #editAttendanceContent>
+				<div class="col" [formGroup]="changeAttendanceForm">
+					<ng-select
+						[items]="evalType"
+						placeholder="Permission"
+						[clearable]="false"
+						formControlName=""
+					></ng-select>
+					<hr class="my-2" />
+					<textarea class="form-control" cols="30" rows="4" formControlName=""></textarea>
+					<div class="btn-group w-100">
+						<button class="btn btn-sm btn-primary rounded-0">Update</button>
+						<button class="btn btn-sm btn-secondary rounded-0">Cancel</button>
+					</div>
+				</div>
+			</ng-template>
+			<!-- eval-attendance => for attendance styling -->
+			<rd-card
+				[cardTitle]="'Attendance'"
+				class="eval-attendance"
+				[isLoading]="loadingViewAttendances$ | async"
+			>
 				<div class="row mb-3">
 					<b>Legends: </b>
-					<span class="Present legend"></span> OK
-					<span class="Late legend"></span> Late / Early
+					<span class="Present legend"></span> OK <span class="Late legend"></span> Late / Early
 					<span class="notDone legend"></span> Absent
 					<span class="Permission legend"></span> Permission
 					<span class="Neglects legend"></span> Neglects attendance
@@ -289,67 +377,58 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngIf="attendanceReport.Attendances.length === 0">
+						<tr *ngIf="(attendanceReport$ | async)?.Attendances.length === 0">
 							<td colspan="14">No data yet</td>
 						</tr>
-						<tr *ngFor="let at of attendanceReport.Attendances">
-							<td
-								[ngClass]="{ Permission: at.FulldayPermission }"
-								class="trainee-details-hotspot"
-							>
-								<a
-									[routerLink]="['#View/Trainee', at.TraineeId, 'false']"
-									class="pointer relative"
-								>
+						<tr *ngFor="let at of (attendanceReport$ | async)?.Attendances">
+							<td [ngClass]="{ Permission: at.FulldayPermission }" class="trainee-details-hotspot">
+								<a [routerLink]="['#View/Trainee', at.TraineeId, 'false']" class="pointer relative">
 									{{ at.TraineeCode }}
 								</a>
 							</td>
 							<td>{{ at.Secretariat.TimeIn || '-' }}</td>
 							<td>{{ at.Secretariat.TimeOut || '-' }}</td>
 							<td
-								[ngClass]="{ tooltip: !!at.Secretariat.NoteIn }"
 								class="{{ at.Secretariat.StatusAbsentIn || 'Absent' }}"
-								title="{{ at.Secretariat.NoteIn }}"
+								[ngbPopover]="editAttendanceContent"
+								[popoverTitle]="editAttendanceTitle"
+								[autoClose]="'outside'"
+								container="body"
 							>
-								{{ (at.Secretariat.TraineeIn | date: 'HH:mm:ss') || '-' }}
+								<span
+									[ngbPopover]="at.Secretariat.NoteIn"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+								>
+									{{ (at.Secretariat.TraineeIn | date: 'HH:mm:ss') || '-' }}
+								</span>
 							</td>
 							<td
 								class="{{ at.Secretariat.StatusAbsentOut || 'Absent' }}"
-								[ngClass]="{ tooltip: !!at.Secretariat.NoteOut }"
 								title="{{ at.Secretariat.NoteOut }}"
 							>
 								{{ (at.Secretariat.TraineeOut | date: 'HH:mm:ss') || '-' }}
 							</td>
 							<td>{{ at.Room.TimeIn || '-' }}</td>
 							<td>{{ at.Room.TimeOut || '-' }}</td>
-							<td
-								class="{{ at.Room.StatusAbsentIn || 'Absent' }}"
-								[ngClass]="{ tooltip: !!at.Secretariat.NoteIn }"
-								title="{{ at.Room.NoteIn }}"
-							>
-								{{ (at.Room.TraineeIn | date: 'HH:mm:ss') || '-' }}
+							<td class="{{ at.Room.StatusAbsentIn || 'Absent' }}">
+								<span
+									[ngbPopover]="at.Room.NoteIn"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+								>
+									{{ (at.Room.TraineeIn | date: 'HH:mm:ss') || '-' }}
+								</span>
 							</td>
-							<td
-								class="{{ at.Room.StatusAbsentOut || 'Absent' }}"
-								[ngClass]="{ tooltip: !!at.Secretariat.NoteOut }"
-								title="{{ at.Room.NoteOut }}"
-							>
+							<td class="{{ at.Room.StatusAbsentOut || 'Absent' }}" title="{{ at.Room.NoteOut }}">
 								{{ (at.Room.TraineeOut | date: 'HH:mm:ss') || '-' }}
 							</td>
 							<td>{{ at.Rest.TimeOut || '-' }}</td>
 							<td>{{ at.Rest.TimeIn || '-' }}</td>
-							<td
-								class="{{ at.Rest.StatusAbsentOut || 'Absent' }}"
-								[ngClass]="{ tooltip: !!at.Secretariat.NoteOut }"
-								title="{{ at.Rest.NoteOut }}"
-							>
+							<td class="{{ at.Rest.StatusAbsentOut || 'Absent' }}" title="{{ at.Rest.NoteOut }}">
 								{{ (at.Rest.TraineeOut | date: 'HH:mm:ss') || '-' }}
 							</td>
-							<td
-								class="{{ at.Rest.StatusAbsentIn || 'Absent' }}"
-								[ngClass]="{ tooltip: !!at.Secretariat.NoteIn }"
-								title="{{ at.Rest.NoteIn }}"
-							>
+							<td class="{{ at.Rest.StatusAbsentIn || 'Absent' }}" title="{{ at.Rest.NoteIn }}">
 								{{ (at.Rest.TraineeIn | date: 'HH:mm:ss') || '-' }}
 							</td>
 							<td>

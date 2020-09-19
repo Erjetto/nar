@@ -7,7 +7,7 @@ import { EncryptToBase64 } from 'src/app/shared/utilities/aes';
 import * as MainStateAction from './main.action';
 import * as fromMasterState from '../master/master.reducer';
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, share, map, tap, withLatestFrom } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, share, map, tap, withLatestFrom, exhaustMap } from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
 import * as _ from 'lodash';
@@ -32,7 +32,7 @@ export class MainStateEffects {
 	@Effect()
 	login$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.Login),
-		switchMap((data) =>
+		exhaustMap((data) =>
 			this.generalService.GetUserSalt({ userName: data.userName }).pipe(
 				map((salt) => {
 					const pass = EncryptToBase64(salt + data.userName, data.password);
@@ -51,7 +51,7 @@ export class MainStateEffects {
 				})
 			)
 		),
-		switchMap((data) => this.generalService.LogOn(data)),
+		exhaustMap((data) => this.generalService.LogOn(data)),
 		mergeMap((res) =>
 			!!res
 				? of(MainStateAction.LoginSuccess({ user: res }))

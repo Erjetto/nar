@@ -17,7 +17,6 @@ import * as _ from 'lodash';
 export class NoteStateEffects {
 	constructor(private actions$: Actions, private noteService: NoteService) {}
 
-
 	@Effect()
 	getEvaluation$: Observable<Action> = this.actions$.pipe(
 		ofType(NoteStateAction.FetchEvaluation),
@@ -26,4 +25,34 @@ export class NoteStateEffects {
 		share()
 	);
 
+	@Effect()
+	createEvaluationNote$: Observable<Action> = this.actions$.pipe(
+		ofType(NoteStateAction.CreateEvaluationNote),
+		switchMap((data) =>
+			this.noteService.SaveEvaluationNote({
+				notes: `[ ${data.evalType} ] - ${data.notes}`,
+				sdate: data.sdate,
+			})
+		),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('created evaluation note'))
+				: of(MainStateAction.FailMessage('creating evaluation note'))
+		),
+		share()
+	);
+
+	@Effect()
+	deleteEvaluationNote$: Observable<Action> = this.actions$.pipe(
+		ofType(NoteStateAction.DeleteEvaluationNote),
+		switchMap((data) =>
+			this.noteService.DeleteEvaluationNote(data)
+		),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted evaluation note'))
+				: of(MainStateAction.FailMessage('deleting evaluation note'))
+		),
+		share()
+	);
 }

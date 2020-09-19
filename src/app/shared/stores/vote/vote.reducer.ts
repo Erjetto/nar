@@ -87,15 +87,15 @@ export const VoteStateReducer = createReducer(
 
 export const getVoteState = createFeatureSelector<IVoteState>(VOTESTATE_REDUCER_NAME);
 
-export const getMainStateBy = (fn: (_: IVoteState) => any) => createSelector(getVoteState, fn);
+export const getVoteStateBy = (fn: (_: IVoteState) => any) => createSelector(getVoteState, fn);
 
-export const getVoteSchedules = getMainStateBy((s) => s.voteSchedules);
-export const getTraineeVotes = getMainStateBy((s) => s.traineeVotes);
-export const getTrainerVotes = getMainStateBy((s) => s.trainerVotes);
-export const getFilterText = getMainStateBy((s) => s.filterText);
+export const getVoteSchedules = getVoteStateBy((s) => s.voteSchedules);
+export const getTraineeVotes = getVoteStateBy((s) => s.traineeVotes);
+export const getTrainerVotes = getVoteStateBy((s) => s.trainerVotes);
+export const getFilterText = getVoteStateBy((s) => s.filterText);
 
-export const isVoteResultLoading = getMainStateBy((s) => s.voteResultLoading);
-export const isVoteScheduleLoading = getMainStateBy((s) => s.voteScheduleLoading);
+export const isVoteResultLoading = getVoteStateBy((s) => s.voteResultLoading);
+export const isVoteScheduleLoading = getVoteStateBy((s) => s.voteScheduleLoading);
 
 export const getTrainerVotesFiltered = createSelector(
 	getTrainerVotes,

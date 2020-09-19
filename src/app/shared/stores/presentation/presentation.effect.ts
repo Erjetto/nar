@@ -31,6 +31,14 @@ export class PresentationStateEffects {
 	// ))
 
 	@Effect()
+	getPresentationsByDate$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.FetchPresentationsByDate),
+		switchMap((data) => this.presentationService.GetPresentationReportDetailByDate(data)),
+		mergeMap((res) => of(PresentationStateAction.FetchPresentationsByDateSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
 	getPresentationsBySubject$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentations),
 		switchMap((data) => this.presentationService.FindCoreTrainingPresentationBySubject(data)),
