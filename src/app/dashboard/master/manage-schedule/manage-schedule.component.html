@@ -219,15 +219,14 @@
 						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create
 						</button>
-						<!-- <button class="btn btn-primary" *ngIf="editForm$ | async" (click)="submitScheduleForm()">
-							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
-						</button> -->
-						<rd-confirmable-button
-							*ngIf="isEditing"
-							[canConfirm]="scheduleForm.controls['deleteReason'].value !== ''"
+						<rd-confirmable-pop-up
+              *ngIf="isEditing"
+              [description]="deleteReasonTemplate"
+              [title]="'Delete Schedule ' + scheduleForm.value['scheduleName'] + '?'"
+							[canConfirm]="scheduleForm.value['deleteReason'] !== ''"
 							(confirm)="deleteSchedule()"
 						>
-							<div class="description">
+							<ng-template #deleteReasonTemplate>
 								<textarea
 									class="form-control"
 									formControlName="deleteReason"
@@ -235,11 +234,11 @@
 									cols="30"
 									rows="4"
 								></textarea>
-							</div>
+							</ng-template>
 							<button class="btn btn-danger">
 								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 							</button>
-						</rd-confirmable-button>
+						</rd-confirmable-pop-up>
 					</div>
 				</form>
 			</rd-card>
@@ -317,24 +316,26 @@
 		<div class="col">
 			<rd-card [cardTitle]="'Schedule in Subject'" [isLoading]="loadingViewSchedule$ | async">
 				<div rdCardBadges>
-					<rd-confirmable-button
-						(confirm)="deleteAllSchedule()"
-						[canConfirm]="deleteAllReason !== ''"
+					<rd-confirmable-pop-up
+            (confirm)="deleteAllSchedule()"
+            [title]="'Delete All Schedule?'"
+            [description]="deleteAllReasonTemplate"
+            [canConfirm]="deleteAllReason.valid"
 						*ngIf="(viewScheduleList$ | async)?.length > 0"
 					>
-						<div class="description">
+						<ng-template #deleteAllReasonTemplate>
 							<textarea
 								class="form-control"
-								placeholder="Input reasons here..."
+								placeholder="Reasons to delete all..."
 								cols="30"
 								rows="4"
-								[(ngModel)]="deleteAllReason"
+								[formControl]="deleteAllReason"
 							></textarea>
-						</div>
+						</ng-template>
 						<button class="btn btn-sm btn-danger">
 							<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete All Schedule
 						</button>
-					</rd-confirmable-button>
+					</rd-confirmable-pop-up>
 				</div>
 				<div class="row form-group">
 					<div class="col">
@@ -431,14 +432,14 @@
 								<td>{{ trainee.TraineeNumber }}</td>
 								<td>{{ trainee.TraineeName }}</td>
 								<td>
-									<rd-confirmable-button
+									<rd-confirmable-pop-up
 										[description]="'Delete ' + trainee.TraineeName + '?'"
 										(confirm)="deleteTrainee(trainee)"
 									>
 										<button class="btn btn-xs btn-danger">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 										</button>
-									</rd-confirmable-button>
+									</rd-confirmable-pop-up>
 								</td>
 							</tr>
 						</tbody>

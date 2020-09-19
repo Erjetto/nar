@@ -183,13 +183,14 @@
 									}}</a>
 								</td>
 								<td class="text-center">
-									<rd-confirmable-button
-                    [description]="'Delete ' + material.MaterialName + '?'"
+									<rd-confirmable-pop-up
+                    [title]="'Delete ' + material.MaterialName + '?'"
+                    [description]="deleteReasonTemplate"
                     [canConfirm]="deleteReasonText.valid"
                     (confirm)="deleteTraineeFile(interviewMaterial, material)"
                     (cancel)="deleteReasonText.reset()"
 									>
-										<div class="description">
+										<ng-template #deleteReasonTemplate>
                       <textarea
                         class="form-control"
                         [formControl]="deleteReasonText"
@@ -197,11 +198,11 @@
                         cols="30"
                         rows="4"
                       ></textarea>
-                    </div>
+                    </ng-template>
 										<button class="btn btn-xs btn-danger">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 										</button>
-									</rd-confirmable-button>
+									</rd-confirmable-pop-up>
 								</td>
 							</tr>
 						</ng-container>

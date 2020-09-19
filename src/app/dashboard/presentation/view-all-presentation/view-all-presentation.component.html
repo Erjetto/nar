@@ -86,11 +86,11 @@
 								>
 									<!-- TODO: Add role validation here (!= Trainee) -->
 									<div class="actions" *ngIf="true">
-										<rd-confirmable-button (confirm)="onDeleteQuestion(question)">
+										<rd-confirmable-pop-up (confirm)="onDeleteQuestion(question)">
 											<button class="btn btn-danger">
 												<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
 											</button>
-										</rd-confirmable-button>
+										</rd-confirmable-pop-up>
 									</div>
 								</rd-presentation-question>
 							</div>

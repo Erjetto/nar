@@ -1,11 +1,14 @@
 <div class="container-lg">
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Insert Trainee Training Schedule'">
+			<rd-card
+				[cardTitle]="'Insert Trainee Training Schedule'"
+				[isLoading]="loadingFormInsertTrainingSchedule$ | async"
+			>
 				<form #insertTraineeTrainingScheduleForm="ngForm">
 					<div class="row">
-						<div
-							>The input format must be: Trainee number,Attendance date,Time in,Time out,Type
+						<div>
+							The input format must be: Trainee number,Attendance date,Time in,Time out,Type
 							<ul style="margin: 0">
 								<li>Trainee number, whose trainee training schedule you wish to set</li>
 								<li>Attendance date, in general date format</li>
@@ -25,21 +28,27 @@
 					</div>
 					<div class="row form-group">
 						<div class="col">
-							<textarea name="" id="" class="form-control vertical-text-area h-150px"></textarea>
+							<textarea
+								[formControl]="insertTrainingScheduleText"
+								class="form-control vertical-text-area mh-150px"
+							></textarea>
 						</div>
 					</div>
 					<div class="row">
-						<button class="btn btn-primary">
+						<button class="btn btn-primary" [disabled]="insertTrainingScheduleText.invalid">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
 						</button>
 					</div>
 				</form>
 			</rd-card>
-			<rd-card [cardTitle]="'Insert Trainee Attendance'">
+			<rd-card
+				[cardTitle]="'Insert Trainee Attendance'"
+				[isLoading]="loadingFormInsertTraineeAttendance$ | async"
+			>
 				<form #insertTraineeAttendanceForm="ngForm">
 					<div class="row">
-						<div
-							>The input format must be: Trainee number,Lecture date,Lecture schedule
+						<div>
+							The input format must be: Trainee number,Lecture date,Lecture schedule
 							<ul style="margin: 0">
 								<li>Trainee number, whose trainee lecture schedule you wish to set</li>
 								<li>Lecture date, in general date format</li>
@@ -56,11 +65,14 @@
 					</div>
 					<div class="row form-group">
 						<div class="col">
-							<textarea name="" id="" class="form-control vertical-text-area h-150px"></textarea>
+							<textarea
+								[formControl]="insertTraineeAttendanceText"
+								class="form-control vertical-text-area mh-150px"
+							></textarea>
 						</div>
 					</div>
 					<div class="row">
-						<button class="btn btn-primary">
+						<button class="btn btn-primary" [disabled]="insertTraineeAttendanceText.invalid">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
 						</button>
 					</div>
@@ -68,11 +80,14 @@
 			</rd-card>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Insert Trainee Lecture Schedule'">
+			<rd-card
+				[cardTitle]="'Insert Trainee Lecture Schedule'"
+				[isLoading]="loadingFormInsertLectureSchedule$ | async"
+			>
 				<form #insertTraineeLectureScheduleForm="ngForm">
 					<div class="row">
-						<div
-							>The input format must be: Trainee number,Lecture date,Lecture schedule
+						<div>
+							The input format must be: Trainee number,Lecture date,Lecture schedule
 							<ul style="margin: 0">
 								<li>Trainee number, whose trainee lecture schedule you wish to set</li>
 								<li>Lecture date, in general date format</li>
@@ -89,11 +104,14 @@
 					</div>
 					<div class="row form-group">
 						<div class="col">
-							<textarea name="" id="" class="form-control vertical-text-area h-150px"></textarea>
+							<textarea
+								[formControl]="insertLectureScheduleText"
+                class="form-control mh-150px vertical-text-area"
+							></textarea>
 						</div>
 					</div>
 					<div class="row">
-						<button class="btn btn-primary">
+						<button class="btn btn-primary" [disabled]="insertLectureScheduleText.invalid">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
 						</button>
 					</div>

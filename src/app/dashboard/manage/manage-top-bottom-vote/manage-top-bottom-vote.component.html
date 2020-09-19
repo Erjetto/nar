@@ -117,11 +117,11 @@
 									<button class="btn btn-primary">
 										<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
 									</button>
-									<rd-confirmable-button (confirm)="deleteVoteSchedule()">
+									<rd-confirmable-pop-up (confirm)="deleteVoteSchedule()">
 										<button class="btn btn-danger">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Schedule
 										</button>
-									</rd-confirmable-button>
+									</rd-confirmable-pop-up>
 								</ng-container>
 							</div>
 						</form>

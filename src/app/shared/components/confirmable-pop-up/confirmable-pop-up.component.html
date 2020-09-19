@@ -1,0 +1,41 @@
+<ng-template #popContent>
+	<div class="row">
+		<ng-container *ngIf="descriptionIsString; else descriptionUsingTemplate">
+			<span class="p-2">{{ description }}</span>
+		</ng-container>
+		<ng-template #descriptionUsingTemplate>
+			<ng-template [ngTemplateOutlet]="description"></ng-template>
+		</ng-template>
+	</div>
+	<div class="btn-group w-100">
+		<button
+			class="btn btn-sm btn-primary rounded-0"
+			[disabled]="!canConfirm"
+			(click)="confirm.emit(); popOver.close()"
+		>
+			Yes
+		</button>
+		<button class="btn btn-sm btn-secondary rounded-0" (click)="popOver.close(); cancel.emit()">
+			No
+		</button>
+	</div>
+</ng-template>
+
+<ng-template #popTitle>
+	<ng-container *ngIf="titleIsString; else titleUsingTemplate">
+		{{ title }}
+	</ng-container>
+	<ng-template #titleUsingTemplate>
+		<ng-template [ngTemplateOutlet]="title"></ng-template>
+	</ng-template>
+</ng-template>
+
+<div
+	#pop="ngbPopover"
+	[ngbPopover]="popContent"
+	[popoverTitle]="popTitle"
+	[autoClose]="'outside'"
+	container="body"
+>
+	<ng-content></ng-content>
+</div>

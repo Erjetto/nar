@@ -65,14 +65,14 @@
 							<td>{{ user.UserName }}</td>
 							<td>{{ user.Role }}</td>
 							<td>
-								<rd-confirmable-button
+                <rd-confirmable-pop-up
 									[description]="'Delete ' + user.UserName + '?'"
 									(confirm)="deleteUserInRole(user)"
 								>
 									<button class="btn btn-xs btn-danger">
 										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 									</button>
-								</rd-confirmable-button>
+								</rd-confirmable-pop-up>
 							</td>
 						</tr>
 					</tbody>

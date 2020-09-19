@@ -93,11 +93,11 @@
 						>
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
 						</button>
-						<rd-confirmable-button *ngIf="editForm$ | async" (confirm)="deleteSubject()">
+						<rd-confirmable-pop-up *ngIf="editForm$ | async" (confirm)="deleteSubject()">
 							<button class="btn btn-danger">
 								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 							</button>
-						</rd-confirmable-button>
+						</rd-confirmable-pop-up>
 					</div>
 				</form>
 			</rd-card>

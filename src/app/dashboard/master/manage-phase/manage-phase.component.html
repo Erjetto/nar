@@ -64,11 +64,11 @@
 						>
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
 						</button>
-						<rd-confirmable-button *ngIf="editForm$ | async" (confirm)="deletePhase()">
+						<rd-confirmable-pop-up *ngIf="editForm$ | async" (confirm)="deletePhase()">
 							<button class="btn btn-danger">
 								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 							</button>
-						</rd-confirmable-button>
+						</rd-confirmable-pop-up>
 					</div>
 				</form>
 			</rd-card>
@@ -205,14 +205,14 @@
 								<td>{{ trainee.TraineeNumber }}</td>
 								<td>{{ trainee.TraineeName }}</td>
 								<td>
-									<rd-confirmable-button
+									<rd-confirmable-pop-up
 										[description]="'Delete ' + trainee.TraineeName + '?'"
 										(confirm)="deleteTrainee(trainee)"
 									>
 										<button class="btn btn-xs btn-danger">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 										</button>
-									</rd-confirmable-button>
+									</rd-confirmable-pop-up>
 								</td>
 							</tr>
 						</tbody>

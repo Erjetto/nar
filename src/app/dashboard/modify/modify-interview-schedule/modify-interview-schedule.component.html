@@ -130,13 +130,14 @@
 									{{ interview.Result }}
 								</td>
 								<td>
-									<rd-confirmable-button
-										[description]="'Delete interview for ' + interview.TraineeName + '?'"
+									<rd-confirmable-pop-up
+                    [title]="'Delete interview for ' + interview.TraineeName + '?'"
+                    [description]="deleteReasonTemplate"
 										[canConfirm]="deleteReasonText.valid"
 										(confirm)="deleteSchedule(interview)"
 										(cancel)="deleteReasonText.reset()"
 									>
-										<div class="description">
+										<ng-template #deleteReasonTemplate>
 											<textarea
 												class="form-control"
 												[formControl]="deleteReasonText"
@@ -144,11 +145,11 @@
 												cols="30"
 												rows="4"
 											></textarea>
-										</div>
+										</ng-template>
 										<button class="btn btn-danger btn-sm">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 										</button>
-									</rd-confirmable-button>
+									</rd-confirmable-pop-up>
 								</td>
 							</tr>
 						</tbody>

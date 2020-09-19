@@ -65,7 +65,9 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		scheduleCount: [1, Validators.min(1)],
 		scheduleDates: this.fb.array(['']),
 		deleteReason: [''],
-	});
+  });
+	deleteAllReason = new FormControl('', Validators.required);
+  
 	variations = 1;
 	meetingPerWeek = 0;
 	meetings: {
@@ -301,10 +303,8 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		);
 	}
 
-	// tslint:disable-next-line: member-ordering
-	deleteAllReason = '';
 	deleteAllSchedule() {
-		this.store.dispatch(MasterStateAction.DeleteAllSchedule({ reason: this.deleteAllReason }));
+		this.store.dispatch(MasterStateAction.DeleteAllSchedule({ reason: this.deleteAllReason.value }));
 		this.loadingFormSchedule$.next(true);
 	}
 
