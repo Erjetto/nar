@@ -1,23 +1,25 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, OnDestroy } from '@angular/core';
-import { Store, select, ActionsSubject } from '@ngrx/store';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, interval, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, merge, combineLatest, Subject } from 'rxjs';
+import { ClientPhase, ClientSubject, ClientSchedule, Case } from 'src/app/shared/models';
+
 import {
-	ClientPhase,
-	ClientSubject,
-	ClientSchedule,
-	Case,
-	Role,
-	ClientGeneration,
-} from 'src/app/shared/models';
+	MasterStateAction,
+	fromMasterState,
+	CaseStateAction,
+	fromCaseState,
+	MainStateEffects,
+	CaseStateEffects,
+	MainStateAction,
+	fromMainState,
+} from 'src/app/shared/store-modules';
 
-import { MasterStateAction, fromMasterState, CaseStateAction, fromCaseState, MainStateEffects } from 'src/app/shared/store-modules';
-
-import { take, filter, tap, first, switchMap, takeUntil, map } from 'rxjs/operators';
+import { filter, tap, takeUntil, map, distinctUntilChanged } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import * as _ from 'lodash';
-import { ObservableHelper } from 'src/app/shared/utilities/observable-helper';
-import { CardComponent } from 'src/app/shared/components/card/card.component';
+import { FormBuilder, Validators } from '@angular/forms';
+import { DateHelper } from 'src/app/shared/utilities/date-helper';
 
 @Component({
 	selector: 'rd-manage-case',
@@ -26,104 +28,228 @@ import { CardComponent } from 'src/app/shared/components/card/card.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageCaseComponent extends DashboardContentBase implements OnInit, OnDestroy {
-
 	viewDateFormat = 'HH:mm, dd MMM yyyy';
+	editDateFormat = 'yyyy-MM-dd HH:mm:ss';
+	todayEditDate = DateHelper.dateToInputFormat(new Date(), this.editDateFormat);
 
-	currentPhase$: Subject<ClientPhase> = new Subject();
-	currentSubject$: Subject<ClientSubject> = new Subject();
-	currentSchedule$: Subject<ClientSchedule> = new Subject();
+	currentViewPhase$ = new BehaviorSubject<ClientPhase>(null);
+	currentViewSubject$ = new BehaviorSubject<ClientSubject>(null);
+	currentViewSchedule$ = new BehaviorSubject<ClientSchedule>(null);
+
+	schedulesEntity$: Observable<{ [subjectId: string]: ClientSchedule[] }>;
+	formScheduleList$: Observable<ClientSchedule[]>;
+	viewScheduleList$: Observable<ClientSchedule[]>;
 
 	phases$: Observable<ClientPhase[]>;
 	subjects$: Observable<ClientSubject[]>;
-	schedules$: Observable<ClientSchedule[]>;
-	manageCaseLoading$: Observable<boolean>;
-
 	caseList$: Observable<Case[]>;
+
 	caseListLoading$: Observable<boolean>;
+	viewCaseLoading$: Observable<boolean>;
+	formCaseLoading$ = new BehaviorSubject<boolean>(false);
 
-	caseForm$: BehaviorSubject<Case> = new BehaviorSubject(null);
+	caseForm = this.fb.group({
+		caseId: [''], // Update
+		changedFile: [false], // Check if 'edit case' uploads new file
+		fileName: [null], // View uploaded file
 
-	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
+		fileId: [null],
+		subject: [null, Validators.required], // Value is object so we can use it for entity
+		scheduleId: [null, Validators.required],
+		caseName: ['', Validators.required],
+		correctorNames: ['', Validators.required],
+		traineeDays: [this.todayEditDate, Validators.required],
+		trainerDays: [this.todayEditDate, Validators.required],
+		scheduleDate: [this.todayEditDate, Validators.required],
+	});
+	deleteReasonText = this.fb.control('', Validators.required);
+
+	constructor(
+		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private caseEffects: CaseStateEffects,
+		private fb: FormBuilder
+	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
+		//#region Bind to store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
-		this.schedules$ = this.store.pipe(select(fromMasterState.getSchedules));
-		this.manageCaseLoading$ = this.store.pipe(
-			// select(fromMasterState.isManageCaseLoading),
+		this.schedulesEntity$ = this.store.pipe(select(fromMasterState.getSchedulesEntity));
+		this.viewScheduleList$ = this.getScheduleFromEntity(this.currentViewSubject$);
+		this.formScheduleList$ = this.getScheduleFromEntity(
+			this.caseForm.get('subject').valueChanges,
+			this.formCaseLoading$
+		);
+		this.viewCaseLoading$ = this.store.pipe(
 			select(fromMasterState.getMasterState),
 			map((v) => v.loadingPhases || v.loadingSubjects || v.loadingSchedules)
 		);
 
 		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
 		this.caseListLoading$ = this.store.pipe(select(fromCaseState.getCasesLoading));
+		// Get uploaded files to caseForm
+		this.store
+			.pipe(
+				select(fromMainState.getUploadedFiles),
+				filter((v) => !_.isEmpty(v)),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe((files) => {
+				this.formCaseLoading$.next(false);
+				this.caseForm.get('changedFile').setValue(true);
+				this.caseForm.get('fileId').setValue(files[0].fileid);
+				this.caseForm.get('fileName').setValue(files[0].filename);
+			});
+		//#endregion
 
 		//#region auto select first in array
-		this.phases$
-			.pipe(
-				filter((res) => !_.isEmpty(res)),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe((res) => this.currentPhase$.next(res[0]));
-
-		this.subjects$
-			.pipe(
-				filter((res) => !_.isEmpty(res)),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe((res) => this.currentSubject$.next(res[0]));
-
-		this.schedules$
-			.pipe(
-				filter((res) => !_.isEmpty(res)),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe((res) => this.currentSchedule$.next(res[0]));
+		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+			if (!_.isEmpty(res)) this.currentViewPhase$.next(res[0]);
+		});
+		this.subjects$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+			if (!_.isEmpty(res)) this.currentViewSubject$.next(res[0]);
+		});
+		this.viewScheduleList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+			if (!_.isEmpty(res)) this.currentViewSchedule$.next(res[0]);
+		});
 		//#endregion
 
 		//#region auto fetch new subject,schedule & case
+		this.mainEffects.afterRequest$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.formCaseLoading$.next(false));
+
 		this.mainEffects.changeGen$
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe((res) => this.store.dispatch(MasterStateAction.FetchPhases()));
+			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
 
-		this.currentPhase$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((phase) =>
-				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }))
-			);
+		this.currentViewPhase$.pipe(takeUntil(this.destroyed$)).subscribe((phase) => {
+			if (phase) this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }));
+		});
 
-		this.currentSubject$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((subject) =>
-				this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: subject.SubjectId }))
-			);
+		this.currentViewSubject$.pipe(takeUntil(this.destroyed$)).subscribe((s) => {
+			if (s) this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: s.SubjectId }));
+		});
 
-		this.currentSchedule$
+		merge(
+			this.currentViewSchedule$,
+			this.caseEffects.createCase$,
+			this.caseEffects.deleteCase$,
+			this.caseEffects.updateCase$
+		)
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe((schedule) =>
-				this.store.dispatch(CaseStateAction.FetchCases({ scheduleId: schedule.ScheduleId }))
-			);
+			.subscribe(() => {
+				if (this.currentViewSchedule$.value)
+					this.store.dispatch(
+						CaseStateAction.FetchCases({ scheduleId: this.currentViewSchedule$.value.ScheduleId })
+					);
+			});
 		//#endregion
+		this.store.dispatch(MasterStateAction.FetchPhases());
+	}
 
+	get isEditing() {
+		return !_.isEmpty(this.caseForm.value.caseId);
+	}
+	get hasFile() {
+		return !_.isEmpty(this.caseForm.value.fileId);
 	}
 
 	onSelectCase(row: Case) {
-		this.caseForm$.next(row);
+		this.caseForm.patchValue(
+			{
+				changedFile: false,
+				caseId: row.CaseId,
+				fileId: row.FileId,
+				fileName: row.FileName,
+				caseName: row.CaseName,
+				correctorNames: row.correctorList,
+				traineeDays: DateHelper.dateToInputFormat(row.TraineeDeadline, this.editDateFormat),
+				trainerDays: DateHelper.dateToInputFormat(row.TrainerDeadline, this.editDateFormat),
+				scheduleDate: DateHelper.dateToInputFormat(row.ScheduleDate, this.editDateFormat),
+				scheduleId: ' ',
+				subject: ' ',
+			},
+			{ emitEvent: false } // Prevent loading subject or schedule by changing value
+		);
 	}
 
 	cancelEdit() {
-		this.caseForm$.next(null);
-  }
-  
-  downloadFile(){
-    
-  }
+		this.caseForm.reset({
+			traineeDays: DateHelper.dateToInputFormat(new Date(), this.editDateFormat),
+			trainerDays: DateHelper.dateToInputFormat(new Date(), this.editDateFormat),
+			scheduleDate: DateHelper.dateToInputFormat(new Date(), this.editDateFormat),
+		});
+	}
 
-  updateCase(){
-    // this.store.dispatch(CaseStateAction)
-  }
+	uploadFile(files: FileList) {
+		this.formCaseLoading$.next(true);
+		this.store.dispatch(MainStateAction.UploadFile({ files: { ...files, length: files.length } }));
+	}
 
-  deleteCase(){}
+	removeFile(element) {
+		element.target.value = '';
+		this.caseForm.patchValue({
+			fileId: null,
+			fileName: null,
+		});
+	}
+
+	downloadFile() {
+		this.store.dispatch(MainStateAction.DownloadFile({ fileId: this.caseForm.value.fileId }));
+	}
+
+	createCase() {
+		this.formCaseLoading$.next(true);
+		const { subject, correctorNames } = this.caseForm.value;
+		this.store.dispatch(
+			CaseStateAction.CreateCase({
+				...this.caseForm.value,
+				subjectId: subject.SubjectId,
+				correctorNames: correctorNames.split('\n'),
+			})
+		);
+	}
+
+	updateCase() {
+		this.formCaseLoading$.next(true);
+		const { changedFile, correctorNames, fileId } = this.caseForm.value;
+		this.store.dispatch(
+			CaseStateAction.UpdateCase({
+				...this.caseForm.value,
+				fileId: changedFile ? fileId : null,
+				correctorNames: correctorNames.split('\n'),
+			})
+		);
+	}
+
+	deleteCase() {
+		this.formCaseLoading$.next(true);
+		this.store.dispatch(
+			CaseStateAction.DeleteCase({
+				caseId: this.caseForm.value.caseId,
+				reason: this.deleteReasonText.value,
+			})
+		);
+	}
+
+	getScheduleFromEntity(subjectObservable: Observable<ClientSubject>, loader?: Subject<boolean>) {
+		return combineLatest([this.schedulesEntity$, subjectObservable]).pipe(
+			map(([entity, currSubj]) => {
+				if (!currSubj) return [];
+				if (!!currSubj && !!entity[currSubj.SubjectId]) {
+					loader?.next(false);
+					return entity[currSubj.SubjectId];
+				} else {
+					loader?.next(true);
+					this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: currSubj.SubjectId }));
+					return [];
+				}
+			}),
+			distinctUntilChanged()
+		);
+	}
 }

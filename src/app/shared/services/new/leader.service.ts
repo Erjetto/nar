@@ -273,7 +273,6 @@ export class LeaderService {
 	}
 
 	public DeleteCase(data: {
-		scheduleId: string;
 		caseId: string;
 		reason: string;
 	}): Observable<boolean> {
