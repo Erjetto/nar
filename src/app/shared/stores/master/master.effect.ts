@@ -165,6 +165,14 @@ export class MasterStateEffects {
 		share()
 	);
 
+	@Effect()
+	getIPList$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.FetchIPList),
+		switchMap(() => this.traineeAttendanceService.getIPWhiteList()),
+		mergeMap((res) => of(MasterStateAction.FetchIPListSuccess({payload: res}))),
+		share()
+	);
+
 	//#endregion
 
 	//#region create
@@ -331,6 +339,18 @@ export class MasterStateEffects {
 			res.every((v) => !!v)
 				? of(MainStateAction.SuccessfullyMessage('updating phase'))
 				: of(MainStateAction.FailMessage('updating phase'))
+		),
+		share()
+	);
+
+	@Effect()
+	updateIPList$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.UpdateIPList),
+		switchMap((data) => this.traineeAttendanceService.saveIPWhiteList(data)),
+		mergeMap((res) =>
+			res
+				? of(MainStateAction.SuccessfullyMessage('updated IP List'))
+				: of(MainStateAction.FailMessage('updating IP List'))
 		),
 		share()
 	);

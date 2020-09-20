@@ -1,0 +1,23 @@
+<input type="file" class="form-control" (change)="uploadFile($event.target.files)" #fileUploader />
+<div class="input-group-append" [hidden]="!hasFile">
+	<ng-template #popContent>
+		<div class="p-2">
+			Remove uploaded files?
+			<ul class="pl-3">
+				<li>
+
+				</li>
+			</ul>
+		</div>
+	</ng-template>
+	<button
+		class="btn btn-info hover-switch-content"
+		[ngbPopover]="popContent"
+		triggers="mouseenter:mouseleave"
+		title="Remove uploaded files"
+		(click)="removeUploadedFiles($event)"
+	>
+		<fa-icon [icon]="['fas', 'check']" class="not-hovered"></fa-icon>
+		<fa-icon [icon]="['fas', 'times']" class="hovered"></fa-icon>
+	</button>
+</div>

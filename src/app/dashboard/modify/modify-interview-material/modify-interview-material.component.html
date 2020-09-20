@@ -140,7 +140,7 @@
 						<div class="row" [hidden]="isUploadingSingle$ | async">Uploaded Files:</div>
 						<div class="row" [hidden]="isUploadingSingle$ | async">
 							<ul>
-								<li *ngFor="let file of uploadedFiles$ | async">{{ file }}</li>
+								<li *ngFor="let file of uploadedFiles$ | async">{{ file.filename }}</li>
 							</ul>
 						</div>
 						<div class="row form-group justify-content-around">

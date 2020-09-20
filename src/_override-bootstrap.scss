@@ -1,7 +1,7 @@
-// bootstrap
+@import './variables';
 
-.text-grey{
-  
+//#region bootstrap
+.text-grey {
 }
 
 .btn-xs {
@@ -60,12 +60,16 @@
 		padding-right: 0;
 	}
 }
-
-.bg-excel{
-  background-color: teal;
-}
+//#endregion
 
 // ng-bootstrap
 .ngb-highlight {
 	background-color: yellow;
+}
+
+.ng-dropdown-panel {
+	z-index: $ng-select-z-index !important;
+}
+.popover {
+	z-index: popover-z-index !important;
 }

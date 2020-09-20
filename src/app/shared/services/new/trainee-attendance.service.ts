@@ -158,9 +158,9 @@ export class TraineeAttendanceService {
 			.pipe(map((res: any) => _.map(res.d, TraineePresentation.fromJson)));
 	}
 
-	public getIPWhiteList(data: { time: string }): Observable<string[]> {
+	public getIPWhiteList(): Observable<string[]> {
 		return this.httpClient
-			.post(this.baseUrl + 'getIPWhiteList', data)
+			.post(this.baseUrl + 'getIPWhiteList', {})
 			.pipe(map((res: any) => res.d as string[]));
 	}
 }

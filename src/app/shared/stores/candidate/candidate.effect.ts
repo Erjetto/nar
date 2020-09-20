@@ -92,7 +92,7 @@ export class CandidateStateEffects {
 		mergeMap((res) =>{
       if(res !== '') window.open(`${this.excelDownloadLink}${res}`)
 			return res !== ''
-				? of(MainStateAction.SuccessfullyMessage('exported, the answers'))
+				? of(MainStateAction.SuccessfullyMessage('exported the answers'))
 				: of(MainStateAction.FailMessage('exporting the answers'))
 		}),
 		share()

@@ -83,8 +83,6 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
 	schedulesEntity$: Observable<{ [subjectId: string]: ClientSchedule[] }>;
 
-	formCurrPhase$ = new BehaviorSubject<ClientPhase>(null);
-
 	viewCurrPhase$ = new BehaviorSubject<ClientPhase>(null);
 	viewCurrSubject$ = new BehaviorSubject<ClientSubject>(null);
 	viewCurrSchedule$ = new BehaviorSubject<ClientSchedule>(null);
@@ -376,7 +374,8 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
 					return [];
 				}
-			})
+			}),
+      distinctUntilChanged()
 		);
 	}
 
@@ -392,7 +391,8 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 					this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: currSubj.SubjectId }));
 					return [];
 				}
-			})
+			}),
+      distinctUntilChanged()
 		);
 	}
 }

@@ -7,7 +7,16 @@ import { EncryptToBase64 } from 'src/app/shared/utilities/aes';
 import * as MainStateAction from './main.action';
 import * as fromMasterState from '../master/master.reducer';
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, share, map, tap, withLatestFrom, exhaustMap } from 'rxjs/operators';
+import {
+	switchMap,
+	mergeMap,
+	pluck,
+	share,
+	map,
+	tap,
+	withLatestFrom,
+	exhaustMap,
+} from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
 import * as _ from 'lodash';
@@ -154,6 +163,13 @@ export class MainStateEffects {
 				? of(MainStateAction.SuccessfullyMessage('deleted announcement'))
 				: of(MainStateAction.FailMessage('deleting announcement'))
 		),
+		share()
+	);
+
+	@Effect({ dispatch: false })
+	downloadFile$ = this.actions$.pipe(
+		ofType(MainStateAction.DownloadFile),
+		map((data) => this.otherService.DownloadFile(data.fileId)),
 		share()
 	);
 

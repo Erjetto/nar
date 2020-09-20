@@ -26,6 +26,7 @@ import { ContrastTextColorDirective } from './directives/contrast-text-color.dir
 import { EasyHorizontalSrollDirective } from './directives/easy-horizontal-sroll.directive';
 import { PresentationQuestionComponent } from './components/presentation-question/presentation-question.component';
 import { VarDirective } from './directives/var.directive';
+import { UploadInputComponent } from './components/upload-input/upload-input.component';
 
 const SHARED_DECLARATIONS = [
 	// Shared components, pipes, and directives, ex: SearchComponent, CurrencyPipe
@@ -36,6 +37,8 @@ const SHARED_DECLARATIONS = [
   ConfirmablePopUpComponent,
   PresentationQuestionComponent,
   FilterByInputComponent,
+  UploadInputComponent,
+
   
   ClickStopPropagationDirective,
   ContrastTextColorDirective,
@@ -44,7 +47,7 @@ const SHARED_DECLARATIONS = [
 ];
 
 @NgModule({
-	declarations: [...SHARED_DECLARATIONS,   ],
+	declarations: [...SHARED_DECLARATIONS,    ],
 	imports: [
 		FontAwesomeModule,
 		CommonModule,

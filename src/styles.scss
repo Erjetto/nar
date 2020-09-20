@@ -51,12 +51,12 @@ footer {
 		display: none;
 	}
 	.not-hovered {
-    display: initial;
+		display: initial;
 	}
-  
+
 	&:hover {
-    .hovered {
-      display: initial;
+		.hovered {
+			display: initial;
 		}
 		.not-hovered {
 			display: none;
@@ -340,4 +340,21 @@ footer {
 .vertical-text-area {
 	width: 100%;
 	resize: vertical;
+}
+
+.confirmable-popover {
+	border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  overflow: hidden;
+  
+	> .popover-header {
+		color: black;
+	}
+	> .popover-body {
+		padding: 0;
+	}
+}
+
+.bg-excel{
+  background-color: teal;
 }

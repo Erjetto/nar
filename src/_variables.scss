@@ -1,6 +1,8 @@
 
-$toaster-z-index: 60;
 $header-z-index: 55;
+$toaster-z-index: 60;
+$popover-z-index: 1060; // default 1060
+$ng-select-z-index: 1070; // default 1050
 
 $header-bg-color-light: white;
 $content-bg-color-light: #f1f1f1;

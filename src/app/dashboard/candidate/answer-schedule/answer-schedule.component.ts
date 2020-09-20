@@ -6,7 +6,6 @@ import { Observable, merge, BehaviorSubject } from 'rxjs';
 import {
 	SubcoCandidateAnswerModel,
 	SubcoCandidateQuestionModel,
-	Pair,
 } from 'src/app/shared/models';
 import {
 	CandidateStateAction,
@@ -120,7 +119,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		const regex = /(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}), (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}), (....-.)/i;
 		const errorIdx = [];
 		const schedules = csvString.split('\n').map((line, idx) => {
-      let arr = regex.exec(line); // if fails regex returns null
+      const arr = regex.exec(line); // if fails regex returns null
 			if (!!arr)
       return new SubcoCandidateAnswerModel(
         '00000000-0000-0000-0000-000000000000',
@@ -149,6 +148,6 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
   }
   
   exportToExcel(){
-    
+    this.store.dispatch(CandidateStateAction.ExportAnswersToExcel());
   }
 }

@@ -30,6 +30,7 @@ export const FetchTraineeInSchedule = createAction(
 	'[MasterState] FetchTraineeInSchedule',
 	props<{ scheduleId: string }>()
 );
+export const FetchIPList = createAction('[MasterState] FetchIPList');
 //#endregion
 
 //#region Fetch Success
@@ -64,6 +65,10 @@ export const FetchSchedulesSuccess = createAction(
 export const FetchTraineeInScheduleSuccess = createAction(
 	'[MasterState] FetchTraineeInScheduleSuccess',
 	props<{ payload: ClientTrainee[]; scheduleId: string }>()
+);
+export const FetchIPListSuccess = createAction(
+	'[MasterState] FetchIPListSuccess',
+	props<{ payload: string[] }>()
 );
 //#endregion
 
@@ -167,7 +172,7 @@ export const UpdatePhase = createAction(
 export const UpdateSubject = createAction(
 	'[MasterState] UpdateSubject',
 	props<{
-    subjectId: string;
+		subjectId: string;
 		value?: boolean;
 		maxFileSize?: number;
 	}>()
@@ -180,6 +185,10 @@ export const UpdateSubject = createAction(
 // 	'[MasterState] UpdateTraineeInSchedule',
 // 	props<{ schedule: string }>()
 // );
+export const UpdateIPList = createAction(
+	'[MasterState] UpdateIPList',
+	props<{ ipList: string[] }>()
+);
 //#endregion
 
 //#region Delete

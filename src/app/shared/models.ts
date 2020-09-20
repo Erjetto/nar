@@ -1,17 +1,19 @@
 import { RoleFlags } from './constants/role.constant';
 import { isNumber, map, isEmpty } from 'lodash';
 import { DateHelper } from './utilities/date-helper';
+import { environment } from 'src/environments/environment';
 
-export class Pair<T, U> {
-	constructor(val1: T, val2: U) {
-		this[0] = val1;
-		this[1] = val2;
-	}
+//#region Not from backend
+// tslint:disable-next-line: only-arrow-functions
+export function GetDownloadLinkFromFileId(fileId: string){
+  return `${environment.apiUrl}File.svc/GetFile/${fileId}`
 }
+export type AttendanceType = 'Rest' | 'Room' | 'Secretariat';
+export type ToastType = 'info' | 'warning' | 'success' | 'danger';
 
 export class Toast {
 	constructor(
-		public messageType: 'info' | 'warning' | 'success' | 'danger' = 'info',
+		public messageType: ToastType = 'info',
 		public message = ''
 	) {}
 }
@@ -39,6 +41,7 @@ export class Role {
 		else return roleFlags.some((role) => (role.roleNumber & this.roleNumber) !== 0);
 	}
 }
+//#endregion
 
 export class ClientUserInRoles extends BaseModel {
 	constructor(public Role = '', public UserInRoleId = '', public UserName = '') {
@@ -1129,7 +1132,7 @@ export class InterviewMaterialDetail extends BaseModel {
 		super();
 	}
 	get downloadLink() {
-		return 'File.svc/GetFile/' + this.FileId;
+		return GetDownloadLinkFromFileId(this.FileId);
 	}
 	get linkTitle() {
 		return `Download '${this.FileName}'`;

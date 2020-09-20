@@ -1,7 +1,8 @@
 import { createAction, props, Action } from '@ngrx/store';
-import { Message, User, ClientGeneration, Role } from '../../models';
+import { Message, User, ClientGeneration, Role, ToastType } from '../../models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
+import { StringDecoder } from 'string_decoder';
 
 export const Login = createAction(
 	'[MainState] Login',
@@ -37,7 +38,7 @@ export const ToastMessage = createAction(
 	'[MainState] ToastMessage',
 	props<{
 		message: string;
-		messageType: 'info' | 'success' | 'danger' | 'warning';
+		messageType: ToastType;
 	}>()
 );
 export const RemoveMessage = createAction('[MainState] PopMessage', props<{ index: number }>());
@@ -73,6 +74,7 @@ export const DeleteAnnouncement = createAction(
 export const CreateAnnouncementSuccess = createAction('[MainState] CreateAnnouncementSuccess');
 export const UpdateAnnouncementSuccess = createAction('[MainState] UpdateAnnouncementSuccess');
 
+export const DownloadFile = createAction('[MainState] DownloadFile', props<{ fileId: string}>());
 export const UploadFile = createAction('[MainState] UploadFile', props<{ files: FileList }>());
 export const UploadFileSuccess = createAction(
 	'[MainState] UploadFileSuccess',
@@ -130,7 +132,7 @@ export const WarningMessage = (what: string): Action =>
 export const FailMessage = (doingWhat: string, why?: string): Action =>
 	ToastMessage({
 		messageType: 'danger',
-		message: 'Failed ' + doingWhat + (!!why ? ': ' + why : ''),
+		message: 'Failed ' + doingWhat + (!!why ? ': \n' + why : ''),
 	});
 
 // export const EmptyGetMessage = (what: string): Action =>

@@ -12,6 +12,8 @@ import {
 	ClientTrainee,
 } from '../../models';
 import { getCurrentGeneration } from '../main/main.reducer';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface IMasterState {
 	roles: Role[];
@@ -176,6 +178,12 @@ export const MasterStateReducer = createReducer(
 		traineeInSchedule: payload,
 		loadingTraineeInSchedule: false,
 		traineesInScheduleEntity: { ...state.traineesInScheduleEntity, [scheduleId]: payload },
+	})),
+
+  // No need loadingIPList
+	on(MasterStateAction.FetchIPListSuccess, (state, { payload }) => ({
+		...state,
+		ipList: payload,
 	}))
 );
 
@@ -216,7 +224,6 @@ export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTrain
 //#region Extras
 export const getGenerationOneYearLower = createSelector(
 	getCurrentGeneration,
-	(g: ClientGeneration) =>
-		parseInt(g?.Description.substr(0, 2), 10) - 1 + g?.Description.substr(2)
+	(g: ClientGeneration) => parseInt(g?.Description.substr(0, 2), 10) - 1 + g?.Description.substr(2)
 );
 //#endregion
