@@ -34,8 +34,9 @@
 	#pop="ngbPopover"
 	[ngbPopover]="popContent"
 	[popoverTitle]="popTitle"
-	[autoClose]="'outside'"
-	container="body"
+	[autoClose]="autoClose"
+  container="body"
+  popoverClass="confirmable-popover"
 >
 	<ng-content></ng-content>
 </div>

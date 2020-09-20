@@ -23,14 +23,15 @@ export class ConfirmablePopUpComponent implements OnInit {
 	@ViewChild('pop') popOver: NgbPopover;
 	@Input() description: string | TemplateRef<any> = null;
 	@Input() title: string | TemplateRef<any> = 'Confirmation';
-	@Input() canConfirm = true;
+  @Input() autoClose: boolean | string = 'outside';
+  @Input() canConfirm = true;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 
 	constructor(private el: ElementRef) {}
 
 	get titleIsString() {
-		return typeof(this.title) === 'string';
+		return _.isString(this.title);
 	}
 	get descriptionIsString() {
 		return _.isString(this.description);

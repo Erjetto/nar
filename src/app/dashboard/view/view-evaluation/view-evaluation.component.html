@@ -1,3 +1,35 @@
+<!-- Templates -->
+<div>
+  <ng-template #changeFullDayPermissionTemplate> 
+    <textarea
+      class="form-control"
+      cols="30"
+      rows="4"
+      placeholder="Reasons..."
+      [formControl]="changeFullDayPermissionReason"
+    ></textarea>
+  </ng-template>
+
+  <ng-template #changeAttendanceContent>
+    <div class="col" [formGroup]="changeAttendanceForm">
+      <ng-select
+        [items]="attendanceType"
+        placeholder="Permission"
+        [clearable]="false"
+        appendTo="body"
+        formControlName="status"
+      ></ng-select>
+      <hr class="my-2" />
+      <textarea
+        class="form-control"
+        cols="30"
+        rows="4"
+        placeholder="Reasons..."
+        formControlName="note"
+      ></textarea>
+    </div>
+  </ng-template>
+</div>
 <div class="container-lg">
 	<div class="row">
 		<div class="col-3">
@@ -169,41 +201,7 @@
 			>
 				<div class="row justify-content-between">
 					<span class="font-weight-bold">Session 1</span>
-					<span>Passed: (3) Not Passed: (1)</span>
-				</div>
-				<table class="table table-sm table-striped table-hover text-center">
-					<thead>
-						<tr>
-							<th>Trainee</th>
-							<th>Date</th>
-							<th>No</th>
-							<th>Final Score</th>
-							<th width="70px">Status</th>
-							<th width="55px">PIC</th>
-							<!-- <th width="100px">Actions</th> -->
-						</tr>
-					</thead>
-					<tbody>
-						<tr *ngIf="(todaysPresentation$ | async)?.length === 0">
-							<td colspan="6">No votes yet</td>
-						</tr>
-						<tr
-							*ngFor="let presentation of todaysPresentation$ | async"
-							(click)="selectPresentation(presentation)"
-							class="cursor-pointer"
-						>
-							<td>{{ presentation.traineeName }}</td>
-							<td>{{ presentation.savedAt | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
-							<td>{{ presentation.presentationNo }}</td>
-							<td>{{ presentation.score }}</td>
-							<td>{{ presentation.status }}</td>
-							<td>{{ presentation.savedBy }}</td>
-						</tr>
-					</tbody>
-				</table>
-				<div class="row justify-content-between">
-					<span class="font-weight-bold">Session 2</span>
-					<span>Passed: (3) Not Passed: (1)</span>
+					<!-- <span>Passed: ({{1}}) Not Passed: (1)</span> -->
 				</div>
 				<table class="table table-sm table-striped table-hover text-center">
 					<thead>
@@ -218,15 +216,49 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngIf="(todaysPresentation$ | async)?.length === 0">
-							<td colspan="6">No votes yet</td>
+						<tr *ngIf="(todaysPresentation$ | async)[0]?.length === 0">
+							<td colspan="6">No presentations yet</td>
 						</tr>
 						<tr
-							*ngFor="let presentation of todaysPresentation$ | async"
+							*ngFor="let presentation of (todaysPresentation$ | async)[0]"
 							(click)="selectPresentation(presentation)"
 							class="cursor-pointer"
 						>
-							<td>{{ presentation.traineeName }}</td>
+							<td>{{ presentation.traineeCode }}</td>
+							<td>{{ presentation.savedAt | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
+							<td>{{ presentation.presentationNo }}</td>
+							<td>{{ presentation.score }}</td>
+							<td>{{ presentation.status }}</td>
+							<td>{{ presentation.savedBy }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="row justify-content-between">
+					<span class="font-weight-bold">Session 2</span>
+					<!-- <span>Passed: (3) Not Passed: (1)</span> -->
+				</div>
+				<table class="table table-sm table-striped table-hover text-center">
+					<thead>
+						<tr>
+							<th>Trainee</th>
+							<th>Date</th>
+							<th>No</th>
+							<th>Final Score</th>
+							<th>Status</th>
+							<th>PIC</th>
+							<!-- <th width="100px">Actions</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="(todaysPresentation$ | async)[1]?.length === 0">
+							<td colspan="6">No presentations yet</td>
+						</tr>
+						<tr
+							*ngFor="let presentation of (todaysPresentation$ | async)[1]"
+							(click)="selectPresentation(presentation)"
+							class="cursor-pointer"
+						>
+							<td>{{ presentation.traineeCode }}</td>
 							<td>{{ presentation.savedAt | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
 							<td>{{ presentation.presentationNo }}</td>
 							<td>{{ presentation.score }}</td>
@@ -314,23 +346,6 @@
 	</div>
 	<div class="row">
 		<div class="col">
-			<ng-template #editAttendanceTitle>Change Attendance</ng-template>
-			<ng-template #editAttendanceContent>
-				<div class="col" [formGroup]="changeAttendanceForm">
-					<ng-select
-						[items]="evalType"
-						placeholder="Permission"
-						[clearable]="false"
-						formControlName=""
-					></ng-select>
-					<hr class="my-2" />
-					<textarea class="form-control" cols="30" rows="4" formControlName=""></textarea>
-					<div class="btn-group w-100">
-						<button class="btn btn-sm btn-primary rounded-0">Update</button>
-						<button class="btn btn-sm btn-secondary rounded-0">Cancel</button>
-					</div>
-				</div>
-			</ng-template>
 			<!-- eval-attendance => for attendance styling -->
 			<rd-card
 				[cardTitle]="'Attendance'"
@@ -351,7 +366,7 @@
 							<th colspan="4">Secretariat</th>
 							<th colspan="4">Room</th>
 							<th colspan="4">Rest</th>
-							<th rowspan="3">Permission</th>
+							<th rowspan="3" colspan="2">Permission</th>
 						</tr>
 						<tr>
 							<th colspan="2">Scheduled</th>
@@ -381,7 +396,8 @@
 							<td colspan="14">No data yet</td>
 						</tr>
 						<tr *ngFor="let at of (attendanceReport$ | async)?.Attendances">
-							<td [ngClass]="{ Permission: at.FulldayPermission }" class="trainee-details-hotspot">
+							<td class="trainee-details-hotspot">
+								<!-- [ngClass]="{ Permission: at.FulldayPermission }"  -->
 								<a [routerLink]="['#View/Trainee', at.TraineeId, 'false']" class="pointer relative">
 									{{ at.TraineeCode }}
 								</a>
@@ -390,51 +406,157 @@
 							<td>{{ at.Secretariat.TimeOut || '-' }}</td>
 							<td
 								class="{{ at.Secretariat.StatusAbsentIn || 'Absent' }}"
-								[ngbPopover]="editAttendanceContent"
-								[popoverTitle]="editAttendanceTitle"
-								[autoClose]="'outside'"
+								[ngbPopover]="at.Secretariat.NoteIn"
+								triggers="mouseenter:mouseleave"
+								placement="bottom"
 								container="body"
 							>
-								<span
-									[ngbPopover]="at.Secretariat.NoteIn"
-									triggers="mouseenter:mouseleave"
-									placement="bottom"
+								<rd-confirmable-pop-up
+									[title]="'Change Secretariat In'"
+									[description]="changeAttendanceContent"
+									[autoClose]="false"
+									[canConfirm]="changeAttendanceForm.valid"
+									(confirm)="confirmChangeAttendance()"
+									(click)="
+										selectAttendanceToChange(
+											at.Secretariat.AttendanceIdIn,
+											at.TraineeCode,
+											'Secretariat'
+										)
+									"
 								>
 									{{ (at.Secretariat.TraineeIn | date: 'HH:mm:ss') || '-' }}
-								</span>
+								</rd-confirmable-pop-up>
 							</td>
 							<td
 								class="{{ at.Secretariat.StatusAbsentOut || 'Absent' }}"
-								title="{{ at.Secretariat.NoteOut }}"
+								[ngbPopover]="at.Secretariat.NoteOut"
+								triggers="mouseenter:mouseleave"
+								placement="bottom"
+								container="body"
 							>
-								{{ (at.Secretariat.TraineeOut | date: 'HH:mm:ss') || '-' }}
+								<rd-confirmable-pop-up
+									[title]="'Change Secretariat Out'"
+									[description]="changeAttendanceContent"
+									[autoClose]="false"
+									[canConfirm]="changeAttendanceForm.valid"
+									(confirm)="confirmChangeAttendance()"
+									(click)="
+										selectAttendanceToChange(
+											at.Secretariat.AttendanceIdOut,
+											at.TraineeCode,
+											'Secretariat'
+										)
+									"
+								>
+									{{ (at.Secretariat.TraineeOut | date: 'HH:mm:ss') || '-' }}
+								</rd-confirmable-pop-up>
 							</td>
 							<td>{{ at.Room.TimeIn || '-' }}</td>
 							<td>{{ at.Room.TimeOut || '-' }}</td>
-							<td class="{{ at.Room.StatusAbsentIn || 'Absent' }}">
-								<span
-									[ngbPopover]="at.Room.NoteIn"
-									triggers="mouseenter:mouseleave"
-									placement="bottom"
+							<td
+								class="{{ at.Room.StatusAbsentIn || 'Absent' }}"
+								[ngbPopover]="at.Room.NoteIn"
+								triggers="mouseenter:mouseleave"
+								placement="bottom"
+								container="body"
+							>
+								<rd-confirmable-pop-up
+									[title]="'Change Room In'"
+									[description]="changeAttendanceContent"
+									[autoClose]="false"
+									[canConfirm]="changeAttendanceForm.valid"
+									(confirm)="confirmChangeAttendance()"
+									(click)="selectAttendanceToChange(at.Room.AttendanceIdIn, at.TraineeCode, 'Room')"
 								>
 									{{ (at.Room.TraineeIn | date: 'HH:mm:ss') || '-' }}
-								</span>
+								</rd-confirmable-pop-up>
 							</td>
-							<td class="{{ at.Room.StatusAbsentOut || 'Absent' }}" title="{{ at.Room.NoteOut }}">
-								{{ (at.Room.TraineeOut | date: 'HH:mm:ss') || '-' }}
+							<td
+								class="{{ at.Room.StatusAbsentOut || 'Absent' }}"
+								[ngbPopover]="at.Room.NoteOut"
+								triggers="mouseenter:mouseleave"
+								placement="bottom"
+								container="body"
+							>
+								<rd-confirmable-pop-up
+									[title]="'Change Room Out'"
+									[description]="changeAttendanceContent"
+									[autoClose]="false"
+									[canConfirm]="changeAttendanceForm.valid"
+									(confirm)="confirmChangeAttendance()"
+									(click)="
+										selectAttendanceToChange(at.Room.AttendanceIdOut, at.TraineeCode, 'Room')
+									"
+								>
+									{{ (at.Room.TraineeOut | date: 'HH:mm:ss') || '-' }}
+								</rd-confirmable-pop-up>
 							</td>
 							<td>{{ at.Rest.TimeOut || '-' }}</td>
 							<td>{{ at.Rest.TimeIn || '-' }}</td>
-							<td class="{{ at.Rest.StatusAbsentOut || 'Absent' }}" title="{{ at.Rest.NoteOut }}">
-								{{ (at.Rest.TraineeOut | date: 'HH:mm:ss') || '-' }}
+							<td
+								class="{{ at.Rest.StatusAbsentOut || 'Absent' }}"
+								[ngbPopover]="at.Rest.NoteOut"
+								triggers="mouseenter:mouseleave"
+								placement="bottom"
+								container="body"
+							>
+								<rd-confirmable-pop-up
+									[title]="'Change Rest In'"
+									[description]="changeAttendanceContent"
+									[autoClose]="false"
+									[canConfirm]="changeAttendanceForm.valid"
+									(confirm)="confirmChangeAttendance()"
+									(click)="selectAttendanceToChange(at.Rest.AttendanceIdIn, at.TraineeCode, 'Rest')"
+								>
+									{{ (at.Rest.TraineeOut | date: 'HH:mm:ss') || '-' }}
+								</rd-confirmable-pop-up>
 							</td>
-							<td class="{{ at.Rest.StatusAbsentIn || 'Absent' }}" title="{{ at.Rest.NoteIn }}">
-								{{ (at.Rest.TraineeIn | date: 'HH:mm:ss') || '-' }}
+							<td
+								class="{{ at.Rest.StatusAbsentIn || 'Absent' }}"
+								[ngbPopover]="at.Rest.NoteIn"
+								triggers="mouseenter:mouseleave"
+								placement="bottom"
+								container="body"
+							>
+								<rd-confirmable-pop-up
+									[title]="'Change Rest Out'"
+									[description]="changeAttendanceContent"
+									[autoClose]="false"
+									[canConfirm]="changeAttendanceForm.valid"
+									(confirm)="confirmChangeAttendance()"
+									(click)="
+										selectAttendanceToChange(at.Rest.AttendanceIdOut, at.TraineeCode, 'Rest')
+									"
+								>
+									{{ (at.Rest.TraineeIn | date: 'HH:mm:ss') || '-' }}
+								</rd-confirmable-pop-up>
+							</td>
+							<td>
+								<rd-confirmable-pop-up
+									[title]="
+										at.FulldayPermission
+											? 'Remove All Day Permission?'
+											: 'Set Permission to All Day?'
+                  "
+                  [description]="changeFullDayPermissionTemplate"
+                  (confirm)="toggleFullDayPermission(at)"
+                  (cancel)="changeFullDayPermissionReason.reset()"
+								>
+									{{ at.FulldayPermission ? '&#x2611;' : '&#x2610;' }}
+								</rd-confirmable-pop-up>
 							</td>
 							<td>
 								<div *ngFor="let permission of at.AttendanceTimePermission">
-									{{ permission.AttendanceDate | date: 'HH:mm:ss' }} -
-									{{ permission.Reason }}
+									<span
+                    [ngbPopover]="permission.Reason"
+										triggers="mouseenter:mouseleave"
+										container="body"
+									>
+										{{ permission.AttendanceDate | date: 'HH:mm:ss' }}
+									</span>
+									<!-- {{ permission.AttendanceDate | date: 'HH:mm:ss' }} -
+									{{ permission.Reason }} -->
 								</div>
 							</td>
 						</tr>

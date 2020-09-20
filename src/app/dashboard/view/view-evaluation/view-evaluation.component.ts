@@ -7,6 +7,7 @@ import {
 	ClientEvaluation,
 	EvaluationNote,
 	ClientEvaluationNote,
+	ClientTraineeAttendance,
 } from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -22,8 +23,10 @@ import {
 	fromNoteState,
 	MainStateEffects,
 	NoteStateEffects,
+	AttendanceStateEffects,
 } from 'src/app/shared/store-modules';
-import { takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { takeUntil, tap, withLatestFrom, map } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Component({
 	selector: 'rd-view-evaluation',
@@ -35,7 +38,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	viewDateFormat = 'dd MMM yyyy';
 
 	// currentDate = new FormControl(DateHelper.dateToInputFormat(new Date()));
-	currentDate = new FormControl('2018-01-17');
+	currentDate = this.fb.control('2018-01-17');
 	filterEvaluationForm = this.fb.group({
 		evalType: [null],
 		search: [''],
@@ -45,14 +48,28 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	insertEvaluationForm = this.fb.group({
 		notes: ['', Validators.required],
 		evalType: [null, Validators.required],
-  });
-  changeAttendanceForm = this.fb.group({
-    
-  })
+	});
+	changeAttendanceForm = this.fb.group({
+		attendanceId: ['', Validators.required],
+		status: ['Present', Validators.required],
+		note: ['', Validators.required],
+		traineeCode: ['', Validators.required],
+		attType: ['', Validators.required],
+		attendanceDate: ['', Validators.required],
+	});
+	changeFullDayPermissionReason = this.fb.control('', Validators.required);
 
 	evalType = ['Tidiness', 'Case Making', 'Presentation', 'Book', 'Attendance', 'Others'];
+	attendanceType = [
+		'Present',
+		'Late',
+		'Absent',
+		'Permission',
+		'College Permission',
+		'Neglects Attendance',
+	];
 
-	todaysPresentation$: Observable<TraineePresentation[]>;
+	todaysPresentation$: Observable<TraineePresentation[][]>;
 	attendanceReport$: Observable<ClientTraineeAttendanceReport>;
 	evaluations$: Observable<ClientEvaluation>;
 	filteredEvalNotes$: Observable<ClientEvaluationNote[]>;
@@ -62,7 +79,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	loadingAttendanceReport$: Observable<boolean>;
 	loadingEvaluations$: Observable<boolean>;
 
-  // 
+	//
 	loadingViewEvaluations$ = new BehaviorSubject<boolean>(false);
 	loadingViewAttendances$ = new BehaviorSubject<boolean>(false);
 
@@ -70,6 +87,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
 		private noteEffects: NoteStateEffects,
+		private attendanceEffects: AttendanceStateEffects,
 		private fb: FormBuilder
 	) {
 		super(store);
@@ -78,7 +96,16 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	ngOnInit(): void {
 		//#region Bind to store
 		this.todaysPresentation$ = this.store.pipe(
-			select(fromPresentationState.getPresentationsByDate)
+			select(fromPresentationState.getPresentationsByDate),
+			map((presentations: TraineePresentation[]) => {
+				// Separate presentations into 2 arr for each sessions
+				const presentationArr = [[], []];
+				_.sortBy(presentations, 'savedAt').forEach((p) => {
+					if (p.savedAt.getHours() >= 7 && p.savedAt.getHours() < 13) presentationArr[0].push(p);
+					else presentationArr[1].push(p);
+				});
+				return presentationArr;
+			})
 		);
 		this.attendanceReport$ = this.store.pipe(select(fromAttendanceState.getAttendanceReport));
 		this.evaluations$ = this.store.pipe(select(fromNoteState.getEvaluations));
@@ -90,7 +117,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 			select(fromAttendanceState.isAttendanceReportLoading)
 		);
 		this.loadingEvaluations$ = this.store.pipe(select(fromNoteState.isEvaluationsLoading));
-		this.loadingTodaysPresentation$
+		this.loadingAttendanceReport$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(this.loadingViewAttendances$);
 		this.loadingEvaluations$
@@ -99,7 +126,12 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		//#endregion
 
 		//#region Auto fetch
-		merge(this.currentDate.valueChanges, this.mainEffects.changeGen$)
+		merge(
+			this.currentDate.valueChanges,
+			this.mainEffects.changeGen$,
+      this.attendanceEffects.changeAttendanceStatus$,
+      this.attendanceEffects.setAttendancePermission$
+		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.getEvaluationDataByDate(this.currentDate.value));
 		//#endregion
@@ -107,7 +139,6 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		this.filterEvaluationForm.valueChanges
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((val) => this.store.dispatch(NoteStateAction.SetEvaluationNoteFilter(val)));
-
 
 		this.getEvaluationDataByDate(this.currentDate.value);
 	}
@@ -151,5 +182,42 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 
 	changeTraineeAttendance() {
 		this.loadingViewAttendances$.next(true);
+	}
+
+	confirmChangeAttendance() {
+		/*
+    Example value:
+    attType: "Secretariat"​
+    attendanceDate: "2018-01-17"​
+    attendanceId: "9dbf0f3d-ac82-4ced-ad04-bff812aa66a9"​
+    note: "Test"​
+    status: "Neglects Attendance"​
+    traineeCode: "T080"
+    */
+		this.store.dispatch(
+			AttendanceStateAction.ChangeTraineeAttendanceStatus(this.changeAttendanceForm.value)
+		);
+	}
+	selectAttendanceToChange(attendanceId, traineeCode, attType) {
+		this.changeAttendanceForm.patchValue({
+			attendanceId,
+			traineeCode,
+			attType,
+			attendanceDate: this.currentDate.value,
+		});
+	}
+	cancelAttendanceChange() {
+		this.changeAttendanceForm.reset();
+	}
+
+	toggleFullDayPermission(att: ClientTraineeAttendance) {
+		this.store.dispatch(
+			AttendanceStateAction.SetAttendancePermission({
+				traineecode: att.TraineeCode,
+				date: this.currentDate.value,
+				reason: this.changeFullDayPermissionReason.value,
+				to: !att.FulldayPermission,
+			})
+		);
 	}
 }
