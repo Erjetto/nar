@@ -7,10 +7,10 @@ import {
 	UrlTree,
 	Router,
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { UserService } from '../services/user.service';
 import { GeneralService } from '../services/new/general.service';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { MainStateAction, fromMainState } from '../store-modules';
@@ -30,7 +30,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 		next: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot
 	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-		return this.generalService.GetCurrentUser().pipe(
+		return this.store.pipe(
+      select(fromMainState.getCurrentUser),
+      switchMap(user => user ? of(user) : this.generalService.GetCurrentUser()),
 			map((user: User) => {
 				if (user) {
 					this.store.dispatch(MainStateAction.SetCurrentUser({ user }));

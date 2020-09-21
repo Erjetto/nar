@@ -66,10 +66,10 @@ footer {
 
 // List padding
 .v-list-m-12 {
-	> * {
-		display: flex;
-		flex-flow: column;
-	}
+	// > * {
+	// 	display: flex;
+	// 	flex-flow: column;
+	// }
 	> *:not(:last-child)::after {
 		content: '';
 		margin: 12px 0;
@@ -77,10 +77,10 @@ footer {
 	}
 }
 .v-list-m-6 {
-	> * {
-		display: flex;
-		flex-flow: column;
-	}
+	// > * {
+	// 	display: flex;
+	// 	flex-flow: column;
+	// }
 	> *:not(:last-child)::after {
 		content: '';
 		margin: 6px 0;

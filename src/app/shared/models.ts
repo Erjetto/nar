@@ -5,17 +5,31 @@ import { environment } from 'src/environments/environment';
 
 //#region Not from backend
 // tslint:disable-next-line: only-arrow-functions
-export function GetDownloadLinkFromFileId(fileId: string){
-  return `${environment.apiUrl}File.svc/GetFile/${fileId}`
+export function GetDownloadLinkFromFileId(fileId: string) {
+	return `${environment.apiUrl}File.svc/GetFile/${fileId}`;
 }
 export type AttendanceType = 'Rest' | 'Room' | 'Secretariat';
-export type ToastType = 'info' | 'warning' | 'success' | 'danger';
+export type QuestionStatus = 'wrong' | 'correct' | 'unchecked';
+export const EvalTypes = [
+	'Tidiness',
+	'Case Making',
+	'Presentation',
+	'Book',
+	'Attendance',
+	'Others',
+];
+export const AttendanceStatus = [
+	'Present',
+	'Late',
+	'Absent',
+	'Permission',
+	'College Permission',
+	'Neglects Attendance',
+];
 
+export type ToastType = 'info' | 'warning' | 'success' | 'danger';
 export class Toast {
-	constructor(
-		public messageType: ToastType = 'info',
-		public message = ''
-	) {}
+	constructor(public messageType: ToastType = 'info', public message = '') {}
 }
 
 export class BaseModel {}
@@ -324,6 +338,9 @@ export class ClientTraineeData extends BaseModel {
 		public DeactivateReasons: ClientTraineeDeactivateReason[] = []
 	) {
 		super();
+	}
+	get imageLink() {
+		return `${environment.apiUrl}File.svc/GetThumbnail/${this.PictureId}/150`;
 	}
 	static fromJson(data?: any): ClientTraineeData {
 		if (isEmpty(data)) return null;
@@ -670,13 +687,15 @@ export class CoreTrainingPresentation extends BaseModel {
 	}
 
 	static fromJson(data: any): CoreTrainingPresentation {
-		if (isEmpty(data)) return null;
-		return Object.assign(new CoreTrainingPresentation(), data, {
-			Deadline: DateHelper.fromCSharpDate(data?.Deadline),
-			Questions: map(data?.Questions, CoreTrainingPresentationQuestion.fromJson),
+    if (isEmpty(data)) return null;
+    let res = new CoreTrainingPresentation()
+		res = Object.assign(res, data, {
+      Deadline: DateHelper.fromCSharpDate(data?.Deadline),
+      Questions: map(data?.Questions, (q) => CoreTrainingPresentationQuestion.fromJson(q, res)),
 			PresentationDate: DateHelper.fromCSharpDate(data?.PresentationDate),
 			PresentationComment: CoreTrainingPresentationItem.fromJson(data?.PresentationComment),
-		});
+    }) as CoreTrainingPresentation;
+    return res
 	}
 }
 
@@ -686,7 +705,7 @@ export class CoreTrainingPresentationComment extends BaseModel {
 		public Histories: DataHistory[] = [],
 		public Id = '',
 		public UserId = '',
-		public UserName = ''
+    public UserName = ''
 	) {
 		super();
 	}
@@ -694,7 +713,7 @@ export class CoreTrainingPresentationComment extends BaseModel {
 	static fromJson(data: any): CoreTrainingPresentationComment {
 		if (isEmpty(data)) return null;
 		return Object.assign(new CoreTrainingPresentationComment(), data, {
-			Histories: map(data?.Histories, DataHistory.fromJson),
+      Histories: map(data?.Histories, DataHistory.fromJson),
 		});
 	}
 }
@@ -718,21 +737,29 @@ export class CoreTrainingPresentationQuestion extends BaseModel {
 		public Answers: CoreTrainingPresentationItem[] = [],
 		public AcceptedAnswerId = '',
 		public DeadlinePassed = '',
-		public Status = '',
-		public StatusBy = ''
+		public Status = 'unchecked',
+		public StatusBy = '',
+    
+    public parent: CoreTrainingPresentation = null // Additional featue
 	) {
 		super();
 	}
 
 	get rightAnswer() {
-		return this.Answers.find((q) => q.Id === this.AcceptedAnswerId);
-	}
+		// return this.Answers.find((q) => q.Id === this.AcceptedAnswerId);
+		return this.Answers.find((q) => q.Status === 'correct');
+  }
+  
+  get questionLink(){
+    return `${environment.apiUrl}/presentation/question/${this.Question.Id}`
+  }
 
-	static fromJson(data: any): CoreTrainingPresentationQuestion {
+	static fromJson(data: any, parent: any): CoreTrainingPresentationQuestion {
 		if (isEmpty(data)) return null;
 		return Object.assign(new CoreTrainingPresentationQuestion(), data, {
 			Question: CoreTrainingPresentationItem.fromJson(data?.Question),
 			Answers: map(data?.Answers, CoreTrainingPresentationItem.fromJson),
+      parent
 		});
 	}
 }
@@ -1708,10 +1735,11 @@ export class ClientEvaluationNote extends BaseModel {
 	) {
 		super();
 	}
-	get evalNoteType() { // [ Others ] Lorem ips... -> Others
-    const res = /\[(\w+)\]/.exec(this.Notes);
-    return res ? res[1] : '';
-	 }
+	get evalNoteType() {
+		// [ Others ] Lorem ips... -> Others
+		const res = /\[(\w+)\]/.exec(this.Notes);
+		return res ? res[1] : '';
+	}
 	static fromJson(data?: any): ClientEvaluationNote {
 		if (isEmpty(data)) return null;
 		return Object.assign(new ClientEvaluationNote(), data, {

@@ -3,7 +3,7 @@ import { CoreTrainingPresentation, TraineePresentation } from '../../models';
 
 export const FetchPresentations = createAction(
 	'[PresentationState] FetchPresentations',
-	props<{ generationId: string, subjectId: string }>()
+	props<{ generationId: string; subjectId: string }>()
 );
 
 export const FetchPresentationStatus = createAction(
@@ -16,7 +16,6 @@ export const FetchPresentationsByDate = createAction(
 	props<{ time: string }>()
 );
 
-
 export const FetchPresentationsSuccess = createAction(
 	'[PresentationState] FetchPresentationsSuccess',
 	props<{ payload: CoreTrainingPresentation[] }>()
@@ -28,4 +27,9 @@ export const FetchPresentationStatusSuccess = createAction(
 export const FetchPresentationsByDateSuccess = createAction(
 	'[PresentationState] FetchPresentationsByDateSuccess',
 	props<{ payload: TraineePresentation[] }>()
+);
+
+export const SetQuestionsFilter = createAction(
+	'[PresentationState] SetQuestionsFilter',
+	props<{ search: string; status: string; subjectId: string }>()
 );

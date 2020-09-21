@@ -4,10 +4,7 @@
 			<rd-card [cardTitle]="'Trainee ' + traineeDetail.TraineeCode">
 				<div class="row">
 					<div class="col-auto">
-						<img
-							[src]="'File.svc/GetThumnail/' + traineeDetail.PictureId + '/150'"
-							style="width: auto; height: 100%;"
-						/>
+						<img [src]="traineeDetail.imageLink" style="width: auto; height: 100%" />
 					</div>
 					<div class="col">
 						<div class="row">
@@ -31,23 +28,16 @@
 			</rd-card>
 		</div>
 		<!-- If veteran -->
-		<div class="col" *ngIf="traineeDetail.IsVeteran">
+		<div class="col-5" *ngIf="traineeDetail.IsVeteran">
 			<rd-card [cardTitle]="'Trainee Veteran History'">
 				<div class="row">
 					<div class="col v-list-m-6 v-list-bordered">
-						<div
-							class="row"
-							*ngFor="let history of traineeDetail.DeactivateReasons"
-						>
+						<div class="row" *ngFor="let history of traineeDetail.DeactivateReasons">
 							<div class="col">
-								<div class="font-weight-bold">
-									Generation: {{ history.GenerationName }}
-								</div>
+								<div class="font-weight-bold">Generation: {{ history.GenerationName }}</div>
 								<div class="pl-4">{{ history.Reason }}</div>
 								<div class="text-right">
-									<span class="font-weight-bold align-self-end">{{
-										history.UserName
-									}}</span>
+									<span class="font-weight-bold align-self-end">{{ history.UserName }}</span>
 									at
 									{{ history.Date | date: viewDateFormat }}
 								</div>
@@ -66,48 +56,50 @@
           div.col-5
         </div> -->
 				<div class="row">
-					<div
-						class="col-7"
-          >
-          <div class="v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8 py-2">
-						<div class="row" *ngIf="traineeDetail.Notes.length === 0">
-							<div class="col align-items-center justify-content-center">
-								<i>No notes yet</i>
+					<div class="col-7">
+						<span class="row justify-content-center pr-2 mb-2"><b>Notes</b></span>
+						<div
+							class="v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8 py-2"
+						>
+							<div class="row" *ngIf="traineeDetail.Notes.length === 0">
+								<div class="col align-items-center justify-content-center">
+									<i>No notes yet</i>
+								</div>
 							</div>
-						</div>
-						<div class="row" *ngFor="let note of traineeDetail.Notes">
-							<!-- Need extra col-row due to v-list-m-6 styling 
+							<div class="row" *ngFor="let note of traineeDetail.Notes">
+								<!-- Need extra col-row due to v-list-m-6 styling 
                 prevents > 1 child element -->
-							<div class="col">
-								<div class="row">
-									<div class="col-auto">
-										<div class="font-weight-bold">
-											{{ note.Reputation }}
+								<div class="col">
+									<div class="row">
+										<div class="col-auto">
+											<div class="font-weight-bold">
+												{{ note.Reputation }}
+											</div>
 										</div>
-									</div>
-									<div class="col">
-										<div>{{ note.Description }}</div>
-										<div>
-											<span class="font-weight-bold">{{ note.SavedBy }}</span>
-											at {{ note.SavedAt | date: viewDateFormat }}
+										<div class="col">
+											<div>{{ note.Description }}</div>
+											<div>
+												<span class="font-weight-bold">{{ note.SavedBy }}</span>
+												at {{ note.SavedAt | date: viewDateFormat }}
+											</div>
 										</div>
-									</div>
-									<div class="col-auto">
-										<rd-confirmable-pop-up (confirm)="deleteNote(note)">
-											<button class="btn btn-danger">
-												<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
-											</button>
-										</rd-confirmable-pop-up>
+										<div class="col-auto">
+											<rd-confirmable-pop-up
+												[title]="'Delete Note from' + note.SavedBy + '?'"
+												(confirm)="deleteNote(note)"
+											>
+												<button class="btn btn-danger">
+													<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+												</button>
+											</rd-confirmable-pop-up>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-          </div>
 					<div class="col col-flex ml-2 border-left border-lightgrey">
-						<span class="row justify-content-center pr-2 mb-2"
-							><b>Insert new Note</b></span
-						>
+						<span class="row justify-content-center pr-2 mb-2"><b>Insert new Note</b></span>
 						<!-- <b class="row">Insert new Note</b> -->
 						<form class="row">
 							<div class="col">
@@ -115,7 +107,7 @@
 									name="evalNote"
 									id="evalNote"
 									class="form-control h-100"
-									style="resize: none;"
+									style="resize: none"
 									placeholder="Notes"
 								></textarea>
 							</div>
@@ -130,9 +122,7 @@
 									></ng-select>
 								</div>
 								<div class="row">
-									<button type="submit" class="btn btn-block btn-primary">
-										Insert New Note
-									</button>
+									<button type="submit" class="btn btn-block btn-primary">Insert New Note</button>
 								</div>
 							</div>
 						</form>

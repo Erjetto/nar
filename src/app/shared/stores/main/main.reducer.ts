@@ -52,7 +52,11 @@ export const MainStateReducer = createReducer(
 		currentRole: user.Role,
 	})),
 
-	on(MainStateAction.LogoutSuccess, (state) => ({ ...state, user: null })),
+	on(MainStateAction.LogoutSuccess, (state) => ({
+		...state,
+		currentUser: null,
+		currentRole: null,
+	})),
 
 	on(MainStateAction.ToastMessage, (state, { message, messageType }) => ({
 		...state,

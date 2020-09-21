@@ -59,7 +59,6 @@ export class ViewTraineeComponent extends DashboardContentBase
 
 	}
 
-
 	onSelectTrainee(trainee) {}
 
 	onChangePhase(phase) {}

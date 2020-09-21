@@ -8,6 +8,8 @@ import {
 	EvaluationNote,
 	ClientEvaluationNote,
 	ClientTraineeAttendance,
+  EvalTypes,
+  AttendanceStatus,
 } from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -59,15 +61,8 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	});
 	changeFullDayPermissionReason = this.fb.control('', Validators.required);
 
-	evalType = ['Tidiness', 'Case Making', 'Presentation', 'Book', 'Attendance', 'Others'];
-	attendanceType = [
-		'Present',
-		'Late',
-		'Absent',
-		'Permission',
-		'College Permission',
-		'Neglects Attendance',
-	];
+	evalType = EvalTypes;
+	attendanceStatus = AttendanceStatus;
 
 	todaysPresentation$: Observable<TraineePresentation[][]>;
 	attendanceReport$: Observable<ClientTraineeAttendanceReport>;

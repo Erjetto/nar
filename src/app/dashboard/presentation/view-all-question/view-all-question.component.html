@@ -1,37 +1,163 @@
 <div class="container-lg">
-	<div class="row">
-		<div class="col-5">
+	<!-- <div class="row">
+		<div class="col-4">
 			<rd-card [cardTitle]="'Download into Excel'" [expanded]="false">
 				<div class="row">
 					<div class="col">
 						<ng-select
 							class="col"
-							[items]="generations$ | async"
+              [items]="generations$ | async"
 							[clearable]="false"
 							[searchable]="false"
 						></ng-select>
 					</div>
-					<div class="col">
+					<div class="col-7">
 						<button class="btn text-white bg-excel w-100">Export into Excel</button>
 					</div>
 				</div>
 			</rd-card>
 		</div>
-	</div>
-	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'View All Questions'" [isLoading]="false">
+			<rd-card [cardTitle]="'Filters'" [expanded]="false">
 				<div class="row">
-					<div class="col">
-						<ng-select
-							class="col"
-							[items]="generations$ | async"
-							[clearable]="false"
-							[searchable]="false"
-						></ng-select>
+					<div class="col-4">
+						<input
+							class="form-control"
+							placeholder="initials, content,"
+							[formControl]="searchText"
+						/>
 					</div>
 					<div class="col">
+						<div class="row btn-group">
+							<button
+								class="btn btn-primary"
+								[class.active]="filter.value === ''"
+								(click)="filter.setValue('')"
+							>
+								All
+							</button>
+							<button
+								class="btn btn-primary"
+								[class.active]="filter.value === 'correct'"
+								(click)="filter.setValue('correct')"
+							>
+								Correct
+							</button>
+							<button
+								class="btn btn-primary"
+								[class.active]="filter.value === 'wrong'"
+								(click)="filter.setValue('wrong')"
+							>
+								Wrong
+							</button>
+							<button
+								class="btn btn-primary"
+								[class.active]="filter.value === 'unchecked'"
+								(click)="filter.setValue('unchecked')"
+							>
+								Unchecked
+							</button>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div> -->
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'View All Questions'" [isLoading]="loadingViewQuestions$ | async">
+				<div class="row form-group">
+					<div class="col-2">
+						<ng-select
+							class="col"
+							[items]="subjects$ | async"
+							bindLabel="Name"
+							bindValue="SubjectId"
+							[clearable]="false"
+							[searchable]="false"
+							[formControl]="filterForm.get('subjectId')"
+						></ng-select>
+					</div>
+					<div class="col-2">
+						<input
+							class="form-control"
+							placeholder="Search by initials, content..."
+							[formControl]="filterForm.get('search')"
+						/>
+					</div>
+					<div class="col">
+						<div class="row btn-group">
+							<button
+								class="btn btn-primary"
+								[class.active]="filterForm.get('status').value === ''"
+								(click)="filterForm.get('status').setValue('')"
+							>
+								All
+							</button>
+							<button
+								class="btn btn-primary"
+								[class.active]="filterForm.get('status').value === 'correct'"
+								(click)="filterForm.get('status').setValue('correct')"
+							>
+								Correct
+							</button>
+							<button
+								class="btn btn-primary"
+								[class.active]="filterForm.get('status').value === 'wrong'"
+								(click)="filterForm.get('status').setValue('wrong')"
+							>
+								Wrong
+							</button>
+							<button
+								class="btn btn-primary"
+								[class.active]="filterForm.get('status').value === 'unchecked'"
+								(click)="filterForm.get('status').setValue('unchecked')"
+							>
+								Unchecked
+							</button>
+						</div>
+					</div>
+					<div class="col-2">
 						<button class="btn text-white bg-excel w-100">Export into Excel</button>
+					</div>
+				</div>
+				<div class="row" style="max-height: 600px; overflow: auto">
+					<div class="col">
+						<div
+							[class]="'row question-item question-' + question.Status"
+							*ngFor="let question of filteredQuestions$ | async"
+						>
+							<div class="col-1 text-center question-side-detail">
+								{{ question.Answers.length }} <br />
+								Answers
+							</div>
+							<div class="col">
+								<a [routerLink]="" [innerHTML]="question.Question.Text"></a>
+								<div *ngIf="!!question.rightAnswer" >
+									<br />
+									<b>Answered:</b>
+									<div [innerHTML]="question.rightAnswer.Text"></div>
+								</div>
+							</div>
+							<div
+								class="col d-flex flex-column justify-content-end text-right question-side-detail"
+							>
+								<div *ngIf="(currentUser$ | async).Role.is(constant.role.AssistantSupervisor)">
+									<rd-confirmable-pop-up
+										title="Delete this question?"
+										(confirm)="deleteQuestion(question)"
+									>
+										<button class="btn btn-danger">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+										</button>
+									</rd-confirmable-pop-up>
+								</div>
+								<div>Asked by {{ question.Question.UserName }}</div>
+								<div [ngClass]="{ 'text-danger': question.DeadlinePassed }">
+									{{ question.parent.Deadline | date: viewDateFormat }}
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</rd-card>

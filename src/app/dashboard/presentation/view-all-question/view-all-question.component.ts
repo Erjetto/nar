@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
 
 import {
 	MasterStateAction,
@@ -11,15 +11,20 @@ import {
 	fromMainState,
 	PresentationStateAction,
 	fromPresentationState,
+	MainStateEffects,
 } from 'src/app/shared/store-modules';
 
 import {
 	CoreTrainingPresentation,
 	CoreTrainingPresentationQuestion,
 	ClientSubject,
+	ClientGeneration,
+	ClientPhase,
 } from 'src/app/shared/models';
-import { filter, withLatestFrom, takeUntil, tap } from 'rxjs/operators';
+import { filter, withLatestFrom, takeUntil, tap, map, distinctUntilChanged } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { FormControl, FormBuilder } from '@angular/forms';
+import { RoleFlags } from 'src/app/shared/constants/role.constant';
 
 @Component({
 	selector: 'rd-view-all-question',
@@ -27,37 +32,101 @@ import * as _ from 'lodash';
 	styleUrls: ['./view-all-question.component.scss'],
 })
 export class ViewAllQuestionComponent extends DashboardContentBase implements OnInit, OnDestroy {
+  viewDateFormat = 'dd MMM yyyy hh:mm a'
+	filterForm = this.fb.group(
+		{
+			search: [''],
+			status: [''],
+			subjectId: [''],
+		},
+		{ updateOn: 'blur' }
+	);
+
+	constant = {
+		role: RoleFlags,
+	};
 	presentations$: Observable<CoreTrainingPresentation>;
-
-	filteredQuestions$: Observable<CoreTrainingPresentationQuestion>;
+	questionsBySubjectEntity$: Observable<{ [subjectId: string]: CoreTrainingPresentation[] }>;
 	subjects$: Observable<ClientSubject[]>;
-	currentSubject$: Subject<ClientSubject> = new Subject();
 
-	generations$: Observable<string>;
+	loadingViewQuestions$: Observable<boolean>;
+	filteredQuestions$: Observable<CoreTrainingPresentationQuestion[]>;
 
-	constructor(protected store: Store<IAppState>) {
+	constructor(
+		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private fb: FormBuilder
+	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
-		this.generations$ = this.store.pipe(select(fromMasterState.getGenerations));
 		this.presentations$ = this.store.pipe(select(fromPresentationState.getPresentations));
+		this.loadingViewQuestions$ = this.store.pipe(
+			select(fromPresentationState.isPresentationsLoading)
+		);
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
+		this.questionsBySubjectEntity$ = this.store.pipe(
+			select(fromPresentationState.getQuestionsBySubject)
+		);
+		this.filteredQuestions$ = this.store.pipe(select(fromPresentationState.getFilteredQuestions));
+
+		// Auto fetch presentations by subject
+		combineLatest([
+			this.questionsBySubjectEntity$,
+			this.filterForm.get('subjectId').valueChanges,
+			this.currentGeneration$,
+		])
+			.pipe(
+				takeUntil(this.destroyed$),
+				map(([entity, subId, gen]) => {
+					if (!subId) return [];
+					if (!!subId && !!entity[subId]) return entity[subId];
+					else
+						this.store.dispatch(
+							PresentationStateAction.FetchPresentations({
+								generationId: gen.GenerationId,
+								subjectId: subId,
+							})
+						);
+					return [];
+				}),
+				distinctUntilChanged()
+			)
+			.subscribe();
+
+		this.store
+			.pipe(
+				select(fromMasterState.getPhases),
+				filter((v) => !_.isEmpty(v), takeUntil(this.destroyed$))
+			)
+			.subscribe((phases: ClientPhase[]) => {
+				const corePhase = phases.find((p) => p.Description.includes('Core'));
+				if (corePhase)
+					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: corePhase.PhaseId }));
+			});
 
 		this.subjects$ // Auto fetch presentation
 			.pipe(
 				filter((res) => !_.isEmpty(res)),
-				withLatestFrom(this.currentGeneration$),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe(([subjects, gen]) => {
-				this.currentSubject$.next(subjects[0]);
-				this.store.dispatch(
-					PresentationStateAction.FetchPresentations({
-						generationId: gen.GenerationId,
-						subjectId: subjects[0].SubjectId,
-					})
-				);
+			.subscribe((subjects) => {
+				this.filterForm.patchValue({ subjectId: subjects[0].SubjectId });
 			});
-	}
+
+		this.mainEffects.changeGen$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
+
+		this.filterForm.valueChanges
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((data) => this.store.dispatch(PresentationStateAction.SetQuestionsFilter(data)));
+
+		this.store.dispatch(MasterStateAction.FetchPhases());
+  }
+  
+  deleteQuestion(qst: CoreTrainingPresentationQuestion){
+    
+  }
 }
