@@ -1,6 +1,6 @@
 import { Component, OnInit, HostBinding, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { User, Role, ClientGeneration } from '../shared/models';
-import { Subject, Observable, of, interval, merge } from 'rxjs';
+import { Subject, Observable, of, interval, merge, BehaviorSubject } from 'rxjs';
 import { RoleFlags } from '../shared/constants/role.constant';
 import { IAppState } from '../app.reducer';
 import { Store, select } from '@ngrx/store';
@@ -46,6 +46,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	currentUser$: Observable<User>;
 	genList$: Observable<ClientGeneration[]>;
 	roleList$: Observable<Role[]>;
+
+	loadingChangeGen$ = new BehaviorSubject<boolean>(false);
 
 	selectedGenId$: Observable<string>;
 	selectedRole$: Observable<Role>;
@@ -98,9 +100,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.roleList$ = of(Role.allRoles);
 
 		this.selectedGenId$ = this.store.pipe(select(fromMainState.getCurrentGenerationId));
-    this.selectedRole$ = this.store.pipe(select(fromMainState.getCurrentRole));
-    
-    // Update menu when change role
+		this.selectedRole$ = this.store.pipe(select(fromMainState.getCurrentRole));
+
+		merge(this.mainEffects.afterRequest$, this.selectedGenId$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.loadingChangeGen$.next(false));
+
+		// Update menu when change role
 		this.selectedRole$
 			.pipe(takeUntil(this.destroyed$), distinctUntilChanged())
 			.subscribe((role) => {
@@ -112,7 +118,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 		//#region For SPV
 		this.currentUser$
-			.pipe(filter((u) => u.Role.is(RoleFlags.AssistantSupervisor)))
+			.pipe(filter((u) => u?.Role?.is(RoleFlags.AssistantSupervisor)))
 			.subscribe((u) => {
 				this.initiateRoleAndGen();
 			});
@@ -131,12 +137,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		return menu.data?.name === this.currentActiveHeader;
 	}
 
-	onChangeRole(value: string) {
-		this.store.dispatch(MainStateAction.ChangeRole({ role: Role.from(value) }));
+	onChangeRole(value: Role) {
+		this.store.dispatch(MainStateAction.ChangeRole({ role: value }));
 	}
 
-	onChangeGen(value: string) {
-		this.store.dispatch(MainStateAction.ChangeGeneration({ genId: value }));
+	onChangeGen(value: ClientGeneration) {
+		this.loadingChangeGen$.next(true);
+		this.store.dispatch(MainStateAction.ChangeGeneration({ genId: value.GenerationId }));
 	}
 
 	signOut() {

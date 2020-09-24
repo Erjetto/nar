@@ -6,16 +6,43 @@
 				<img src="../../assets/images/ribbon.png" />
 				<img src="../../assets/images/CI NAR.png" height="100" />
 			</div>
-			<div class="col text-right align-self-end pt-4">
+			<div class="col align-self-end pt-4">
 				<div class="row justify-content-end pt-1">
-					<b>
-						<span class="cursor" random-salutation>Hi, </span>
-						<span class="text-primary">{{ (currentUser$ | async)?.Name }}</span>
-					</b>
-				</div>
-				<div class="row justify-content-end pt-1">
+          <!-- For showing loading when changing gen -->
+					<div
+						class="lds-ring"
+						style="width: 35px; height: 35px"
+						[hidden]="!(loadingChangeGen$ | async)"
+					>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+					</div>
+					&nbsp;&nbsp;
 					<ng-container *ngIf="(currentUser$ | async)?.Role.is(constant.role.AssistantSupervisor)">
-						<select [ngModel]="(selectedRole$ | async)?.roleName" (change)="onChangeRole($event.target.value)">
+						<ng-select
+							[items]="roleList$ | async"
+							[clearable]="false"
+							[searchable]="false"
+							bindLabel="roleName"
+							bindValue="roleName"
+							[ngModel]="(selectedRole$ | async)?.roleName"
+							style="width: 200px"
+							(change)="onChangeRole($event)"
+						></ng-select>
+						&nbsp;&nbsp;
+						<ng-select
+							[items]="genList$ | async"
+							[clearable]="false"
+							[searchable]="false"
+							bindLabel="Description"
+							bindValue="GenerationId"
+							[ngModel]="selectedGenId$ | async"
+							(change)="onChangeGen($event)"
+							style="width: 80px"
+						></ng-select>
+						<!-- <select [ngModel]="(selectedRole$ | async)?.roleName" (change)="onChangeRole($event.target.value)">
 							<option *ngFor="let role of roleList$ | async" [value]="role.roleName">
 								{{ role.roleName }}
 							</option>
@@ -24,8 +51,15 @@
 							<option *ngFor="let gen of genList$ | async" [value]="gen.GenerationId">
 								{{ gen.Description }}
 							</option>
-						</select>
+						</select> -->
 					</ng-container>
+				</div>
+
+				<div class="row justify-content-end pt-1">
+					<b>
+						<span class="cursor" random-salutation>Hi, </span>
+						<span class="text-primary">{{ (currentUser$ | async)?.Name }}</span>
+					</b>
 				</div>
 
 				<rd-clock class="row justify-content-end pt-1 font-weight-bold"></rd-clock>

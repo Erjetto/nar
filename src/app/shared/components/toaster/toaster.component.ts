@@ -39,7 +39,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
 				}
 			});
 
-		interval(5000)
+		interval(7000)
 			.pipe(
 				takeUntil(this.stop$),
 				repeatWhen(() => this.start$)
