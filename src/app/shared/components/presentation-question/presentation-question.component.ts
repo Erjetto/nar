@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { CoreTrainingPresentationQuestion, CoreTrainingPresentation } from '../../models';
+import { Component, OnInit, Input, HostBinding } from '@angular/core';
+import { CoreTrainingPresentationQuestion, CoreTrainingPresentation, ClientGeneration } from '../../models';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'rd-presentation-question',
@@ -7,15 +8,15 @@ import { CoreTrainingPresentationQuestion, CoreTrainingPresentation } from '../.
   styleUrls: ['./presentation-question.component.scss']
 })
 export class PresentationQuestionComponent implements OnInit {
+  @HostBinding('class') hostClass;
 
   @Input() presentation: CoreTrainingPresentation;
   @Input() question: CoreTrainingPresentationQuestion;
-
-  constructor() { }
-
+  @Input() currentGenId: string;
+  
 
   ngOnInit(): void {
-    
+    this.hostClass = 'row question-item question-' + this.question.Status;
   }
 
 }

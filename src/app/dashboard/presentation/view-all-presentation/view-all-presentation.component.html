@@ -4,47 +4,51 @@
 			<rd-card [cardTitle]="'Search Presentation'" [isLoading]="false">
 				<div class="col v-list-m-12 v-list-bordered px-0">
 					<div class="row">
-						<ng-select
-							class="col"
-							[items]="phases$ | async"
-							[clearable]="false"
-							bindLabel="Description"
-							[searchable]="false"
-							[ngModel]="currentPhase$ | async"
-							(change)="currentPhase$.next($event)"
-						></ng-select>
+						<div class="col">
+							<ng-select
+								[items]="phases$ | async"
+								[clearable]="false"
+								bindLabel="Description"
+								[searchable]="false"
+								[ngModel]="currentPhase$ | async"
+								(change)="currentPhase$.next($event)"
+							></ng-select>
+						</div>
 					</div>
 					<div class="row">
-						<ng-select
-							class="col"
-							[items]="subjects$ | async"
-							[clearable]="false"
-							bindLabel="Name"
-							[searchable]="false"
-							[ngModel]="currentSubject$ | async"
-							(change)="currentSubject$.next($event)"
-						></ng-select>
+						<div class="col">
+							<ng-select
+								[items]="subjects$ | async"
+								[clearable]="false"
+								bindLabel="Name"
+								[searchable]="false"
+								[ngModel]="currentSubject$ | async"
+								(change)="currentSubject$.next($event)"
+							></ng-select>
+						</div>
 					</div>
-					<div class="row" *ngIf="(currentSubject$ | async)">
-						<ng-select
-							class="col"
-							[items]="traineesInSubject$ | async"
-							[clearable]="false"
-							[searchable]="false"
-							[ngModel]="currentTraineeCode$ | async"
-							(change)="currentTraineeCode$.next($event)"
-						></ng-select>
+					<div class="row">
+						<div class="col">
+							<ng-select
+								[items]="traineesInSubject$ | async"
+								[clearable]="false"
+								[searchable]="false"
+								[ngModel]="currentTraineeCode$ | async"
+								(change)="currentTraineeCode$.next($event)"
+							></ng-select>
+						</div>
 					</div>
-					<div class="row" *ngIf="(currentTraineeCode$ | async)">
-						<ng-select
-							class="col"
-							[items]="presentationsForTrainee$ | async"
-							[clearable]="false"
-							bindLabel="PresentationNo"
-							[searchable]="false"
-							[ngModel]="currentPresentation$ | async"
-							(change)="currentPresentation$.next($event)"
-						></ng-select>
+					<div class="row">
+						<div class="col">
+							<ng-select
+								[items]="presentationsForTrainee$ | async"
+								[clearable]="false"
+								bindLabel="PresentationNo"
+								[searchable]="false"
+								[ngModel]="currentPresentation$ | async"
+								(change)="currentPresentation$.next($event)"
+							></ng-select>
+						</div>
 					</div>
 				</div>
 			</rd-card>
@@ -52,7 +56,7 @@
 		<div class="col">
 			<rd-card
 				[cardTitle]="'View Presentation'"
-				[expanded]="(currentPresentation$ | async)"
+				[expanded]="currentPresentation$ | async"
 				[collapsible]="false"
 			>
 				<ng-container *ngIf="currentPresentation$ | async as presentation">
@@ -71,19 +75,16 @@
 								'text-success': status === 'Passed'
 							}"
 						>
-							<b>{{ 'Status here...' }}</b>
+							<b>{{ status }}</b>
 						</div>
-          </div>
-          <div class="row mb-3">
-            <b>Questions:</b>
-          </div>
+					</div>
+					<div class="row mb-3">
+						<b>Questions:</b>
+					</div>
 					<div class="row mb-3">
 						<div class="col v-list-m-12 v-list-bordered px-0">
 							<div class="row" *ngFor="let question of presentation?.Questions">
-								<rd-presentation-question
-									[presentation]="presentation"
-									[question]="question"
-								>
+								<rd-presentation-question [presentation]="presentation" [question]="question">
 									<!-- TODO: Add role validation here (!= Trainee) -->
 									<div class="actions" *ngIf="true">
 										<rd-confirmable-pop-up (confirm)="onDeleteQuestion(question)">

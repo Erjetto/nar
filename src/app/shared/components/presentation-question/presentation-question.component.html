@@ -1,13 +1,27 @@
-<div class="row" [routerLink]="['presentation','view-question']">
-	<div class="col-1 text-center">{{ question.Answers.length }} Answers</div>
-	<div class="col">
-		<div class="row" [innerHTML]="question.Question.Text"></div>
-		<div class="row" *ngIf="question.rightAnswer != null">
-			<p><b>Answered:</b></p>
-			<p>{{ question.rightAnswer }}</p>
-		</div>
+<div
+	class="row"
+	[routerLink]="[
+		'presentation',
+		'view-question',
+		currentGenId,
+		presentation.TraineeId,
+		question.Question.Id
+	]"
+>
+	<div class="text-center question-side-detail">
+		{{ question.Answers.length }} <br />
+		Answers
 	</div>
-	<div class="col-2">
+	<div class="col px-4">
+		<div class="row question" [innerHTML]="question.Question.Text"></div>
+		<ng-container  *ngIf="question.rightAnswer != null">
+			<div class="row">
+				<b>Answered:</b>
+			</div>
+			<div class="row answer" [innerHTML]="question.rightAnswer.Text"></div>
+		</ng-container>
+	</div>
+	<div class="d-flex flex-column justify-content-end question-side-detail question-badge">
 		<div class="row justify-content-end">
 			<!-- TODO: Put ng-container for button -->
 			<ng-content select=".actions"></ng-content>

@@ -1,0 +1,31 @@
+:host {
+	padding: 1rem;
+
+	font-size: 1.1rem;
+
+	.question-side-detail {
+		font-size: 0.85rem;
+		font-weight: bold;
+  }
+
+  .question-badge{
+    position: absolute;
+    right: 0;
+  }
+  
+  .question{
+    min-height: 60px;
+  }
+
+  .answer{
+    word-break: break-word;
+  }
+}
+
+:host(.question-correct) {
+	background: #6bf0cb4d;
+}
+
+:host(.question-wrong) {
+	background: #6bf0cb4d;
+}
