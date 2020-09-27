@@ -123,11 +123,23 @@
 				</div>
 				<div class="row" style="max-height: 600px; overflow: auto">
 					<div class="col">
-						<div
-							[class]="'row question-item question-' + question.Status"
-							*ngFor="let question of filteredQuestions$ | async"
-						>
-							<div class="col-1 text-center question-side-detail">
+						<ng-container *ngFor="let question of filteredQuestions$ | async">
+							<rd-presentation-question [presentation]="question.parent" [question]="question">
+								<div
+									class="actions"
+									*ngIf="(currentUser$ | async).Role.is(constant.role.AssistantSupervisor)"
+								>
+									<rd-confirmable-pop-up
+										title="Delete this question?"
+										(confirm)="deleteQuestion(question)"
+									>
+										<button class="btn btn-danger">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+										</button>
+									</rd-confirmable-pop-up>
+								</div>
+							</rd-presentation-question>
+							<!-- <div class="col-1 text-center question-side-detail">
 								{{ question.Answers.length }} <br />
 								Answers
 							</div>
@@ -156,8 +168,8 @@
 								<div [ngClass]="{ 'text-danger': question.DeadlinePassed }">
 									{{ question.parent.Deadline | date: viewDateFormat }}
 								</div>
-							</div>
-						</div>
+							</div> -->
+						</ng-container>
 					</div>
 				</div>
 			</rd-card>

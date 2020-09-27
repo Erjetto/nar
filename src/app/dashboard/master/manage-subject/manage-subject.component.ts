@@ -12,7 +12,7 @@ import {
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
 import { map, takeUntil, withLatestFrom, tap } from 'rxjs/operators';
-import { NgModel, NgForm } from '@angular/forms';
+import { NgModel, NgForm, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'rd-manage-subject',
@@ -22,14 +22,13 @@ import { NgModel, NgForm } from '@angular/forms';
 })
 export class ManageSubjectComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
-	currentSubjects$: Observable<ClientSubject[]>;
+	viewSubjectList$: Observable<ClientSubject[]>;
 	phases$: Observable<ClientPhase[]>;
 
 	loadingViewSubject$: Observable<boolean>;
 	loadingFormSubject$ = new BehaviorSubject<boolean>(false);
 
-	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
-	editForm$ = new BehaviorSubject<ClientSubject>(null);
+	viewCurrentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
 	size = [
 		{ key: 'byte', val: 1 },
@@ -37,12 +36,23 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 		{ key: 'MB', val: 1024 * 1024 },
 		{ key: 'GB', val: 1024 * 1024 * 1024 },
 	];
-	currentSize = this.size[0];
+	currentUnit = this.size[0];
+
+	subjectForm = this.fb.group({
+		subjectId: [''], // For update
+
+		phaseId: ['', Validators.required],
+		name: ['', Validators.required],
+		value: [false, Validators.required],
+		sizeValue: [0, Validators.required],
+		sizeUnit: [this.size[0]],
+	});
 
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
-		private masterEffects: MasterStateEffects
+		private masterEffects: MasterStateEffects,
+		private fb: FormBuilder
 	) {
 		super(store);
 	}
@@ -58,7 +68,7 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 		//#endregion
 
 		//#region Get from entity
-		this.currentSubjects$ = combineLatest([this.subjectsEntity$, this.currentPhase$]).pipe(
+		this.viewSubjectList$ = combineLatest([this.subjectsEntity$, this.viewCurrentPhase$]).pipe(
 			map(([entity, currPhase]) => {
 				if (!currPhase) return [];
 				if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
@@ -71,9 +81,10 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 		//#endregion
 
 		//#region Auto select first in array
-		this.phases$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((phases) => this.currentPhase$.next(phases[0]));
+		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((phases) => {
+			this.viewCurrentPhase$.next(phases[0]);
+			this.subjectForm.get('phaseId').setValue(phases[0]?.PhaseId);
+		});
 		//#endregion
 
 		//#region Subscribe to effects
@@ -87,8 +98,9 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 			this.masterEffects.deleteSubject$,
 			this.masterEffects.updateSubject$
 		)
-			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
+			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrentPhase$))
 			.subscribe(([action, phase]) => {
+				this.subjectForm.reset({ value: false });
 				if (!!phase)
 					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }));
 			});
@@ -97,41 +109,70 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 			this.loadingFormSubject$.next(false);
 		});
 		//#endregion
+
+		// Adjust file size when size unit changes (byte, kB, MB, GB)
+		this.subjectForm
+			.get('sizeUnit')
+			.valueChanges.pipe(takeUntil(this.destroyed$))
+			.subscribe((unit) => {
+				this.sizeControl.setValue(
+					_.max([(this.sizeControl.value * this.currentUnit.val) / unit.val, 1])
+				);
+				this.currentUnit = unit;
+			});
+
+		// Disable name edit when it's edit mode
+		this.subjectForm
+			.get('subjectId')
+			.valueChanges.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => {
+				if (!this.isEditing) this.subjectForm.get('name').enable();
+				else this.subjectForm.get('name').disable();
+			});
+
 		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
-	convertFileSize(size, currentInput: NgModel) {
-		currentInput.control.setValue(_.max([(currentInput.value * this.currentSize.val) / size.val, 1]));
-		this.currentSize = size;
+	get isEditing() {
+		return !_.isEmpty(this.subjectForm.get('subjectId').value);
 	}
 
-	selectSubject(subject) {
-		this.editForm$.next(subject);
-		this.currentSize = this.size[0];
+	get sizeControl() {
+		return this.subjectForm.get('sizeValue');
 	}
 
-	submitSubjectForm(form: NgForm) {
-		const { subjectName, maxFileSize, selectFileSize, selectPhase, hasPresentation } = form.value;
+	selectSubject(subject: ClientSubject) {
+		this.subjectForm.patchValue({
+			subjectId: subject.SubjectId,
+			name: subject.Name,
+			value: subject.HasPresentation,
+			sizeValue: subject.MaxFileSize,
+			sizeUnit: this.size[0],
+		});
+		this.subjectForm.markAsPristine(); // Useful for Update
+	}
 
-		if (!this.editForm$.value)
+	submitSubjectForm() {
+		const { subjectId, phaseId, name, value, sizeValue, sizeUnit } = this.subjectForm.value;
+
+		if (!subjectId)
 			this.store.dispatch(
 				MasterStateAction.CreateSubject({
-					name: subjectName,
-					phaseId: selectPhase,
-					value: hasPresentation,
-					maxFileSize: maxFileSize * selectFileSize.val,
+					name,
+					phaseId,
+					value,
+					maxFileSize: sizeValue * sizeUnit.val,
 				})
 			);
 		else {
-			const currSubj = this.editForm$.value;
-			const hasPresentationChanged = currSubj.HasPresentation !== hasPresentation;
-			const maxFileSizeChanged = currSubj.MaxFileSize !== maxFileSize * selectFileSize.val;
+			const hasPresentationChanged = this.subjectForm.get('hasPresentation').dirty;
+			const maxFileSizeChanged = this.subjectForm.get('sizeValue').dirty;
 
 			this.store.dispatch(
 				MasterStateAction.UpdateSubject({
-					subjectId: this.editForm$.value.SubjectId,
-					value: hasPresentationChanged ? hasPresentation : null,
-					maxFileSize: maxFileSizeChanged ? maxFileSize * selectFileSize.val : null,
+					subjectId,
+					value: hasPresentationChanged ? value : null,
+					maxFileSize: maxFileSizeChanged ? sizeValue * sizeUnit.val : null,
 				})
 			);
 		}
@@ -139,12 +180,16 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 	}
 
 	cancelEdit() {
-		this.editForm$.next(null);
+		this.subjectForm.reset({
+			phaseId: this.viewCurrentPhase$.value,
+			value: false,
+			sizeUnit: this.size[0],
+		});
 	}
 
 	deleteSubject() {
 		this.store.dispatch(
-			MasterStateAction.DeleteSubject({ subjectId: this.editForm$.value.SubjectId })
+			MasterStateAction.DeleteSubject({ subjectId: this.subjectForm.get('subjectId').value })
 		);
 		this.loadingFormSubject$.next(true);
 	}

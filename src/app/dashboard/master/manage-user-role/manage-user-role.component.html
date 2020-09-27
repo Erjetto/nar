@@ -44,39 +44,40 @@
 						<input
 							class="form-control"
               placeholder="Search by initial/roles"
-              (change)="searchText$.next($event.target.value)"
-						/>
+              [formControl]="searchTextControl"
+              />
           </div>
-          <div class="col text-light col-form-label">Note: Press 'Enter' or 'Tab' to start filter</div>
-				</div>
-				<table class="table table-sm table-striped table-hover text-center">
-					<thead>
-						<tr>
-							<th>Username</th>
-							<th>Roles</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr *ngIf="(userInRolesFiltered$ | async)?.length === 0">
-							<td colspan="4">No user...</td>
-						</tr>
-						<tr *ngFor="let user of userInRolesFiltered$ | async">
-							<td>{{ user.UserName }}</td>
-							<td>{{ user.Role }}</td>
-							<td>
-                <rd-confirmable-pop-up
-									[description]="'Delete ' + user.UserName + '?'"
-									(confirm)="deleteUserInRole(user)"
-								>
-									<button class="btn btn-xs btn-danger">
-										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
-									</button>
-								</rd-confirmable-pop-up>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+        </div>
+        <div class="row scrollable-table"  style="height:500px;">
+          <table class="table table-sm table-striped table-hover text-center">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Roles</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="(userInRolesFiltered$ | async)?.length === 0">
+                <td colspan="4">No user...</td>
+              </tr>
+              <tr *ngFor="let user of userInRolesFiltered$ | async">
+                <td>{{ user.UserName }}</td>
+                <td>{{ user.Role }}</td>
+                <td>
+                  <rd-confirmable-pop-up
+                    [description]="'Delete ' + user.UserName + '?'"
+                    (confirm)="deleteUserInRole(user)"
+                  >
+                    <button class="btn btn-xs btn-danger">
+                      <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+                    </button>
+                  </rd-confirmable-pop-up>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 			</rd-card>
 		</div>
 	</div>

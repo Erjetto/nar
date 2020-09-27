@@ -209,6 +209,10 @@ footer {
 	}
 }
 
+.pre-wrap{
+  white-space: pre-wrap;
+}
+
 // Cursor
 .cursor-pointer {
 	cursor: pointer;
@@ -240,100 +244,23 @@ footer {
 }
 
 // z-index
-// NOTE: How it's not working?
-// @for $i from 0 through 12 {
-//   .z-index-#{$i}{
-//     z-index: $i;
-//   }
-// }
 .z-index--1 {
 	z-index: -1;
 }
-.z-index-0 {
-	z-index: 0;
+@for $i from 0 through 15 {
+  .z-index-#{$i}{
+    z-index: #{$i};
+  }
 }
-.z-index-1 {
-	z-index: 1;
-}
-.z-index-2 {
-	z-index: 2;
-}
-.z-index-3 {
-	z-index: 3;
-}
-.z-index-4 {
-	z-index: 4;
-}
-.z-index-5 {
-	z-index: 5;
-}
-.z-index-10 {
-	z-index: 10;
-}
-.z-index-15 {
-	z-index: 15;
-}
-.z-index-20 {
-	z-index: 20;
-}
-.z-index-25 {
-	z-index: 25;
-}
-.z-index-30 {
-	z-index: 30;
-}
-.z-index-35 {
-	z-index: 35;
-}
-.z-index-40 {
-	z-index: 40;
-}
-.z-index-45 {
-	z-index: 45;
-}
-.z-index-50 {
-	z-index: 50;
-}
-.z-index-1000 {
-	z-index: 1000;
-}
-.z-index-1010 {
-	z-index: 1010;
-}
-.z-index-1020 {
-	z-index: 1020;
-}
-.z-index-1030 {
-	z-index: 1030;
-}
-
-// h & w
-.h-150px {
-	height: 150px !important;
-}
-.h-200px {
-	height: 200px !important;
-}
-.h-300px {
-	height: 300px !important;
-}
-.mh-150px {
-	min-height: 150px !important;
-}
-.mh-200px {
-	min-height: 200px !important;
-}
-.mh-300px {
-	min-height: 300px !important;
-}
-.w-150px {
-	width: 150px !important;
-}
-.w-200px {
-	width: 200px !important;
-}
-.w-300px {
-	width: 300px !important;
+// Max height
+// mh-0px - mh-600px
+@for $i from 2 through 16 {
+  .minh-#{$i*50}px{
+    min-height: #{$i*50}px;
+  }
+  .maxh-#{$i*50}px{
+    max-height: #{$i*50}px;
+  }
 }
 
 // text-area
@@ -344,9 +271,9 @@ footer {
 
 .confirmable-popover {
 	border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  overflow: hidden;
-  
+	border-bottom-right-radius: 10px;
+	overflow: hidden;
+
 	> .popover-header {
 		color: black;
 	}
@@ -355,46 +282,56 @@ footer {
 	}
 }
 
-.bg-excel{
-  background-color: teal;
+.bg-excel {
+	background-color: teal;
 }
 
+.scrollable-table {
+  overflow: auto;
+  position: relative;
+
+	thead {
+		position: sticky;
+		background-color: inherit;
+		top: 0;
+	}
+}
 
 .lds-ring {
-  display: inline-block;
-  position: relative;
-  width: 40px;
-  height: 40px;
+	display: inline-block;
+	position: relative;
+	width: 40px;
+	height: 40px;
 
-  div {
-    box-sizing: border-box;
-    display: block;
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    margin: 6px;
-    border: 6px solid #0069d9;
-    border-radius: 50%;
-    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #0069d9 transparent transparent transparent;
+	div {
+		box-sizing: border-box;
+		display: block;
+		position: absolute;
+		width: 32px;
+		height: 32px;
+		margin: 6px;
+		border: 6px solid #0069d9;
+		border-radius: 50%;
+		animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+		border-color: #0069d9 transparent transparent transparent;
 
-    &:nth-child(1) {
-      animation-delay: -0.45s;
-    }
-    &:nth-child(2) {
-      animation-delay: -0.3s;
-    }
-    &:nth-child(3) {
-      animation-delay: -0.15s;
-    }
-  }
+		&:nth-child(1) {
+			animation-delay: -0.45s;
+		}
+		&:nth-child(2) {
+			animation-delay: -0.3s;
+		}
+		&:nth-child(3) {
+			animation-delay: -0.15s;
+		}
+	}
 }
 
 @keyframes lds-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }

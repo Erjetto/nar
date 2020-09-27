@@ -12,6 +12,7 @@ import {
 	fromMainState,
 	PresentationStateAction,
 	fromPresentationState,
+	MainStateEffects,
 } from 'src/app/shared/store-modules';
 
 import { Observable, Subject, merge, combineLatest, BehaviorSubject } from 'rxjs';
@@ -25,7 +26,7 @@ import {
 	ClientGeneration,
 } from 'src/app/shared/models';
 import * as _ from 'lodash';
-import { takeUntil, filter, tap, withLatestFrom, switchMap } from 'rxjs/operators';
+import { takeUntil, filter, tap, withLatestFrom, switchMap, map } from 'rxjs/operators';
 
 @Component({
 	selector: 'rd-view-all-presentation',
@@ -37,12 +38,10 @@ export class ViewAllPresentationComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
 	presentations$: Observable<CoreTrainingPresentation[]>;
-	traineesInSubject$: Subject<string[]> = new Subject();
-	presentationsForTrainee$: Subject<CoreTrainingPresentation[]> = new Subject();
+	traineesInSubject$: Observable<string[]>;
+	presentationsForTrainee$: Observable<CoreTrainingPresentation[]>;
 
-	currentPresentation$: BehaviorSubject<CoreTrainingPresentation> = new BehaviorSubject(
-		null
-	);
+	currentPresentation$: BehaviorSubject<CoreTrainingPresentation> = new BehaviorSubject(null);
 	presentationStatus$: Observable<string>;
 	currentTraineeCode$: Subject<string> = new Subject();
 	currentSubject$: Subject<ClientSubject> = new Subject();
@@ -56,11 +55,12 @@ export class ViewAllPresentationComponent
 	subjectsLoading$: Observable<boolean>;
 	presentationsLoading$: Observable<boolean>;
 
-	constructor(protected store: Store<IAppState>) {
+	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
 		super(store);
 	}
 
 	ngOnInit(): void {
+		//#region Bind from store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
 		this.subjectsLoading$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
@@ -70,66 +70,77 @@ export class ViewAllPresentationComponent
 		this.presentationsLoading$ = this.store.pipe(
 			select(fromPresentationState.isPresentationsLoading)
 		);
+		//#endregion
 
-		//#region auto fetch new subject,schedule & case in first fetch
-		this.phases$ // Auto fetch subject
+		// When one of these changed, also change filtered trainees
+		// Expected list: T000 - T999
+		// Get all trainee from filtered trainee code
+		// Get all distinct trainee code that has presentation in a subject
+		this.traineesInSubject$ = combineLatest([this.currentSubject$, this.presentations$]).pipe(
+			takeUntil(this.destroyed$),
+			map(([sbj, presentations]) => [
+				...new Set<string>(
+					presentations.filter((p) => p.SubjectId === sbj?.SubjectId).map((p) => p.TraineeCode)
+				),
+			])
+		);
+
+		// get current trainee's presentation numbers (1,2,...)
+		this.presentationsForTrainee$ = combineLatest([
+			this.currentSubject$,
+			this.presentations$,
+			this.currentTraineeCode$,
+		]).pipe(
+			takeUntil(this.destroyed$),
+			map(([sbj, presentations, traineeCode]) =>
+				presentations.filter((p) => p.SubjectId === sbj?.SubjectId && p.TraineeCode === traineeCode)
+			)
+		);
+
+		//#region Auto get first value in array
+		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+			this.currentPhase$.next(res.find((p) => p.Description.includes('Core')) || res[0]);
+		});
+
+		this.subjects$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
+			this.currentSubject$.next(subjects[0]);
+		});
+
+		this.traineesInSubject$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((traineeCodes) => this.currentTraineeCode$.next(traineeCodes[0]));
+
+		this.presentationsForTrainee$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((presentations) => this.currentPresentation$.next(presentations[0]));
+		//#endregion
+
+		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe((p) => {
+			this.store.dispatch(MasterStateAction.FetchPhases());
+		});
+
+		this.currentPhase$
 			.pipe(
 				filter((res) => !_.isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe((res) => {
-				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: res[0].PhaseId }));
-				this.currentPhase$.next(res[0]);
+			.subscribe((p) => {
+				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: p.PhaseId }));
 			});
 
-		this.subjects$ // Auto fetch presentation
+		this.currentSubject$
 			.pipe(
 				filter((res) => !_.isEmpty(res)),
-				withLatestFrom(this.currentGeneration$),
-				takeUntil(this.destroyed$)
+				takeUntil(this.destroyed$),
+				withLatestFrom(this.currentGeneration$)
 			)
-			.subscribe(([subjects, gen]) => {
-				this.currentSubject$.next(subjects[0]);
+			.subscribe(([sub, gen]) => {
 				this.store.dispatch(
 					PresentationStateAction.FetchPresentations({
 						generationId: gen.GenerationId,
-						subjectId: subjects[0].SubjectId,
+						subjectId: sub.SubjectId,
 					})
 				);
-			});
-
-		// When one of these changed, also change filtered trainees
-		combineLatest([this.currentSubject$, this.presentations$])
-			.pipe(
-				filter((values) => values.every((v) => !_.isEmpty(v))),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe(([sbj, presentations]) => {
-				// Get all distinct trainee code that has presentation in a subject
-				const filteredTrainees = [
-					...new Set<string>(
-						presentations.filter((p) => p.SubjectId === sbj.SubjectId).map((p) => p.TraineeCode)
-					),
-				];
-
-				// Get all trainee from filtered trainee code
-				// this.filteredTrainees$.next(trainees.filter((t) => filteredTrainees.has(t.TraineeCode)));
-				this.traineesInSubject$.next(filteredTrainees);
-				this.currentTraineeCode$.next(filteredTrainees[0]);
-			});
-
-		// Update presentations for trainee (number)
-		combineLatest([this.currentSubject$, this.presentations$, this.currentTraineeCode$])
-			.pipe(
-				filter((values) => values.every((v) => !_.isEmpty(v))),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe(([sbj, presentations, traineeCode]) => {
-				const presentationsFromTrainee = presentations.filter(
-					(p) => p.SubjectId === sbj.SubjectId && p.TraineeCode === traineeCode
-				);
-				this.presentationsForTrainee$.next(presentationsFromTrainee);
-				this.currentPresentation$.next(presentationsFromTrainee[0]);
 			});
 
 		this.currentPresentation$ // Auto fetch Presentation Status
@@ -146,6 +157,7 @@ export class ViewAllPresentationComponent
 			});
 		//#endregion
 
+		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
 	onDeleteQuestion(qstn: CoreTrainingPresentationQuestion) {}

@@ -1,21 +1,21 @@
-:host{
-  .question-item{
-    padding: 1rem;
-    border-bottom: 1px solid lightgrey;
-    font-size: 1.1rem;
+:host {
+	.question-item {
+		padding: 1rem;
+		border-bottom: 1px solid lightgrey;
+		font-size: 1.1rem;
 
-    .question-side-detail{
-      font-size: 0.85rem;
-      font-weight: bold;
-    }
-  }
+		.question-side-detail {
+			font-size: 0.85rem;
+			font-weight: bold;
+		}
+	}
 
-  .row-checked, .question-correct{
-    background: #6bf0cb4d
-}
+	.row-checked,
+	.question-correct {
+		background: #6bf0cb4d;
+	}
 
-.question-wrong{
-    background: #f06b6b4d;
-}
-
+	.question-wrong {
+		background: #f06b6b4d;
+	}
 }

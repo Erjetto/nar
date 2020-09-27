@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Role, ClientUserInRoles } from 'src/app/shared/models';
-import { takeUntil, tap } from 'rxjs/operators';
+import { takeUntil, tap, map, startWith } from 'rxjs/operators';
 import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
@@ -11,7 +11,7 @@ import {
 	MainStateEffects,
 	MasterStateEffects,
 } from 'src/app/shared/store-modules';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormControl } from '@angular/forms';
 
 /**
  * Question:
@@ -29,9 +29,8 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 
 	roles$: Observable<Role[]>;
 	userInRoles$: Observable<ClientUserInRoles[]>;
-	userInRolesFiltered$ = new BehaviorSubject<ClientUserInRoles[]>([]);
-	searchText$ = new BehaviorSubject<string>('');
-	// searchTextTrigger$ = new BehaviorSubject<string>('');
+	userInRolesFiltered$: Observable<ClientUserInRoles[]>;
+	searchTextControl = new FormControl('');
 
 	loadingFormUserInRole$ = new BehaviorSubject<boolean>(false);
 	loadingViewUserInRole$: Observable<boolean>;
@@ -58,13 +57,15 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 		//#endregion
 
 		// Filter user in roles
-		combineLatest([this.userInRoles$, this.searchText$])
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(([users, searchText]) =>
-				this.userInRolesFiltered$.next(
-					users.filter((u) => `${u.UserName} ${u.Role}`.toLowerCase().includes(searchText))
-				)
-			);
+		this.userInRolesFiltered$ = combineLatest([
+			this.userInRoles$,
+			this.searchTextControl.valueChanges.pipe(startWith('')),
+		]).pipe(
+			takeUntil(this.destroyed$),
+			map(([users, searchText]) =>
+				users.filter((u) => `${u.UserName} ${u.Role}`.toLowerCase().includes(searchText))
+			)
+		);
 
 		merge(
 			this.masterEffects.createUserInRole$,
