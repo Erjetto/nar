@@ -69,10 +69,7 @@ export class NoteService {
 
 	public SaveEvaluationNote(data: { notes: string; sdate: Date }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'SaveEvaluationNote', {
-				...data,
-				sdate: DateHelper.toCSharpDate(data.sdate),
-			})
+			.post(this.baseUrl + 'SaveEvaluationNote', data)
 			.pipe(map((res: any) => res.d === true));
 	}
 

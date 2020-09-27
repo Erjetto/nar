@@ -53,21 +53,7 @@ export class SubcoCandidateService {
 
 	public CreateSchedules(data: { schedules: SubcoCandidateAnswerModel[] }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'CreateSchedules', {
-				schedules: _.map(
-					data.schedules,
-					// Reformat date to old Microsoft format because this backend is oooold
-					// TODO: Move this to new interceptor (HandleDateInterceptor)
-					({ Id, SubcoCandidateQuestionId, TrainerName, Answers, StartDate, EndDate }) => ({
-						Id,
-						SubcoCandidateQuestionId,
-						TrainerName,
-						Answers,
-						StartDate: DateHelper.toCSharpDate(StartDate),
-						EndDate: DateHelper.toCSharpDate(EndDate),
-					})
-				),
-			})
+			.post(this.baseUrl + 'CreateSchedules', data)
 			.pipe(map((res: any) => res.d === true));
 	}
 
