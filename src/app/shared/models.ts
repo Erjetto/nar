@@ -318,6 +318,25 @@ export class AdditionalTraineeData extends BaseModel {
 	}
 }
 
+export class SimpleTraineeData extends BaseModel {
+  constructor(
+    public DeactivateReason: TraineeDeactivateReason = null,
+    public Status = '',
+    public TraineeCode = '',
+    public TraineeId = '',
+    public TraineeName = '',
+    public TraineeNumber = '',
+  ){
+    super();
+  }
+	static fromJson(data?: any): SimpleTraineeData {
+		if (isEmpty(data)) return null;
+		return Object.assign(new SimpleTraineeData(), data, {
+      DeactivateReason: TraineeDeactivateReason.fromJson(data?.DeactivateReason)
+    });
+	}
+}
+
 export class ClientTraineeData extends BaseModel {
 	constructor(
 		public TraineeId = '',
@@ -1122,7 +1141,7 @@ export class Message extends BaseModel {
 		return (
 			`<p>${this.Note}</p>` +
 			(this.HasFile
-				? `<p><a title="'Download ${this.FileName}'" href="'File.svc/GetFile/${this.FileId}'">Download Link</a></p>`
+				? `<p><a title="Download ${this.FileName}" href="${environment.apiUrl}File.svc/GetFile/${this.FileId}">Download Link</a></p>`
 				: '')
 		);
 		// return this.Note + (this.HasFile ? `Attachments here` + this.FileName : '');
@@ -1736,7 +1755,7 @@ export class ClientEvaluationNote extends BaseModel {
 		super();
 	}
 	get evalNoteType() {
-		// [ Others ] Lorem ips... -> Others
+		// [Others] Lorem ips... -> Others
 		const res = /\[(\w+)\]/.exec(this.Notes);
 		return res ? res[1] : '';
 	}

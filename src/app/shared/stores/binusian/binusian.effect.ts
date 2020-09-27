@@ -9,7 +9,7 @@ import * as MainStateAction from '../main/main.action';
 import * as fromMainState from '../main/main.reducer';
 
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, share } from 'rxjs/operators';
+import { switchMap, mergeMap, share, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { LeaderService } from '../../services/new/leader.service';
 import { TraineeService } from '../../services/new/trainee.service';
@@ -22,6 +22,7 @@ import { TraineeAttendanceService } from '../../services/new/trainee-attendance.
 export class BinusianStateEffects {
 	constructor(
 		private actions$: Actions,
+		private leaderService: LeaderService,
 		private generalService: GeneralService,
 		private traineeService: TraineeService,
 		private traineeAttendanceService: TraineeAttendanceService
@@ -32,6 +33,16 @@ export class BinusianStateEffects {
 		ofType(BinusianStateAction.FetchTrainees),
 		switchMap(() => this.generalService.GetTrainees()),
 		mergeMap((results) => of(BinusianStateAction.FetchTraineesSuccess({ payload: results }))),
+		share()
+	);
+
+	@Effect()
+	getTraineesSimpleData$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.FetchTraineesSimpleData),
+		switchMap(() => this.leaderService.GetTraineesSimpleData()),
+		mergeMap((results) =>
+			of(BinusianStateAction.FetchTraineesSimpleDataSuccess({ payload: results }))
+		),
 		share()
 	);
 
@@ -64,18 +75,34 @@ export class BinusianStateEffects {
 				: of(MainStateAction.FailMessage('inserting lecture schedules'))
 		),
 		share()
+  );
+  
+
+	@Effect()
+	createTrainee$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.CreateTrainees),
+    switchMap((data) => this.leaderService.SaveTraineesInGeneration(data)),
+    tap(console.log),
+    mergeMap((res) =>
+			_.isEmpty(res)
+				? of(MainStateAction.SuccessfullyMessage('created trainee'))
+				: of(MainStateAction.FailMessage('creating trainee', res.join('\n')))
+		)
 	);
 
-	// @Effect()
-	// getSubjects$: Observable<Action> = this.actions$.pipe(
-	// 	ofType(CaseStateAction.FetchSubjects),
-	// 	switchMap(() => {
-	// 		return this.subjectService.getSubjects().pipe(
-	// 			mergeMap((results: any) => {
-	// 				const res = map(results, ClientSubject.fromJson);
-	// 				return of(CaseStateAction.FetchSubjectsSuccess({ payload: res }));
-	// 			})
-	// 		);
-	// 	})
-	// );
+	@Effect()
+	deleteTrainee$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.DeleteTrainee),
+    switchMap((data) => this.traineeService.Delete(data)),
+    tap(console.log),
+    mergeMap((res) =>
+      of(MainStateAction.ToastMessage({
+        messageType:'warning',
+        message: 'Result is not evaluated yet, please check the console'
+      }))
+			// !_.isEmpty(res)
+			// 	? of(MainStateAction.SuccessfullyMessage('deleted trainee'))
+			// 	: of(MainStateAction.FailMessage('deleting trainee'))
+		)
+	);
 }

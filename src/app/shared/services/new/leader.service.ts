@@ -16,6 +16,7 @@ import {
 	ClientUploadAnswer,
 	SchedulePerWeek,
 	Case,
+  SimpleTraineeData,
 } from '../../models';
 import { environment } from 'src/environments/environment';
 import * as _ from 'lodash';
@@ -321,10 +322,10 @@ export class LeaderService {
 
 	//#region Get Data
 	// SimpleTraineeData[]
-	public GetTraineesSimpleData(): Observable<ClientTrainee[]> {
+	public GetTraineesSimpleData(): Observable<SimpleTraineeData[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineesSimpleData', {})
-			.pipe(map((r: any) => _.map(r.d, ClientTrainee.fromJson)));
+			.pipe(map((r: any) => _.map(r.d, SimpleTraineeData.fromJson)));
 	}
 	public GetTraineesByPhase(data: { phaseId: string }): Observable<ClientTrainee[]> {
 		return this.httpClient
@@ -409,10 +410,10 @@ export class LeaderService {
 	}
 
 	// datas: ['CompSci, Assistant, 3, 150025626,...', ...]
-	public SaveTraineesInGeneration(data: { datas: string[] }): Observable<boolean> {
+	public SaveTraineesInGeneration(data: { datas: string[] }): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveTraineesInGeneration', data)
-			.pipe(map((res: any) => res.d === true));
+			.pipe(map((res: any) => res.d as string[]));
 	}
 
 	// datas: ['1503251513, ar, T001', ...]
@@ -493,10 +494,10 @@ export class LeaderService {
 			.pipe(map((res: any) => res.d === true));
 	}
 
-	public SaveUserInRoles(data: { userRoleId: string; usernames: string[] }): Observable<boolean> {
+	public SaveUserInRoles(data: { userRoleId: string; usernames: string[] }): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveUserInRoles', data)
-			.pipe(map((res: any) => res.d === true));
+			.pipe(map((res: any) => res.d as string[]));
 	}
 
 	//#endregion
