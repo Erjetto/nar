@@ -19,7 +19,7 @@
 					<div class="row pb-3">
 						<div class="col">
 							<ng-select
-								[items]="subjects$ | async"
+								[items]="subjectList$ | async"
 								[clearable]="false"
 								bindLabel="Name"
 								placeholder="Subject"
@@ -96,7 +96,7 @@
 								<label class="col-3 col-form-label">Subject</label>
 								<div class="col">
 									<ng-select
-										[items]="subjects$ | async"
+										[items]="subjectList$ | async"
 										[clearable]="false"
 										[searchable]="false"
 										bindLabel="Name"
@@ -195,19 +195,19 @@
 							<div class="row form-group">
 								<label class="col-4 col-form-label">Starts at</label>
 								<div class="col">
-									<input class="form-control" formControlName="scheduleDate" />
+									<input type="datetime-local" class="form-control" formControlName="scheduleDate" />
 								</div>
 							</div>
 							<div class="row form-group">
 								<label class="col-4 col-form-label">Trainer Deadline</label>
 								<div class="col">
-									<input class="form-control" formControlName="trainerDays" />
+									<input type="datetime-local" class="form-control" formControlName="trainerDays" />
 								</div>
 							</div>
 							<div class="row form-group">
 								<label class="col-4 col-form-label">Trainee Deadline</label>
 								<div class="col">
-									<input class="form-control" formControlName="traineeDays" />
+									<input type="datetime-local" class="form-control" formControlName="traineeDays" />
 								</div>
 							</div>
 						</div>
@@ -243,7 +243,10 @@
 								</button>
 							</rd-confirmable-pop-up>
 						</ng-container>
-					</div>
+          </div>
+          <div class="row justify-content-end mt-2">
+              <i>Note: datetime-local input is not supported by Firefox</i>
+          </div>
 				</form>
 			</rd-card>
 		</div>

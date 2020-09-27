@@ -220,9 +220,9 @@
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create
 						</button>
 						<rd-confirmable-pop-up
-              *ngIf="isEditing"
-              [description]="deleteReasonTemplate"
-              [title]="'Delete Schedule ' + scheduleForm.value['scheduleName'] + '?'"
+							*ngIf="isEditing"
+							[description]="deleteReasonTemplate"
+							[title]="'Delete Schedule ' + scheduleForm.value['scheduleName'] + '?'"
 							[canConfirm]="scheduleForm.value['deleteReason'] !== ''"
 							(confirm)="deleteSchedule()"
 						>
@@ -243,70 +243,68 @@
 				</form>
 			</rd-card>
 			<rd-card [cardTitle]="'Insert Trainee in Schedule'">
-				<form #insertTraineeInScheduleForm="ngForm">
+				<form [formGroup]="insertTraineeInScheduleForm">
 					<div class="row form-group">
 						<label class="col-4 col-form-label">Phase</label>
 						<div class="col">
 							<ng-select
-								id="selectPhase"
-								name="selectPhase"
 								[items]="phases$ | async"
 								[clearable]="false"
 								bindLabel="Description"
 								placeholder="Phase"
 								[searchable]="false"
-								[ngModel]="insertTraineeCurrPhase$ | async"
-								(change)="insertTraineeCurrPhase$.next($event)"
+								formControlName="phase"
 							></ng-select>
+							<!-- id="selectPhase"
+              name="selectPhase"
+								[ngModel]="insertTraineeCurrPhase$ | async"
+								(change)="insertTraineeCurrPhase$.next($event)" -->
 						</div>
 					</div>
 					<div class="row form-group">
 						<label class="col-4 col-form-label">Subject</label>
 						<div class="col">
 							<ng-select
-								id="selectSubject"
-								name="selectSubject"
 								[items]="insertTraineeSubjectList$ | async"
 								[clearable]="false"
 								bindLabel="Name"
 								placeholder="Subject"
 								[searchable]="false"
-								[ngModel]="insertTraineeCurrSubject$ | async"
-								(change)="insertTraineeCurrSubject$.next($event)"
+								formControlName="subject"
 							></ng-select>
+							<!-- id="selectSubject"
+              name="selectSubject"
+								[ngModel]="insertTraineeCurrSubject$ | async"
+								(change)="insertTraineeCurrSubject$.next($event)" -->
 						</div>
 					</div>
 					<div class="row form-group">
 						<label class="col-4 col-form-label">Schedule</label>
 						<div class="col">
 							<ng-select
-								id="selectSchedule"
-								name="selectSchedule"
 								[items]="insertTraineeScheduleList$ | async"
 								[clearable]="false"
 								bindLabel="ScheduleName"
 								placeholder="Schedule"
 								[searchable]="false"
-								[ngModel]="(insertTraineeScheduleList$ | async)[0]"
+								formControlName="schedule"
 							></ng-select>
+							<!-- id="selectSchedule"
+              name="selectSchedule"
+								[ngModel]="(insertTraineeScheduleList$ | async)[0]" -->
 						</div>
 					</div>
 					<div class="row form-group">
 						<label class="col-4 col-form-label">Trainee</label>
 						<div class="col">
 							<textarea
-								name="traineeText"
-								id="traineeText"
-								class="form-control"
-								style="resize: vertical; width: 100%"
+								class="form-control vertical-text-area"
+								formControlName="binusianNumbers"
 							></textarea>
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button
-							class="btn btn-primary"
-							(click)="insertTraineeInSchedule(insertTraineeInScheduleForm)"
-						>
+						<button class="btn btn-primary" (click)="insertTraineeInSchedule()">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert Trainee(s)
 						</button>
 					</div>
@@ -317,10 +315,10 @@
 			<rd-card [cardTitle]="'Schedule in Subject'" [isLoading]="loadingViewSchedule$ | async">
 				<div rdCardBadges>
 					<rd-confirmable-pop-up
-            (confirm)="deleteAllSchedule()"
-            [title]="'Delete All Schedule?'"
-            [description]="deleteAllReasonTemplate"
-            [canConfirm]="deleteAllReason.valid"
+						(confirm)="deleteAllSchedule()"
+						[title]="'Delete All Schedule?'"
+						[description]="deleteAllReasonTemplate"
+						[canConfirm]="deleteAllReason.valid"
 						*ngIf="(viewScheduleList$ | async)?.length > 0"
 					>
 						<ng-template #deleteAllReasonTemplate>

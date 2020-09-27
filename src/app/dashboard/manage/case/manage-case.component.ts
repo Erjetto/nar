@@ -29,19 +29,21 @@ import { DateHelper } from 'src/app/shared/utilities/date-helper';
 })
 export class ManageCaseComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	viewDateFormat = 'HH:mm, dd MMM yyyy';
-	editDateFormat = 'yyyy-MM-dd HH:mm:ss';
+	editDateFormat = 'yyyy-MM-dd\THH:mm:ss';
 	todayEditDate = DateHelper.dateToInputFormat(new Date(), this.editDateFormat);
 
 	currentViewPhase$ = new BehaviorSubject<ClientPhase>(null);
 	currentViewSubject$ = new BehaviorSubject<ClientSubject>(null);
 	currentViewSchedule$ = new BehaviorSubject<ClientSchedule>(null);
 
-	schedulesEntity$: Observable<{ [subjectId: string]: ClientSchedule[] }>;
+  schedulesEntity$: Observable<{ [subjectId: string]: ClientSchedule[] }>;
+  subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
+  
 	formScheduleList$: Observable<ClientSchedule[]>;
 	viewScheduleList$: Observable<ClientSchedule[]>;
+  subjectList$: Observable<ClientSubject[]>; 
 
 	phases$: Observable<ClientPhase[]>;
-	subjects$: Observable<ClientSubject[]>;
 	caseList$: Observable<Case[]>;
 
 	caseListLoading$: Observable<boolean>;
@@ -76,20 +78,24 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	ngOnInit(): void {
 		//#region Bind to store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
-		this.schedulesEntity$ = this.store.pipe(select(fromMasterState.getSchedulesEntity));
-		this.viewScheduleList$ = this.getScheduleFromEntity(this.currentViewSubject$);
-		this.formScheduleList$ = this.getScheduleFromEntity(
+		this.subjectsEntity$ = this.store.pipe(select(fromMasterState.getSubjectsEntity));
+    this.schedulesEntity$ = this.store.pipe(select(fromMasterState.getSchedulesEntity));
+    
+		this.subjectList$ = this.getSubjectsFromEntity(this.currentViewPhase$);
+		this.viewScheduleList$ = this.getSchedulesFromEntity(this.currentViewSubject$);
+		this.formScheduleList$ = this.getSchedulesFromEntity(
 			this.caseForm.get('subject').valueChanges,
 			this.formCaseLoading$
-		);
+    );
+    
 		this.viewCaseLoading$ = this.store.pipe(
 			select(fromMasterState.getMasterState),
 			map((v) => v.loadingPhases || v.loadingSubjects || v.loadingSchedules)
 		);
 
 		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
-		this.caseListLoading$ = this.store.pipe(select(fromCaseState.getCasesLoading));
+    this.caseListLoading$ = this.store.pipe(select(fromCaseState.getCasesLoading));
+    
 		// Get uploaded files to caseForm
 		this.store
 			.pipe(
@@ -107,17 +113,19 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 
 		//#region auto select first in array
 		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			if (!_.isEmpty(res)) this.currentViewPhase$.next(res[0]);
+      this.currentViewPhase$.next(res[0]);
 		});
-		this.subjects$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			if (!_.isEmpty(res)) this.currentViewSubject$.next(res[0]);
+		this.subjectList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+			this.currentViewSubject$.next(res[0]);
+      this.caseForm.get('subject').setValue(res[0]);
 		});
 		this.viewScheduleList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			if (!_.isEmpty(res)) this.currentViewSchedule$.next(res[0]);
+			this.currentViewSchedule$.next(res[0]);
+      this.caseForm.get('scheduleId').setValue(res[0]?.ScheduleId);
 		});
 		//#endregion
 
-		//#region auto fetch new subject,schedule & case
+		//#region Subscribe to effects
 		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.formCaseLoading$.next(false));
@@ -125,14 +133,6 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		this.mainEffects.changeGen$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
-
-		this.currentViewPhase$.pipe(takeUntil(this.destroyed$)).subscribe((phase) => {
-			if (phase) this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: phase.PhaseId }));
-		});
-
-		this.currentViewSubject$.pipe(takeUntil(this.destroyed$)).subscribe((s) => {
-			if (s) this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: s.SubjectId }));
-		});
 
 		merge(
 			this.currentViewSchedule$,
@@ -142,6 +142,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => {
+        this.cancelEdit(); // Reset form
 				if (this.currentViewSchedule$.value)
 					this.store.dispatch(
 						CaseStateAction.FetchCases({ scheduleId: this.currentViewSchedule$.value.ScheduleId })
@@ -173,7 +174,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 				scheduleId: ' ',
 				subject: ' ',
 			},
-			{ emitEvent: false } // Prevent loading subject or schedule by changing value
+			{ emitEvent: false } // Prevent loading subject or schedule when changing value
 		);
 	}
 
@@ -236,7 +237,24 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		);
 	}
 
-	getScheduleFromEntity(subjectObservable: Observable<ClientSubject>, loader?: Subject<boolean>) {
+	getSubjectsFromEntity(phaseObservable: Observable<ClientPhase>, loader?: Subject<boolean>) {
+		return combineLatest([this.subjectsEntity$, phaseObservable]).pipe(
+			map(([entity, currPhase]) => {
+				if (!currPhase) return [];
+				if (!!currPhase && !!entity[currPhase.PhaseId]) {
+					loader?.next(false);
+					return entity[currPhase.PhaseId];
+				} else {
+					loader?.next(true);
+					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
+					return [];
+				}
+			}),
+			distinctUntilChanged()
+		);
+	}
+
+	getSchedulesFromEntity(subjectObservable: Observable<ClientSubject>, loader?: Subject<boolean>) {
 		return combineLatest([this.schedulesEntity$, subjectObservable]).pipe(
 			map(([entity, currSubj]) => {
 				if (!currSubj) return [];

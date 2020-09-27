@@ -1,28 +1,21 @@
 <div class="container-lg">
 	<div class="row">
-		<div class="col-6">
+		<div class="col-4">
 			<rd-card
-				[cardTitle]="(editForm$ | async) ? 'Edit Generation' : 'Insert New Generation'"
-				[collapsible]="false"
+				[cardTitle]="isEditing ? 'Edit Generation' : 'Insert New Generation'"
 				[isLoading]="loadingFormGen$ | async"
-        >
-				<div rdCardBadges class="" *ngIf="editForm$ | async">
+				[expanded]="isEditing"
+			>
+				<div rdCardBadges class="" *ngIf="isEditing">
 					<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
-				<form #genForm="ngForm">
-					<input type="hidden" name="genId" [ngModel]="(editForm$ | async)?.GenerationId" />
+				<form [formGroup]="generationForm">
 					<div class="row form-group">
-						<label for="genName" class="col-3 col-form-label">Name</label>
+						<label class="col-3 col-form-label">Name</label>
 						<div class="col">
-							<input
-								type="text"
-								class="form-control"
-								name="genName"
-								[ngModel]="(editForm$ | async)?.Description"
-								required
-							/>
+							<input class="form-control" formControlName="generationName" />
 						</div>
 					</div>
 					<div class="row form-group">
@@ -32,11 +25,9 @@
 								<input
 									type="radio"
 									id="oddSemRadio"
-									name="semesterRadio"
 									class="custom-control-input"
-									[ngModel]="(editForm$ | async)?.Semester"
 									value="Odd"
-									required
+									formControlName="semester"
 								/>
 								<label class="custom-control-label" for="oddSemRadio">Odd</label>
 							</div>
@@ -44,11 +35,9 @@
 								<input
 									type="radio"
 									id="eventSemRadio"
-									name="semesterRadio"
 									class="custom-control-input"
-									[ngModel]="(editForm$ | async)?.Semester"
 									value="Even"
-									required
+									formControlName="semester"
 								/>
 								<label class="custom-control-label" for="eventSemRadio">Even</label>
 							</div>
@@ -56,55 +45,40 @@
 								<input
 									type="radio"
 									id="compactSemRadio"
-									name="semesterRadio"
 									class="custom-control-input"
-									[ngModel]="(editForm$ | async)?.Semester"
 									value="Compact"
-									required
+									formControlName="semester"
 								/>
 								<label class="custom-control-label" for="compactSemRadio">Compact</label>
 							</div>
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="lastYear" class="col-3 col-form-label">Last Year</label>
+						<label class="col-3 col-form-label">Last Year</label>
 						<div class="col">
-							<input
-								type="number"
-								class="form-control"
-								name="lastYear"
-                [ngModel]="(editForm$ | async)?.Year"
-								required
-							/>
+							<input type="number" class="form-control" formControlName="year" />
 						</div>
 					</div>
 					<div class="row justify-content-around">
 						<button
 							class="btn btn-primary"
-              *ngIf="!(editForm$ | async)"
-              [disabled]="!genForm.valid"
-							(click)="submitGenForm(genForm)"
+							*ngIf="!isEditing"
+							[disabled]="generationForm.invalid"
+							(click)="submitGenForm()"
 						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Generation
 						</button>
 						<button
 							class="btn btn-primary"
-							*ngIf="editForm$ | async"
-              [disabled]="!genForm.valid"
-							(click)="submitGenForm(genForm)"
+							*ngIf="isEditing"
+							[disabled]="generationForm.invalid"
+							(click)="submitGenForm()"
 						>
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Change(s)
 						</button>
-						<!-- <rd-confirmable-pop-up *ngIf="(editForm$|async)">
-              <button class="btn btn-danger">
-                <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Generation
-              </button>
-						</rd-confirmable-pop-up> -->
 					</div>
 				</form>
 			</rd-card>
-		</div>
-		<div class="col">
 			<rd-card
 				[cardTitle]="'Generation List'"
 				[collapsible]="false"
@@ -133,6 +107,125 @@
 						</tr>
 					</tbody>
 				</table>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card
+				[cardTitle]="'Insert/Update Trainee in Generation'"
+				[isLoading]="loadingFormTrainee$ | async"
+				[expanded]="isEditing"
+			>
+				<div rdCardBadges class="" *ngIf="isEditing">
+					<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
+						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
+					</button>
+				</div>
+				<form>
+					<div class="row form-group">
+						<ul>
+							<li>
+								The input format must be: Major, Information Source, Registration Code, Binusian
+								Number, Semester, Gender, Handphone, Email, Registration Date, IP Address, Identity
+								Number, Trainee Code, Is Active
+							</li>
+							<li>Handphone, email, Identity Number can be filled with null</li>
+							<li>
+								There is no problem if Registrant Code has already exist in server (duplicated)
+							</li>
+							<li>Trainee Code not filled if that student is only BEE+ Member</li>
+							<li>
+								Trainee Code only filled when that student joined the assistant recruitment
+								(trainee)
+							</li>
+							<li>
+								Fill 1 in "Is Active" field if you want to mark this student as active member,
+								otherwise fill 0
+							</li>
+							<li>
+								Fill Now in "Registration Date" if you want to fill this field with current date
+							</li>
+							<li>
+								For Example
+								<ul>
+									<li>
+										Computer Science, Assistant, 3, 1500123456, 3, Male, 081254654213,
+										John@yahoo.com, 2012-12-14 12:35, 127.0.0.1, 1234567890, T001, 1
+									</li>
+									<li>
+										Computer Science, Friends, 4, 1500123456, 5, Male, , , Now, 192.168.2.10, , ,1
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<textarea
+							class="form-control vertical-text-area minh-300px"
+							[formControl]="traineeText"
+						></textarea>
+					</div>
+					<div class="row justify-content-around">
+						<button
+							class="btn btn-primary"
+							[disabled]="traineeText.invalid"
+							(click)="submitTraineeForm()"
+						>
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert/Update
+            </button>
+						<!-- <rd-confirmable-pop-up *ngIf="(editForm$|async)">
+              <button class="btn btn-danger">
+                <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Generation
+              </button>
+						</rd-confirmable-pop-up> -->
+					</div>
+				</form>
+			</rd-card>
+			<rd-card
+				[cardTitle]="'Trainees in ' + (currentGeneration$ | async)?.Description"
+				[collapsible]="false"
+				[isLoading]="loadingViewTrainee$ | async"
+			>
+				<div class="row form-group">
+					<div class="col-6">
+						<input
+							class="form-control"
+							placeholder="Search by number / code / name"
+							[formControl]="searchTextControl"
+						/>
+					</div>
+        </div>
+        <div class="row scrollable-table maxh-500px">
+          <table class="table table-sm table-striped table-hover text-center">
+            <thead>
+              <tr>
+                <th>Binusian Number</th>
+                <th>Trainee Code</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody style="max-height: 600px; overflow-y: auto">
+              <tr *ngIf="(currentGenTraineesFiltered$ | async)?.length === 0">
+                <td colspan="5">No trainees....</td>
+              </tr>
+              <tr *ngFor="let trainee of currentGenTraineesFiltered$ | async" class="cursor-pointer">
+                <td>{{ trainee.TraineeNumber }}</td>
+                <td>{{ trainee.TraineeCode }}</td>
+                <td>{{ trainee.TraineeName }}</td>
+                <td>{{ trainee.Status }}</td>
+                <td>
+                  <rd-confirmable-pop-up
+                    [description]="'Delete ' + trainee.TraineeName + '?'"
+                    (confirm)="deleteTrainee(trainee)"
+                  >
+                    <button class="btn btn-xs btn-danger">
+                      <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+                    </button>
+                  </rd-confirmable-pop-up>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 			</rd-card>
 		</div>
 	</div>

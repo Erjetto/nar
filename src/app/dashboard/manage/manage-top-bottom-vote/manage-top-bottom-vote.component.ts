@@ -1,22 +1,14 @@
-import {
-	Component,
-	OnInit,
-	ChangeDetectionStrategy,
-	OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, merge } from 'rxjs';
 import {
 	ClientTrainee,
 	TopBottomVoteSchedule,
 	TopBottomVote,
 	TrainerTopBottomVote,
 } from 'src/app/shared/models';
-import {
-	takeUntil,
-	filter,
-} from 'rxjs/operators';
+import { takeUntil, filter, debounceTime } from 'rxjs/operators';
 import * as _ from 'lodash';
 import {
 	VoteStateAction,
@@ -24,9 +16,11 @@ import {
 	BinusianStateAction,
 	fromBinusianState,
 	MainStateEffects,
+	VoteStateEffects,
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { DateHelper } from 'src/app/shared/utilities/date-helper';
 
 @Component({
 	selector: 'rd-manage-top-bottom-vote',
@@ -40,10 +34,10 @@ export class ManageTopBottomVoteComponent
 	viewDateFormat = 'dd MMM yyyy';
 
 	voteSchedules$: Observable<TopBottomVoteSchedule[]>;
-	traineeVotes$: Observable<TopBottomVote[]>;
-	trainerVotes$: Observable<TrainerTopBottomVote[]>;
+	traineeVotesFiltered$: Observable<TopBottomVote[]>;
+	trainerVotesFiltered$: Observable<TrainerTopBottomVote[]>;
 
-	searchText$ = new BehaviorSubject<string>('');
+	searchTextControl = new FormControl('', { updateOn: 'blur' });
 	currentVote: 'trainer' | 'trainee' = 'trainee';
 
 	loadingViewVoteSchedule$: Observable<boolean>;
@@ -53,8 +47,22 @@ export class ManageTopBottomVoteComponent
 	traineesEntity: { [id: string]: ClientTrainee }; // for get trainee name by id
 	trainees$ = new BehaviorSubject<ClientTrainee[]>([]); // for get trainee name by id
 	editForm$ = new BehaviorSubject<TopBottomVoteSchedule>(null);
+	voteForm = this.fb.group({
+		scheduleId: [''], // For Update
 
-	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
+		scheduleName: ['', Validators.required],
+		voteCount: [1, Validators.required],
+		startDate: ['', Validators.required],
+		endDate: ['', Validators.required],
+		isForTrainer: [false],
+	});
+
+	constructor(
+		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private voteEffects: VoteStateEffects,
+		private fb: FormBuilder
+	) {
 		super(store);
 	}
 
@@ -70,8 +78,8 @@ export class ManageTopBottomVoteComponent
 			.subscribe((res) => (this.traineesEntity = res));
 
 		this.voteSchedules$ = this.store.pipe(select(fromVoteState.getVoteSchedules));
-		this.traineeVotes$ = this.store.pipe(select(fromVoteState.getTraineeVotesFiltered));
-		this.trainerVotes$ = this.store.pipe(select(fromVoteState.getTrainerVotesFiltered));
+		this.traineeVotesFiltered$ = this.store.pipe(select(fromVoteState.getTraineeVotesFiltered));
+		this.trainerVotesFiltered$ = this.store.pipe(select(fromVoteState.getTrainerVotesFiltered));
 
 		this.loadingViewVoteResult$ = this.store.pipe(select(fromVoteState.isVoteResultLoading));
 		this.loadingViewVoteSchedule$ = this.store.pipe(select(fromVoteState.isVoteScheduleLoading));
@@ -81,9 +89,22 @@ export class ManageTopBottomVoteComponent
 		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.loadingFormVoteSchedule$.next(false));
+
+		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+			this.store.dispatch(BinusianStateAction.FetchTrainees());
+			this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
+		});
+
+		merge(
+			this.voteEffects.createTopBottomVoteSchedules$,
+			this.voteEffects.updateTopBottomVoteSchedules$,
+			this.voteEffects.deleteTopBottomVoteSchedules$
+		)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules()));
 		//#endregion
 
-		this.searchText$
+		this.searchTextControl.valueChanges
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((text) =>
 				this.store.dispatch(VoteStateAction.SetFilterText({ filterText: text }))
@@ -93,9 +114,20 @@ export class ManageTopBottomVoteComponent
 		this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
 	}
 
+	get isEditing() {
+		return !_.isEmpty(this.voteForm.get('scheduleId').value);
+	}
 
 	selectSchedule(row: TopBottomVoteSchedule) {
-		this.editForm$.next(row);
+		this.voteForm.patchValue({
+			scheduleId: row.ScheduleId,
+			scheduleName: row.ScheduleName,
+			voteCount: row.VoteCount,
+			startDate: DateHelper.dateToInputFormat(row.StartDate),
+			endDate: DateHelper.dateToInputFormat(row.EndDate),
+			isForTrainer: row.isForTrainer,
+		});
+
 		this.store.dispatch(
 			VoteStateAction.FetchTopBottomVotesForSchedule({ scheduleId: row.ScheduleId })
 		);
@@ -105,32 +137,20 @@ export class ManageTopBottomVoteComponent
 	}
 
 	cancelEdit() {
-		this.editForm$.next(null);
+		this.voteForm.reset({
+			isForTrainer: false,
+			voteCount: 1,
+		});
 	}
 
-	submitForm(form: NgForm) {
-		const { ScheduleName, AmountVote, StartDate, EndDate, isForTrainerCheck } = form.value;
-		if (!this.editForm$.value)
-			this.store.dispatch(
-				VoteStateAction.CreateTopBottomVoteSchedule({
-					scheduleName: ScheduleName,
-					voteCount: AmountVote,
-					startDate: StartDate,
-					endDate: EndDate,
-					isForTrainer: isForTrainerCheck.checked,
-				})
-			);
-		else
-			this.store.dispatch(
-				VoteStateAction.UpdateTopBottomVoteSchedule({
-					scheduleId: this.editForm$.value.ScheduleId,
-					scheduleName: ScheduleName,
-					voteCount: AmountVote,
-					startDate: StartDate,
-					endDate: EndDate,
-					isForTrainer: isForTrainerCheck.checked,
-				})
-			);
+	submitForm() {
+		this.loadingFormVoteSchedule$.next(true);
+		const values = this.voteForm.value;
+		values.startDate = new Date(values.startDate);
+		values.endDate = new Date(values.endDate);
+
+		if (!this.isEditing) this.store.dispatch(VoteStateAction.CreateTopBottomVoteSchedule(values));
+		else this.store.dispatch(VoteStateAction.UpdateTopBottomVoteSchedule(values));
 	}
 
 	getTrainee(traineeId: string): ClientTrainee {
@@ -138,6 +158,7 @@ export class ManageTopBottomVoteComponent
 	}
 
 	deleteVoteSchedule() {
+		this.loadingFormVoteSchedule$.next(true);
 		this.store.dispatch(
 			VoteStateAction.DeleteTopBottomVoteSchedule({
 				scheduleId: this.editForm$.value.ScheduleId,

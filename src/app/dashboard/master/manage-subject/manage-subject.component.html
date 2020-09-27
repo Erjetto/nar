@@ -2,64 +2,52 @@
 	<div class="row">
 		<div class="col-4">
 			<rd-card
-				[cardTitle]="(editForm$ | async) ? 'Edit Subject' : 'Insert New Subject'"
+				[cardTitle]="(isEditing) ? 'Edit Subject' : 'Insert New Subject'"
 				[isLoading]="loadingFormSubject$ | async"
 			>
-				<div rdCardBadges class="" *ngIf="editForm$ | async">
+				<div rdCardBadges class="" *ngIf="isEditing">
 					<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
-				<form #subjectForm="ngForm">
+				<form [formGroup]="subjectForm">
 					<div class="row form-group">
 						<label for="subjectName" class="col-4 col-form-label"> Subject </label>
 						<div class="col">
-							<input
-								type="text"
-								class="form-control"
-								name="subjectName"
-								[ngModel]="(editForm$ | async)?.Name"
-								[disabled]="editForm$ | async"
-							/>
+							<input class="form-control" formControlName="name"/>
 						</div>
 					</div>
-					<div class="row form-group" [hidden]="!(editForm$ | async)">
+					<div class="row form-group" [hidden]="!isEditing">
 						<label for="maxFileSize" class="col-4 col-form-label"> Max File Size </label>
 						<div class="col-5">
-							<input
-								#fileSizeInput="ngModel"
-								type="text"
-								class="form-control"
-								name="maxFileSize"
-								[ngModel]="(editForm$ | async)?.MaxFileSize"
-							/>
+							<input class="form-control" formControlName="sizeValue" />
+							<!-- #fileSizeInput="ngModel" -->
+							<!-- [ngModel]="(isEditing)?.MaxFileSize" -->
 						</div>
 						<div class="col">
 							<ng-select
-								id="selectFileSize"
-								name="selectFileSize"
 								[items]="size"
 								bindLabel="key"
 								[searchable]="false"
 								[clearable]="false"
-								[ngModel]="currentSize"
-								(change)="convertFileSize($event, fileSizeInput)"
+								formControlName="sizeUnit"
 							></ng-select>
+							<!-- [ngModel]="currentSize" -->
+							<!-- (change)="convertFileSize($event, fileSizeInput)" -->
 						</div>
 					</div>
-					<div class="row form-group" [hidden]="(editForm$ | async)">
+					<div class="row form-group" [hidden]="isEditing">
 						<label for="endDate" class="col-4 col-form-label">Phase</label>
 						<div class="col">
 							<ng-select
-								id="selectPhase"
-								name="selectPhase"
 								[items]="phases$ | async"
 								[clearable]="false"
 								bindLabel="Description"
 								[bindValue]="'PhaseId'"
 								[searchable]="false"
-								[ngModel]="(phases$ | async)[0]?.PhaseId"
+								formControlName="phaseId"
 							></ng-select>
+							<!-- [ngModel]="(phases$ | async)[0]?.PhaseId" -->
 						</div>
 					</div>
 					<div class="row form-group">
@@ -68,32 +56,26 @@
 							<div class="custom-control custom-checkbox">
 								<input
 									type="checkbox"
-									class="custom-control-input"
 									id="hasPresentation"
-									name="hasPresentation"
-                  [checked]="(editForm$ | async)?.HasPresentation"
-                  ngModel
+									class="custom-control-input"
+									formControlName="value"
 								/>
+								<!-- id="hasPresentation"
+                  name="hasPresentation"
+									[checked]="(isEditing)?.HasPresentation"
+									ngModel -->
 								<label class="custom-control-label" for="hasPresentation"> Has Presentation </label>
 							</div>
 						</div>
 					</div>
 					<div class="row justify-content-around">
-						<button
-							class="btn btn-primary"
-							*ngIf="!(editForm$ | async)"
-							(click)="submitSubjectForm(subjectForm)"
-						>
+						<button class="btn btn-primary" *ngIf="!isEditing" (click)="submitSubjectForm()">
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create Subject
 						</button>
-						<button
-							class="btn btn-primary"
-							*ngIf="editForm$ | async"
-							(click)="submitSubjectForm(subjectForm)"
-						>
+						<button class="btn btn-primary" *ngIf="isEditing" (click)="submitSubjectForm()">
 							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
 						</button>
-						<rd-confirmable-pop-up *ngIf="editForm$ | async" (confirm)="deleteSubject()">
+						<rd-confirmable-pop-up *ngIf="isEditing" (confirm)="deleteSubject()">
 							<button class="btn btn-danger">
 								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 							</button>
@@ -107,15 +89,13 @@
 				<div class="row form-group">
 					<div class="col-6">
 						<ng-select
-							id="selectPhase"
-							name="selectPhase"
 							[items]="phases$ | async"
 							[clearable]="false"
 							bindLabel="Description"
 							[searchable]="false"
-							[ngModel]="currentPhase$ | async"
+							[ngModel]="viewCurrentPhase$ | async"
 							required
-							(change)="currentPhase$.next($event)"
+							(change)="viewCurrentPhase$.next($event)"
 						></ng-select>
 					</div>
 				</div>
@@ -128,11 +108,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngIf="(currentSubjects$ | async)?.length === 0">
+						<tr *ngIf="(viewSubjectList$ | async)?.length === 0">
 							<td colspan="3">No subject yet</td>
 						</tr>
 						<tr
-							*ngFor="let subject of currentSubjects$ | async"
+							*ngFor="let subject of viewSubjectList$ | async"
 							class="cursor-pointer"
 							(click)="selectSubject(subject)"
 						>

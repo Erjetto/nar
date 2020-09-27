@@ -63,11 +63,19 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		scheduleType: ['daily'],
 		scheduleName: ['', Validators.required],
 		scheduleCount: [1, Validators.min(1)],
-		scheduleDates: this.fb.array(['']),
+		scheduleDates: this.fb.array([
+      this.fb.control('', Validators.required)
+    ]),
 		deleteReason: [''],
-  });
+	});
 	deleteAllReason = new FormControl('', Validators.required);
-  
+	insertTraineeInScheduleForm = this.fb.group({
+		binusianNumbers: ['', Validators.required],
+		phase: ['', Validators.required],
+		subject: ['', Validators.required],
+		schedule: ['', Validators.required],
+	});
+
 	variations = 1;
 	meetingPerWeek = 0;
 	meetings: {
@@ -154,22 +162,25 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			// this.loadingViewSchedule$
 		);
 		this.insertTraineeSubjectList$ = this.getSubjectFromEntity(
-			this.insertTraineeCurrPhase$,
+			// this.insertTraineeCurrPhase$,
+			this.insertTraineeInScheduleForm.get('phase').valueChanges,
 			this.loadingFormTraineeInSchedule$
 		);
 		this.viewScheduleList$ = this.getScheduleFromEntity(
 			this.viewCurrSubject$,
 			this.loadingViewSchedule$
 		);
-		this.insertTraineeScheduleList$ = this.getScheduleFromEntity(this.insertTraineeCurrSubject$);
+		this.insertTraineeScheduleList$ = this.getScheduleFromEntity(
+			this.insertTraineeInScheduleForm.get('subject').valueChanges,
+			this.loadingFormTraineeInSchedule$
+		);
 		//#endregion
 
 		//#region Auto select first in array
 		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((phases) => {
 			this.scheduleForm.get('phase').setValue(phases[0]);
-
+			this.insertTraineeInScheduleForm.get('phase').setValue(phases[0]);
 			this.viewCurrPhase$.next(phases[0]);
-			this.insertTraineeCurrPhase$.next(phases[0]);
 		});
 
 		this.formSubjectList$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
@@ -177,16 +188,24 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		});
 
 		this.viewSubjectList$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
-			this.viewCurrSubject$.next(subjects[0]);
+			this.viewCurrSubject$.next(subjects[0]); 
 		});
 
 		this.viewScheduleList$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((schedules) => this.viewCurrSchedule$.next(schedules[0]));
 
+      // Insert Trainee in Schedule Form
 		this.insertTraineeSubjectList$
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe((subjects) => this.insertTraineeCurrSubject$.next(subjects[0]));
+			.subscribe((subjects) =>
+				this.insertTraineeInScheduleForm.get('subject').setValue(subjects[0])
+			);
+		this.insertTraineeScheduleList$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((schedules) =>
+				this.insertTraineeInScheduleForm.get('schedule').setValue(schedules[0])
+			);
 		//#endregion
 
 		//#region Subscribe to effects
@@ -211,10 +230,9 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrSubject$))
 			.subscribe(([act, sub]) => {
-        // Reset except phase & subject ng-select
+				// Reset except phase & subject ng-select
 				const { phase, subjectId } = this.scheduleForm.value;
-        this.scheduleForm.reset({ phase, subjectId });
-        
+				this.scheduleForm.reset({ phase, subjectId });
 				if (!!sub)
 					this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: sub.SubjectId }));
 			});
@@ -247,7 +265,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	}
 	//#region Easy get scheduleForm
 	get isEditing() {
-		return !!this.scheduleForm.get('currentSchedule').value;
+		return !_.isEmpty(this.scheduleForm.get('currentSchedule').value);
 	}
 	get scheduleDates(): FormArray {
 		return this.scheduleForm.get('scheduleDates') as FormArray;
@@ -299,10 +317,13 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 				reason: deleteReason,
 			})
 		);
+		this.loadingFormSchedule$.next(true);
 	}
 
 	deleteAllSchedule() {
-		this.store.dispatch(MasterStateAction.DeleteAllSchedule({ reason: this.deleteAllReason.value }));
+		this.store.dispatch(
+			MasterStateAction.DeleteAllSchedule({ reason: this.deleteAllReason.value })
+		);
 		this.loadingFormSchedule$.next(true);
 	}
 
@@ -343,18 +364,16 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		// console.log(this.meetings);
 	}
 
-	insertTraineeInSchedule(form: NgForm) {
-		const { selectSubject, selectSchedule, selectPhase, traineeText } = form.value;
-
-		if (this.editForm$.value == null)
-			this.store.dispatch(
-				MasterStateAction.CreateTraineeInSchedule({
-					binusianNumbers: traineeText.split('\n'),
-					phaseId: selectPhase.PhaseId,
-					subjectId: selectSubject.SubjectId,
-					scheduleId: selectSchedule.ScheduleId,
-				})
-			);
+	insertTraineeInSchedule() {
+		const { binusianNumbers, phase, subject, schedule } = this.insertTraineeInScheduleForm.value;
+		this.store.dispatch(
+			MasterStateAction.CreateTraineeInSchedule({
+				binusianNumbers: binusianNumbers.split('\n'),
+				phaseId: phase.PhaseId,
+				subjectId: subject.SubjectId,
+				scheduleId: schedule.ScheduleId,
+			})
+		);
 		this.loadingFormTraineeInSchedule$.next(true);
 	}
 
@@ -375,7 +394,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 					return [];
 				}
 			}),
-      distinctUntilChanged()
+			distinctUntilChanged()
 		);
 	}
 
@@ -392,7 +411,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 					return [];
 				}
 			}),
-      distinctUntilChanged()
+			distinctUntilChanged()
 		);
 	}
 }
