@@ -1,32 +1,35 @@
-<div class="card__title" (click)="toggleMinimized()" >
-  <span>{{ cardTitle }}</span>
-  <div class="badges" rdClickStopPropagation>
-    <ng-content select="[rdCardBadges]"></ng-content>
-    
-    <!-- <button class="btn btn-sm btn-secondary" >
+<div class="card__title" (click)="toggleMinimized()">
+	<span>{{ cardTitle }}</span>
+	<div class="badges" rdClickStopPropagation>
+		<ng-content select="[rdCardBadges]"></ng-content>
+
+		<!-- <button class="btn btn-sm btn-secondary" >
       <fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
     </button> -->
-  </div>
+	</div>
 </div>
 <div class="card__body row" [@dropdown]="expanded ? 'expand' : 'collapse'">
-<!-- <div class="card__body row"> -->
-  <div class="col">
-    <ng-content></ng-content>
-  </div>
+	<!-- <div class="card__body row"> -->
+	<div class="col">
+		<ng-content></ng-content>
+	</div>
 	<!-- <div class="card__loader"> -->
 	<div
 		class="size-cover card__cover z-index-10"
-    [@faderAnimation]="isLoading ? 'shown' : 'hidden'"
+		[@faderAnimation]="isLoading ? 'shown' : 'hidden'"
 	></div>
 </div>
 
-<div class="click-through absolute-center z-index--1" [class.z-index-15]="isLoading">
-  <span [@swipeAnimation]="isLoading ? 'shown' : 'hidden'">
-    <div class="lds-ring">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </span>
+<div
+	class="click-through absolute-center"
+	[ngClass]="{ 'z-index-15': isLoading, 'z-index--1': isLoading }"
+>
+	<span [@swipeAnimation]="isLoading ? 'shown' : 'hidden'">
+		<div class="lds-ring">
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+	</span>
 </div>

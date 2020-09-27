@@ -49,13 +49,25 @@ export class VoteStateEffects {
 	);
 
 	@Effect()
+	createTopBottomVoteSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(VoteStateAction.CreateTopBottomVoteSchedule),
+		switchMap((data) => this.leaderService.SaveTopBottomVoteSchedule(data)),
+		mergeMap((res) =>
+			res != null
+				? of(MainStateAction.SuccessfullyMessage('created schedule'))
+				: of(MainStateAction.FailMessage('creating schedule'))
+		),
+		share()
+	);
+
+	@Effect()
 	updateTopBottomVoteSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(VoteStateAction.UpdateTopBottomVoteSchedule),
 		switchMap((data) => this.leaderService.UpdateTopBottomVoteSchedule(data)),
 		mergeMap((res) =>
 			res != null
-				? of(MainStateAction.SuccessfullyMessage('update schedule'))
-				: of(MainStateAction.FailMessage('deleting schedule'))
+				? of(MainStateAction.SuccessfullyMessage('updated schedule'))
+				: of(MainStateAction.FailMessage('updating schedule'))
 		),
 		share()
 	);
@@ -66,7 +78,7 @@ export class VoteStateEffects {
 		switchMap((data) => this.leaderService.DeleteTopBottomVoteSchedule(data)),
 		mergeMap((res) =>
 			res === false
-				? of(MainStateAction.SuccessfullyMessage('delete schedule'))
+				? of(MainStateAction.SuccessfullyMessage('deleted schedule'))
 				: of(MainStateAction.FailMessage('deleting schedule'))
 		),
 		share()

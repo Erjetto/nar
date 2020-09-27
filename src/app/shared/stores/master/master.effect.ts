@@ -36,6 +36,7 @@ import { VoteService } from 'src/app/shared/services/new/vote.service';
 import { IAppState } from 'src/app/app.reducer';
 
 import { ClientTrainee } from 'src/app/shared/models';
+import * as _ from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -181,9 +182,9 @@ export class MasterStateEffects {
 		ofType(MasterStateAction.CreateUserInRole),
 		switchMap((data) => this.leaderService.SaveUserInRoles(data)),
 		mergeMap((res) =>
-			!!res
+			_.isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created users'))
-				: of(MainStateAction.FailMessage('creating users'))
+				: of(MainStateAction.FailMessage('creating users', res.join('\n')))
 		),
 		share()
 	);
@@ -385,8 +386,12 @@ export class MasterStateEffects {
 	@Effect()
 	deleteSubject$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.DeleteSubject),
-		switchMap((data) => of(MainStateAction.NotImplementedMessage('deleting phase'))),
-		share()
+		switchMap((data) => this.leaderService.DeleteSubject(data)),
+		mergeMap((res) =>
+			res
+				? of(MainStateAction.SuccessfullyMessage('deleted subject'))
+				: of(MainStateAction.FailMessage('delete subject'))
+		),
 	);
 
 	@Effect()

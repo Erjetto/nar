@@ -55,7 +55,7 @@
 					>
 						<div class="col v-list-m-12">
 							<div class="row">
-								<textarea class="form-control" style="resize: vertical" #scheduleCsv>{{
+								<textarea class="form-control vertical-text-area minh-300px" #scheduleCsv>{{
 									addSchedulePlaceholder
 								}}</textarea>
 							</div>
@@ -92,7 +92,7 @@
 						<div class="form-group row">
 							<label class="col-2 col-form-label" for="startTime">Start Time</label>
 							<input
-								type="datetime"
+								type="datetime-local"
 								class="form-control col"
 								name="startTime"
 								[ngModel]="(selectedSchedule$ | async)?.StartDate | date: dateFormat"
@@ -101,7 +101,7 @@
 						<div class="form-group row">
 							<label class="col-2 col-form-label" for="endTime">End Time</label>
 							<input
-								type="datetime"
+								type="datetime-local"
 								class="form-control col"
 								name="endTime"
 								[ngModel]="(selectedSchedule$ | async)?.EndDate | date: dateFormat"
@@ -110,6 +110,7 @@
 						<div class="row justify-content-around">
 							<!-- <input type="submit" value="Save Schedule" class="btn btn-primary"/> -->
 							<button class="btn btn-primary" (click)="saveSchedule(scheduleForm)">
+                <fa-icon [icon]="['fas', 'pen']"></fa-icon>
 								Save Schedule
 							</button>
 							<rd-confirmable-pop-up (confirm)="deleteSchedule(scheduleForm)">

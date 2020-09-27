@@ -118,7 +118,7 @@ export const MasterStateReducer = createReducer(
 		loadingSubjects: true,
 	})),
 
-	on(MasterStateAction.FetchSchedules, (state) => ({
+	on(MasterStateAction.FetchSubjects, (state) => ({
 		...state,
 		loadingSchedules: true,
 	})),

@@ -3,23 +3,21 @@ import { IAppState } from 'src/app/app.reducer';
 import { Store, select, ActionsSubject } from '@ngrx/store';
 import { Observable, merge, BehaviorSubject } from 'rxjs';
 
-import {
-	SubcoCandidateAnswerModel,
-	SubcoCandidateQuestionModel,
-} from 'src/app/shared/models';
+import { SubcoCandidateAnswerModel, SubcoCandidateQuestionModel } from 'src/app/shared/models';
 import {
 	CandidateStateAction,
 	fromCandidateState,
 	MainStateAction,
 	MainStateEffects,
 	CandidateStateEffects,
-  MasterStateEffects,
-  fromMasterState,
+	MasterStateEffects,
+	fromMasterState,
 } from 'src/app/shared/store-modules';
-import { take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil, map } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
+import * as _ from 'lodash';
 
 @Component({
 	selector: 'rd-answer-schedule',
@@ -28,10 +26,10 @@ import { DateHelper } from 'src/app/shared/utilities/date-helper';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnswerScheduleComponent extends DashboardContentBase implements OnInit, OnDestroy {
-  currentYear = new Date().getFullYear();
+	currentYear = new Date().getFullYear();
 	viewDateFormat = 'yyyy MMM dd HH:mm';
-  viewDateFormatWithoutYear = 'MMM dd HH:mm'; // Hilangkan tahun jika di tahun ini
-  
+	viewDateFormatWithoutYear = 'MMM dd HH:mm'; // Hilangkan tahun jika di tahun ini
+
 	addSchedulePlaceholder = '';
 	dateFormat = 'yyyy-MM-dd HH:mm';
 
@@ -56,11 +54,14 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	ngOnInit(): void {
-		this.trainerSchedule$ = this.store.pipe(select(fromCandidateState.getAnswerModels));
+		this.trainerSchedule$ = this.store.pipe(
+			select(fromCandidateState.getAnswerModels),
+			map((schedules) => _.sortBy(schedules, 'TrainerName')) // Temporary until table have sort feature
+		);
 		this.selectedSchedule$ = this.store.pipe(select(fromCandidateState.getSelectedAnswer));
 		this.questionModel$ = this.store.pipe(select(fromCandidateState.getQuestionModel));
-    this.loadingViewSchedule$ = this.store.pipe(select(fromCandidateState.isLoadingAnswersModel));
-    this.genOneYearLower$ = this.store.pipe(select(fromMasterState.getGenerationOneYearLower));    
+		this.loadingViewSchedule$ = this.store.pipe(select(fromCandidateState.isLoadingAnswersModel));
+		this.genOneYearLower$ = this.store.pipe(select(fromMasterState.getGenerationOneYearLower));
 		this.questionModel$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
 			this.questions = res;
 		});
@@ -69,16 +70,16 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(CandidateStateAction.FetchQuestions());
 			this.store.dispatch(CandidateStateAction.FetchAnswers());
-    });
-    this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
-      this.loadingFormSchedule$.next(false);
-    });
+		});
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+			this.loadingFormSchedule$.next(false);
+		});
 
 		// Reload schedule when do crud
 		merge(
 			this.candidateEffects.createAnswerSchedule$,
 			this.candidateEffects.deleteAnswerSchedule$,
-      this.candidateEffects.updateAnswerSchedule$,
+			this.candidateEffects.updateAnswerSchedule$
 		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => {
@@ -119,11 +120,11 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		const regex = /(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}), (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}), (....-.)/i;
 		const errorIdx = [];
 		const schedules = csvString.split('\n').map((line, idx) => {
-      const arr = regex.exec(line); // if fails regex returns null
+			const arr = regex.exec(line); // if fails regex returns null
 			if (!!arr)
-      return new SubcoCandidateAnswerModel(
-        '00000000-0000-0000-0000-000000000000',
-        '00000000-0000-0000-0000-000000000000',
+				return new SubcoCandidateAnswerModel(
+					'00000000-0000-0000-0000-000000000000',
+					'00000000-0000-0000-0000-000000000000',
 					arr[5],
 					[],
 					new Date(arr[1] + ' ' + arr[2]),
@@ -132,22 +133,21 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 			else errorIdx.push(idx + 1);
 			return null;
 		});
-    
+
 		if (errorIdx.length === 0)
-      this.store.dispatch(CandidateStateAction.CreateSchedule({ schedules }));
-		else{
-      this.loadingFormSchedule$.next(false);
-      this.store.dispatch(
-        MainStateAction.ToastMessage({
+			this.store.dispatch(CandidateStateAction.CreateSchedule({ schedules }));
+		else {
+			this.loadingFormSchedule$.next(false);
+			this.store.dispatch(
+				MainStateAction.ToastMessage({
 					messageType: 'danger',
 					message: 'Wrong format in row : ' + errorIdx.join(', '),
 				})
-      );
-      
-    }
-  }
-  
-  exportToExcel(){
-    this.store.dispatch(CandidateStateAction.ExportAnswersToExcel());
-  }
+			);
+		}
+	}
+
+	exportToExcel() {
+		this.store.dispatch(CandidateStateAction.ExportAnswersToExcel());
+	}
 }
