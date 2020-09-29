@@ -29,6 +29,7 @@ import { ViewAllPresentationComponent } from './presentation/view-all-presentati
 import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
 import { TraineeScheduleComponent } from './modify/trainee-schedule/trainee-schedule.component';
 import { CurrentUserResolver } from '../shared/resolvers/current-user.resolver';
+import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
 
 export const routes: Routes = [
 	{
@@ -310,7 +311,7 @@ export const routes: Routes = [
 						},
 					},
 					{
-						path: 'view-question/',
+						path: 'view-question/:generationId/:traineeId/:questionId',
 						component: ViewQuestionComponent,
 						data: {
 							roles: RoleGroups.ALL,
@@ -416,9 +417,8 @@ export const routes: Routes = [
 				children: [
 					{
 						path: 'data',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleFlags.AssistantSupervisor, name: 'Data (-)' },
+						component: TraineeDataComponent,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'Data' },
 					},
 					{
 						path: 'schedule',

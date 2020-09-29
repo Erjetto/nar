@@ -30,6 +30,7 @@ import { ViewAllPresentationComponent } from './presentation/view-all-presentati
 import { ScoringComponent } from './presentation/scoring/scoring.component';
 import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
 import { TraineeScheduleComponent } from './modify/trainee-schedule/trainee-schedule.component';
+import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
 
 @NgModule({
 	declarations: [
@@ -61,7 +62,9 @@ import { TraineeScheduleComponent } from './modify/trainee-schedule/trainee-sche
 		ViewAllQuestionComponent,
 		ViewAllPresentationComponent,
 		ScoringComponent,
-		TraineeScheduleComponent,
+    TraineeScheduleComponent,
+    
+		TraineeDataComponent,
 	],
 	imports: [
 		SharedModule,

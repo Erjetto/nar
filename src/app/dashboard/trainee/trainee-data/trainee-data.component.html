@@ -1,0 +1,155 @@
+<div class="container-lg">
+	<div class="row">
+		<div class="col-5">
+			<rd-card
+				[cardTitle]="'Trainees Data'"
+				[expanded]="!viewingTable"
+				(toggleExpand)="viewingTable = !$event"
+				[isLoading]="loadingTrainees$ | async"
+			>
+				<div class="row scrollable-table maxh-500px">
+					<table class="table table-sm table-striped table-hover">
+						<thead>
+							<tr>
+								<th>NIM</th>
+								<th>Name</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(trainees$ | async)?.length === 0">
+								<td class="text-center" colspan="2">No trainees...</td>
+							</tr>
+							<tr *ngFor="let trainee of trainees$ | async" (click)="showTraineeData(trainee)">
+								<td>{{ trainee.TraineeNumber }}</td>
+								<td>{{ trainee.TraineeName }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card
+				[cardTitle]="'View Trainee Data'"
+				[expanded]="!viewingTable && (currentTrainee$ | async) != null"
+				[collapsible]="false"
+			>
+				<table class="table table-sm table-striped table-hover row-header">
+					<thead>
+						<tr>
+							<th colspan="2">Trainee Details</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Name</td>
+							<td>{{ (currentTrainee$ | async)?.TraineeName }}</td>
+						</tr>
+						<tr>
+							<td>NIM</td>
+							<td>{{ (currentTrainee$ | async)?.TraineeNumber }}</td>
+						</tr>
+						<tr>
+							<td>Code</td>
+							<td>{{ (currentTrainee$ | async)?.TraineeCode }}</td>
+						</tr>
+						<tr>
+							<td>ID Card</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.KPTOrPassport }}</td>
+						</tr>
+						<tr>
+							<td>Semester</td>
+							<td>{{ (currentTrainee$ | async)?.Semester }}</td>
+						</tr>
+						<tr>
+							<td>Birth Date</td>
+							<td>{{ (currentTrainee$ | async)?.BirthDate | date: viewDateFormat }}</td>
+						</tr>
+						<tr>
+							<td>Gender</td>
+							<td>{{ (currentTrainee$ | async)?.Gender }}</td>
+						</tr>
+						<tr>
+							<td>Bank Branch</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.BankBranch }}</td>
+						</tr>
+						<tr>
+							<td>Bank Account</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.BankAccount }}</td>
+						</tr>
+						<tr>
+							<td>Permanent Address</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.PemanentAddress }}</td>
+						</tr>
+						<tr>
+							<td>Current Address</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.CurrentAddress }}</td>
+						</tr>
+						<tr>
+							<td>Current Address Type</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.CurrentAddressType }}</td>
+						</tr>
+						<tr>
+							<td>Phone Number</td>
+							<td>
+								{{ (currentTrainee$ | async)?.AdditionalTraineeData.PhoneNumberList.join('\n') }}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card
+				[cardTitle]="'Trainee Data in Table View'"
+				[expanded]="viewingTable"
+				(toggleExpand)="viewingTable = $event"
+				[isLoading]="loadingTrainees$ | async"
+			>
+				<div class="row scrollable-table first-row-sticky maxh-550px">
+					<table class="table table-sm table-striped table-hover">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>NIM</th>
+								<th>Code</th>
+								<th>ID Card</th>
+								<th>Semester</th>
+								<th>Birth Date</th>
+								<th>Gender</th>
+								<th>Bank Branch</th>
+								<th>Bank Account</th>
+								<th>Permanent Address</th>
+								<th>Current Address</th>
+								<th>Current Address Type</th>
+								<th>Phone Number</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(trainees$ | async)?.length === 0">
+								<td class="text-center" colspan="3">No trainees...</td>
+							</tr>
+							<tr *ngFor="let trainee of trainees$ | async">
+								<td>{{ trainee.TraineeName }}</td>
+								<td>{{ trainee.TraineeNumber }}</td>
+								<td>{{ trainee.TraineeCode }}</td>
+								<td>{{ trainee.AdditionalTraineeData.KPTOrPassport }}</td>
+								<td>{{ trainee.Semester }}</td>
+								<td>{{ trainee.BirthDate | date: viewDateFormat }}</td>
+								<td>{{ trainee.Gender }}</td>
+								<td>{{ trainee.AdditionalTraineeData.BankBranch }}</td>
+								<td>{{ trainee.AdditionalTraineeData.BankAccount }}</td>
+								<td>{{ trainee.AdditionalTraineeData.PemanentAddress }}</td>
+								<td>{{ trainee.AdditionalTraineeData.CurrentAddress }}</td>
+								<td>{{ trainee.AdditionalTraineeData.CurrentAddressType }}</td>
+								<td>{{ trainee.AdditionalTraineeData.PhoneNumberList.join('\n') }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>
