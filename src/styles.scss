@@ -42,6 +42,13 @@ footer {
 	margin-top: 15px;
 }
 
+a {
+
+  &:hover{
+    text-decoration: none;
+  }
+}
+
 .hover-text-blue:hover {
 	color: #00a9e2 !important;
 }
@@ -209,8 +216,8 @@ footer {
 	}
 }
 
-.pre-wrap{
-  white-space: pre-wrap;
+.pre-wrap {
+	white-space: pre-wrap;
 }
 
 // Cursor
@@ -248,19 +255,25 @@ footer {
 	z-index: -1;
 }
 @for $i from 0 through 15 {
-  .z-index-#{$i}{
-    z-index: #{$i};
-  }
+	.z-index-#{$i} {
+		z-index: #{$i};
+	}
 }
 // Max height
 // mh-0px - mh-600px
-@for $i from 2 through 16 {
-  .minh-#{$i*50}px{
-    min-height: #{$i*50}px;
-  }
-  .maxh-#{$i*50}px{
-    max-height: #{$i*50}px;
-  }
+@for $i from 1 through 16 {
+	.minh-#{$i*50}px {
+		min-height: #{$i * 50}px;
+	}
+	.maxh-#{$i*50}px {
+		max-height: #{$i * 50}px;
+	}
+	.minw-#{$i*50}px {
+		min-width: #{$i * 50}px;
+	}
+	.maxw-#{$i*50}px {
+		max-width: #{$i * 50}px;
+	}
 }
 
 // text-area
@@ -286,14 +299,29 @@ footer {
 	background-color: teal;
 }
 
+// tables
+table {
+	> thead {
+		text-align: center;
+	}
+}
+
 .scrollable-table {
-  overflow: auto;
-  position: relative;
+	overflow: auto;
+	position: relative;
 
 	thead {
 		position: sticky;
 		background-color: inherit;
 		top: 0;
+		z-index: 2;
+	}
+}
+
+table.row-header {
+	> tbody > tr > td:first-child {
+		text-align: end;
+		font-weight: bold;
 	}
 }
 

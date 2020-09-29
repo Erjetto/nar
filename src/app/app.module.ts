@@ -38,7 +38,7 @@ import { UserCookieInterceptor } from './shared/interceptors/user-cookie-interce
 	providers: [
     { provide: HTTP_INTERCEPTORS, useClass: UserCookieInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: StoreDispatcherInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ToCSharpDateInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: ToCSharpDateInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
     CookieService,
   ],

@@ -63,7 +63,11 @@ export class SubcoCandidateService {
 		endDate: Date;
 	}): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'UpdateSchedule', data)
+			.post(this.baseUrl + 'UpdateSchedule', {
+				...data,
+				startDate: DateHelper.toCSharpDate(data.startDate),
+				endDate: DateHelper.toCSharpDate(data.endDate),
+			})
 			.pipe(map((res: any) => res.d === true));
 	}
 

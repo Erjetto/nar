@@ -364,6 +364,7 @@ export class ClientTraineeData extends BaseModel {
 	static fromJson(data?: any): ClientTraineeData {
 		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeData(), data, {
+      BirthDate: DateHelper.fromCSharpDate(data?.BirthDate),
 			Scores: map(data?.Scores, ClientTraineeDataScore.fromJson),
 			Notes: map(data?.Notes, ClientNote.fromJson),
 			Attendances: map(data?.Attendances, ClientTraineeDataAttendance.fromJson),

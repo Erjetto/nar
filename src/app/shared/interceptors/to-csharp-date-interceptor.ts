@@ -18,6 +18,8 @@ import { DateHelper } from '../utilities/date-helper';
  * Converts from standard JSON date format (2020-09-27T09:11:03.049Z)
  * to old ASP Net format (/Date(12141252352)/)
  * Only works if parameter contains 'date', do it manually otherwise
+ * 
+ * NOTE: Not used for now, since backend service is inconsistent with date param
  */
 
 @Injectable({

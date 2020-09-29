@@ -98,6 +98,23 @@ export class PresentationService {
 			.post(this.baseUrl + 'GetTotalCorrectedAnswerByTrainer', data)
   }
 
+	public FindCoreTrainingPresentationByGeneration(data: {
+		generationId: string;
+	}): Observable<CoreTrainingPresentation[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'FindCoreTrainingPresentationByGeneration', data)
+			.pipe(map((res: any) => _.map(res.d, CoreTrainingPresentation.fromJson)));
+	}
+
+	public FindCoreTrainingPresentationBySubject(data: {
+		generationId: string;
+		subjectId: string;
+	}): Observable<CoreTrainingPresentation[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'FindCoreTrainingPresentationBySubject', data)
+			.pipe(map((res: any) => _.map(res.d, CoreTrainingPresentation.fromJson)));
+	}
+
 	public FindCoreTrainingPresentationByTrainee(data: {
 		generationId: string;
 		traineeId: string;
@@ -259,23 +276,6 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationStatus', data)
 			.pipe(map((res: any) => res.d + ''));
-	}
-
-	public FindCoreTrainingPresentationByGeneration(data: {
-		generationId: string;
-	}): Observable<CoreTrainingPresentation[]> {
-		return this.httpClient
-			.post(this.baseUrl + 'FindCoreTrainingPresentationByGeneration', data)
-			.pipe(map((res: any) => _.map(res.d, CoreTrainingPresentation.fromJson)));
-	}
-
-	public FindCoreTrainingPresentationBySubject(data: {
-		generationId: string;
-		subjectId: string;
-	}): Observable<CoreTrainingPresentation[]> {
-		return this.httpClient
-			.post(this.baseUrl + 'FindCoreTrainingPresentationBySubject', data)
-			.pipe(map((res: any) => _.map(res.d, CoreTrainingPresentation.fromJson)));
 	}
 
 	public GetPresentationReportSummary(data: {

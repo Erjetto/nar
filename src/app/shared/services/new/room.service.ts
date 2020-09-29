@@ -17,11 +17,11 @@ export class RoomService {
 		return throwError('Not implemented yet');
 	}
   
-  public GetBookLogDetail(data: { id: string }): Observable<boolean> {
+  public GetBookLogDetail(data: { id: string }): Observable<LogBookPIC> {
 		return throwError('Not implemented yet');
 	}
   
-  public GetBookLog(data: { start: Date; end: Date }): Observable<boolean> {
+  public GetBookLog(data: { start: Date; end: Date }): Observable<LogBookPIC[]> {
 		return throwError('Not implemented yet');
 	}
   
@@ -33,11 +33,11 @@ export class RoomService {
 		return throwError('Not implemented yet');
 	}
   
-  public GetLogRoom(data: { id: string; time: string }): Observable<boolean> {
+  public GetLogRoom(data: { id: string; time: string }): Observable<LogRoomPIC> {
 		return throwError('Not implemented yet');
 	}
   
-  public ExportRoomLog(data: { date: Date }): Observable<boolean> {
+  public ExportRoomLog(data: { date: Date }): Observable<string> {
 		return throwError('Not implemented yet');
 	}
   
@@ -45,19 +45,19 @@ export class RoomService {
 		return throwError('Not implemented yet');
 	}
   
-  public GetLogPICRoomNote(data: { date: Date }): Observable<boolean> {
+  public GetLogPICRoomNote(data: { date: Date }): Observable<LogRoomPIC[]> {
 		return throwError('Not implemented yet');
 	}
   
-  public SaveLogPICRoomNote(data: { data: LogRoomPIC }): Observable<boolean> {
+  public SaveLogPICRoomNote(data: { data: LogRoomPIC }): Observable<string> {
 		return throwError('Not implemented yet');
 	}
-  
-  public GetAllRooms(): Observable<boolean> {
+  // ClientRoom[]
+  public GetAllRooms(): Observable<any[]> {
 		return throwError('Not implemented yet');
 	}
-  
-  public GetRoomsTransactionByDate(data: { date: string }): Observable<boolean> {
+  // ClientRoomTransaction
+  public GetRoomsTransactionByDate(data: { date: string }): Observable<any> {
 		return throwError('Not implemented yet');
 	}
   

@@ -16,7 +16,7 @@ import {
 	ClientUploadAnswer,
 	SchedulePerWeek,
 	Case,
-  SimpleTraineeData,
+	SimpleTraineeData,
 } from '../../models';
 import { environment } from 'src/environments/environment';
 import * as _ from 'lodash';
@@ -53,8 +53,7 @@ export class LeaderService {
 
 	// ClientTraineeBeeAttendanceOverall
 	public GetOverall(data: { startDate: string; endDate: string }): Observable<any> {
-		return this.httpClient
-			.post(this.baseUrl + 'GetOverall', data)
+		return this.httpClient.post(this.baseUrl + 'GetOverall', data);
 	}
 
 	public GetAllCaseBySubject(data: { subjectId: string }): Observable<ClientCaseTrainer[]> {
@@ -273,10 +272,7 @@ export class LeaderService {
 			.pipe(map((res: any) => res.d === true));
 	}
 
-	public DeleteCase(data: {
-		caseId: string;
-		reason: string;
-	}): Observable<boolean> {
+	public DeleteCase(data: { caseId: string; reason: string }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteCase', data)
 			.pipe(map((res: any) => res.d === true));
@@ -291,7 +287,11 @@ export class LeaderService {
 		isForTrainer: boolean;
 	}): Observable<TopBottomVoteSchedule> {
 		return this.httpClient
-			.post(this.baseUrl + 'SaveTopBottomVoteSchedule', data)
+			.post(this.baseUrl + 'SaveTopBottomVoteSchedule', {
+				...data,
+				startDate: DateHelper.toCSharpDate(data.startDate),
+				endDate: DateHelper.toCSharpDate(data.endDate),
+			})
 			.pipe(map((res: any) => TopBottomVoteSchedule.fromJson(res.d)));
 	}
 
@@ -304,7 +304,11 @@ export class LeaderService {
 		isForTrainer: boolean;
 	}): Observable<TopBottomVoteSchedule> {
 		return this.httpClient
-			.post(this.baseUrl + 'UpdateTopBottomVoteSchedule', data)
+			.post(this.baseUrl + 'UpdateTopBottomVoteSchedule', {
+				...data,
+				startDate: DateHelper.toCSharpDate(data.startDate),
+				endDate: DateHelper.toCSharpDate(data.endDate),
+			})
 			.pipe(map((res: any) => TopBottomVoteSchedule.fromJson(res.d)));
 	}
 
@@ -316,8 +320,7 @@ export class LeaderService {
 
 	// ZipModel
 	public GetAllTraineeAnswerByZip(data: { caseId: string; correctorId?: string }): Observable<any> {
-		return this.httpClient
-			.post(this.baseUrl + 'GetAllTraineeAnswerByZip', data)
+		return this.httpClient.post(this.baseUrl + 'GetAllTraineeAnswerByZip', data);
 	}
 
 	//#region Get Data
@@ -429,7 +432,9 @@ export class LeaderService {
 		endDate: string;
 		type: string;
 	}): Observable<boolean> {
-		return this.httpClient.post(this.baseUrl + 'SavePhase', data).pipe(map((res: any) => res.d === true));
+		return this.httpClient
+			.post(this.baseUrl + 'SavePhase', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveTraineesToPhase(data: {
@@ -479,10 +484,10 @@ export class LeaderService {
 		phaseId: string;
 		subjectId: string;
 		scheduleId: string;
-	}): Observable<boolean> {
+	}): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveTraineesToSchedule', data)
-			.pipe(map((res: any) => res.d === true));
+			.pipe(map((res: any) => res.d as string[]));
 	}
 
 	public SaveInterviewQuestions(data: {

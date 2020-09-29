@@ -151,7 +151,7 @@ export class TraineeService {
 			.pipe(map((res: any) => res.d));
 	}
 
-	public Delete(data: { binusianNumber: string }): Observable<any> {
-		return this.httpClient.post(this.baseUrl + 'Delete', data).pipe(map((res: any) => res.d));
+	public Delete(data: { binusianNumber: string }): Observable<boolean> {
+		return this.httpClient.post(this.baseUrl + 'Delete', data).pipe(map((res: any) => res.d === true));
 	}
 }

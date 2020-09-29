@@ -101,10 +101,10 @@ export class TraineeAttendanceService {
 			.pipe(map((res: any) => res.d === true));
 	}
 
-	public SaveAttendances(data: { attendances: string[] }): Observable<boolean> {
+	public SaveAttendances(data: { attendances: string[] }): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveAttendances', data)
-			.pipe(map((res: any) => res.d === true));
+			.pipe(map((res: any) => res.d as string[]));
 	}
 
 	public SaveTraineePermission(data: {
