@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, combineLatest, BehaviorSubject, merge } from 'rxjs';
 
 import {
 	MasterStateAction,
@@ -32,7 +32,7 @@ import { RoleFlags } from 'src/app/shared/constants/role.constant';
 	styleUrls: ['./view-all-question.component.scss'],
 })
 export class ViewAllQuestionComponent extends DashboardContentBase implements OnInit, OnDestroy {
-  viewDateFormat = 'dd MMM yyyy hh:mm a'
+	viewDateFormat = 'dd MMM yyyy hh:mm a';
 	filterForm = this.fb.group(
 		{
 			search: [''],
@@ -49,6 +49,8 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 	questionsBySubjectEntity$: Observable<{ [subjectId: string]: CoreTrainingPresentation[] }>;
 	subjects$: Observable<ClientSubject[]>;
 
+	loadingSubjects$: Observable<boolean>;
+	loadingPresentations$: Observable<boolean>;
 	loadingViewQuestions$: Observable<boolean>;
 	filteredQuestions$: Observable<CoreTrainingPresentationQuestion[]>;
 
@@ -62,38 +64,32 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 
 	ngOnInit(): void {
 		this.presentations$ = this.store.pipe(select(fromPresentationState.getPresentations));
-		this.loadingViewQuestions$ = this.store.pipe(
-			select(fromPresentationState.isPresentationsLoading)
-		);
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
+		this.loadingSubjects$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
+    this.loadingPresentations$ = this.store.pipe(
+      select(fromPresentationState.isPresentationsLoading)
+    );
+    this.loadingViewQuestions$ = merge(this.loadingPresentations$, this.loadingSubjects$);
 		this.questionsBySubjectEntity$ = this.store.pipe(
 			select(fromPresentationState.getQuestionsBySubject)
 		);
 		this.filteredQuestions$ = this.store.pipe(select(fromPresentationState.getFilteredQuestions));
 
 		// Auto fetch presentations by subject
-		combineLatest([
-			this.questionsBySubjectEntity$,
-			this.filterForm.get('subjectId').valueChanges,
-			this.currentGeneration$,
-		])
-			.pipe(
-				takeUntil(this.destroyed$),
-				map(([entity, subId, gen]) => {
-					if (!subId) return [];
-					if (!!subId && !!entity[subId]) return entity[subId];
-					else
-						this.store.dispatch(
-							PresentationStateAction.FetchPresentations({
-								generationId: gen.GenerationId,
-								subjectId: subId,
-							})
-						);
-					return [];
-				}),
-				distinctUntilChanged()
-			)
-			.subscribe();
+		combineLatest([this.filterForm.get('subjectId').valueChanges, this.currentGeneration$])
+			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.questionsBySubjectEntity$))
+			.subscribe(([[subId, gen], entity]) => {
+				if (!subId) return [];
+				if (!!subId && !_.isEmpty(entity[subId])) return entity[subId];
+				else
+					this.store.dispatch(
+						PresentationStateAction.FetchPresentationsBy({
+							generationId: gen.GenerationId,
+							subjectId: subId,
+						})
+					);
+				return [];
+			});
 
 		this.store
 			.pipe(
@@ -101,12 +97,12 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 				filter((v) => !_.isEmpty(v), takeUntil(this.destroyed$))
 			)
 			.subscribe((phases: ClientPhase[]) => {
-				const corePhase = phases.find((p) => p.Description.includes('Core'));
+				const corePhase = phases.find((p) => p.Description.includes('Core')) ?? phases[0];
 				if (corePhase)
 					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: corePhase.PhaseId }));
 			});
 
-		this.subjects$ // Auto fetch presentation
+		this.subjects$
 			.pipe(
 				filter((res) => !_.isEmpty(res)),
 				takeUntil(this.destroyed$)
@@ -124,9 +120,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 			.subscribe((data) => this.store.dispatch(PresentationStateAction.SetQuestionsFilter(data)));
 
 		this.store.dispatch(MasterStateAction.FetchPhases());
-  }
-  
-  deleteQuestion(qst: CoreTrainingPresentationQuestion){
-    
-  }
+	}
+
+	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}
 }

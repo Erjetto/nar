@@ -7,7 +7,7 @@ import * as MainStateAction from '../main/main.action';
 import * as PresentationStateAction from './presentation.action';
 import * as fromPresentationState from './presentation.reducer';
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, tap, share } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, tap, share, map } from 'rxjs/operators';
 import { PresentationService } from '../../services/new/presentation.service';
 import * as _ from 'lodash';
 
@@ -17,32 +17,43 @@ import * as _ from 'lodash';
 export class PresentationStateEffects {
 	constructor(private actions$: Actions, private presentationService: PresentationService) {}
 
-	// @Effect()
-	// getPresentationsByGeneration$: Observable<Action> = this.actions$.pipe(
-	//   ofType(PresentationStateAction.FetchPresentations),
-	//   switchMap(data => this.presentationService.FindCoreTrainingPresentationByGeneration(data)),
-	//   mergeMap(res =>
-	//     !_.isEmpty(res)
-	//     ? of(PresentationStateAction.FetchPresentationsSuccess({payload: res}))
-	//     : of(MainStateAction.ToastMessage({
-	//       messageType: 'danger',
-	//       message: 'Failed to get presentations'
-	//     }))
-	// ))
-
 	@Effect()
 	getPresentationsByDate$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentationsByDate),
 		switchMap((data) => this.presentationService.GetPresentationReportDetailByDate(data)),
-		mergeMap((res) => of(PresentationStateAction.FetchPresentationsByDateSuccess({ payload: res }))),
+		mergeMap((res) =>
+			of(PresentationStateAction.FetchPresentationsByDateSuccess({ payload: res }))
+		),
 		share()
 	);
 
 	@Effect()
-	getPresentationsBySubject$: Observable<Action> = this.actions$.pipe(
-		ofType(PresentationStateAction.FetchPresentations),
-		switchMap((data) => this.presentationService.FindCoreTrainingPresentationBySubject(data)),
-		mergeMap((res) => of(PresentationStateAction.FetchPresentationsSuccess({ payload: res }))),
+	getPresentationsBy$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.FetchPresentationsBy),
+		switchMap(
+			({ generationId, traineeId, subjectId }) =>
+				// Gunakan antara ketiga method yg returnnya sama
+				(!_.isEmpty(traineeId)
+					? this.presentationService.FindCoreTrainingPresentationByTrainee({
+							generationId,
+							traineeId,
+					  })
+					: !_.isEmpty(subjectId)
+					? this.presentationService.FindCoreTrainingPresentationBySubject({
+							generationId,
+							subjectId,
+					  })
+					: this.presentationService.FindCoreTrainingPresentationByGeneration({ generationId })
+				).pipe(map((res) => ({ traineeId, subjectId, res })))
+			// Di akhirannya dibawa juga 'data' supaya bisa dipisahkan spt ini
+		),
+		mergeMap(({ traineeId, subjectId, res }) =>
+			!_.isEmpty(traineeId)
+				? of(PresentationStateAction.FetchPresentationsByTraineeSuccess({ payload: res, traineeId }))
+				: !_.isEmpty(subjectId)
+				? of(PresentationStateAction.FetchPresentationsBySubjectSuccess({ payload: res, subjectId }))
+				: of(PresentationStateAction.FetchPresentationsByGenerationSuccess({ payload: res }))
+		),
 		share()
 	);
 

@@ -99,7 +99,7 @@ export class ViewAllPresentationComponent
 
 		//#region Auto get first value in array
 		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.currentPhase$.next(res.find((p) => p.Description.includes('Core')) || res[0]);
+			this.currentPhase$.next(res.find((p) => p.Description.includes('Core')) ?? res[0]);
 		});
 
 		this.subjects$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
@@ -136,7 +136,7 @@ export class ViewAllPresentationComponent
 			)
 			.subscribe(([sub, gen]) => {
 				this.store.dispatch(
-					PresentationStateAction.FetchPresentations({
+					PresentationStateAction.FetchPresentationsBy({
 						generationId: gen.GenerationId,
 						subjectId: sub.SubjectId,
 					})
