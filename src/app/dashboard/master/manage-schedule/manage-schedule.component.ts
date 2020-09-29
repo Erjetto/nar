@@ -63,9 +63,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		scheduleType: ['daily'],
 		scheduleName: ['', Validators.required],
 		scheduleCount: [1, Validators.min(1)],
-		scheduleDates: this.fb.array([
-      this.fb.control('', Validators.required)
-    ]),
+		scheduleDates: this.fb.array([this.fb.control('', Validators.required)]),
 		deleteReason: [''],
 	});
 	deleteAllReason = new FormControl('', Validators.required);
@@ -111,7 +109,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	loadingFormSchedule$ = new BehaviorSubject<boolean>(false);
 	loadingFormTraineeInSchedule$ = new BehaviorSubject<boolean>(false);
 	loadingViewSchedule$ = new BehaviorSubject<boolean>(false);
-	loadingViewTraineeInSchedule$: Observable<boolean>;
+	loadingViewTraineeInSchedule$ = new BehaviorSubject<boolean>(false);
 	loadingSubject$: Observable<boolean>;
 	loadingSchedule$: Observable<boolean>;
 	phases$: Observable<ClientPhase[]>;
@@ -143,9 +141,9 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		this.loadingSubject$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
 
 		this.traineeInSchedule$ = this.store.pipe(select(fromMasterState.getTraineesInSchedule));
-		this.loadingViewTraineeInSchedule$ = this.store.pipe(
-			select(fromMasterState.isTraineeInScheduleLoading)
-		);
+		this.store
+			.pipe(select(fromMasterState.isTraineeInScheduleLoading), takeUntil(this.destroyed$))
+			.subscribe(this.loadingViewTraineeInSchedule$);
 
 		// this.loadingSchedule$
 		// 	.pipe(takeUntil(this.destroyed$))
@@ -188,14 +186,14 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		});
 
 		this.viewSubjectList$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
-			this.viewCurrSubject$.next(subjects[0]); 
+			this.viewCurrSubject$.next(subjects[0]);
 		});
 
 		this.viewScheduleList$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((schedules) => this.viewCurrSchedule$.next(schedules[0]));
 
-      // Insert Trainee in Schedule Form
+		// Insert Trainee in Schedule Form
 		this.insertTraineeSubjectList$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((subjects) =>
@@ -279,15 +277,6 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		return this.phaseTypes.find((p) => p.key === key).val;
 	}
 
-	deleteTrainee(trainee: ClientTrainee) {
-		this.store.dispatch(
-			MasterStateAction.DeleteTraineeInSchedule({
-				ScheduleId: this.viewCurrSchedule$.value.ScheduleId,
-				TraineeId: trainee.TraineeId,
-			})
-		);
-	}
-
 	selectSchedule(schedule: ClientSchedule) {
 		this.scheduleForm.patchValue({
 			currentSchedule: schedule,
@@ -368,13 +357,23 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		const { binusianNumbers, phase, subject, schedule } = this.insertTraineeInScheduleForm.value;
 		this.store.dispatch(
 			MasterStateAction.CreateTraineeInSchedule({
-				binusianNumbers: binusianNumbers.split('\n'),
+				binusianNumbers: binusianNumbers.trim().split('\n'),
 				phaseId: phase.PhaseId,
 				subjectId: subject.SubjectId,
 				scheduleId: schedule.ScheduleId,
 			})
 		);
 		this.loadingFormTraineeInSchedule$.next(true);
+	}
+
+	deleteTrainee(trainee: ClientTrainee) {
+		this.loadingViewTraineeInSchedule$.next(true);
+		this.store.dispatch(
+			MasterStateAction.DeleteTraineeInSchedule({
+				ScheduleId: this.viewCurrSchedule$.value.ScheduleId,
+				TraineeId: trainee.TraineeId,
+			})
+		);
 	}
 
 	cancelEdit() {

@@ -52,7 +52,7 @@ export class TraineeScheduleComponent extends DashboardContentBase implements On
     this.loadingFormInsertTrainingSchedule$.next(true);
 		this.store.dispatch(
 			BinusianStateAction.CreateTrainingSchedules({
-				schedules: (this.insertTrainingScheduleText.value + '').split('\n'),
+				schedules: this.insertTrainingScheduleText.value.trim().split('\n'),
 			})
 		);
 	}
@@ -60,7 +60,7 @@ export class TraineeScheduleComponent extends DashboardContentBase implements On
     this.loadingFormInsertTraineeAttendance$.next(true);
 		this.store.dispatch(
 			BinusianStateAction.CreateTraineeAttendances({
-				attendances: (this.insertTraineeAttendanceText.value + '').split('\n'),
+				attendances: this.insertTraineeAttendanceText.value.trim().split('\n'),
 			})
 		);
 	}
@@ -68,7 +68,7 @@ export class TraineeScheduleComponent extends DashboardContentBase implements On
     this.loadingFormInsertLectureSchedule$.next(true);
 		this.store.dispatch(
 			BinusianStateAction.CreateLectureSchedules({
-				schedules: (this.insertLectureScheduleText.value + '').split('\n'),
+				schedules: this.insertLectureScheduleText.value.trim().split('\n'),
 			})
 		);
 	}

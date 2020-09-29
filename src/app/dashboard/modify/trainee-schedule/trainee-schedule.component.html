@@ -35,7 +35,11 @@
 						</div>
 					</div>
 					<div class="row">
-						<button class="btn btn-primary" [disabled]="insertTrainingScheduleText.invalid">
+						<button
+							class="btn btn-primary"
+							[disabled]="insertTrainingScheduleText.invalid"
+							(click)="submitInsertTrainingSchedule()"
+						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
 						</button>
 					</div>
@@ -72,7 +76,11 @@
 						</div>
 					</div>
 					<div class="row">
-						<button class="btn btn-primary" [disabled]="insertTraineeAttendanceText.invalid">
+						<button
+							class="btn btn-primary"
+							[disabled]="insertTraineeAttendanceText.invalid"
+							(click)="submitInsertTraineeAttendance()"
+						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
 						</button>
 					</div>
@@ -106,12 +114,16 @@
 						<div class="col">
 							<textarea
 								[formControl]="insertLectureScheduleText"
-                class="form-control minh-150px vertical-text-area"
+								class="form-control minh-150px vertical-text-area"
 							></textarea>
 						</div>
 					</div>
 					<div class="row">
-						<button class="btn btn-primary" [disabled]="insertLectureScheduleText.invalid">
+						<button
+							class="btn btn-primary"
+							[disabled]="insertLectureScheduleText.invalid"
+							(click)="submitInsertLectureSchedule()"
+						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
 						</button>
 					</div>

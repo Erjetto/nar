@@ -165,7 +165,7 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 				})
 			);
 		else {
-			const hasPresentationChanged = this.subjectForm.get('hasPresentation').dirty;
+			const hasPresentationChanged = this.subjectForm.get('value').dirty;
 			const maxFileSizeChanged = this.subjectForm.get('sizeValue').dirty;
 
 			this.store.dispatch(
@@ -181,7 +181,7 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 
 	cancelEdit() {
 		this.subjectForm.reset({
-			phaseId: this.viewCurrentPhase$.value,
+			phaseId: this.viewCurrentPhase$.value.PhaseId,
 			value: false,
 			sizeUnit: this.size[0],
 		});

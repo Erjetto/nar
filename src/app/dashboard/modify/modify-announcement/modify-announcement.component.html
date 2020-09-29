@@ -2,10 +2,15 @@
 	<div class="row">
 		<div class="col">
 			<rd-card [cardTitle]="'Insert Announcement'">
+				<div rdCardBadges class="" *ngIf="isEditing">
+					<button class="btn btn-sm btn-secondary mr-1" (click)="cancelEdit()">
+						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
+					</button>
+				</div>
 				<form [formGroup]="announcementForm">
 					<div class="row">
 						<div class="col-6">
-							<div class="row form-group">
+							<!-- <div class="row form-group">
 								<label class="col-4 col-form-label">Member Type</label>
 								<div class="col">
 									<ng-select
@@ -17,7 +22,7 @@
 										formControlName="memberType"
 									></ng-select>
 								</div>
-							</div>
+							</div> -->
 							<div class="row form-group">
 								<label for="title" class="col-4 col-form-label">Title</label>
 								<div class="col">
@@ -25,8 +30,8 @@
 								</div>
 							</div>
 							<div class="row form-group">
-                <label class="col-4 col-form-label"> Attachment </label>
-                
+								<label class="col-4 col-form-label"> Attachment </label>
+
 								<div class="col input-group">
 									<input
 										type="file"
@@ -34,16 +39,16 @@
 										(change)="uploadFile($event.target.files)"
 										#fileUploader
 									/>
-									<div class="input-group-append" [hidden]="!hasFile">
+									<div class="input-group-append" [hidden]="!(hasFile$ | async)">
 										<ng-template #popContent>
-                      <div class="p-2">
-                        Remove uploaded files?
-                        <ul class="pl-3">
-                          <li>
-                            {{ announcementForm.get('fileName').value }}
-                          </li>
-                        </ul>
-                      </div>
+											<div class="p-2">
+												Remove uploaded files?
+												<ul class="pl-3">
+													<li>
+														{{ announcementForm.get('fileName').value }}
+													</li>
+												</ul>
+											</div>
 										</ng-template>
 										<button
 											class="btn btn-info hover-switch-content"
@@ -62,11 +67,9 @@
 						<div class="col">
 							<div class="row form-group">
 								<div class="col">
-									<label for="contentTextArea">Content</label>
 									<textarea
 										formControlName="note"
-										class="form-control w-100"
-										style="height: 100px"
+										class="form-control vertical-text-area minh-50px"
 										placeholder="Content here..."
 									></textarea>
 								</div>
@@ -91,8 +94,8 @@
 									(click)="submitAnnouncementForm()"
 								>
 									<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
-                </button>
-                &nbsp;&nbsp;&nbsp;
+								</button>
+								&nbsp;&nbsp;&nbsp;
 								<rd-confirmable-pop-up (confirm)="deleteAnnouncement()">
 									<button class="btn btn-danger">
 										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
@@ -113,7 +116,7 @@
 						<tr>
 							<th>Date</th>
 							<th>Charge</th>
-							<th>Member Permission</th>
+							<!-- <th>Member Permission</th> -->
 							<th>Title</th>
 							<th>Content and Attachment</th>
 						</tr>
@@ -128,7 +131,7 @@
 								{{ announcement.InsertOn | date: 'dd MMM yyyy HH:mm:ss' }}
 							</td>
 							<td>{{ announcement.InsertBy.Name }}</td>
-							<td>{{ announcement.MemberType }}</td>
+							<!-- <td>{{ announcement.MemberType }}</td> -->
 							<td>{{ announcement.Title }}</td>
 							<td
 								class="text-left"

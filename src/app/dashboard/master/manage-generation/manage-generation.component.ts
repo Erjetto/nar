@@ -10,6 +10,7 @@ import {
 	MasterStateEffects,
 	fromBinusianState,
 	BinusianStateAction,
+	BinusianStateEffects,
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { NgForm, FormBuilder, Validators } from '@angular/forms';
@@ -23,10 +24,6 @@ import * as _ from 'lodash';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageGenerationComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	// tslint:disable-next-line: max-line-length
-	traineeInputExample = `Computer Science, Assistant, 3, 1500123456, 3, Male, 081254654213, John@yahoo.com, 2012-12-14 12:35, 127.0.0.1, 1234567890, T001, 1 
-Computer Science, Friends, 4, 1500123456, 5, Male, , , Now, 192.168.2.10, , ,1`;
-
 	generations$: Observable<ClientGeneration[]>;
 	currentGenTrainees$: Observable<SimpleTraineeData[]>;
 	currentGenTraineesFiltered$: Observable<SimpleTraineeData[]>;
@@ -38,7 +35,7 @@ Computer Science, Friends, 4, 1500123456, 5, Male, , , Now, 192.168.2.10, , ,1`;
 		semester: ['', Validators.required],
 		year: [new Date().getFullYear(), Validators.required],
 	});
-	traineeText = this.fb.control(this.traineeInputExample, Validators.required);
+	traineeText = this.fb.control('', Validators.required);
 	searchTextControl = this.fb.control('');
 
 	loadingFormGen$ = new BehaviorSubject<boolean>(false);
@@ -50,6 +47,7 @@ Computer Science, Friends, 4, 1500123456, 5, Male, , , Now, 192.168.2.10, , ,1`;
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
 		private masterEffects: MasterStateEffects,
+		private binusianEffects: BinusianStateEffects,
 		private fb: FormBuilder
 	) {
 		super(store);
@@ -62,18 +60,6 @@ Computer Science, Friends, 4, 1500123456, 5, Male, , , Now, 192.168.2.10, , ,1`;
 		this.store
 			.pipe(select(fromBinusianState.isTraineesSimpleDataLoading), takeUntil(this.destroyed$))
 			.subscribe(this.loadingViewTrainee$);
-
-		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.loadingFormGen$.next(false);
-			this.loadingViewTrainee$.next(false);
-		});
-
-		merge(this.masterEffects.createGeneration$, this.masterEffects.updateGeneration$)
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => {
-				this.cancelEdit();
-				this.store.dispatch(MasterStateAction.FetchGenerations());
-			});
 
 		this.currentGenTraineesFiltered$ = combineLatest([
 			this.currentGenTrainees$,
@@ -89,7 +75,26 @@ Computer Science, Friends, 4, 1500123456, 5, Male, , , Now, 192.168.2.10, , ,1`;
 			)
 		);
 
-		this.mainEffects.changeGen$
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+			this.loadingFormGen$.next(false);
+			this.loadingViewTrainee$.next(false);
+			this.loadingFormTrainee$.next(false);
+		});
+
+		// Auto refresh generation list
+		merge(this.masterEffects.createGeneration$, this.masterEffects.updateGeneration$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => {
+				this.cancelEdit();
+				this.store.dispatch(MasterStateAction.FetchGenerations());
+			});
+
+		// Auto refresh trainee list
+		merge(
+			this.mainEffects.changeGen$,
+			this.binusianEffects.createTrainee$,
+			this.binusianEffects.deleteTrainee$
+		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(BinusianStateAction.FetchTraineesSimpleData()));
 
@@ -130,11 +135,15 @@ Computer Science, Friends, 4, 1500123456, 5, Male, , , Now, 192.168.2.10, , ,1`;
 	}
 
 	submitTraineeForm() {
-    
-  }
+		this.loadingFormTrainee$.next(true);
+
+		this.store.dispatch(
+			BinusianStateAction.CreateTrainees({ datas: this.traineeText.value.trim().split('\n') })
+		);
+	}
 
 	deleteTrainee(trainee: SimpleTraineeData) {
-    this.loadingViewTrainee$.next(true);
+		this.loadingViewTrainee$.next(true);
 		this.store.dispatch(
 			BinusianStateAction.DeleteTrainee({ binusianNumber: trainee.TraineeNumber })
 		);

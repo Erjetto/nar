@@ -8,8 +8,8 @@ import {
 	EvaluationNote,
 	ClientEvaluationNote,
 	ClientTraineeAttendance,
-  EvalTypes,
-  AttendanceStatus,
+	EvalTypes,
+	AttendanceStatus,
 } from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -27,7 +27,7 @@ import {
 	NoteStateEffects,
 	AttendanceStateEffects,
 } from 'src/app/shared/store-modules';
-import { takeUntil, tap, withLatestFrom, map } from 'rxjs/operators';
+import { takeUntil, tap, withLatestFrom, map, filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 @Component({
@@ -40,7 +40,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	viewDateFormat = 'dd MMM yyyy';
 
 	// currentDate = new FormControl(DateHelper.dateToInputFormat(new Date()));
-	currentDate = this.fb.control('2018-01-17');
+	currentDate = this.fb.control(DateHelper.dateToInputFormat(new Date()), { updateOn: 'change' });
 	filterEvaluationForm = this.fb.group({
 		evalType: [null],
 		search: [''],
@@ -121,21 +121,39 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		//#endregion
 
 		//#region Auto fetch
+		merge(this.currentDate.valueChanges, this.mainEffects.changeGen$)
+			.pipe(
+				filter(() => !_.isEmpty(this.currentDate.value)),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe(() => this.getAllEvaluationDataByDate(this.currentDate.value));
+
+		// Update attendance only
 		merge(
-			this.currentDate.valueChanges,
-			this.mainEffects.changeGen$,
-      this.attendanceEffects.changeAttendanceStatus$,
-      this.attendanceEffects.setAttendancePermission$
+			this.attendanceEffects.changeAttendanceStatus$,
+			this.attendanceEffects.setAttendancePermission$
 		)
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.getEvaluationDataByDate(this.currentDate.value));
+			.subscribe(() =>
+				this.store.dispatch(
+					AttendanceStateAction.FetchAttendanceReport({ date: this.currentDate.value })
+				)
+			);
+
+		// Update evaluation notes only
+		merge(this.noteEffects.createEvaluationNote$, this.noteEffects.deleteEvaluationNote$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() =>
+				this.store.dispatch(NoteStateAction.FetchEvaluation({ sdate: this.currentDate.value }))
+			);
+
 		//#endregion
 
 		this.filterEvaluationForm.valueChanges
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((val) => this.store.dispatch(NoteStateAction.SetEvaluationNoteFilter(val)));
 
-		this.getEvaluationDataByDate(this.currentDate.value);
+		this.getAllEvaluationDataByDate(this.currentDate.value);
 	}
 
 	get sorter() {
@@ -146,7 +164,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	}
 
 	// Get data by date (yyyy-MM-dd)
-	getEvaluationDataByDate(date: string) {
+	getAllEvaluationDataByDate(date: string) {
 		this.store.dispatch(PresentationStateAction.FetchPresentationsByDate({ time: date }));
 		this.store.dispatch(AttendanceStateAction.FetchAttendanceReport({ date }));
 		this.store.dispatch(NoteStateAction.FetchEvaluation({ sdate: date }));

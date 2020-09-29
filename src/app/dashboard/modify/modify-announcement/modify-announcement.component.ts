@@ -18,7 +18,7 @@ import {
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
 import { FormBuilder, Validators } from '@angular/forms';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, map } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 @Component({
@@ -38,7 +38,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 		fileId: [''],
 		fileName: [''],
 	});
-
+	hasFile$: Observable<boolean>;
 	phaseTypes$: Observable<{ key: string; val: string }>;
 
 	announcements$: Observable<Message[]>;
@@ -69,9 +69,14 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((files) => {
-        this.announcementForm.get('fileId').setValue(files[0].fileid)
-        this.announcementForm.get('fileName').setValue(files[0].filename)
-      });
+				this.announcementForm.patchValue({
+					fileId: files[0].fileid,
+					fileName: files[0].filename,
+				});
+			});
+		this.hasFile$ = this.announcementForm
+			.get('fileId')
+			.valueChanges.pipe(map((id) => !_.isEmpty(id)));
 		//#endregion
 
 		//#region Subscribe to effects
@@ -89,7 +94,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => {
 				this.store.dispatch(MainStateAction.FetchAnnouncements());
-				this.announcementForm.reset({ memberType: 'ar' });
+				this.cancelEdit();
 			});
 		//#endregion
 
@@ -99,8 +104,12 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 	get isEditing() {
 		return !_.isEmpty(this.announcementForm.get('messageId').value);
 	}
-	get hasFile() {
-		return !_.isEmpty(this.announcementForm.get('fileId').value);
+
+	cancelEdit() {
+		this.announcementForm.reset({
+			memberType: 'ar',
+		});
+		this.uploader.nativeElement.value = '';
 	}
 
 	submitAnnouncementForm() {
@@ -111,13 +120,13 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 					mtype: this.announcementForm.value.memberType,
 				})
 			);
-    else this.store.dispatch(MainStateAction.CreateAnnouncement(this.announcementForm.value));
-    this.loadingFormAnnouncement$.next(true);
+		else this.store.dispatch(MainStateAction.CreateAnnouncement(this.announcementForm.value));
+		this.loadingFormAnnouncement$.next(true);
 	}
 
 	deleteAnnouncement() {
-    this.store.dispatch(MainStateAction.DeleteAnnouncement(this.announcementForm.value));
-    this.loadingFormAnnouncement$.next(true);
+		this.store.dispatch(MainStateAction.DeleteAnnouncement(this.announcementForm.value));
+		this.loadingFormAnnouncement$.next(true);
 	}
 
 	selectAnnouncement(ann: Message) {
@@ -128,7 +137,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 			note: ann.Note,
 			fileId: ann.FileId !== '00000000-0000-0000-0000-000000000000' ? ann.FileId : null,
 			fileName: ann.FileName,
-    });
+		});
 	}
 
 	removeUploadedFiles() {
@@ -140,7 +149,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 
 	uploadFile(files: FileList) {
 		// Harus {...files} untuk membuang object sebelumnya yg read-only
-    this.store.dispatch(MainStateAction.UploadFile({ files: { ...files, length: files.length } }));
-    this.loadingFormAnnouncement$.next(true);
+		this.store.dispatch(MainStateAction.UploadFile({ files: { ...files, length: files.length } }));
+		this.loadingFormAnnouncement$.next(true);
 	}
 }

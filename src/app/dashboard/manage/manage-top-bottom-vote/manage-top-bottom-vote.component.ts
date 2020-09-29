@@ -44,7 +44,9 @@ export class ManageTopBottomVoteComponent
 	loadingViewVoteResult$: Observable<boolean>;
 	loadingFormVoteSchedule$ = new BehaviorSubject<boolean>(false);
 
-	traineesEntity: { [id: string]: ClientTrainee }; // for get trainee name by id
+  traineesEntity: { [id: string]: ClientTrainee } = {}; // for get trainee name by id
+  traineeIfNotFound = new ClientTrainee('000', 'T???', 'Unkown Trainee', '0000', false);
+
 	trainees$ = new BehaviorSubject<ClientTrainee[]>([]); // for get trainee name by id
 	editForm$ = new BehaviorSubject<TopBottomVoteSchedule>(null);
 	voteForm = this.fb.group({
@@ -75,7 +77,7 @@ export class ManageTopBottomVoteComponent
 				filter((v) => !_.isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe((res) => (this.traineesEntity = res));
+			.subscribe((res) => this.traineesEntity = res);
 
 		this.voteSchedules$ = this.store.pipe(select(fromVoteState.getVoteSchedules));
 		this.traineeVotesFiltered$ = this.store.pipe(select(fromVoteState.getTraineeVotesFiltered));
@@ -154,7 +156,7 @@ export class ManageTopBottomVoteComponent
 	}
 
 	getTrainee(traineeId: string): ClientTrainee {
-		return this.traineesEntity[traineeId];
+		return this.traineesEntity[traineeId] ?? this.traineeIfNotFound;
 	}
 
 	deleteVoteSchedule() {

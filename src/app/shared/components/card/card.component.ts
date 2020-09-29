@@ -154,6 +154,6 @@ export class CardComponent implements OnInit {
 	}
 
 	onBadgeClick($event: Event) {
-		$event.stopPropagation();
+		$event.stopPropagation(); // Prevent toggling open card when pressing button
 	}
 }
