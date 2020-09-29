@@ -2,7 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { ClientTrainee, ClientTraineeData, SimpleTraineeData } from '../../models';
 
 export const FetchTraineesSimpleData = createAction('[BinusianState] FetchTraineesSimpleData');
-export const FetchAllTraineesData = createAction('[BinusianState] FetchAllTraineesData');
+export const FetchTraineesData = createAction('[BinusianState] FetchTraineesData');
 export const FetchTrainees = createAction('[BinusianState] FetchTrainees');
 
 export const FetchTraineesSimpleDataSuccess = createAction(

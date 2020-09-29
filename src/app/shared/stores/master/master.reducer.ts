@@ -29,6 +29,7 @@ export interface IMasterState {
 	phases: ClientPhase[];
 	traineeInPhase: ClientTrainee[];
 	subjects: ClientSubject[];
+	maxFileSizes: { [subjectId: string]: number };
 	schedules: ClientSchedule[];
 	traineeInSchedule: ClientTrainee[];
 
@@ -61,6 +62,7 @@ export const initialState: IMasterState = {
 	phases: [],
 	traineeInPhase: [],
 	subjects: [],
+	maxFileSizes: {},
 	schedules: [],
 	traineeInSchedule: [],
 
@@ -161,8 +163,12 @@ export const MasterStateReducer = createReducer(
 
 	on(MasterStateAction.FetchSubjectsSuccess, (state, { payload, phaseId }) => ({
 		...state,
-		subjects: payload,
 		loadingSubjects: false,
+		subjects: payload,
+		maxFileSizes: {
+			...state.maxFileSizes,
+			...payload.reduce((acc, prev) => ({...acc, [prev.SubjectId]: prev.MaxFileSize}), {}),
+		},
 		subjectsByPhaseEntity: { ...state.subjectsByPhaseEntity, [phaseId]: payload },
 	})),
 
@@ -180,7 +186,7 @@ export const MasterStateReducer = createReducer(
 		traineesInScheduleEntity: { ...state.traineesInScheduleEntity, [scheduleId]: payload },
 	})),
 
-  // No need loadingIPList
+	// No need loadingIPList
 	on(MasterStateAction.FetchIPListSuccess, (state, { payload }) => ({
 		...state,
 		ipList: payload,
@@ -204,6 +210,7 @@ export const getRoles = getMasterStateBy((s) => s.roles);
 export const getUserInRoles = getMasterStateBy((s) => s.userInRoles);
 export const getGenerations = getMasterStateBy((s) => s.generations);
 export const getSubjects = getMasterStateBy((s) => s.subjects);
+export const getMaxFileSizes = getMasterStateBy((s) => s.maxFileSizes);
 export const getPhaseTypes = getMasterStateBy((s) => s.phaseTypes);
 export const getPhases = getMasterStateBy((s) => s.phases);
 export const getTraineesInPhase = getMasterStateBy((s) => s.traineeInPhase);

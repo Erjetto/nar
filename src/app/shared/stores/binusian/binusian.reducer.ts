@@ -50,7 +50,14 @@ export const BinusianStateReducer = createReducer(
     ...state,
     loadingTraineesSimpleData: false,
 		traineesSimpleData: payload,
-	}))
+	})),
+
+	on(BinusianStateAction.FetchTraineesData, (state) => ({ ...state, loadingTraineesData: true })),
+	on(BinusianStateAction.FetchTraineesDataSuccess, (state, { payload }) => ({
+    ...state,
+    loadingTraineesData: false,
+		traineesData: payload,
+	})),
 	// on(BinusianStateAction.FetchTraineesByPhaseSuccess, (state, {payload}) => ({...state, traineesByPhase: payload})),
 	// on(BinusianStateAction.FetchTraineesByScheduleSuccess, (state, {payload}) => ({...state, traineesBySchedule: payload})),
 );
@@ -62,5 +69,7 @@ export const getBinusianStateBy = (fn: (_: IBinusianState) => any) =>
 
 export const getTrainees = getBinusianStateBy((s) => s.trainees);
 export const getTraineesEntity = getBinusianStateBy((s) => s.traineesEntity);
+export const getTraineesData = getBinusianStateBy((s) => s.traineesData);
 export const getTraineesSimpleData = getBinusianStateBy((s) => s.traineesSimpleData);
 export const isTraineesSimpleDataLoading = getBinusianStateBy((s) => s.loadingTraineesSimpleData);
+export const isTraineesDataLoading = getBinusianStateBy((s) => s.loadingTraineesData);

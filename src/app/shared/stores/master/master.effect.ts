@@ -15,6 +15,7 @@ import {
 	switchMapTo,
 	catchError,
 	exhaustMap,
+  defaultIfEmpty,
 } from 'rxjs/operators';
 
 import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
@@ -82,25 +83,26 @@ export class MasterStateEffects {
 	);
 	@Effect()
 	getSubjects$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.FetchSubjects),
-		pluck('phaseId'),
-		switchMap((phaseId) =>
-			this.generalService.GetSubjects({ phaseId }).pipe(map((res) => ({ phaseId, res })))
+    ofType(MasterStateAction.FetchSubjects),
+    withLatestFrom(this.store.pipe(select(fromMasterState.getMaxFileSizes))),
+		switchMap(([data, sizes]) =>
+			this.generalService.GetSubjects(data).pipe(map((res) => ({ phaseId: data.phaseId, res, sizes })))
 		),
-		switchMap(({ phaseId, res }) =>
+		switchMap(({ phaseId, res, sizes }) =>
 			res.length === 0
 				? of({ phaseId, res }) // Kalo ngga ada subject skip GetMaxFileSize
 				: forkJoin(
 						// Get maximum file size for each subject
 						// Expectation: {'DB Id': 10000, 'Laravel Id': 1000000, 'C Id': 100,...}
 						// Pake Object instead of array karena takut urutannya sembarangan
-						// Possible Bug: Ada yg GetMaxFileSize nya error jadi ngga dapat semua
+						// Possible Bug: Jika ada yg GetMaxFileSize nya error jadi ngga dapat semua
 						res.reduce(
 							(acc, sbj) => ({
-								...acc,
-								[sbj.SubjectId]: this.leaderService.GetMaximumFileSize({
-									subjectId: sbj.SubjectId,
-								}),
+                ...acc,
+                // Ambil dari state jika sudah ada, request jika blum ada
+                [sbj.SubjectId]: sizes[sbj.SubjectId] 
+                  ? of(sizes[sbj.SubjectId]) 
+                  : this.leaderService.GetMaximumFileSize({subjectId: sbj.SubjectId}),
 							}),
 							{}
 						)
@@ -170,7 +172,7 @@ export class MasterStateEffects {
 	getIPList$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchIPList),
 		switchMap(() => this.traineeAttendanceService.getIPWhiteList()),
-		mergeMap((res) => of(MasterStateAction.FetchIPListSuccess({payload: res}))),
+		mergeMap((res) => of(MasterStateAction.FetchIPListSuccess({ payload: res }))),
 		share()
 	);
 
@@ -267,32 +269,12 @@ export class MasterStateEffects {
 	createTraineeInSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateTraineeInSchedule),
 		withLatestFrom(this.store.pipe(select(fromBinusianState.getTrainees))),
-		switchMap(([data, trainees]) => {
-			// If there's a trainee who can't be found in trainee list, toast error message
-			const invalidTrainees = data.binusianNumbers.filter(
-				(b) => trainees.find((t: ClientTrainee) => t.TraineeNumber === b) == null,
-				share()
-			);
-			if (invalidTrainees.length > 0)
-				return from(
-					invalidTrainees.map((num) =>
-						MainStateAction.ToastMessage({
-							messageType: 'danger',
-							message: `Trainee(s) ${num} doesn't exist`,
-						})
-					)
-				);
-			else
-				return this.leaderService
-					.SaveTraineesToSchedule(data)
-					.pipe(
-						map((res) =>
-							res === true
-								? MainStateAction.SuccessfullyMessage('created trainees in schedule')
-								: MainStateAction.FailMessage('Saving trainee to schedule')
-						)
-					);
-		}),
+		switchMap(([data, trainees]) => this.leaderService.SaveTraineesToSchedule(data)),
+		mergeMap((res) =>
+			_.isEmpty(res)
+				? of(MainStateAction.SuccessfullyMessage('created trainees in schedule'))
+				: of(MainStateAction.FailMessage('Saving trainee to schedule', res.join('\n')))
+		),
 		share()
 	);
 	//#endregion
@@ -392,6 +374,7 @@ export class MasterStateEffects {
 				? of(MainStateAction.SuccessfullyMessage('deleted subject'))
 				: of(MainStateAction.FailMessage('delete subject'))
 		),
+		share()
 	);
 
 	@Effect()

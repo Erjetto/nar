@@ -37,6 +37,14 @@ export class BinusianStateEffects {
 	);
 
 	@Effect()
+	getTraineesData$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.FetchTraineesData),
+		switchMap(() => this.traineeService.GetTrainees()),
+		mergeMap((results) => of(BinusianStateAction.FetchTraineesDataSuccess({ payload: results }))),
+		share()
+	);
+
+	@Effect()
 	getTraineesSimpleData$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchTraineesSimpleData),
 		switchMap(() => this.leaderService.GetTraineesSimpleData()),
@@ -46,63 +54,63 @@ export class BinusianStateEffects {
 		share()
 	);
 
+	@Effect()
 	createTrainingSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.CreateTrainingSchedules),
 		switchMap((data) => this.traineeAttendanceService.SaveTraineeSchedules(data)),
 		mergeMap((res) =>
-			!_.isEmpty(res)
+			_.isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('inserted training schedules'))
-				: of(MainStateAction.FailMessage('inserting training schedules'))
-		),
-		share()
-	);
-	createTraineeAttendances$: Observable<Action> = this.actions$.pipe(
-		ofType(BinusianStateAction.CreateTraineeAttendances),
-		switchMap((data) => this.traineeAttendanceService.SaveAttendances(data)),
-		mergeMap((res) =>
-			res === true
-				? of(MainStateAction.SuccessfullyMessage('inserted attendances'))
-				: of(MainStateAction.FailMessage('inserting attendances'))
-		),
-		share()
-	);
-	createLectureSchedules$: Observable<Action> = this.actions$.pipe(
-		ofType(BinusianStateAction.CreateLectureSchedules),
-		switchMap((data) => this.traineeAttendanceService.SaveTraineeLectureSchedules(data)),
-		mergeMap((res) =>
-			!_.isEmpty(res)
-				? of(MainStateAction.SuccessfullyMessage('inserted lecture schedules'))
-				: of(MainStateAction.FailMessage('inserting lecture schedules'))
+				: of(MainStateAction.FailMessage('inserting training schedules', res.join('\n')))
 		),
 		share()
   );
   
+	@Effect()
+	createTraineeAttendances$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.CreateTraineeAttendances),
+		switchMap((data) => this.traineeAttendanceService.SaveAttendances(data)),
+		mergeMap((res) =>
+    _.isEmpty(res)
+				? of(MainStateAction.SuccessfullyMessage('inserted attendances'))
+				: of(MainStateAction.FailMessage('inserting attendances', res.join('\n')))
+		),
+		share()
+  );
+  
+	@Effect()
+	createLectureSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.CreateLectureSchedules),
+		switchMap((data) => this.traineeAttendanceService.SaveTraineeLectureSchedules(data)),
+		mergeMap((res) =>
+			_.isEmpty(res)
+				? of(MainStateAction.SuccessfullyMessage('inserted lecture schedules'))
+				: of(MainStateAction.FailMessage('inserting lecture schedules', res.join('\n')))
+		),
+		share()
+	);
 
 	@Effect()
 	createTrainee$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.CreateTrainees),
-    switchMap((data) => this.leaderService.SaveTraineesInGeneration(data)),
-    tap(console.log),
-    mergeMap((res) =>
+		switchMap((data) => this.leaderService.SaveTraineesInGeneration(data)),
+		mergeMap((res) =>
 			_.isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created trainee'))
 				: of(MainStateAction.FailMessage('creating trainee', res.join('\n')))
-		)
+		),
+		share()
 	);
 
 	@Effect()
 	deleteTrainee$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.DeleteTrainee),
-    switchMap((data) => this.traineeService.Delete(data)),
-    tap(console.log),
-    mergeMap((res) =>
-      of(MainStateAction.ToastMessage({
-        messageType:'warning',
-        message: 'Result is not evaluated yet, please check the console'
-      }))
-			// !_.isEmpty(res)
-			// 	? of(MainStateAction.SuccessfullyMessage('deleted trainee'))
-			// 	: of(MainStateAction.FailMessage('deleting trainee'))
-		)
+		switchMap((data) => this.traineeService.Delete(data)),
+		mergeMap((res) =>
+			res
+				? of(MainStateAction.SuccessfullyMessage('deleted trainee'))
+				: of(MainStateAction.FailMessage('deleting trainee'))
+		),
+		share()
 	);
 }

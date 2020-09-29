@@ -83,20 +83,4 @@ export class VoteStateEffects {
 		),
 		share()
 	);
-
-	// @Effect()
-	// getPresentationStatus$: Observable<Action> = this.actions$.pipe(
-	// 	ofType(PresentationStateAction.FetchPresentationStatus),
-	//   switchMap((data) => this.presentationService.GetPresentationStatus(data)),
-	// 	mergeMap((res) =>
-	// 		!_.isEmpty(res)
-	// 			? of(PresentationStateAction.FetchPresentationStatusSuccess({ payload: res }))
-	// 			: of(
-	// 					MainStateAction.ToastMessage({
-	// 						messageType: 'danger',
-	// 						message: 'Failed to get presentations',
-	// 					})
-	// 			  )
-	// 	)
-	// );
 }

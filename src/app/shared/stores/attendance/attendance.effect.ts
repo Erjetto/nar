@@ -33,7 +33,8 @@ export class AttendanceStateEffects {
 			res
 				? of(MainStateAction.SuccessfullyMessage('change attendance status'))
 				: of(MainStateAction.FailMessage('changing attendance status'))
-		)
+		),
+		share()
 	);
 
 	@Effect()
@@ -48,7 +49,8 @@ export class AttendanceStateEffects {
 			res
 				? of(MainStateAction.SuccessfullyMessage('change fullday permission'))
 				: of(MainStateAction.FailMessage('changing fullday permission'))
-		)
+		),
+		share()
 	);
 
 	// Possibly not needed because attendance is on .aspx page.
@@ -68,6 +70,7 @@ export class AttendanceStateEffects {
 			res !== ''
 				? of(MainStateAction.SuccessfullyMessage('saved attendance'))
 				: of(MainStateAction.FailMessage('saving attendance'))
-		)
+		),
+		share()
 	);
 }
