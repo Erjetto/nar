@@ -56,7 +56,7 @@ export const SaveTraineeTopBottomVote = createAction(
 );
 
 export const SaveTrainerTopBottomVote = createAction(
-	'[VoteState] SaveTraineeTopBottomVote',
+	'[VoteState] SaveTrainerTopBottomVote',
 	props<{
 		scheduleId: string;
 		trainerName: string;

@@ -48,7 +48,6 @@ export class ManageTopBottomVoteComponent
   traineeIfNotFound = new ClientTrainee('000', 'T???', 'Unkown Trainee', '0000', false);
 
 	trainees$ = new BehaviorSubject<ClientTrainee[]>([]); // for get trainee name by id
-	editForm$ = new BehaviorSubject<TopBottomVoteSchedule>(null);
 	voteForm = this.fb.group({
 		scheduleId: [''], // For Update
 
@@ -103,7 +102,10 @@ export class ManageTopBottomVoteComponent
 			this.voteEffects.deleteTopBottomVoteSchedules$
 		)
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules()));
+			.subscribe(() => {
+        this.cancelEdit();
+        this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules())
+      });
 		//#endregion
 
 		this.searchTextControl.valueChanges
@@ -163,7 +165,7 @@ export class ManageTopBottomVoteComponent
 		this.loadingFormVoteSchedule$.next(true);
 		this.store.dispatch(
 			VoteStateAction.DeleteTopBottomVoteSchedule({
-				scheduleId: this.editForm$.value.ScheduleId,
+				scheduleId: this.voteForm.get('scheduleId').value
 			})
 		);
 	}

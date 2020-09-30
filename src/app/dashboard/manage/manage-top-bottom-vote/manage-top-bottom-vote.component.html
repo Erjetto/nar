@@ -106,7 +106,12 @@
 			</div>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Vote Result'" [isLoading]="loadingViewVoteResult$ | async">
+			<rd-card
+				[cardTitle]="
+					'Vote Result' + (isEditing ? ' - ' + this.voteForm.get('scheduleName').value : '')
+				"
+				[isLoading]="loadingViewVoteResult$ | async"
+			>
 				<div class="row">
 					<div class="col">
 						<ul class="nav nav-tabs">

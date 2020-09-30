@@ -249,8 +249,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
 					return [];
 				}
-			}),
-			distinctUntilChanged()
+			})
 		);
 	}
 
@@ -266,8 +265,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 					this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: currSubj.SubjectId }));
 					return [];
 				}
-			}),
-			distinctUntilChanged()
+			})
 		);
 	}
 }
