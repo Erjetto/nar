@@ -26,6 +26,7 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 	editDateFormat = 'yyyy-MM-dd';
 	viewDateFormat = 'EEEE, MMM dd yyyy';
 
+  // Ganti jadi ambil dari store
 	phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];
 
 	editForm$ = new BehaviorSubject<ClientPhase>(null);
