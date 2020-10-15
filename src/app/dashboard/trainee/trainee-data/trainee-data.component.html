@@ -42,7 +42,7 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>Name</td>
+							<td width="150px">Name</td>
 							<td>{{ (currentTrainee$ | async)?.TraineeName }}</td>
 						</tr>
 						<tr>
@@ -55,7 +55,7 @@
 						</tr>
 						<tr>
 							<td>ID Card</td>
-							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.KPTOrPassport }}</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData?.KPTOrPassport }}</td>
 						</tr>
 						<tr>
 							<td>Semester</td>
@@ -71,28 +71,28 @@
 						</tr>
 						<tr>
 							<td>Bank Branch</td>
-							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.BankBranch }}</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData?.BankBranch }}</td>
 						</tr>
 						<tr>
 							<td>Bank Account</td>
-							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.BankAccount }}</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData?.BankAccount }}</td>
 						</tr>
 						<tr>
 							<td>Permanent Address</td>
-							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.PemanentAddress }}</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData?.PemanentAddress }}</td>
 						</tr>
 						<tr>
 							<td>Current Address</td>
-							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.CurrentAddress }}</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData?.CurrentAddress }}</td>
 						</tr>
 						<tr>
 							<td>Current Address Type</td>
-							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData.CurrentAddressType }}</td>
+							<td>{{ (currentTrainee$ | async)?.AdditionalTraineeData?.CurrentAddressType }}</td>
 						</tr>
 						<tr>
 							<td>Phone Number</td>
 							<td>
-								{{ (currentTrainee$ | async)?.AdditionalTraineeData.PhoneNumberList.join('\n') }}
+								{{ (currentTrainee$ | async)?.AdditionalTraineeData?.PhoneNumberList.join('\n') }}
 							</td>
 						</tr>
 					</tbody>
@@ -135,16 +135,16 @@
 								<td>{{ trainee.TraineeName }}</td>
 								<td>{{ trainee.TraineeNumber }}</td>
 								<td>{{ trainee.TraineeCode }}</td>
-								<td>{{ trainee.AdditionalTraineeData.KPTOrPassport }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.KPTOrPassport }}</td>
 								<td>{{ trainee.Semester }}</td>
 								<td>{{ trainee.BirthDate | date: viewDateFormat }}</td>
 								<td>{{ trainee.Gender }}</td>
-								<td>{{ trainee.AdditionalTraineeData.BankBranch }}</td>
-								<td>{{ trainee.AdditionalTraineeData.BankAccount }}</td>
-								<td>{{ trainee.AdditionalTraineeData.PemanentAddress }}</td>
-								<td>{{ trainee.AdditionalTraineeData.CurrentAddress }}</td>
-								<td>{{ trainee.AdditionalTraineeData.CurrentAddressType }}</td>
-								<td>{{ trainee.AdditionalTraineeData.PhoneNumberList.join('\n') }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.BankBranch }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.BankAccount }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.PemanentAddress }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.CurrentAddress }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.CurrentAddressType }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.PhoneNumberList.join('\n') }}</td>
 							</tr>
 						</tbody>
 					</table>
