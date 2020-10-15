@@ -43,10 +43,9 @@ footer {
 }
 
 a {
-
-  &:hover{
-    text-decoration: none;
-  }
+	&:hover {
+		text-decoration: none;
+	}
 }
 
 .hover-text-blue:hover {
@@ -296,7 +295,16 @@ a {
 }
 
 .bg-excel {
-	background-color: teal;
+  background-color: teal;
+  color: white;
+
+	&:hover {
+    background-color: darken($color: teal, $amount: 3%);
+    color: white;
+	}
+	&:active, &.active {
+    background-color: darken($color: teal, $amount: 7%);
+	}
 }
 
 // tables

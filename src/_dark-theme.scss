@@ -7,41 +7,42 @@
 	// .dashboard__content {
 	background-color: $content-bg-color-dark !important;
 	color: $text-color-dark !important;
-  // }
-  .btn{
-    color: white;
-  }
+	// }
+	.btn {
+		color: white;
+	}
 
 	header,
-  nav,
+	nav,
 	.form-control,
 	.table,
 	rd-card,
 	.form-control::placeholder {
 		background-color: $header-bg-color-dark !important;
 		color: white !important;
-  }
-  
-  .form-control:disabled, .form-control[readonly]{
-    background-color: #999999 !important;
-  }
+	}
+
+	.form-control:disabled,
+	.form-control[readonly] {
+		background-color: #999999 !important;
+	}
 
 	.table-hover tbody tr:hover {
 		color: unset;
 	}
-  rd-card{
+	rd-card {
 		.card__cover {
 			background-color: rgba(
 				$color: lighten($color: $header-bg-color-dark, $amount: 15%),
 				$alpha: 0.8
 			) !important;
 		}
-  }
+	}
 	rd-card.card-collapsible {
 		.card__title:hover {
 			background-color: lighten($color: $header-bg-color-dark, $amount: 15%) !important;
 		}
-  }
+	}
 
 	.navbar {
 		border-top: 1px solid lighten($color: $header-bg-color-dark, $amount: 15%) !important;
@@ -66,11 +67,11 @@
 	.text-warning,
 	.text-primary {
 		mix-blend-mode: screen;
-  }
-  
-  .ngb-highlight{
-    color: black;
-  }
+	}
+
+	.ngb-highlight {
+		color: black;
+	}
 
 	pre {
 		color: lightgrey;
@@ -81,6 +82,41 @@
 		border: 1px solid lighten($color: $header-bg-color-dark, $amount: 15%) !important;
 		box-shadow: 0px 2px 3px 0px lighten($color: $header-bg-color-dark, $amount: 15%) !important;
 	}
+
+	// QUILL EDITOR
+	.ql-editor {
+		color: white;
+	}
+	.ql-stroke {
+		stroke: white;
+	}
+	.ql-fill {
+		fill: white;
+  }
+  
+	.ql-picker,
+	.ql-blank::before {
+		color: white;
+	}
+	.ql-picker-item {
+		color: black;
+  }
+  
+  .ql-snow {
+    &.ql-toolbar, .ql-toolbar{
+      button, .ql-picker-item, .ql-picker-label{
+        &:hover, &.ql-active, &:focus, &.ql-selected{
+          color: #75b8ff;
+          .ql-stroke {
+            stroke: #75b8ff;
+          }
+          .ql-fill {
+            fill: #75b8ff;
+          }
+        }
+      }
+    }
+  }
 }
 
 // .body:has(> rd-root > .dark-theme){

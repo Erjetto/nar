@@ -1,0 +1,27 @@
+:host {
+	.answer {
+		padding: 1rem;
+
+		&__head {
+			border-bottom: 1px solid lightblue;
+			margin-bottom: 0.75rem;
+		}
+
+		&__body {
+			padding-left: 1rem;
+		}
+	}
+
+	.comment {
+		border-top: 1px solid lightgrey;
+		line-height: 2.5rem;
+	}
+
+	.answer-correct {
+		background: #6bf0cb4d;
+	}
+
+	.answer-wrong {
+		background: #f06b6b4d;
+	}
+}

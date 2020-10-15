@@ -6,12 +6,9 @@ import { RouterModule } from '@angular/router';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { QuillModule } from 'ngx-quill';
 
-
-import {
-	FontAwesomeModule,
-	FaIconLibrary,
-} from '@fortawesome/angular-fontawesome';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 import { farIcons, fasIcons } from './icons';
 import { ClockComponent } from './components/clock/clock.component';
@@ -32,41 +29,57 @@ const SHARED_DECLARATIONS = [
 	// Shared components, pipes, and directives, ex: SearchComponent, CurrencyPipe
 	ClockComponent,
 	CardComponent,
-  ToasterComponent,
-  ModalComponent, 
-  ConfirmablePopUpComponent,
-  PresentationQuestionComponent,
-  FilterByInputComponent,
-  UploadInputComponent,
+	ToasterComponent,
+	ModalComponent,
+	ConfirmablePopUpComponent,
+	PresentationQuestionComponent,
+	FilterByInputComponent,
+	UploadInputComponent,
 
-  
-  ClickStopPropagationDirective,
-  ContrastTextColorDirective,
-  EasyHorizontalSrollDirective,
-  VarDirective,
+	ClickStopPropagationDirective,
+	ContrastTextColorDirective,
+	EasyHorizontalSrollDirective,
+	VarDirective,
 ];
 
 @NgModule({
-	declarations: [...SHARED_DECLARATIONS,    ],
+	declarations: [...SHARED_DECLARATIONS],
 	imports: [
 		FontAwesomeModule,
 		CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
+		FormsModule,
+		ReactiveFormsModule,
 		HttpClientModule,
-    RouterModule,
-    NgSelectModule,
+		RouterModule,
+		NgSelectModule,
 		NgbModule,
+		QuillModule.forRoot({
+			modules: {
+				toolbar: [
+					['bold', 'italic', 'underline', 'strike'], // toggled buttons
+					['code-block'],
+
+					[{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+
+					[{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+
+					['clean'], // remove formatting button
+
+					['link', 'image', 'video'],
+				],
+			},
+		}),
 	],
 	exports: [
 		FontAwesomeModule,
 		CommonModule,
 		FormsModule,
-    ReactiveFormsModule,
+		ReactiveFormsModule,
 		HttpClientModule,
 		RouterModule,
-    NgSelectModule,
+		NgSelectModule,
 		NgbModule,
+		QuillModule,
 		...SHARED_DECLARATIONS,
 	],
 })

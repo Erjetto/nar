@@ -1,1 +1,186 @@
-<p>view-question works!</p>
+<div class="container-lg">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Question'" [isLoading]="loadingViewQuestion$ | async">
+				<div class="row mb-3">
+					<b>Material: </b> &nbsp;&nbsp; {{ (presentation$ | async)?.Material }}
+				</div>
+				<div class="row">
+					<div class="col pl-4" [innerHTML]="(question$ | async)?.Question.Text"></div>
+					<div class="d-flex flex-column maxw-200px">
+						<div class="row justify-content-end text-right">
+							Asked By {{ (question$ | async)?.Question.UserName }}
+						</div>
+						<div
+							class="row justify-content-end text-right"
+							[ngClass]="{ 'text-danger': (question$ | async)?.DeadlinePassed }"
+						>
+							{{ (presentation$ | async)?.Deadline | date: 'dd MMM yyyy hh:mm' }}
+						</div>
+					</div>
+				</div>
+
+				<div class="row py-3">
+					<b>{{ (question$ | async)?.Answers.length }} Answers</b>
+				</div>
+
+				<div
+					class="row answer"
+					[ngClass]="{
+						'answer-correct': answer.Status === 'correct',
+						'answer-wrong': answer.Status === 'wrong'
+					}"
+					*ngFor="let answer of (question$ | async)?.Answers; let i = index"
+				>
+					<div class="col">
+						<div class="row answer__head">
+							<span class="text-primary">{{ answer.UserName }}</span
+							>&nbsp; - &nbsp;
+							{{
+								(question$ | async)?.Question.Histories[
+									(question$ | async)?.Question.Histories.length - 1
+								].SavedDate | date: 'dd MMM yyyy hh:mm a'
+							}}
+						</div>
+						<div class="row answer__body">
+              <!-- Answer -->
+              <div class="col" [hidden]="isAnswerEditing(i)" [innerHTML]="answer.Text"></div>
+              <!-- or Edit Answer -->
+							<div class="col" [hidden]="!isAnswerEditing(i)">
+                <form 
+                  #answerEditForm="ngForm" 
+                  (submit)="updateAnswer(answer.Id, null, answerEditForm.value['answerEdit'])"
+                >
+                  <quill-editor
+                    name="answerEdit"
+                    [styles]="{ display: 'block', height: '100px' }"
+                    [ngModel]="answer.Text"
+                  ></quill-editor>
+                  <button class="btn btn-sm btn-primary" type="submit">
+                    <fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
+                  </button>
+                </form>
+              </div>
+              
+              <!-- Action buttons -->
+							<div>
+								<!-- Set Answer status -->
+								<div
+									class="row justify-content-end btn-group mb-2"
+									*ngIf="(currentUser$ | async)?.Role.is(constant.role.AssistantSupervisor)"
+								>
+									<button
+										class="btn btn-success"
+										title="Correct"
+										*ngIf="answer.Status !== 'correct'"
+										(click)="updateAnswer(answer.Id, 'correct')"
+									>
+										<fa-icon [icon]="['fas', 'check']"></fa-icon>
+									</button>
+									<button
+										class="btn btn-danger"
+										title="Wrong"
+										*ngIf="answer.Status !== 'wrong'"
+										(click)="updateAnswer(answer.Id, 'wrong')"
+									>
+										<fa-icon [icon]="['fas', 'times']"></fa-icon>
+									</button>
+									<button
+										class="btn btn-secondary"
+										title="Unchecked"
+										*ngIf="answer.Status !== 'unchecked'"
+										(click)="updateAnswer(answer.Id, 'unchecked')"
+									>
+										<fa-icon [icon]="['fas', 'question']"></fa-icon>
+									</button>
+								</div>
+								<!-- Edit comments or delete -->
+								<div
+									class="row justify-content-end"
+									*ngIf="(currentUser$ | async)?.Name === answer.UserName"
+								>
+									<button class="btn btn-primary" title="Edit" (click)="toggleEdit(i)">
+										<fa-icon [icon]="['fas', 'pen']"></fa-icon>
+									</button>
+									&nbsp;
+									<rd-confirmable-pop-up
+										popoverTitle="Delete this answer?"
+										(confirm)="deleteAnswer(answer.Id)"
+									>
+										<button class="btn btn-danger" title="Delete">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+										</button>
+									</rd-confirmable-pop-up>
+								</div>
+							</div>
+							<div class="row pl-4 my-3">
+								<div class="col">
+									<div class="row"><b>Comments</b></div>
+									<div
+										class="row comment pre-wrap"
+										*ngFor="let comment of answer.Comments; let j = index"
+									>
+										<div class="col">{{ comment.Comment }} - by {{ comment.UserName }}</div>
+										<!-- <div class="p-1" *ngIf="(currentUser$ | async)?.Name === answer.UserName">
+											<button class="btn btn-sm btn-primary" title="Edit" (click)="toggleEdit(i, j)">
+												<fa-icon [icon]="['fas', 'pen']"></fa-icon>
+											</button>
+                      <rd-confirmable-pop-up
+                        (confirm)="deleteComment(answer.Id, comment.Id)"
+                      >
+												<button class="btn btn-sm btn-danger" title="Delete">
+													<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+												</button>
+											</rd-confirmable-pop-up>
+										</div> -->
+									</div>
+								</div>
+              </div>
+              <!-- New comment form -->
+							<form #commentForm="ngForm" class="row pl-4" (submit)="addComment(commentForm)">
+								<input type="hidden" name="itemId" [ngModel]="answer.Id"/>
+								<div class="col">
+									<textarea
+										class="form-control vertical-text-area"
+										placeholder="Add comment here"
+										rows="1"
+										style="border: none; border-bottom: 1px solid"
+										name="comment"
+										ngModel
+									></textarea>
+								</div>
+								<div>
+									<button type="submit" class="btn btn-primary">
+										<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+        </div>
+        <!-- New Answer -->
+				<div class="row my-3">
+					<b>New Answers</b>
+				</div>
+				<div class="row mb-3">
+					<div class="col">
+						<quill-editor
+							[styles]="{ display: 'block', height: '100px' }"
+							[formControl]="newAnswerText"
+						></quill-editor>
+					</div>
+				</div>
+				<div class="row justify-content-center">
+					<!-- BUG: answerText.invalid tak bisa mengupdate status disabled -->
+					<button
+						class="btn btn-primary"
+						[disabled]="(newAnswerText.statusChanges | async) === 'INVALID'"
+						(click)="addAnswer()"
+					>
+						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Submit New Answer
+					</button>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>
