@@ -27,7 +27,6 @@ import { ModifyInterviewScheduleComponent } from './modify/modify-interview-sche
 import { ModifyInterviewMaterialComponent } from './modify/modify-interview-material/modify-interview-material.component';
 import { ViewAllQuestionComponent } from './presentation/view-all-question/view-all-question.component';
 import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
-import { ScoringComponent } from './presentation/scoring/scoring.component';
 import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
 import { TraineeScheduleComponent } from './modify/trainee-schedule/trainee-schedule.component';
 import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
@@ -61,7 +60,6 @@ import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.compon
 		ViewQuestionComponent,
 		ViewAllQuestionComponent,
 		ViewAllPresentationComponent,
-		ScoringComponent,
     TraineeScheduleComponent,
     
 		TraineeDataComponent,
