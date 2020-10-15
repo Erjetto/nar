@@ -23,7 +23,6 @@ import { ManageScheduleComponent } from './master/manage-schedule/manage-schedul
 import { ModifyAnnouncementComponent } from './modify/modify-announcement/modify-announcement.component';
 import { ModifyInterviewScheduleComponent } from './modify/modify-interview-schedule/modify-interview-schedule.component';
 import { ModifyInterviewMaterialComponent } from './modify/modify-interview-material/modify-interview-material.component';
-import { ScoringComponent } from './presentation/scoring/scoring.component';
 import { ViewAllQuestionComponent } from './presentation/view-all-question/view-all-question.component';
 import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
 import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
@@ -37,7 +36,7 @@ export const routes: Routes = [
 		component: DashboardComponent,
 		// resolve: { currentUser: CurrentUserResolver },
 		canActivate: [AuthGuard],
-		// canActivateChild: [AuthGuard],  // Not needed, still triggered when access child
+		// canActivateChild: [AuthGuard],  // Not needed, canActivate still triggered when accessing child
 		// Data for MenuService to prevent Circular import
 		data: { isRootMenu: true },
 		children: [
@@ -278,14 +277,14 @@ export const routes: Routes = [
 					name: 'Presentation',
 				},
 				children: [
-					{
-						path: 'scoring',
-						component: ScoringComponent,
-						data: {
-							roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
-							name: 'Scoring',
-						},
-					},
+					// {
+					// 	path: 'scoring',
+					// 	component: ScoringComponent,
+					// 	data: {
+					// 		roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
+					// 		name: 'Scoring',
+					// 	},
+					// },
 					// {
 					// 	path: 'report-detail-summary',
 					// 	component: null,
@@ -480,8 +479,12 @@ export const routes: Routes = [
 					},
 				],
 			},
-		],
-	},
+    ],
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  }
 ];
 
 @NgModule({

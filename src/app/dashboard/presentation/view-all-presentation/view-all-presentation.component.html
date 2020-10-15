@@ -58,51 +58,246 @@
 				[cardTitle]="'View Presentation'"
 				[expanded]="currentPresentation$ | async"
 				[collapsible]="false"
+				[formGroup]="scoringForm"
+				[isLoading]="loadingViewPresentation$ | async"
 			>
-				<ng-container *ngIf="currentPresentation$ | async as presentation">
+				<div rdCardBadges>
+					<button
+						class="btn btn-sm btn-primary mr-1"
+						[hidden]="(presentationStatus$ | async) !== 'Not Yet Input'"
+						(click)="showScoringForm$.next(!showScoringForm$.value)"
+					>
+						{{ (showScoringForm$ | async) ? 'Hide Scoring Form' : 'Show Scoring Form' }}
+					</button>
+				</div>
+				<div class="row mb-3">
+					<div class="col-3"><b>Material</b></div>
+					<div class="col">
+						{{ (currentPresentation$ | async)?.Material }}
+					</div>
+				</div>
+				<div class="row mb-3" *ngIf="presentationStatus$ | async as status">
+					<div class="col-3"><b>Status</b></div>
+					<div
+						class="col"
+						[ngClass]="{
+							'text-danger': status === 'Not Passed',
+							'text-success': status === 'Passed'
+						}"
+					>
+						<b>{{ status }}</b>
+					</div>
+				</div>
+				<div [hidden]="!(showScoringForm$ | async)">
 					<div class="row mb-3">
-						<div class="col-3"><b>Material</b></div>
+						<div class="col-3"><b>Understanding</b></div>
 						<div class="col">
-							{{ presentation?.Material }}
-						</div>
-					</div>
-					<div class="row mb-3" *ngIf="presentationStatus$ | async as status">
-						<div class="col-3"><b>Status</b></div>
-						<div
-							class="col"
-							[ngClass]="{
-								'text-danger': status === 'Not Passed',
-								'text-success': status === 'Passed'
-							}"
-						>
-							<b>{{ status }}</b>
-						</div>
-					</div>
-					<div class="row mb-3">
-						<b>Questions:</b>
-					</div>
-					<div class="row mb-3">
-						<div class="col v-list-m-12 v-list-bordered px-0">
-							<div class="row" *ngFor="let question of presentation?.Questions">
-								<rd-presentation-question [presentation]="presentation" [question]="question">
-									<!-- currentGenId="(currentGeneration$ | async)?.GenerationId" -->
-									<!-- TODO: Add role validation here (!= Trainee) -->
-									<div class="actions" *ngIf="true">
-										<rd-confirmable-pop-up (confirm)="onDeleteQuestion(question)">
-											<button class="btn btn-danger">
-												<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
-											</button>
-										</rd-confirmable-pop-up>
-									</div>
-								</rd-presentation-question>
+							<div class="row mb-2">Your judgement for his/her understanding</div>
+							<div class="row btn-group btn-group-toggle">
+								<label class="btn btn-danger" for="understanding_1">
+									<input
+										type="radio"
+										value="1"
+										id="understanding_1"
+										formControlName="understanding"
+									/>
+									Very Bad &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="understandingValue != '1'"></fa-icon>
+								</label>
+								<label class="btn btn-warning" for="understanding_2">
+									<input
+										type="radio"
+										value="2"
+										id="understanding_2"
+										formControlName="understanding"
+									/>
+									Bad &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="understandingValue != '2'"></fa-icon>
+								</label>
+								<label class="btn btn-success" for="understanding_3">
+									<input
+										type="radio"
+										value="3"
+										id="understanding_3"
+										formControlName="understanding"
+									/>
+									Good &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="understandingValue != '3'"></fa-icon>
+								</label>
+								<label class="btn bg-excel" for="understanding_4">
+									<input
+										type="radio"
+										value="4"
+										id="understanding_4"
+										formControlName="understanding"
+									/>
+									Very Good &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="understandingValue != '4'"></fa-icon>
+								</label>
 							</div>
 						</div>
 					</div>
-					<div class="row">
-						<b>Comment: </b>
-						<div [innerHTML]="presentation?.Comment"></div>
+					<div class="row mb-3">
+						<div class="col-3"><b>Teaching Methodology</b></div>
+						<div class="col">
+							<div class="row mb-2">Voice, material delivery method, writing on white board</div>
+							<div class="row btn-group btn-group-toggle">
+								<label class="btn btn-danger" for="voice_1">
+									<input type="radio" value="1" id="voice_1" formControlName="voice" />
+									Very Bad &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="voiceValue != '1'"></fa-icon>
+								</label>
+								<label class="btn btn-warning" for="voice_2">
+									<input type="radio" value="2" id="voice_2" formControlName="voice" />
+									Bad &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="voiceValue != '2'"></fa-icon>
+								</label>
+								<label class="btn btn-success" for="voice_3">
+									<input type="radio" value="3" id="voice_3" formControlName="voice" />
+									Good &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="voiceValue != '3'"></fa-icon>
+								</label>
+								<label class="btn bg-excel" for="voice_4">
+									<input type="radio" value="4" id="voice_4" formControlName="voice" />
+									Very Good &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="voiceValue != '4'"></fa-icon>
+								</label>
+							</div>
+						</div>
 					</div>
-				</ng-container>
+					<div class="row mb-3">
+						<div class="col-3"><b>Class</b></div>
+						<div class="col">
+							<div class="row mb-2">Your judgement for his/her class control</div>
+							<div class="row btn-group btn-group-toggle">
+								<label class="btn btn-danger" for="classControl_1">
+									<input
+										type="radio"
+										value="1"
+										id="classControl_1"
+										formControlName="classControl"
+									/>
+									Very Bad &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="classControlValue != '1'"></fa-icon>
+								</label>
+								<label class="btn btn-warning" for="classControl_2">
+									<input
+										type="radio"
+										value="2"
+										id="classControl_2"
+										formControlName="classControl"
+									/>
+									Bad &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="classControlValue != '2'"></fa-icon>
+								</label>
+								<label class="btn btn-success" for="classControl_3">
+									<input
+										type="radio"
+										value="3"
+										id="classControl_3"
+										formControlName="classControl"
+									/>
+									Good &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="classControlValue != '3'"></fa-icon>
+								</label>
+								<label class="btn bg-excel" for="classControl_4">
+									<input
+										type="radio"
+										value="4"
+										id="classControl_4"
+										formControlName="classControl"
+									/>
+									Very Good &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="classControlValue != '4'"></fa-icon>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-3"><b>Notes</b></div>
+						<div class="col">
+							<textarea
+								class="form-control vertical-text-area minh-150px"
+								formControlName="notes"
+							></textarea>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-3"><b>Status</b></div>
+						<div class="col-6">
+							<div class="row btn-group btn-group-toggle">
+								<label class="btn btn-danger" for="status_not_passed">
+									<input
+										type="radio"
+										value="Not Passed"
+										id="status_not_passed"
+										formControlName="status"
+									/>
+									Not Passed &nbsp;
+									<fa-icon
+										[icon]="['fas', 'check']"
+										[hidden]="statusValue !== 'Not Passed'"
+									></fa-icon>
+								</label>
+								<label class="btn btn-success" for="status_passed">
+									<input type="radio" value="Passed" id="status_passed" formControlName="status" />
+									Passed &nbsp;
+									<fa-icon [icon]="['fas', 'check']" [hidden]="statusValue !== 'Passed'"></fa-icon>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-3 justify-content-center">
+						<button
+							class="btn btn-primary"
+							[disabled]="scoringForm.invalid"
+							(click)="submitScoringForm()"
+						>
+							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Score
+						</button>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<b>Questions:</b>
+				</div>
+				<div class="row mb-3">
+					<div class="col v-list-m-12 v-list-bordered px-0">
+						<div class="row" *ngFor="let question of (currentPresentation$ | async)?.Questions">
+							<rd-presentation-question
+								[presentation]="currentPresentation$ | async"
+								[question]="question"
+							>
+								<!-- currentGenId="(currentGeneration$ | async)?.GenerationId" -->
+								<!-- TODO: Add role validation here (!= Trainee) -->
+								<div class="actions" *ngIf="true">
+									<rd-confirmable-pop-up
+										[description]="deleteReasonTemplate"
+										[title]="'Delete this question?'"
+                    (confirm)="deleteQuestion(question)"
+                    (cancel)="deleteQuestionReason.reset()"
+									>
+										<ng-template #deleteReasonTemplate>
+											<textarea
+												class="form-control"
+												[formControl]="deleteQuestionReason"
+												placeholder="Reason is optional...."
+												cols="20"
+												rows="4"
+											></textarea>
+										</ng-template>
+										<button class="btn btn-danger">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+										</button>
+									</rd-confirmable-pop-up>
+								</div>
+							</rd-presentation-question>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<b>Comment: </b>
+					<div [innerHTML]="(currentPresentation$ | async)?.Comment"></div>
+				</div>
 			</rd-card>
 		</div>
 	</div>

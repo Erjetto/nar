@@ -1,32 +1,29 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 
 import {
 	MasterStateAction,
 	fromMasterState,
-	BinusianStateAction,
-	fromBinusianState,
-	MainStateAction,
-	fromMainState,
 	PresentationStateAction,
 	fromPresentationState,
 	MainStateEffects,
+	PresentationStateEffects,
 } from 'src/app/shared/store-modules';
 
-import { Observable, Subject, merge, combineLatest, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
 import {
 	ClientSubject,
-	ClientTrainee,
 	CoreTrainingPresentation,
-	CoreTrainingPresentationQuestion,
-	CoreTrainingPresentationItem,
 	ClientPhase,
-	ClientGeneration,
+	TraineePresentation,
+  CoreTrainingPresentationItem,
+  CoreTrainingPresentationQuestion,
 } from 'src/app/shared/models';
-import * as _ from 'lodash';
-import { takeUntil, filter, tap, withLatestFrom, switchMap, map } from 'rxjs/operators';
+import { isEmpty as _isEmpty} from 'lodash';
+import { takeUntil, filter, withLatestFrom, map } from 'rxjs/operators';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'rd-view-all-presentation',
@@ -47,22 +44,43 @@ export class ViewAllPresentationComponent
 	currentSubject$: Subject<ClientSubject> = new Subject();
 	currentPhase$: Subject<ClientPhase> = new Subject();
 
-	filteredTrainees$: Subject<CoreTrainingPresentation[]> = new Subject();
+	showScoringForm$ = new BehaviorSubject<boolean>(false);
+	scoringForm = this.fb.group({
+		phaseId: ['', Validators.required],
+		subjectId: ['', Validators.required],
+		traineeId: ['', Validators.required],
+		notes: ['', Validators.required],
+		presentationNo: ['', Validators.required],
+		status: ['', Validators.required],
+		classControl: ['', Validators.required],
+		understanding: ['', Validators.required],
+		voice: ['', Validators.required],
+  });
+  deleteQuestionReason = this.fb.control('');
 
 	phases$: Observable<ClientPhase[]>;
 	subjects$: Observable<ClientSubject[]>;
 
 	subjectsLoading$: Observable<boolean>;
 	presentationsLoading$: Observable<boolean>;
+	loadingViewPresentation$ = new BehaviorSubject<boolean>(false);
 
-	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
+	constructor(
+		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private presentationEffects: PresentationStateEffects,
+		private fb: FormBuilder
+	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
 		//#region Bind from store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
+		this.subjects$ = this.store.pipe(
+			select(fromMasterState.getSubjects),
+			map((subs: ClientSubject[]) => [...subs].reverse()) // The last subject is the first in list
+		);
 		this.subjectsLoading$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
 
 		this.presentations$ = this.store.pipe(select(fromPresentationState.getPresentations));
@@ -115,13 +133,31 @@ export class ViewAllPresentationComponent
 			.subscribe((presentations) => this.currentPresentation$.next(presentations[0]));
 		//#endregion
 
-		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe((p) => {
+		//#region Bind to effects
+		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());
 		});
+		this.presentationEffects.saveTraineePresentation$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((act) => {
+				// if it's successfully message, hide scoring and re-fetch status code
+				// tslint:disable-next-line: no-string-literal
+				if (act['messageType'].includes('success')) {
+					this.showScoringForm$.next(false);
+					this.store.dispatch(
+						PresentationStateAction.FetchPresentationStatus({
+							filename: this.currentPresentation$.value.presentationFileName,
+						})
+					);
+				}
+			});
+		//#endregion
+
+		//#region Auto fetch
 
 		this.currentPhase$
 			.pipe(
-				filter((res) => !_.isEmpty(res)),
+				filter((res) => !_isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((p) => {
@@ -130,7 +166,7 @@ export class ViewAllPresentationComponent
 
 		this.currentSubject$
 			.pipe(
-				filter((res) => !_.isEmpty(res)),
+				filter((res) => !_isEmpty(res)),
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.currentGeneration$)
 			)
@@ -145,20 +181,58 @@ export class ViewAllPresentationComponent
 
 		this.currentPresentation$ // Auto fetch Presentation Status
 			.pipe(
-				filter((res) => !_.isEmpty(res)),
+				filter((res) => !_isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((res) => {
 				this.store.dispatch(
 					PresentationStateAction.FetchPresentationStatus({
-						filename: res.presentationStatusCode,
+						filename: res.presentationFileName,
 					})
 				);
+				this.scoringForm.patchValue({
+					phaseId: res.PhaseId,
+					subjectId: res.SubjectId,
+					traineeId: res.TraineeId,
+					presentationNo: res.PresentationNo,
+				});
 			});
 		//#endregion
 
 		this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
-	onDeleteQuestion(qstn: CoreTrainingPresentationQuestion) {}
+	get understandingValue() {
+		return this.scoringForm.get('understanding').value;
+	}
+
+	get voiceValue() {
+		return this.scoringForm.get('voice').value;
+	}
+
+	get classControlValue() {
+		return this.scoringForm.get('classControl').value;
+	}
+
+	get statusValue() {
+		return this.scoringForm.get('status').value;
+	}
+
+	submitScoringForm() {
+		this.loadingViewPresentation$.next(true);
+		this.store.dispatch(
+			PresentationStateAction.SaveTraineePresentation({
+				data: TraineePresentation.fromJson(this.scoringForm.value),
+			})
+		);
+	}
+
+	deleteQuestion(question: CoreTrainingPresentationQuestion) {
+		this.loadingViewPresentation$.next(true);
+		this.store.dispatch(PresentationStateAction.DeleteCoreTrainingPresentationItem({
+      filename: question.parent.presentationFileName,
+      itemId: question.Question.Id,
+      note: this.deleteQuestionReason.value ?? '',
+    }));
+	}
 }
