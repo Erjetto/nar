@@ -22,7 +22,7 @@ import {
 	ClientPhase,
 } from 'src/app/shared/models';
 import { filter, withLatestFrom, takeUntil, tap, map, distinctUntilChanged } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 import { FormControl, FormBuilder } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 
@@ -80,7 +80,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.questionsBySubjectEntity$))
 			.subscribe(([[subId, gen], entity]) => {
 				if (!subId) return [];
-				if (!!subId && !_.isEmpty(entity[subId])) return entity[subId];
+				if (!!subId && !_isEmpty(entity[subId])) return entity[subId];
 				else
 					this.store.dispatch(
 						PresentationStateAction.FetchPresentationsBy({
@@ -94,7 +94,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 		this.store
 			.pipe(
 				select(fromMasterState.getPhases),
-				filter((v) => !_.isEmpty(v), takeUntil(this.destroyed$))
+				filter((v) => !_isEmpty(v), takeUntil(this.destroyed$))
 			)
 			.subscribe((phases: ClientPhase[]) => {
 				const corePhase = phases.find((p) => p.Description.includes('Core')) ?? phases[0];
@@ -104,7 +104,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 
 		this.subjects$
 			.pipe(
-				filter((res) => !_.isEmpty(res)),
+				filter((res) => !_isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((subjects) => {

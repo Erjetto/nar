@@ -19,7 +19,7 @@ import {
 } from 'src/app/shared/store-modules';
 import { FormBuilder, Validators } from '@angular/forms';
 import { takeUntil, filter, map } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 
 @Component({
 	selector: 'rd-modify-announcement',
@@ -65,7 +65,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 
 		this.uploadedFiles$
 			.pipe(
-				filter((v) => !_.isEmpty(v)),
+				filter((v) => !_isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((files) => {
@@ -76,7 +76,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 			});
 		this.hasFile$ = this.announcementForm
 			.get('fileId')
-			.valueChanges.pipe(map((id) => !_.isEmpty(id)));
+			.valueChanges.pipe(map((id) => !_isEmpty(id)));
 		//#endregion
 
 		//#region Subscribe to effects
@@ -102,7 +102,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 	}
 
 	get isEditing() {
-		return !_.isEmpty(this.announcementForm.get('messageId').value);
+		return !_isEmpty(this.announcementForm.get('messageId').value);
 	}
 
 	cancelEdit() {

@@ -8,7 +8,7 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { FormControl, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, merge } from 'rxjs';
 import {
 	MainStateEffects,
 	MainStateAction,
@@ -17,8 +17,7 @@ import {
 	fromInterviewState,
 } from 'src/app/shared/store-modules';
 import { takeUntil, filter, tap } from 'rxjs/operators';
-import * as _ from 'lodash';
-import { merge } from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
 
 @Component({
 	selector: 'rd-modify-interview-schedule',
@@ -69,7 +68,7 @@ export class ModifyInterviewScheduleComponent
 		//#region Auto select first in array
 		this.interviewQuestions$
 			.pipe(
-				filter((v) => !_.isEmpty(v)),
+				filter((v) => !_isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((q) => this.titleSelect.setValue(q[0]));
@@ -82,7 +81,7 @@ export class ModifyInterviewScheduleComponent
 			this.mainEffects.changeGen$
 		)
 			.pipe(
-				filter((v) => !_.isEmpty(v)),
+				filter((v) => !_isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe(() => this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport()));

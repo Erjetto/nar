@@ -5,8 +5,7 @@ import { MockData } from '../../mock-data';
 import { ClientCaseTrainer, ClientUploadAnswer } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
-
+import { map as _map} from 'lodash';
 @Injectable({
 	providedIn: 'root',
 })
@@ -17,19 +16,19 @@ export class TrainerService {
 	public GetAllCases(data: { phaseId: string }): Observable<ClientCaseTrainer[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAllCases', data)
-			.pipe(map((res: any) => _.map(res.d, ClientCaseTrainer.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientCaseTrainer.fromJson)));
 	}
 
 	public GetCaseBySubject(data: { subjectId: string }): Observable<ClientCaseTrainer[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetCaseBySubject', data)
-			.pipe(map((res: any) => _.map(res.d, ClientCaseTrainer.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientCaseTrainer.fromJson)));
 	}
 
 	public GetTraineeAnswer(data: { caseId: string }): Observable<ClientUploadAnswer[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeAnswer', data)
-			.pipe(map((res: any) => _.map(res.d, ClientUploadAnswer.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientUploadAnswer.fromJson)));
 	}
 
 	public SaveScore(data: {

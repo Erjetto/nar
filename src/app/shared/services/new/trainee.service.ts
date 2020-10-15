@@ -14,7 +14,7 @@ import {
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -28,7 +28,7 @@ export class TraineeService {
 	}): Observable<TraineeSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeTrainingSchedule', data)
-			.pipe(map((res: any) => _.map(res.d, TraineeSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
 	}
 
 	public GetTraineeScheduleHeader(data: {
@@ -37,13 +37,13 @@ export class TraineeService {
 	}): Observable<TraineeSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeScheduleHeader', data)
-			.pipe(map((res: any) => _.map(res.d, TraineeSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
 	}
 
 	public GetTraineeBinusianData(data: { binusianNumber: string }): Observable<TraineeSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeBinusianData', data)
-			.pipe(map((res: any) => _.map(res.d, TraineeSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
 	}
 
 	public SaveAdditionalTraineData(data: {
@@ -51,7 +51,7 @@ export class TraineeService {
 	}): Observable<TraineeSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveAdditionalTraineData', data)
-			.pipe(map((res: any) => _.map(res.d, TraineeSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
 	}
 
 	public SaveScheduleRegister(data: {
@@ -59,7 +59,7 @@ export class TraineeService {
 	}): Observable<TraineeSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveScheduleRegister', data)
-			.pipe(map((res: any) => _.map(res.d, TraineeSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
 	}
 
 	public GetCaseBySubject(data: {
@@ -74,7 +74,7 @@ export class TraineeService {
 	public GetCaseByPhase(data: { phaseId: string }): Observable<TraineeSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetCaseByPhase', data)
-			.pipe(map((res: any) => _.map(res.d, TraineeSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
 	}
 
 	public SaveAnswer(data: {
@@ -84,7 +84,7 @@ export class TraineeService {
 	}): Observable<TraineeSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveAnswer', data)
-			.pipe(map((res: any) => _.map(res.d, TraineeSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
 	}
 
 	public GetSpecificTraineeSchedule(data: {
@@ -93,7 +93,7 @@ export class TraineeService {
 	}): Observable<SchedulePerWeek[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetSpecificTraineeSchedule', data)
-			.pipe(map((res: any) => _.map(res.d, SchedulePerWeek.fromJson)));
+			.pipe(map((res: any) => _map(res.d, SchedulePerWeek.fromJson)));
 	}
 
 	public GetCurrentUserSpecificSchedule(data: {
@@ -101,7 +101,7 @@ export class TraineeService {
 	}): Observable<ClientSpecificSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetCurrentUserSpecificSchedule', data)
-			.pipe(map((res: any) => _.map(res.d, ClientSpecificSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientSpecificSchedule.fromJson)));
 	}
 
 	public GetTraineeRole(): Observable<string> {
@@ -125,13 +125,13 @@ export class TraineeService {
 	public GetPhasesCurrentTrainee(): Observable<ClientPhaseSimple[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPhasesCurrentTrainee', {})
-			.pipe(map((res: any) => _.map(res.d, ClientPhaseSimple.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientPhaseSimple.fromJson)));
 	}
 
 	public GetTrainees(): Observable<ClientTraineeData[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTrainees', {})
-			.pipe(map((res: any) => _.map(res.d, ClientTraineeData.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientTraineeData.fromJson)));
 	}
 
 	public GetTrainee(data: { traineeId: string }): Observable<ClientTraineeData> {

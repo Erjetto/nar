@@ -1,8 +1,7 @@
 import { createAction, props, Action } from '@ngrx/store';
 import { Message, User, ClientGeneration, Role, ToastType } from '../../models';
 import { HttpErrorResponse } from '@angular/common/http';
-import { JsonPipe } from '@angular/common';
-import { StringDecoder } from 'string_decoder';
+import { environment } from 'src/environments/environment';
 
 export const Login = createAction(
 	'[MainState] Login',
@@ -102,7 +101,10 @@ export const SuccessfullyMessage = (doingWhat: string): Action =>
 export const RequestFailedMessage = (error: HttpErrorResponse): Action =>
 	ToastMessage({
 		messageType: 'danger',
-		message: `Request Failed : ${error.message}`,
+    message: `Request Failed :
+URL: ${error.url.replace(environment.apiUrl, '')}
+Exception Type: ${error.error.ExceptionType}
+"${error.error.Message}"`,
 	});
 
 export const UnexpectedResultMessage = (doingWhat: string, result: any): Action =>

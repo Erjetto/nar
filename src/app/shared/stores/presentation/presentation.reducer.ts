@@ -7,7 +7,7 @@ import {
 	TraineePresentation,
 	CoreTrainingPresentationQuestion,
 } from '../../models';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 
 export interface IPresentationState {
 	// Entity digunakan utk mengakses data yg sudah diambil sebelumnya
@@ -170,13 +170,13 @@ export const getFilteredQuestions = createSelector(
 	getQuestionsBySubject,
 	getQuestionsFilter,
 	(entity, filters) => {
-		if (_.isEmpty(filters.subjectId)) return []; // Must have subjectId filter
+		if (_isEmpty(filters.subjectId)) return []; // Must have subjectId filter
 		let arr: CoreTrainingPresentationQuestion[] = entity[filters.subjectId];
-		if (_.isEmpty(arr)) return []; // If not exists yet the return []
+		if (_isEmpty(arr)) return []; // If not exists yet the return []
 
-		if (!_.isEmpty(filters.status)) arr = arr.filter((q) => q.Status === filters.status);
+		if (!_isEmpty(filters.status)) arr = arr.filter((q) => q.Status === filters.status);
 
-		if (!_.isEmpty(filters.search))
+		if (!_isEmpty(filters.search))
 			arr = arr.filter((q) => q.Question.Text.includes(filters.search));
 
 		return arr;

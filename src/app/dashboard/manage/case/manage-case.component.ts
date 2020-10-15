@@ -17,7 +17,7 @@ import {
 
 import { filter, tap, takeUntil, map, distinctUntilChanged } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 
@@ -100,7 +100,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		this.store
 			.pipe(
 				select(fromMainState.getUploadedFiles),
-				filter((v) => !_.isEmpty(v)),
+				filter((v) => !_isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((files) => {
@@ -153,10 +153,10 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	}
 
 	get isEditing() {
-		return !_.isEmpty(this.caseForm.value.caseId);
+		return !_isEmpty(this.caseForm.value.caseId);
 	}
 	get hasFile() {
-		return !_.isEmpty(this.caseForm.value.fileId);
+		return !_isEmpty(this.caseForm.value.fileId);
 	}
 
 	onSelectCase(row: Case) {

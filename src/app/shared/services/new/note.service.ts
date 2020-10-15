@@ -13,7 +13,7 @@ import {
 	TraineeComment,
 } from '../../models';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
@@ -52,7 +52,7 @@ export class NoteService {
 	public GetEvaluationNotesContain(data: { str: string }): Observable<EvaluationNote[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetEvaluationNotesContain', data)
-			.pipe(map((res: any) => _.map(res.d, EvaluationNote.fromJson)));
+			.pipe(map((res: any) => _map(res.d, EvaluationNote.fromJson)));
 	}
 
 	public DeleteReputationNote(data: { traineeId: string; noteId: string }): Observable<boolean> {

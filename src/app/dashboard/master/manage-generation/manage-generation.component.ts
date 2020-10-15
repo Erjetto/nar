@@ -15,7 +15,7 @@ import {
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { NgForm, FormBuilder, Validators } from '@angular/forms';
 import { takeUntil, tap, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 
 @Component({
 	selector: 'rd-manage-generation',
@@ -102,7 +102,7 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 	}
 
 	get isEditing() {
-		return !_.isEmpty(this.generationForm.get('generationId').value);
+		return !_isEmpty(this.generationForm.get('generationId').value);
 	}
 	selectGeneration(gen: ClientGeneration) {
 		this.generationForm.patchValue({

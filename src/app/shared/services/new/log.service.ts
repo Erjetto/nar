@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { LogBookPICData } from '../../models';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class LogService {
   public GetTraineeLogBookRecapBaseOnSubject(data: { trainee: string, subject: string }): Observable<LogBookPICData[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeLogBookRecapBaseOnSubject', data)
-			.pipe(map((res: any) => _.map(res.d, LogBookPICData.fromJson)));
+			.pipe(map((res: any) => _map(res.d, LogBookPICData.fromJson)));
 	}
   public DeleteLogBookRecap(data: { id: string; }): Observable<boolean> {
 		return this.httpClient

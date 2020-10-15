@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 import { take, filter, tap, first } from 'rxjs/operators';
 
 export class ObservableHelper {
@@ -7,7 +7,7 @@ export class ObservableHelper {
   // Useful for processing something after fetch
 	static tapFirstUnEmpty(observable: Observable<any>, callback: (res:any) => void): Observable<any> {
 		return observable.pipe(
-      filter(res => !_.isEmpty(res)),
+      filter(res => !_isEmpty(res)),
       tap(callback),
       first()
     );
@@ -16,7 +16,7 @@ export class ObservableHelper {
   static tapIfEmpty(observable: Observable<any>, callback: () => void): Observable<any> {
 		return observable.pipe(
       first(),
-      filter(res => !_.isEmpty(res)),
+      filter(res => !_isEmpty(res)),
       tap(callback),
     );
     }

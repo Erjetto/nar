@@ -19,7 +19,7 @@ import {
 } from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
-import * as _ from 'lodash';
+import { flatten as _flatten} from 'lodash';
 import { GeneralService } from '../../services/new/general.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Cookies } from '../../constants/cookie.constants';
@@ -184,8 +184,8 @@ export class MainStateEffects {
 				// If files is possibly string or string[], so make an array then flatten it to force string[]
 				// If it's array, then 2D arr be flattened
 				// If it's string, then it becomes arr
-				const fileIdsArr: string[] = _.flatten([res.fileid]);
-				const fileNamesArr: string[] = _.flatten([res.filename]);
+				const fileIdsArr: string[] = _flatten([res.fileid]);
+				const fileNamesArr: string[] = _flatten([res.filename]);
 
 				return of(
 					MainStateAction.SuccessfullyMessage('uploaded file(s) : ' + fileNamesArr.join(', ')),

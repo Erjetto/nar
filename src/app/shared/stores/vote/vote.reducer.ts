@@ -8,7 +8,7 @@ import {
 	TrainerTopBottomVote,
 } from '../../models';
 import { getBinusianState, getTrainees, getTraineesEntity } from '../binusian/binusian.reducer';
-import * as _ from 'lodash';
+import { cloneDeep as _cloneDeep } from 'lodash';
 import * as VoteStateAction from './vote.action';
 import * as MainStateAction from '../main/main.action';
 
@@ -103,7 +103,7 @@ export const getTrainerVotesFiltered = createSelector(
 	getTraineesEntity,
 	(votes: TrainerTopBottomVote[], search: string, trainees: { [id: string]: ClientTrainee }) => {
 		search = search.toLowerCase();
-		let filteredVotes = _.cloneDeep(votes);
+		let filteredVotes = _cloneDeep(votes);
 
 		if (search !== '') {
 			filteredVotes = filteredVotes.filter((vote) => {
@@ -135,7 +135,7 @@ export const getTraineeVotesFiltered = createSelector(
 	getTraineesEntity,
 	(votes: TopBottomVote[], search: string, trainees: { [id: string]: ClientTrainee }) => {
 		search = search.toLowerCase();
-		let filteredVotes = _.cloneDeep(votes);
+		let filteredVotes = _cloneDeep(votes);
 		if (search !== '') {
 			filteredVotes = filteredVotes.filter((vote) => {
 				if (trainees[vote.TraineeId]?.codeAndName.toLowerCase().indexOf(search) !== -1) return true;

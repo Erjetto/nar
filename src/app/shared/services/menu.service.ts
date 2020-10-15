@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Route, Router } from '@angular/router';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty, cloneDeep as _cloneDeep, filter as _filter} from 'lodash';
 import { UserService } from './user.service';
 import { Role } from '../models';
 import { RoleFlags } from '../constants/role.constant';
@@ -25,7 +25,7 @@ export class MenuService {
 		if (role instanceof Role) this.currentRole = role;
 		else this.currentRole = Role.from(role);
 
-		this.currentMenus = this.filterMenu(_.cloneDeep(this.dashboardRoute));
+		this.currentMenus = this.filterMenu(_cloneDeep(this.dashboardRoute));
 
 		return this.currentMenus;
 	}
@@ -35,7 +35,7 @@ export class MenuService {
 	
 	// Only suitable for 2 level menu
 	private filterMenu(routeArray: Route[]): Route[] {
-		return _.filter(routeArray, (route) => {
+		return _filter(routeArray, (route) => {
 			if (route.children) route.children = route.children.filter(this.menuFilter);
 			return route.children?.length > 0 || this.isPermitted(route);
 		});

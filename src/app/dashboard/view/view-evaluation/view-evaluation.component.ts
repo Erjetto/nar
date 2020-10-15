@@ -28,7 +28,7 @@ import {
 	AttendanceStateEffects,
 } from 'src/app/shared/store-modules';
 import { takeUntil, tap, withLatestFrom, map, filter } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty, sortBy as _sortBy} from 'lodash';
 
 @Component({
 	selector: 'rd-view-evaluation',
@@ -95,7 +95,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 			map((presentations: TraineePresentation[]) => {
 				// Separate presentations into 2 arr for each sessions
 				const presentationArr = [[], []];
-				_.sortBy(presentations, 'savedAt').forEach((p) => {
+				_sortBy(presentations, 'savedAt').forEach((p) => {
 					if (p.savedAt.getHours() >= 7 && p.savedAt.getHours() < 13) presentationArr[0].push(p);
 					else presentationArr[1].push(p);
 				});
@@ -123,7 +123,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		//#region Auto fetch
 		merge(this.currentDate.valueChanges, this.mainEffects.changeGen$)
 			.pipe(
-				filter(() => !_.isEmpty(this.currentDate.value)),
+				filter(() => !_isEmpty(this.currentDate.value)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe(() => this.getAllEvaluationDataByDate(this.currentDate.value));

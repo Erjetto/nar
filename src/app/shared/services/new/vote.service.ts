@@ -11,7 +11,7 @@ import {
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -37,13 +37,13 @@ export class VoteService {
 	public GetVoteBestTrainerSchedule(): Observable<ClientVoteBestTrainerSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetVoteBestTrainerSchedule', {})
-			.pipe(map((res: any) => _.map(res.d, ClientVoteBestTrainerSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientVoteBestTrainerSchedule.fromJson)));
 	}
 
 	public GetVoteSchedule(): Observable<ClientVoteBestTrainer[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetVoteSchedule', {})
-			.pipe(map((res: any) => _.map(res.d, ClientVoteBestTrainer.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientVoteBestTrainer.fromJson)));
 	}
 
 	public GetVoteBestTrainer(data: {
@@ -51,7 +51,7 @@ export class VoteService {
 	}): Observable<ClientVoteBestTrainer[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetVoteBestTrainer', data)
-			.pipe(map((res: any) => _.map(res.d, ClientVoteBestTrainer.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientVoteBestTrainer.fromJson)));
 	}
 
 	public UpdateVoteBestTrainerSchedule(data: {
@@ -78,7 +78,7 @@ export class VoteService {
 	}): Observable<ClientVoteBestTrainerSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetVoteBestTrainerScheduleForCurrentUser', data)
-			.pipe(map((res: any) => _.map(res.d, ClientVoteBestTrainerSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientVoteBestTrainerSchedule.fromJson)));
 	}
 
 	public SaveVote(data: {
@@ -167,7 +167,7 @@ export class VoteService {
 	public GetTopBottomVotesForSchedule(data: { scheduleId: string }): Observable<TopBottomVote[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTopBottomVotesForSchedule', data)
-			.pipe(map((res: any) => _.map(res.d, TopBottomVote.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TopBottomVote.fromJson)));
 	}
 
 	public GetTrainerTopBottomVotesForSchedule(data: {
@@ -175,6 +175,6 @@ export class VoteService {
 	}): Observable<TrainerTopBottomVote[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTrainerTopBottomVotesForSchedule', data)
-			.pipe(map((res: any) => _.map(res.d, TrainerTopBottomVote.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TrainerTopBottomVote.fromJson)));
 	}
 }

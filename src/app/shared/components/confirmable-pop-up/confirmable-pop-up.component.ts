@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { ColorHelper } from '../../utilities/color-helper';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import * as _ from 'lodash';
+import { isString as _isString } from 'lodash';
 
 @Component({
 	selector: 'rd-confirmable-pop-up',
@@ -31,10 +31,10 @@ export class ConfirmablePopUpComponent implements OnInit {
 	constructor(private el: ElementRef) {}
 
 	get titleIsString() {
-		return _.isString(this.title);
+		return _isString(this.title);
 	}
 	get descriptionIsString() {
-		return _.isString(this.description);
+		return _isString(this.description);
 	}
 
 	ngOnInit(): void {}

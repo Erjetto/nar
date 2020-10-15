@@ -19,13 +19,7 @@ import {
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { DateHelper } from '../../utilities/date-helper';
-import * as _ from 'lodash';
-
-// const headers = {
-// 	'Content-Type': 'application/json',
-// 	'Access-Control-Allow-Origin': '*',
-// 	'Access-Control-Allow-Methods': 'POST,',
-// };
+import { map as _map} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -85,25 +79,25 @@ export class GeneralService {
 	public GetScoreBySubject(data: { subjectId: string }): Observable<ClientScoreTrainee[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetScoreBySubject', data)
-			.pipe(map((res: any) => _.map(res.d, ClientScoreTrainee.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientScoreTrainee.fromJson)));
 	}
 
 	public GetMaterial(data: { subjectId: string }): Observable<Material[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetMaterial', data)
-			.pipe(map((res: any) => _.map(res.d, Material.fromJson)));
+			.pipe(map((res: any) => _map(res.d, Material.fromJson)));
 	}
 
 	public GetTraineesInLatestPhase(): Observable<ClientTraineeView[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineesInLatestPhaseg', {})
-			.pipe(map((res: any) => _.map(res.d, ClientTraineeView.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientTraineeView.fromJson)));
 	}
 
 	public GetTrainees(): Observable<ClientTrainee[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTrainees', {})
-			.pipe(map((res: any) => _.map(res.d, ClientTrainee.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientTrainee.fromJson)));
 	}
 
 	public GetTraineeData(data: { traineeId: string }): Observable<ClientTraineeData> {
@@ -121,7 +115,7 @@ export class GeneralService {
 	public GetSubjectsWithPresentation(data: { phaseId: string }): Observable<ClientSubject[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetSubjectsWithPresentation', data)
-			.pipe(map((res: any) => _.map(res.d, ClientSubject.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientSubject.fromJson)));
 	}
 
 	// Notification
@@ -147,30 +141,30 @@ export class GeneralService {
 	public GetPhasesCurrentGeneration(): Observable<ClientPhase[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPhasesCurrentGeneration', {})
-			.pipe(map((res: any) => _.map(res.d, ClientPhase.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientPhase.fromJson)));
 	}
 
 	public GetPhasesCurrentGenerationWithType(data: { type: string }): Observable<ClientPhase[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPhasesCurrentGenerationWithType', data)
-			.pipe(map((res: any) => _.map(res.d, ClientPhase.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientPhase.fromJson)));
 	}
 
 	public GetMessageCurrentGeneration(): Observable<Message[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetMessageCurrentGeneration', {})
-			.pipe(map((res: any) => _.map(res.d, Message.fromJson)));
+			.pipe(map((res: any) => _map(res.d, Message.fromJson)));
 	}
 
 	public GetStatisticTrainee(data: { phaseId: string }): Observable<ClientStatistic[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetStatisticTrainee', data)
-			.pipe(map((res: any) => _.map(res.d, ClientStatistic.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientStatistic.fromJson)));
 	}
 
 	public GetSubjects(data: { phaseId: string }): Observable<ClientSubject[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetSubjects', data)
-			.pipe(map((res: any) => _.map(res.d, ClientSubject.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientSubject.fromJson)));
 	}
 }

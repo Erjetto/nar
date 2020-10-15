@@ -27,7 +27,7 @@ import {
 	FormControl,
 	AbstractControl,
 } from '@angular/forms';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 
 /*
 NOTE: Schedule HAS NO UPDATE
@@ -250,7 +250,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		// Get trainee in schedule when change schedule
 		this.viewCurrSchedule$
 			.pipe(
-				filter((v) => !_.isEmpty(v)),
+				filter((v) => !_isEmpty(v)),
 				distinctUntilChanged(),
 				takeUntil(this.destroyed$)
 			)
@@ -263,7 +263,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	}
 	//#region Easy get scheduleForm
 	get isEditing() {
-		return !_.isEmpty(this.scheduleForm.get('currentSchedule').value);
+		return !_isEmpty(this.scheduleForm.get('currentSchedule').value);
 	}
 	get scheduleDates(): FormArray {
 		return this.scheduleForm.get('scheduleDates') as FormArray;
@@ -341,10 +341,10 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 
 		// for (let i = 0; i < this.meetingPerWeek; i++) {
 		// 	for (let j = 0; j < this.variations; j++) {
-		// 		const meeting = _.cloneDeep(newVariant);
+		// 		const meeting = _cloneDeep(newVariant);
 		// 		meeting.MeetingNo = i;
 		// 		meeting.VariationNo = j;
-		// 		for (let k = 0; k < this.scheduleCount; k++) meeting.Detail.push(_.cloneDeep(detail));
+		// 		for (let k = 0; k < this.scheduleCount; k++) meeting.Detail.push(_cloneDeep(detail));
 
 		// 		this.meetings = [...this.meetings, meeting];
 		// 	}

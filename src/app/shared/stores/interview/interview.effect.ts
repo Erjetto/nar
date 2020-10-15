@@ -32,7 +32,7 @@ import { TraineeAttendanceService } from 'src/app/shared/services/new/trainee-at
 import { TraineeService } from 'src/app/shared/services/new/trainee.service';
 import { VoteService } from 'src/app/shared/services/new/vote.service';
 import { IAppState } from 'src/app/app.reducer';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -123,7 +123,7 @@ export class InterviewStateEffects {
 		ofType(InterviewStateAction.CreateInterviewSchedule),
 		switchMap((data) => this.interviewService.SaveInterviewSchedule(data)),
 		mergeMap((res) =>
-			!_.isEmpty(res)
+			!_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created interview schedules'))
 				: of(MainStateAction.FailMessage('Saving interview schedules'))
 		),
@@ -166,7 +166,7 @@ export class InterviewStateEffects {
 		ofType(InterviewStateAction.DeleteInterviewSchedule),
 		switchMap((data) => this.interviewService.DeleteInterviewSchedule(data)),
 		mergeMap((res) =>
-			!_.isEmpty(res)
+			!_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created interview schedules'))
 				: of(MainStateAction.FailMessage('Saving interview schedules'))
 		),

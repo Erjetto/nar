@@ -11,7 +11,7 @@ import * as fromMainState from '../main/main.reducer';
 import { Observable, of } from 'rxjs';
 import { switchMap, mergeMap, share, pluck } from 'rxjs/operators';
 import { LeaderService } from '../../services/new/leader.service';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -32,7 +32,7 @@ export class CaseStateEffects {
 		ofType(CaseStateAction.CreateCase),
 		switchMap((data) => this.leaderService.SaveCase(data)),
 		mergeMap((res) =>
-			_.isEmpty(res)
+			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created case'))
 				: of(MainStateAction.FailMessage('creating case', res.join('\n')))
 		),
@@ -43,12 +43,12 @@ export class CaseStateEffects {
 	updateCase$: Observable<Action> = this.actions$.pipe(
 		ofType(CaseStateAction.UpdateCase),
 		switchMap((data) =>
-			!_.isEmpty(data.fileId)
+			!_isEmpty(data.fileId)
 				? this.leaderService.UpdateCaseIncludingFile({ ...data, fileId: data.fileId })
 				: this.leaderService.UpdateCase(data)
 		),
 		mergeMap((res) =>
-			_.isEmpty(res)
+			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('updated case'))
 				: of(MainStateAction.FailMessage('updating case', res.join('\n')))
 		),

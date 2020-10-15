@@ -8,8 +8,7 @@ import {
 	ClientEvaluation,
 	ClientTraineeData,
 } from '../../models';
-import * as _ from 'lodash';
-import { filter } from 'lodash';
+import { isEmpty as _isEmpty, sortBy as _sortBy} from 'lodash';
 
 export interface INoteState {
 	evaluations: ClientEvaluation;
@@ -78,7 +77,7 @@ export const getFilteredEvaluationNotes = createSelector(
 	getEvaluations,
 	getEvaluationNoteFilters,
 	(evaluation: ClientEvaluation, filters : any) => {
-    if(_.isEmpty(evaluation?.EvaluationNote)) return [];
+    if(_isEmpty(evaluation?.EvaluationNote)) return [];
 		let evals = [...evaluation.EvaluationNote];
 
 		evals = evals.filter(
@@ -86,13 +85,13 @@ export const getFilteredEvaluationNotes = createSelector(
 		);
 		switch (filters.sort) {
 			case 'Date':
-				evals = _.sortBy(evals, 'SavedAt');
+				evals = _sortBy(evals, 'SavedAt');
 				break;
 			case 'Author':
-				evals = _.sortBy(evals, 'SavedBy');
+				evals = _sortBy(evals, 'SavedBy');
 				break;
 			case 'Type':
-				evals = _.sortBy(evals, 'evalNoteType');
+				evals = _sortBy(evals, 'evalNoteType');
 				break;
 		}
 		if (!filters.asc) evals = evals.reverse();

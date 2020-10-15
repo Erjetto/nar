@@ -9,7 +9,7 @@ import {
 	TrainerTopBottomVote,
 } from 'src/app/shared/models';
 import { takeUntil, filter, debounceTime } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 import {
 	VoteStateAction,
 	fromVoteState,
@@ -73,7 +73,7 @@ export class ManageTopBottomVoteComponent
 		this.store
 			.pipe(
 				select(fromBinusianState.getTraineesEntity),
-				filter((v) => !_.isEmpty(v)),
+				filter((v) => !_isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((res) => this.traineesEntity = res);
@@ -119,7 +119,7 @@ export class ManageTopBottomVoteComponent
 	}
 
 	get isEditing() {
-		return !_.isEmpty(this.voteForm.get('scheduleId').value);
+		return !_isEmpty(this.voteForm.get('scheduleId').value);
 	}
 
 	selectSchedule(row: TopBottomVoteSchedule) {

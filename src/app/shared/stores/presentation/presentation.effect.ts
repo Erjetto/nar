@@ -9,7 +9,7 @@ import * as fromPresentationState from './presentation.reducer';
 import { Observable, of } from 'rxjs';
 import { switchMap, mergeMap, pluck, tap, share, map } from 'rxjs/operators';
 import { PresentationService } from '../../services/new/presentation.service';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -33,12 +33,12 @@ export class PresentationStateEffects {
 		switchMap(
 			({ generationId, traineeId, subjectId }) =>
 				// Gunakan antara ketiga method yg returnnya sama
-				(!_.isEmpty(traineeId)
+				(!_isEmpty(traineeId)
 					? this.presentationService.FindCoreTrainingPresentationByTrainee({
 							generationId,
 							traineeId,
 					  })
-					: !_.isEmpty(subjectId)
+					: !_isEmpty(subjectId)
 					? this.presentationService.FindCoreTrainingPresentationBySubject({
 							generationId,
 							subjectId,
@@ -48,10 +48,14 @@ export class PresentationStateEffects {
 			// Di akhirannya dibawa juga 'data' supaya bisa dipisahkan spt ini
 		),
 		mergeMap(({ traineeId, subjectId, res }) =>
-			!_.isEmpty(traineeId)
-				? of(PresentationStateAction.FetchPresentationsByTraineeSuccess({ payload: res, traineeId }))
-				: !_.isEmpty(subjectId)
-				? of(PresentationStateAction.FetchPresentationsBySubjectSuccess({ payload: res, subjectId }))
+			!_isEmpty(traineeId)
+				? of(
+						PresentationStateAction.FetchPresentationsByTraineeSuccess({ payload: res, traineeId })
+				  )
+				: !_isEmpty(subjectId)
+				? of(
+						PresentationStateAction.FetchPresentationsBySubjectSuccess({ payload: res, subjectId })
+				  )
 				: of(PresentationStateAction.FetchPresentationsByGenerationSuccess({ payload: res }))
 		),
 		share()
@@ -64,4 +68,102 @@ export class PresentationStateEffects {
 		mergeMap((res) => of(PresentationStateAction.FetchPresentationStatusSuccess({ payload: res }))),
 		share()
 	);
+
+	//#region Create
+	// NOTE: Do I need to make separate effect for adding question?
+	// @Effect()
+	// addCoreTrainingPresentationQuestion$: Observable<Action> = this.actions$.pipe(
+	// 	ofType(PresentationStateAction.AddCoreTrainingPresentationQuestion),
+	// 	switchMap((data) => this.presentationService.AddCoreTrainingPresentationQuestion(data)),
+	// 	mergeMap((res) =>
+	// 		res === false
+	// 			? of(MainStateAction.SuccessfullyMessage('added question'))
+	// 			: of(MainStateAction.FailMessage('adding question'))
+	// 	),
+	// 	share()
+	// );
+
+	@Effect()
+	addCoreTrainingPresentationAnswer$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.AddCoreTrainingPresentationAnswer),
+		switchMap((data) => this.presentationService.AddCoreTrainingPresentationAnswer(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('added answer'))
+				: of(MainStateAction.FailMessage('adding answer'))
+		),
+		share()
+	);
+
+	@Effect()
+	addCoreTrainingPresentationComment$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.AddCoreTrainingPresentationComment),
+		switchMap((data) => this.presentationService.AddCoreTrainingPresentationComment(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('added comment'))
+				: of(MainStateAction.FailMessage('adding comment'))
+		),
+		share()
+	);
+	//#endregion
+
+	//#region Update
+	@Effect()
+	saveTraineePresentation$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.SaveTraineePresentation),
+		switchMap((data) => this.presentationService.SaveTraineePresentation(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('updated trainee presentation'))
+				: of(MainStateAction.FailMessage('updating trainee presentation'))
+		),
+		share()
+	);
+
+	@Effect()
+	updateCoreTrainingPresentationAnswer$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.UpdateCoreTrainingPresentationItem),
+		switchMap((data) =>
+			_isEmpty(data.text)
+				? this.presentationService.UpdateCoreTrainingPresentationItemStatus({
+						...data,
+						status: data.status,
+				  })
+				: this.presentationService.UpdateCoreTrainingPresentationItem({ ...data, text: data.text })
+		),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('updateed answer'))
+				: of(MainStateAction.FailMessage('updating answer'))
+		),
+		share()
+	);
+
+	@Effect()
+	updateCoreTrainingPresentationComment$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.UpdateCoreTrainingPresentationComment),
+		switchMap((data) => this.presentationService.UpdateCoreTrainingPresentationComment(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('updated comment'))
+				: of(MainStateAction.FailMessage('updating comment'))
+		),
+		share()
+	);
+	//#endregion
+
+	//#region Delete
+	@Effect()
+	deleteCoreTrainingPresentationItem$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.DeleteCoreTrainingPresentationItem),
+		switchMap((data) => this.presentationService.DeleteCoreTrainingPresentationItem(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('updated trainee presentation'))
+				: of(MainStateAction.FailMessage('updating trainee presentation'))
+		),
+		share()
+	);
+	//#endregion
 }

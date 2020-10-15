@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty, max as _max} from 'lodash';
 import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { IAppState } from 'src/app/app.reducer';
@@ -116,7 +116,7 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 			.valueChanges.pipe(takeUntil(this.destroyed$))
 			.subscribe((unit) => {
 				this.sizeControl.setValue(
-					_.max([(this.sizeControl.value * this.currentUnit.val) / unit.val, 1])
+					_max([(this.sizeControl.value * this.currentUnit.val) / unit.val, 1])
 				);
 				this.currentUnit = unit;
 			});
@@ -134,7 +134,7 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 	}
 
 	get isEditing() {
-		return !_.isEmpty(this.subjectForm.get('subjectId').value);
+		return !_isEmpty(this.subjectForm.get('subjectId').value);
 	}
 
 	get sizeControl() {

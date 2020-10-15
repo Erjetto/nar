@@ -26,7 +26,7 @@ import {
 import { takeUntil, withLatestFrom, filter, map, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { NgForm, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { isEmpty } from 'lodash';
+import { isEmpty as _isEmpty, map as _map} from 'lodash';
 
 @Component({
 	selector: 'rd-modify-interview-material',
@@ -95,7 +95,7 @@ export class ModifyInterviewMaterialComponent
 		// If mass upload, save it into massUploadFiles
 		this.uploadedFiles$
 			.pipe(
-				filter((v) => !isEmpty(v)),
+				filter((v) => !_isEmpty(v)),
 				withLatestFrom(this.isUploadingSingle$),
 				takeUntil(this.destroyed$)
 			)
@@ -107,8 +107,8 @@ export class ModifyInterviewMaterialComponent
 					});
 				else
 					this.massUploadFiles = {
-						fileIds: _.map(files, 'fileid'),
-						fileNames: _.map(files, 'filename'),
+						fileIds: _map(files, 'fileid'),
+						fileNames: _map(files, 'filename'),
 					};
 			});
 		//#endregion
@@ -128,7 +128,7 @@ export class ModifyInterviewMaterialComponent
 		//#region Auto fetch
 		this.currentPhase$
 			.pipe(
-				filter((v) => !_.isEmpty(v)),
+				filter((v) => !_isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((currPhase) =>
@@ -165,7 +165,7 @@ export class ModifyInterviewMaterialComponent
 	}
 
 	get hasSingleFile() {
-		return !_.isEmpty(this.singleUploadForm.get('fileId').value);
+		return !_isEmpty(this.singleUploadForm.get('fileId').value);
 	}
 	removeSingleUploadFile() {
 		this.singleUploadForm.get('fileId').setValue(null);

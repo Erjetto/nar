@@ -10,7 +10,7 @@ import * as fromMainState from '../main/main.reducer';
 
 import { Observable, of } from 'rxjs';
 import { switchMap, mergeMap, share, tap } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 import { LeaderService } from '../../services/new/leader.service';
 import { TraineeService } from '../../services/new/trainee.service';
 import { GeneralService } from '../../services/new/general.service';
@@ -59,7 +59,7 @@ export class BinusianStateEffects {
 		ofType(BinusianStateAction.CreateTrainingSchedules),
 		switchMap((data) => this.traineeAttendanceService.SaveTraineeSchedules(data)),
 		mergeMap((res) =>
-			_.isEmpty(res)
+			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('inserted training schedules'))
 				: of(MainStateAction.FailMessage('inserting training schedules', res.join('\n')))
 		),
@@ -71,7 +71,7 @@ export class BinusianStateEffects {
 		ofType(BinusianStateAction.CreateTraineeAttendances),
 		switchMap((data) => this.traineeAttendanceService.SaveAttendances(data)),
 		mergeMap((res) =>
-    _.isEmpty(res)
+    _isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('inserted attendances'))
 				: of(MainStateAction.FailMessage('inserting attendances', res.join('\n')))
 		),
@@ -83,7 +83,7 @@ export class BinusianStateEffects {
 		ofType(BinusianStateAction.CreateLectureSchedules),
 		switchMap((data) => this.traineeAttendanceService.SaveTraineeLectureSchedules(data)),
 		mergeMap((res) =>
-			_.isEmpty(res)
+			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('inserted lecture schedules'))
 				: of(MainStateAction.FailMessage('inserting lecture schedules', res.join('\n')))
 		),
@@ -95,7 +95,7 @@ export class BinusianStateEffects {
 		ofType(BinusianStateAction.CreateTrainees),
 		switchMap((data) => this.leaderService.SaveTraineesInGeneration(data)),
 		mergeMap((res) =>
-			_.isEmpty(res)
+			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created trainee'))
 				: of(MainStateAction.FailMessage('creating trainee', res.join('\n')))
 		),

@@ -11,7 +11,7 @@ import {
 } from 'src/app/shared/store-modules';
 import { ClientTraineeData } from 'src/app/shared/models';
 import { takeUntil, map } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { sortBy as _sortBy} from 'lodash';
 
 @Component({
 	selector: 'rd-trainee-data',
@@ -33,7 +33,7 @@ export class TraineeDataComponent extends DashboardContentBase implements OnInit
 	ngOnInit(): void {
 		this.trainees$ = this.store.pipe(
 			select(fromBinusianState.getTraineesData),
-			map((datas) => _.sortBy(datas, 'TraineeName'))
+			map((datas) => _sortBy(datas, 'TraineeName'))
 		);
 		this.loadingTrainees$ = this.store.pipe(select(fromBinusianState.isTraineesDataLoading));
 

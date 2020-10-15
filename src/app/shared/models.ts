@@ -3,11 +3,9 @@ import { isNumber, map, isEmpty } from 'lodash';
 import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
 
-//#region Not from backend
-// tslint:disable-next-line: only-arrow-functions
-export function GetDownloadLinkFromFileId(fileId: string) {
-	return `${environment.apiUrl}File.svc/GetFile/${fileId}`;
-}
+export const GetDownloadLinkFromFileId = (fileId: string) => 
+	 `${environment.apiUrl}File.svc/GetFile/${fileId}`;
+
 export type AttendanceType = 'Rest' | 'Room' | 'Secretariat';
 export type QuestionStatus = 'wrong' | 'correct' | 'unchecked';
 export const EvalTypes = [
@@ -36,7 +34,7 @@ export class BaseModel {}
 
 // ClientRole -> Role
 export class Role {
-	public static readonly allRoles = map(RoleFlags, (val: number, key) => new Role(key, val));
+	public static readonly allRoles: Role[] = map(RoleFlags, (val: number, key) => new Role(key, val));
 
 	constructor(public roleName = '', public roleNumber = 0, public roleId = '') {}
 
@@ -48,8 +46,9 @@ export class Role {
 	static from(input: string | number): Role {
 		// name/flag to Role
 		return this.allRoles.find((r) => r.roleName === input || r.roleNumber === input);
-	}
-
+  }
+  
+  // Ex: currentRole.is(RoleFlag.Subco, RoleFlag.Trainer, ....)
 	is(...roleFlags: number[] | Role[]): boolean {
 		if (isNumber(roleFlags[0])) return roleFlags.some((num) => (num & this.roleNumber) !== 0);
 		else return roleFlags.some((role) => (role.roleNumber & this.roleNumber) !== 0);
@@ -653,23 +652,23 @@ export class ClientTraineeAttendanceDetail extends BaseModel {
 
 export class TraineePresentation extends BaseModel {
 	constructor(
-		public IsActive = false,
-		public classControl = 0,
-		public comment = '',
 		public generationId = '',
-		public material = '',
-		public notes = '',
 		public phaseId = '',
 		public presentationId = '',
+		public subjectId = '',
+		public traineeId = '',
+		public traineeCode = '',
+		public traineeName = '',
 		public presentationNo = 0,
+		public IsActive = false,
+		public comment = '',
+		public material = '',
 		public savedAt: Date = null,
+		public notes = '',
 		public savedBy = '',
+		public classControl = 0,
 		public score = 0,
 		public status = '',
-		public subjectId = '',
-		public traineeCode = '',
-		public traineeId = '',
-		public traineeName = '',
 		public understanding = 0,
 		public voice = 0
 	) {
@@ -702,7 +701,7 @@ export class CoreTrainingPresentation extends BaseModel {
 		super();
 	}
 
-	get presentationStatusCode() {
+	get presentationFileName() {
 		return `${this.GenerationId}|${this.PhaseId}|${this.SubjectId}|${this.TraineeId}|${this.PresentationNo}`;
 	}
 
@@ -760,7 +759,7 @@ export class CoreTrainingPresentationQuestion extends BaseModel {
 		public Status = 'unchecked',
 		public StatusBy = '',
     
-    public parent: CoreTrainingPresentation = null // Additional featue
+    public parent: CoreTrainingPresentation = null // Additional feature
 	) {
 		super();
 	}
@@ -797,7 +796,7 @@ export class CoreTrainingPresentationQuestionSummary extends BaseModel {
 
 export class CoreTrainingPresentationItem extends BaseModel {
 	constructor(
-		public Comments: CoreTrainingPresentationItem[] = [],
+		public Comments: CoreTrainingPresentationComment[] = [],
 		public Histories: DataHistory[] = [],
 		public Id = '',
 		public RespondenUserName = '',

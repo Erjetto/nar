@@ -12,7 +12,7 @@ import {
 	CoreTrainingPresentationQuestionSummary,
 } from '../../models';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -43,7 +43,7 @@ export class PresentationService {
 	}): Observable<ClientSubject[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAllCaseBySubject', data)
-			.pipe(map((res: any) => _.map(res.d, ClientSubject.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientSubject.fromJson)));
 	}
 
 	public GetSubjectListByCurrentPhase(data: {
@@ -51,7 +51,7 @@ export class PresentationService {
 	}): Observable<ClientSubject[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAllCaseBySubject', data)
-			.pipe(map((res: any) => _.map(res.d, ClientSubject.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientSubject.fromJson)));
 	}
 
 	public SaveTraineePresentation(data: {
@@ -87,7 +87,7 @@ export class PresentationService {
 	}): Observable<TraineePresentation[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationReportSummaryWithPhase', data)
-			.pipe(map((res: any) => _.map(res.d, TraineePresentation.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineePresentation.fromJson)));
   }
 
   // Dictionary<string, int> 
@@ -103,7 +103,7 @@ export class PresentationService {
 	}): Observable<CoreTrainingPresentation[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'FindCoreTrainingPresentationByGeneration', data)
-			.pipe(map((res: any) => _.map(res.d, CoreTrainingPresentation.fromJson)));
+			.pipe(map((res: any) => _map(res.d, CoreTrainingPresentation.fromJson)));
 	}
 
 	public FindCoreTrainingPresentationBySubject(data: {
@@ -112,7 +112,7 @@ export class PresentationService {
 	}): Observable<CoreTrainingPresentation[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'FindCoreTrainingPresentationBySubject', data)
-			.pipe(map((res: any) => _.map(res.d, CoreTrainingPresentation.fromJson)));
+			.pipe(map((res: any) => _map(res.d, CoreTrainingPresentation.fromJson)));
 	}
 
 	public FindCoreTrainingPresentationByTrainee(data: {
@@ -121,7 +121,7 @@ export class PresentationService {
 	}): Observable<CoreTrainingPresentation[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'FindCoreTrainingPresentationByTrainee', data)
-			.pipe(map((res: any) => _.map(res.d, CoreTrainingPresentation.fromJson)));
+			.pipe(map((res: any) => _map(res.d, CoreTrainingPresentation.fromJson)));
   }
 
 	public SaveCoreTrainingPresentation(data: {
@@ -246,7 +246,7 @@ export class PresentationService {
 	}): Observable<TraineePresentation[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationReportDetailByDate', data)
-			.pipe(map((res: any) => _.map(res.d, TraineePresentation.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineePresentation.fromJson)));
   }
 
 	public GetCurrentPhaseWithPresentation(): Observable<ClientPhase> {
@@ -259,7 +259,7 @@ export class PresentationService {
 	public GetPresentationTrainee(): Observable<ClientTrainee[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationTrainee', {})
-			.pipe(map((res: any) => _.map(res.d, ClientTrainee.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientTrainee.fromJson)));
 	}
 
 	public GetTraineePresentationNo(): Observable<number> {
@@ -269,7 +269,7 @@ export class PresentationService {
 	public GetPhaseWithPresentation(): Observable<ClientPhase[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPhaseWithPresentation', {})
-			.pipe(map((res: any) => _.map(res.d, ClientPhase.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientPhase.fromJson)));
 	}
 
 	public GetPresentationStatus(data: { filename: string }): Observable<string> {
@@ -283,7 +283,7 @@ export class PresentationService {
 	}): Observable<TraineePresentation[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationReportSummary', data)
-			.pipe(map((res: any) => _.map(res.d, TraineePresentation.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineePresentation.fromJson)));
 	}
 
 	public GetPresentationReportDetail(data: {
@@ -291,6 +291,6 @@ export class PresentationService {
 	}): Observable<TraineePresentation[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationReportDetail', data)
-			.pipe(map((res: any) => _.map(res.d, TraineePresentation.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineePresentation.fromJson)));
 	}
 }

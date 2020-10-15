@@ -11,7 +11,7 @@ import {
 } from 'src/app/shared/store-modules';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { takeUntil, filter, tap } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 
 @Component({
 	selector: 'rd-manage-attendance-ip-list',
@@ -59,7 +59,7 @@ export class ManageAttendanceIpListComponent
 	}
 
 	ipFormatValid({ value }: AbstractControl) {
-    if (_.isEmpty(value)) return null;
+    if (_isEmpty(value)) return null;
     const ipRegex = /^((\d{1,2}|1\d{2}|2[0-4][0-9]|25[0-5])\.){3}(\d{1,2}|1\d{2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
 		const ipList = (value + '').split('\n');
 

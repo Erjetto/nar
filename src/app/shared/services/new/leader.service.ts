@@ -19,7 +19,7 @@ import {
 	SimpleTraineeData,
 } from '../../models';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
@@ -59,7 +59,7 @@ export class LeaderService {
 	public GetAllCaseBySubject(data: { subjectId: string }): Observable<ClientCaseTrainer[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAllCaseBySubject', data)
-			.pipe(map((res: any) => _.map(res.d, ClientCaseTrainer.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientCaseTrainer.fromJson)));
 	}
 
 	// RegisteredSchedule[]
@@ -72,13 +72,13 @@ export class LeaderService {
 	public GetAllTraineeAnswer(data: { caseId: string }): Observable<ClientUploadAnswer[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAllTraineeAnswer', data)
-			.pipe(map((res: any) => _.map(res.d, ClientUploadAnswer.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientUploadAnswer.fromJson)));
 	}
 
 	public CheckCurrentTrainee(data: { traineeList: string[] }): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAllTraineeAnswer', data)
-			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
+			.pipe(map((res: any) => _map(res.d, (v) => v + '')));
 	}
 
 	public SaveSchedule(data: {
@@ -88,7 +88,7 @@ export class LeaderService {
 	}): Observable<ClientSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveSchedule', data)
-			.pipe(map((res: any) => _.map(res.d, ClientSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientSchedule.fromJson)));
 	}
 
 	public ChangeSelfRegisterOfSpecificSchedule(data: {
@@ -103,7 +103,7 @@ export class LeaderService {
 	public GetDatesInSchedules(data: { scheduleId: string }): Observable<Date[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetDatesInSchedules', data)
-			.pipe(map((res: any) => _.map(res.d, DateHelper.fromCSharpDate)));
+			.pipe(map((res: any) => _map(res.d, DateHelper.fromCSharpDate)));
 	}
 
 	public GetSpecificScheduleRegistration(data: {
@@ -125,7 +125,7 @@ export class LeaderService {
 	}): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdateCaseIncludingFile', data)
-			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
+			.pipe(map((res: any) => _map(res.d, (v) => v + '')));
 	}
 
 	public UpdateCase(data: {
@@ -138,7 +138,7 @@ export class LeaderService {
 	}): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdateCase', data)
-			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
+			.pipe(map((res: any) => _map(res.d, (v) => v + '')));
 	}
 
 	public SaveCase(data: {
@@ -153,7 +153,7 @@ export class LeaderService {
 	}): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveCase', data)
-			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
+			.pipe(map((res: any) => _map(res.d, (v) => v + '')));
 	}
 
 	public SaveMaterial(data: {
@@ -182,13 +182,13 @@ export class LeaderService {
 	}): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveFinalScore', data)
-			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
+			.pipe(map((res: any) => _map(res.d, (v) => v + '')));
 	}
 
 	public GetFinalScore(data: { phaseId: string; subjectId: string }): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetFinalScore', data)
-			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
+			.pipe(map((res: any) => _map(res.d, (v) => v + '')));
 	}
 
 	// ClientTraineeInScheduleSpecific
@@ -328,42 +328,42 @@ export class LeaderService {
 	public GetTraineesSimpleData(): Observable<SimpleTraineeData[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineesSimpleData', {})
-			.pipe(map((r: any) => _.map(r.d, SimpleTraineeData.fromJson)));
+			.pipe(map((r: any) => _map(r.d, SimpleTraineeData.fromJson)));
 	}
 	public GetTraineesByPhase(data: { phaseId: string }): Observable<ClientTrainee[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineesByPhase', data)
-			.pipe(map((r: any) => _.map(r.d, ClientTrainee.fromJson)));
+			.pipe(map((r: any) => _map(r.d, ClientTrainee.fromJson)));
 	}
 
 	public GetTraineesBySchedule(data: { scheduleId: string }): Observable<ClientTrainee[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineesBySchedule', data)
-			.pipe(map((r: any) => _.map(r.d, ClientTrainee.fromJson)));
+			.pipe(map((r: any) => _map(r.d, ClientTrainee.fromJson)));
 	}
 
 	public GetGenerations(): Observable<ClientGeneration[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetGenerations', {})
-			.pipe(map((r: any) => _.map(r.d, ClientGeneration.fromJson)));
+			.pipe(map((r: any) => _map(r.d, ClientGeneration.fromJson)));
 	}
 
 	public GetPhases(data: { generationId: string }): Observable<ClientPhase[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPhases', data)
-			.pipe(map((r: any) => _.map(r.d, ClientPhase.fromJson)));
+			.pipe(map((r: any) => _map(r.d, ClientPhase.fromJson)));
 	}
 
 	public GetTopBottomVoteSchedules(): Observable<TopBottomVoteSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTopBottomVoteSchedules', {})
-			.pipe(map((r: any) => _.map(r.d, TopBottomVoteSchedule.fromJson)));
+			.pipe(map((r: any) => _map(r.d, TopBottomVoteSchedule.fromJson)));
 	}
 
 	public GetSchedules(data: { subjectId: string }): Observable<ClientSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetSchedules', data)
-			.pipe(map((r: any) => _.map(r.d, ClientSchedule.fromJson)));
+			.pipe(map((r: any) => _map(r.d, ClientSchedule.fromJson)));
 	}
 
 	public GetCurrentSubject(data: { phaseId: string }): Observable<ClientSubject> {
@@ -375,19 +375,19 @@ export class LeaderService {
 	public GetCase(data: { scheduleId: string }): Observable<Case[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetCase', data)
-			.pipe(map((r: any) => _.map(r.d, Case.fromJson)));
+			.pipe(map((r: any) => _map(r.d, Case.fromJson)));
 	}
 
 	public GetRoles(): Observable<Role[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetRoles', {})
-			.pipe(map((r: any) => _.map(r.d, Role.fromJson)));
+			.pipe(map((r: any) => _map(r.d, Role.fromJson)));
 	}
 
 	public GetUserInRoles(): Observable<ClientUserInRoles[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetUserInRoles', {})
-			.pipe(map((r: any) => _.map(r.d, ClientUserInRoles.fromJson)));
+			.pipe(map((r: any) => _map(r.d, ClientUserInRoles.fromJson)));
 	}
 
 	public GetMaximumFileSize(data: { subjectId: string }): Observable<number> {

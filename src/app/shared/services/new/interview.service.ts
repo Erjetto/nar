@@ -15,7 +15,7 @@ import {
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -33,7 +33,7 @@ export class InterviewService {
 	public GetInterviewQuestions(): Observable<ClientInterviewQuestion[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetInterviewQuestions', {})
-			.pipe(map((res: any) => _.map(res.d, ClientInterviewQuestion.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientInterviewQuestion.fromJson)));
 	}
 
 	public GetInterviewQuestionDetails(data: {
@@ -41,13 +41,13 @@ export class InterviewService {
 	}): Observable<InterviewQuestionDetail[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetInterviewQuestionDetails', data)
-			.pipe(map((res: any) => _.map(res.d, InterviewQuestionDetail.fromJson)));
+			.pipe(map((res: any) => _map(res.d, InterviewQuestionDetail.fromJson)));
 	}
 
 	public GetInterviewMaterial(data: { phaseId: string }): Observable<InterviewMaterial[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetInterviewMaterial', data)
-			.pipe(map((res: any) => _.map(res.d, InterviewMaterial.fromJson)));
+			.pipe(map((res: any) => _map(res.d, InterviewMaterial.fromJson)));
 	}
 
 	public SaveInterviewSchedule(data: {
@@ -56,7 +56,7 @@ export class InterviewService {
 	}): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveInterviewSchedule', data)
-			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
+			.pipe(map((res: any) => _map(res.d, (v) => v + '')));
 	}
 
 	public SaveInterviewQuestions(data: {
@@ -65,19 +65,19 @@ export class InterviewService {
 	}): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveInterviewQuestions', data)
-			.pipe(map((res: any) => _.map(res.d, (v) => v + '')));
+			.pipe(map((res: any) => _map(res.d, (v) => v + '')));
 	}
 
 	public GetInterviewSchedulesForCurrentUser(): Observable<ClientInterviewSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetInterviewSchedulesForCurrentUser', {})
-			.pipe(map((res: any) => _.map(res.d, ClientInterviewSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientInterviewSchedule.fromJson)));
 	}
 
 	public GetInterviewSchedulesForTrainee(): Observable<ClientInterviewSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetInterviewSchedulesForTrainee', {})
-			.pipe(map((res: any) => _.map(res.d, ClientInterviewSchedule.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientInterviewSchedule.fromJson)));
 	}
 
 	public GetInterviewResult(data: {

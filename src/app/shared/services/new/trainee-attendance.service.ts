@@ -9,7 +9,7 @@ import {
 	ClientTraineeDailyAttendance,
 } from '../../models';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -57,7 +57,7 @@ export class TraineeAttendanceService {
 	}): Observable<ClientPeriodicTraineeAttendance[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeAttendanceByGeneration', data)
-			.pipe(map((res: any) => _.map(res.d, ClientPeriodicTraineeAttendance.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientPeriodicTraineeAttendance.fromJson)));
 	}
 
 	public GetPeriodicTraineeAttendances(data: {
@@ -67,7 +67,7 @@ export class TraineeAttendanceService {
 	}): Observable<ClientPeriodicTraineeAttendance[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPeriodicTraineeAttendances', data)
-			.pipe(map((res: any) => _.map(res.d, ClientPeriodicTraineeAttendance.fromJson)));
+			.pipe(map((res: any) => _map(res.d, ClientPeriodicTraineeAttendance.fromJson)));
 	}
 
 	public SaveTraineeSchedules(data: { schedules: string[] }): Observable<string[]> {
@@ -155,7 +155,7 @@ export class TraineeAttendanceService {
 	}): Observable<TraineePresentation[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationReportDetailByDate', data)
-			.pipe(map((res: any) => _.map(res.d, TraineePresentation.fromJson)));
+			.pipe(map((res: any) => _map(res.d, TraineePresentation.fromJson)));
 	}
 
 	public getIPWhiteList(): Observable<string[]> {

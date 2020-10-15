@@ -37,7 +37,7 @@ import { VoteService } from 'src/app/shared/services/new/vote.service';
 import { IAppState } from 'src/app/app.reducer';
 
 import { ClientTrainee } from 'src/app/shared/models';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -184,7 +184,7 @@ export class MasterStateEffects {
 		ofType(MasterStateAction.CreateUserInRole),
 		switchMap((data) => this.leaderService.SaveUserInRoles(data)),
 		mergeMap((res) =>
-			_.isEmpty(res)
+			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created users'))
 				: of(MainStateAction.FailMessage('creating users', res.join('\n')))
 		),
@@ -271,7 +271,7 @@ export class MasterStateEffects {
 		withLatestFrom(this.store.pipe(select(fromBinusianState.getTrainees))),
 		switchMap(([data, trainees]) => this.leaderService.SaveTraineesToSchedule(data)),
 		mergeMap((res) =>
-			_.isEmpty(res)
+			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created trainees in schedule'))
 				: of(MainStateAction.FailMessage('Saving trainee to schedule', res.join('\n')))
 		),

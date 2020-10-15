@@ -2,7 +2,13 @@ import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/
 
 import * as MainStateAction from './main.action';
 import { Toast, Message, User, ClientGeneration, Role } from '../../models';
-import * as _ from 'lodash';
+import {
+	isEmpty as _isEmpty,
+	drop as _drop,
+	max as _max,
+	filter as _filter,
+	zip as _zip,
+} from 'lodash';
 
 export interface IMainState {
 	currentUser: User;
@@ -62,14 +68,14 @@ export const MainStateReducer = createReducer(
 		...state,
 		// Only show the last n toast
 		messages: [
-			..._.drop(state.messages, _.max([state.messages.length - state.messagesMax + 1, 0])),
+			..._drop(state.messages, _max([state.messages.length - state.messagesMax + 1, 0])),
 			new Toast(messageType, message),
 		],
 	})),
 
 	on(MainStateAction.RemoveMessage, (state, { index }) => ({
 		...state,
-		messages: _.filter(state.messages, (v, i) => i !== index),
+		messages: _filter(state.messages, (v, i) => i !== index),
 	})),
 
 	on(MainStateAction.ChangeGenerationSuccess, MainStateAction.SetGeneration, (state, { gen }) => ({
@@ -98,7 +104,7 @@ export const MainStateReducer = createReducer(
 
 	on(MainStateAction.UploadFileSuccess, (state, { fileids, filenames }) => ({
 		...state,
-		uploadedFiles: _.zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
+		uploadedFiles: _zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
 		isUploadingFiles: false,
 	})),
 

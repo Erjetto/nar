@@ -17,7 +17,7 @@ import { take, takeUntil, map } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
-import * as _ from 'lodash';
+import { sortBy as _sortBy} from 'lodash';
 
 @Component({
 	selector: 'rd-answer-schedule',
@@ -40,6 +40,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 	questionModel$: Observable<SubcoCandidateQuestionModel>;
 
 	loadingViewSchedule$: Observable<boolean>;
+	loadingViewScheduleDetail$ = new BehaviorSubject<boolean>(false);
 	loadingFormSchedule$ = new BehaviorSubject<boolean>(false);
 	genOneYearLower$: Observable<string>;
 
@@ -56,7 +57,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 	ngOnInit(): void {
 		this.trainerSchedule$ = this.store.pipe(
 			select(fromCandidateState.getAnswerModels),
-			map((schedules) => _.sortBy(schedules, 'TrainerName')) // Temporary until table have sort feature
+			map((schedules) => _sortBy(schedules, 'TrainerName')) // Temporary until table have sort feature
 		);
 		this.selectedSchedule$ = this.store.pipe(select(fromCandidateState.getSelectedAnswer));
 		this.questionModel$ = this.store.pipe(select(fromCandidateState.getQuestionModel));
@@ -72,6 +73,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 			this.store.dispatch(CandidateStateAction.FetchAnswers());
 		});
 		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+			this.loadingViewScheduleDetail$.next(false);
 			this.loadingFormSchedule$.next(false);
 		});
 
@@ -99,7 +101,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	deleteSchedule(form: NgForm) {
-		this.loadingFormSchedule$.next(true);
+		this.loadingViewScheduleDetail$.next(true);
 		this.store.dispatch(CandidateStateAction.DeleteSchedule({ answerId: form.value.answerId }));
 	}
 

@@ -5,7 +5,7 @@ import { MockData } from '../../mock-data';
 import { Message } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -78,6 +78,6 @@ export class AnnouncementService {
 	public GetMessage(): Observable<Message[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdateMessageWithFile', {})
-			.pipe(map((res: any) => _.map(res.d, Message.fromJson)));
+			.pipe(map((res: any) => _map(res.d, Message.fromJson)));
 	}
 }

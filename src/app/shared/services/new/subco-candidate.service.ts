@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { SubcoCandidateQuestionModel, SubcoCandidateAnswerModel } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash';
+import { map as _map} from 'lodash';
 import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
@@ -36,7 +36,7 @@ export class SubcoCandidateService {
 	public GetAnswersFromTrainerGeneration(): Observable<SubcoCandidateAnswerModel[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAnswersFromTrainerGeneration', {})
-			.pipe(map((res: any) => _.map(res.d, SubcoCandidateAnswerModel.fromJson)));
+			.pipe(map((res: any) => _map(res.d, SubcoCandidateAnswerModel.fromJson)));
 	}
 
 	public GetAnswersFromTrainer(): Observable<SubcoCandidateAnswerModel> {

@@ -17,7 +17,7 @@ import { filter, takeUntil, distinctUntilChanged, first, tap, mapTo } from 'rxjs
 import { CookieService } from 'ngx-cookie-service';
 import { trigger, transition, query, style, group, animate } from '@angular/animations';
 import { Cookies } from '../shared/constants/cookie.constants';
-import * as _ from 'lodash';
+import { isEmpty as _isEmpty} from 'lodash';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -160,7 +160,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		else
 			this.currentUser$
 				.pipe(
-					filter((v) => !_.isEmpty(v)),
+					filter((v) => !_isEmpty(v)),
 					first()
 				)
 				.subscribe((u: User) =>
@@ -180,7 +180,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		// else
 		// 	this.genList$
 		// 		.pipe(
-		// 			filter((v) => !_.isEmpty(v)),
+		// 			filter((v) => !_isEmpty(v)),
 		// 			first()
 		// 		)
 		// 		.subscribe((genList) =>
