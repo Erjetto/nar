@@ -6,7 +6,6 @@ import { fromMainState } from 'src/app/shared/store-modules';
 import { OnDestroy } from '@angular/core';
 import { ClientGeneration, User } from '../shared/models';
 import { IAppState } from '../app.reducer';
-import * as _ from 'lodash';
 
 export class DashboardContentBase implements OnDestroy {
   // TODO: Remove this from derived component, use mainEffects.changeGen$ instead

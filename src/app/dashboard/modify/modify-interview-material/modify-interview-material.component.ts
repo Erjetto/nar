@@ -24,7 +24,6 @@ import {
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { takeUntil, withLatestFrom, filter, map, tap } from 'rxjs/operators';
-import * as _ from 'lodash';
 import { NgForm, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { isEmpty as _isEmpty, map as _map} from 'lodash';
 
@@ -52,7 +51,7 @@ export class ModifyInterviewMaterialComponent
 	uploadedFiles$: Observable<{ fileid: string; filename: string }[]>;
 	phaseTypes$: Observable<any[]>;
 	phases$: Observable<ClientPhase[]>;
-	trainees$: Observable<ClientTrainee[]>;
+	allTrainees$: Observable<ClientTrainee[]>;
 
 	interviewMaterials$: Observable<InterviewMaterial[]>;
 
@@ -81,8 +80,8 @@ export class ModifyInterviewMaterialComponent
 		this.loadingViewInterviewMaterial$ = this.store.pipe(
 			select(fromInterviewState.isInterviewMaterialsLoading)
 		);
-		this.trainees$ = this.store.pipe(
-			select(fromBinusianState.getTrainees),
+		this.allTrainees$ = this.store.pipe(
+			select(fromBinusianState.getAllTrainees),
 			map((trainees: ClientTrainee[]) => [
 				new ClientTrainee('0', 'T000', 'All', '', false), // Add for all trainee
 				...trainees,
@@ -118,7 +117,7 @@ export class ModifyInterviewMaterialComponent
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((phases) => this.currentPhase$.next(phases[0]));
 
-		this.trainees$
+		this.allTrainees$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((trainees) =>
 				this.singleUploadForm.get('trainee_Id').setValue(trainees[0].TraineeId)
@@ -156,12 +155,12 @@ export class ModifyInterviewMaterialComponent
 
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());
-			this.store.dispatch(BinusianStateAction.FetchTrainees());
+			this.store.dispatch(BinusianStateAction.FetchAllTraineesInCurrentGen());
 		});
 		//#endregion
 
 		this.store.dispatch(MasterStateAction.FetchPhases());
-		this.store.dispatch(BinusianStateAction.FetchTrainees());
+		this.store.dispatch(BinusianStateAction.FetchAllTraineesInCurrentGen());
 	}
 
 	get hasSingleFile() {

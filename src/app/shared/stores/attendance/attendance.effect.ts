@@ -9,7 +9,6 @@ import * as fromAttendanceState from './attendance.reducer';
 import { Observable, of } from 'rxjs';
 import { switchMap, mergeMap, pluck, tap, share, map } from 'rxjs/operators';
 import { TraineeAttendanceService } from '../../services/new/trainee-attendance.service';
-import * as _ from 'lodash';
 
 @Injectable({
 	providedIn: 'root',

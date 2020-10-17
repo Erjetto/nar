@@ -1,21 +1,28 @@
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 
 import * as MainStateAction from '../main/main.action';
 import * as PresentationStateAction from './presentation.action';
+import * as fromMainState from '../main/main.reducer';
 import * as fromPresentationState from './presentation.reducer';
+
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, tap, share, map } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, tap, share, map, withLatestFrom } from 'rxjs/operators';
 import { PresentationService } from '../../services/new/presentation.service';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
+import { IAppState } from 'src/app/app.reducer';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class PresentationStateEffects {
-	constructor(private actions$: Actions, private presentationService: PresentationService) {}
+	constructor(
+		private actions$: Actions,
+		private presentationService: PresentationService,
+		private store: Store<IAppState>
+	) {}
 
 	@Effect()
 	getPresentationsByDate$: Observable<Action> = this.actions$.pipe(
@@ -47,17 +54,23 @@ export class PresentationStateEffects {
 				).pipe(map((res) => ({ traineeId, subjectId, res })))
 			// Di akhirannya dibawa juga 'data' supaya bisa dipisahkan spt ini
 		),
-		mergeMap(({ traineeId, subjectId, res }) =>
-			!_isEmpty(traineeId)
-				? of(
-						PresentationStateAction.FetchPresentationsByTraineeSuccess({ payload: res, traineeId })
-				  )
-				: !_isEmpty(subjectId)
-				? of(
-						PresentationStateAction.FetchPresentationsBySubjectSuccess({ payload: res, subjectId })
-				  )
-				: of(PresentationStateAction.FetchPresentationsByGenerationSuccess({ payload: res }))
-		),
+		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentUser))),
+    mergeMap(([{ traineeId, subjectId, res }, currTrainee]) =>{
+      // Bikin begini karena fetch by trainee punya 2 kemungkinan action
+      const actions = []
+      if(!_isEmpty(traineeId)) {
+        actions.push(PresentationStateAction.FetchPresentationsByTraineeSuccess({payload: res,traineeId}))
+        // Kalo fetch punya sendiri
+        if(currTrainee.TraineeId !== traineeId) 
+          actions.push(PresentationStateAction.FetchMyPresentationsSuccess({ payload: res }))
+      }
+      else if(!_isEmpty(subjectId)) 
+        actions.push(PresentationStateAction.FetchPresentationsBySubjectSuccess({ payload: res, subjectId }))
+      else 
+        actions.push(PresentationStateAction.FetchPresentationsByGenerationSuccess({ payload: res }))
+
+      return of(...actions)
+    }),
 		share()
 	);
 

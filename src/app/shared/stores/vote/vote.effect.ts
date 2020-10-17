@@ -8,7 +8,6 @@ import * as VoteStateAction from './vote.action';
 import * as fromVoteState from './vote.reducer';
 import { Observable, of } from 'rxjs';
 import { switchMap, mergeMap, pluck, tap, share } from 'rxjs/operators';
-import * as _ from 'lodash';
 import { VoteService } from '../../services/new/vote.service';
 import { LeaderService } from '../../services/new/leader.service';
 

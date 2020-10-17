@@ -26,11 +26,10 @@ export class MenuService {
 		else this.currentRole = Role.from(role);
 
 		this.currentMenus = this.filterMenu(_cloneDeep(this.dashboardRoute));
-
 		return this.currentMenus;
 	}
-
-	private menuFilter  = (r: Route) => r.data?.name && this.isPermitted(r); // If has name
+  // If has name
+	private menuFilter  = (r: Route) => r.data?.name && this.isPermitted(r); 
 	private isPermitted = (r: Route) => r.data?.roles && this.currentRole.is(r.data.roles);
 	
 	// Only suitable for 2 level menu

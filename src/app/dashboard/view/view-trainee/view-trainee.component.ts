@@ -17,7 +17,6 @@ import {
 import { MasterStateAction, fromMasterState } from 'src/app/shared/store-modules';
 import { Observable, of, Subject, interval } from 'rxjs';
 
-import * as _ from 'lodash';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { MockData } from 'src/app/shared/mock-data';
 

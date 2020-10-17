@@ -3,11 +3,20 @@ import { ClientTrainee, ClientTraineeData, SimpleTraineeData } from '../../model
 
 export const FetchTraineesSimpleData = createAction('[BinusianState] FetchTraineesSimpleData');
 export const FetchTraineesData = createAction('[BinusianState] FetchTraineesData');
-export const FetchTrainees = createAction('[BinusianState] FetchTrainees');
+// TODO: Ganti semua FetchTrainees jadi FetchTraineesBy
+export const FetchAllTraineesInCurrentGen = createAction('[BinusianState] FetchAllTraineesInCurrentGen');
+export const FetchTraineesBy = createAction(
+  '[BinusianState] FetchTrainees', 
+  props<{ scheduleId?: string, phaseId?: string }>()
+);
 
 export const FetchTraineesSimpleDataSuccess = createAction(
 	'[BinusianState] FetchTraineesSimpleDataSuccess',
 	props<{ payload: SimpleTraineeData[] }>()
+);
+export const FetchAllTraineesSuccess = createAction(
+	'[BinusianState] FetchAllTraineesSuccess',
+	props<{ payload: ClientTrainee[] }>()
 );
 export const FetchTraineesSuccess = createAction(
 	'[BinusianState] FetchTraineesSuccess',

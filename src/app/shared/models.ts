@@ -3,8 +3,20 @@ import { isNumber, map, isEmpty } from 'lodash';
 import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
 
-export const GetDownloadLinkFromFileId = (fileId: string) => 
-	 `${environment.apiUrl}File.svc/GetFile/${fileId}`;
+//#region Common methods or class unrelated to NAR backend
+
+/**
+ * Template for most of downloadable item in NAR
+ */
+export const GetDownloadLinkFromFileId = (fileId: string): string => 
+  `${environment.apiUrl}File.svc/GetFile/${fileId}`;
+   
+/**
+ * Find Core training phase, if not found then return first phase
+ * @param phases phases
+ */
+export const TryGetCoreTrainingPhase = (phases: ClientPhase[]): ClientPhase => 
+  phases.find((p) => p.Description.includes('Core')) ?? phases[0]
 
 export type AttendanceType = 'Rest' | 'Room' | 'Secretariat';
 export type QuestionStatus = 'wrong' | 'correct' | 'unchecked';
@@ -29,6 +41,7 @@ export type ToastType = 'info' | 'warning' | 'success' | 'danger';
 export class Toast {
 	constructor(public messageType: ToastType = 'info', public message = '') {}
 }
+//#endregion
 
 export class BaseModel {}
 

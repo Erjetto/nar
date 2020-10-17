@@ -92,7 +92,7 @@ export class ManageTopBottomVoteComponent
 			.subscribe(() => this.loadingFormVoteSchedule$.next(false));
 
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
-			this.store.dispatch(BinusianStateAction.FetchTrainees());
+			this.store.dispatch(BinusianStateAction.FetchAllTraineesInCurrentGen());
 			this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
 		});
 
@@ -114,7 +114,7 @@ export class ManageTopBottomVoteComponent
 				this.store.dispatch(VoteStateAction.SetFilterText({ filterText: text }))
 			);
 
-		this.store.dispatch(BinusianStateAction.FetchTrainees());
+		this.store.dispatch(BinusianStateAction.FetchAllTraineesInCurrentGen());
 		this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
 	}
 

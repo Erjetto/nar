@@ -34,12 +34,22 @@ export const FetchPresentationsByDateSuccess = createAction(
 	'[PresentationState] FetchPresentationsByDateSuccess',
 	props<{ payload: TraineePresentation[] }>()
 );
+export const FetchMyPresentationsSuccess = createAction(
+	'[PresentationState] FetchMyPresentationsSuccess',
+	props<{ payload: CoreTrainingPresentation[] }>()
+);
+
 
 export const SetQuestionsFilter = createAction(
 	'[PresentationState] SetQuestionsFilter',
 	props<{ search: string; status: string; subjectId: string }>()
 );
-
+// For trainee saving questions & comment
+export const SaveCoreTrainingPresentation = createAction(
+	'[PresentationState] SaveCoreTrainingPresentation',
+	props<{ data: CoreTrainingPresentation }>()
+);
+// For trainer saving score
 export const SaveTraineePresentation = createAction(
 	'[PresentationState] SaveTraineePresentation',
 	props<{ data: TraineePresentation }>()

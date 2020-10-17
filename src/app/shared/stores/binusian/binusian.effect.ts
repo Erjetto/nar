@@ -30,8 +30,22 @@ export class BinusianStateEffects {
 
 	@Effect()
 	getTrainees$: Observable<Action> = this.actions$.pipe(
-		ofType(BinusianStateAction.FetchTrainees),
+		ofType(BinusianStateAction.FetchAllTraineesInCurrentGen),
 		switchMap(() => this.generalService.GetTrainees()),
+		mergeMap((results) => of(BinusianStateAction.FetchAllTraineesSuccess({ payload: results }))),
+		share()
+	);
+
+	@Effect()
+	getTraineesBy$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.FetchTraineesBy),
+    switchMap((data) => 
+    data.phaseId 
+      ? this.leaderService.GetTraineesByPhase({phaseId: data.phaseId})
+      : data.scheduleId
+      ? this.leaderService.GetTraineesBySchedule({scheduleId: data.scheduleId})
+      : this.generalService.GetTrainees()
+    ),
 		mergeMap((results) => of(BinusianStateAction.FetchTraineesSuccess({ payload: results }))),
 		share()
 	);

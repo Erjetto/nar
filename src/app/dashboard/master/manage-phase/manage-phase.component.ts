@@ -13,7 +13,7 @@ import {
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
 import { map, takeUntil, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
-import * as _ from 'lodash';
+
 
 @Component({
 	selector: 'rd-manage-phase',

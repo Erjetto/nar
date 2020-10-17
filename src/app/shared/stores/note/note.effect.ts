@@ -9,7 +9,6 @@ import * as fromNoteState from './note.reducer';
 import { Observable, of } from 'rxjs';
 import { switchMap, mergeMap, pluck, tap, share } from 'rxjs/operators';
 import { NoteService } from '../../services/new/note.service';
-import * as _ from 'lodash';
 
 @Injectable({
 	providedIn: 'root',

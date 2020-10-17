@@ -10,6 +10,7 @@ import {
 	fromPresentationState,
 	MainStateEffects,
 	PresentationStateEffects,
+  fromMainState,
 } from 'src/app/shared/store-modules';
 
 import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
@@ -20,10 +21,14 @@ import {
 	TraineePresentation,
   CoreTrainingPresentationItem,
   CoreTrainingPresentationQuestion,
+  TryGetCoreTrainingPhase,
+  User,
+  ClientGeneration,
 } from 'src/app/shared/models';
-import { isEmpty as _isEmpty} from 'lodash';
-import { takeUntil, filter, withLatestFrom, map } from 'rxjs/operators';
+import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
+import { takeUntil, filter, withLatestFrom, map, tap } from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
+import { RoleFlags } from 'src/app/shared/constants/role.constant';
 
 @Component({
 	selector: 'rd-view-all-presentation',
@@ -34,12 +39,19 @@ import { FormBuilder, Validators } from '@angular/forms';
 export class ViewAllPresentationComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
+  subjects: ClientSubject[]; // to find subject name by id
+
+  phases$: Observable<ClientPhase[]>;
+  subjects$: Observable<ClientSubject[]>;
 	presentations$: Observable<CoreTrainingPresentation[]>;
 	traineesInSubject$: Observable<string[]>;
 	presentationsForTrainee$: Observable<CoreTrainingPresentation[]>;
+	myPresentationList$: Observable<CoreTrainingPresentation[]>;
+  presentationStatus$: Observable<string>;
+  
+
 
 	currentPresentation$: BehaviorSubject<CoreTrainingPresentation> = new BehaviorSubject(null);
-	presentationStatus$: Observable<string>;
 	currentTraineeCode$: Subject<string> = new Subject();
 	currentSubject$: Subject<ClientSubject> = new Subject();
 	currentPhase$: Subject<ClientPhase> = new Subject();
@@ -58,12 +70,13 @@ export class ViewAllPresentationComponent
   });
   deleteQuestionReason = this.fb.control('');
 
-	phases$: Observable<ClientPhase[]>;
-	subjects$: Observable<ClientSubject[]>;
-
 	subjectsLoading$: Observable<boolean>;
 	presentationsLoading$: Observable<boolean>;
-	loadingViewPresentation$ = new BehaviorSubject<boolean>(false);
+  loadingViewPresentation$ = new BehaviorSubject<boolean>(false);
+  
+  constant = {
+    role: RoleFlags
+  }
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -88,6 +101,11 @@ export class ViewAllPresentationComponent
 		this.presentationsLoading$ = this.store.pipe(
 			select(fromPresentationState.isPresentationsLoading)
 		);
+    
+    this.myPresentationList$ = this.store.pipe(
+      select(fromPresentationState.getMyPresentations),
+      map(presentations => _sortBy(presentations, 'PresentationDate').reverse())
+    )
 		//#endregion
 
 		// When one of these changed, also change filtered trainees
@@ -113,11 +131,11 @@ export class ViewAllPresentationComponent
 			map(([sbj, presentations, traineeCode]) =>
 				presentations.filter((p) => p.SubjectId === sbj?.SubjectId && p.TraineeCode === traineeCode)
 			)
-		);
+    );
 
 		//#region Auto get first value in array
 		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.currentPhase$.next(res.find((p) => p.Description.includes('Core')) ?? res[0]);
+			this.currentPhase$.next(TryGetCoreTrainingPhase(res));
 		});
 
 		this.subjects$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
@@ -133,7 +151,10 @@ export class ViewAllPresentationComponent
 			.subscribe((presentations) => this.currentPresentation$.next(presentations[0]));
 		//#endregion
 
-		//#region Bind to effects
+    //#region Bind to effects
+    this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+      this.loadingViewPresentation$.next(false);
+    });
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());
 		});
@@ -154,7 +175,6 @@ export class ViewAllPresentationComponent
 		//#endregion
 
 		//#region Auto fetch
-
 		this.currentPhase$
 			.pipe(
 				filter((res) => !_isEmpty(res)),
@@ -196,10 +216,25 @@ export class ViewAllPresentationComponent
 					traineeId: res.TraineeId,
 					presentationNo: res.PresentationNo,
 				});
-			});
+      });
+      // Dari dashboard content base
+      combineLatest([ this.currentUser$, this.currentGeneration$ ])
+      .pipe(
+        takeUntil(this.destroyed$), 
+        filter(values => values.every(v => !_isEmpty(v))),
+        tap(console.log)
+      )
+      .subscribe(([user, gen]: [User, ClientGeneration]) => {
+				this.store.dispatch(
+          PresentationStateAction.FetchPresentationsBy({
+            generationId: gen.GenerationId,
+            traineeId: user.TraineeId
+          })
+        )
+      })
 		//#endregion
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
+    this.store.dispatch(MasterStateAction.FetchPhases());
 	}
 
 	get understandingValue() {
@@ -216,7 +251,11 @@ export class ViewAllPresentationComponent
 
 	get statusValue() {
 		return this.scoringForm.get('status').value;
-	}
+  }
+  
+  getSubjectById(subId){
+    return this.subjects.find(s => s.SubjectId === subId);
+  }
 
 	submitScoringForm() {
 		this.loadingViewPresentation$.next(true);

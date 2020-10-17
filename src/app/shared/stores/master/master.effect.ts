@@ -268,8 +268,7 @@ export class MasterStateEffects {
 	@Effect()
 	createTraineeInSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateTraineeInSchedule),
-		withLatestFrom(this.store.pipe(select(fromBinusianState.getTrainees))),
-		switchMap(([data, trainees]) => this.leaderService.SaveTraineesToSchedule(data)),
+		switchMap((data) => this.leaderService.SaveTraineesToSchedule(data)),
 		mergeMap((res) =>
 			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created trainees in schedule'))
