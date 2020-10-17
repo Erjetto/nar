@@ -29,6 +29,8 @@ import { ViewQuestionComponent } from './presentation/view-question/view-questio
 import { TraineeScheduleComponent } from './modify/trainee-schedule/trainee-schedule.component';
 import { CurrentUserResolver } from '../shared/resolvers/current-user.resolver';
 import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
+import { NewPresentationComponent } from './presentation/new-presentation/new-presentation.component';
+import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote/top-bottom-vote.component';
 
 export const routes: Routes = [
 	{
@@ -173,17 +175,23 @@ export const routes: Routes = [
 			// 	component: null,
 			// 	data: { roles: RoleFlags.Guest, name: 'Guest' },
 			// },
-			// {
-			// 	path: 'top-bottom-vote',
-			// 	component: null,
-			// 	data: {
-			// 		roles:
-			// 			RoleFlags.Trainee |
-			// 			RoleFlags.Trainer |
-			// 			RoleFlags.Interviewer,
-			// 		name: 'Top Bottom Vote',
-			// 	},
-			// },
+			{
+				path: 'top-bottom-vote',
+				data: { name: 'Top Bottom Vote' },
+        children:[
+					{
+						path: 'vote',
+            component: TopBottomVoteComponent,
+            data:{
+              roles:
+                RoleFlags.Trainee |
+                RoleFlags.Trainer |
+                RoleFlags.Interviewer,
+              name: 'Top Bottom Vote'
+            }
+					},
+        ]
+			},
 			// {
 			// 	path: 'upload',
 			// 	component: null,
@@ -318,16 +326,14 @@ export const routes: Routes = [
 					},
 					{
 						path: 'new',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleFlags.Trainee, name: 'New Presentations (-)' },
+						component: NewPresentationComponent,
+						data: { roles: RoleFlags.Trainee, name: 'New Presentations' },
 					},
-					{
-						path: 'my-presentations',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleFlags.Trainee, name: 'My Presentations (-)' },
-					},
+					// {
+					// 	path: 'my-presentations',
+					// 	component: MyPresentationComponent,
+					// 	data: { roles: RoleFlags.Trainee, name: 'My Presentations' },
+					// },
 					{
 						path: 'question/:generationId/:trainerId/:questionId',
 						redirectTo: '/home',

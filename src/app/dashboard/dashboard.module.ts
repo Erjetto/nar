@@ -30,6 +30,8 @@ import { ViewAllPresentationComponent } from './presentation/view-all-presentati
 import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
 import { TraineeScheduleComponent } from './modify/trainee-schedule/trainee-schedule.component';
 import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
+import { NewPresentationComponent } from './presentation/new-presentation/new-presentation.component';
+import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote/top-bottom-vote.component';
 
 @NgModule({
 	declarations: [
@@ -63,6 +65,10 @@ import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.compon
     TraineeScheduleComponent,
     
 		TraineeDataComponent,
+    
+		NewPresentationComponent,
+    
+		TopBottomVoteComponent,
 	],
 	imports: [
 		SharedModule,

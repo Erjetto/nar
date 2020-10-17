@@ -1,0 +1,18 @@
+<div class="container-lg">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Vote Schedule'" [isLoading]="false"> </rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+      <rd-card 
+        [cardTitle]="'Vote'" 
+        [isLoading]="false"
+        [collapsible]="false"
+        [expanded]="voteForm.get('voteScheduleId').value !== ''"
+      > 
+      </rd-card>
+		</div>
+	</div>
+</div>
