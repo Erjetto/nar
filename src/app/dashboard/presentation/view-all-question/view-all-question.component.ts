@@ -20,6 +20,7 @@ import {
 	ClientSubject,
 	ClientGeneration,
 	ClientPhase,
+  TryGetCoreTrainingPhase,
 } from 'src/app/shared/models';
 import { filter, withLatestFrom, takeUntil, tap, map, distinctUntilChanged } from 'rxjs/operators';
 import { isEmpty as _isEmpty} from 'lodash';
@@ -97,7 +98,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 				filter((v) => !_isEmpty(v), takeUntil(this.destroyed$))
 			)
 			.subscribe((phases: ClientPhase[]) => {
-				const corePhase = phases.find((p) => p.Description.includes('Core')) ?? phases[0];
+        const corePhase = TryGetCoreTrainingPhase(phases);
 				if (corePhase)
 					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: corePhase.PhaseId }));
 			});

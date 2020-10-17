@@ -6,7 +6,10 @@
 					<b>Material: </b> &nbsp;&nbsp; {{ (presentation$ | async)?.Material }}
 				</div>
 				<div class="row">
-					<div class="col pl-4" [innerHTML]="(question$ | async)?.Question.Text"></div>
+          <div class="col pl-4">
+          <!-- [innerHTML]="(question$ | async)?.Question.Text" -->
+            <quill-view-html [content]="(question$ | async)?.Question.Text"></quill-view-html>
+          </div>
 					<div class="d-flex flex-column maxw-200px">
 						<div class="row justify-content-end text-right">
 							Asked By {{ (question$ | async)?.Question.UserName }}
@@ -34,17 +37,17 @@
 				>
 					<div class="col">
 						<div class="row answer__head">
-							<span class="text-primary">{{ answer.UserName }}</span
-							>&nbsp; - &nbsp;
-							{{
-								(question$ | async)?.Question.Histories[
-									(question$ | async)?.Question.Histories.length - 1
-								].SavedDate | date: 'dd MMM yyyy hh:mm a'
-							}}
-						</div>
+							<span class="text-primary">{{ answer.UserName }}</span>
+              &nbsp; - &nbsp; 
+              {{answer.Histories[answer.Histories.length - 1].SavedDate | date: 'dd MMM yyyy hh:mm a'}}
+            </div>
+            
 						<div class="row answer__body">
               <!-- Answer -->
-              <div class="col" [hidden]="isAnswerEditing(i)" [innerHTML]="answer.Text"></div>
+              <div class="col">
+                <quill-view-html [content]="answer.Text"></quill-view-html>
+              </div>
+              <!-- <div class="col" [hidden]="isAnswerEditing(i)" [innerHTML]="answer.Text"></div> -->
               <!-- or Edit Answer -->
 							<div class="col" [hidden]="!isAnswerEditing(i)">
                 <form 
@@ -164,10 +167,7 @@
 				</div>
 				<div class="row mb-3">
 					<div class="col">
-						<quill-editor
-							[styles]="{ display: 'block', height: '100px' }"
-							[formControl]="newAnswerText"
-						></quill-editor>
+						<quill-editor [formControl]="newAnswerText"></quill-editor>
 					</div>
 				</div>
 				<div class="row justify-content-center">

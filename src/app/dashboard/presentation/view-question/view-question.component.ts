@@ -17,7 +17,6 @@ import {
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
 import { map, takeUntil, tap, startWith, filter, first, withLatestFrom } from 'rxjs/operators';
-import * as _ from 'lodash';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 import {
 	NgForm,
@@ -96,7 +95,8 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 
 					if (qst == null) return null;
 					// Remove deleted answers
-					qst.Answers = qst.Answers.filter((a) => !a.Text.includes('[DELETED]'));
+          qst.Answers = qst.Answers.filter((a) => !a.Text.includes('[DELETED]'));
+          this.loadingViewQuestion$.next(false);
 					return qst;
 				}
 			)
@@ -111,9 +111,13 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 			this.questionId$.next(questionId);
 		});
 
-		this.mainEffects.afterRequest$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.loadingViewQuestion$.next(false));
+    // Selalu hilangkan loading pertama waktu load presentation, jadi kasi jeda 
+    // utk solusi sementara
+    setTimeout(() => {
+      this.mainEffects.afterRequest$
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(() => this.loadingViewQuestion$.next(false));
+    }, 1000);
 
 		merge(
 			this.presentationEffects.addCoreTrainingPresentationAnswer$,
@@ -123,14 +127,15 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 			this.presentationEffects.deleteCoreTrainingPresentationItem$
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.traineeId$, this.generationId$))
-			.subscribe(([action, trId, genId]) =>
+			.subscribe(([action, trId, genId]) =>{
 				this.store.dispatch(
 					PresentationStateAction.FetchPresentationsBy({
 						generationId: genId,
 						traineeId: trId,
 					})
 				)
-			);
+        this.loadingViewQuestion$.next(true);
+			});
 
 		combineLatest([this.question$, this.traineeId$, this.generationId$])
 			// Trigger fetch until this.question$ get value other than empty value
@@ -166,7 +171,7 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 					);
 				}
 			});
-		this.answersForm.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(console.log);
+		this.loadingViewQuestion$.next(true);
 	}
 
 	isAnswerEditing(answerIdx) {

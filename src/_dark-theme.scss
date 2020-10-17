@@ -98,25 +98,24 @@
 	.ql-blank::before {
 		color: white;
 	}
-	.ql-picker-item {
+	.ql-snow .ql-picker-item {
 		color: black;
   }
   
-  .ql-snow {
-    &.ql-toolbar, .ql-toolbar{
-      button, .ql-picker-item, .ql-picker-label{
-        &:hover, &.ql-active, &:focus, &.ql-selected{
-          color: #75b8ff;
-          .ql-stroke {
-            stroke: #75b8ff;
-          }
-          .ql-fill {
-            fill: #75b8ff;
-          }
+  .ql-toolbar, .ql-tooltip{
+    button, .ql-picker-item, .ql-picker-label{
+      &:hover, &.ql-active, &:focus, &.ql-selected{
+        color: #75b8ff;
+        .ql-stroke {
+          stroke: #75b8ff;
+        }
+        .ql-fill {
+          fill: #75b8ff;
         }
       }
     }
   }
+  
 }
 
 // .body:has(> rd-root > .dark-theme){
