@@ -26,7 +26,7 @@ import { ModifyInterviewMaterialComponent } from './modify/modify-interview-mate
 import { ViewAllQuestionComponent } from './presentation/view-all-question/view-all-question.component';
 import { ViewAllPresentationComponent } from './presentation/view-all-presentation/view-all-presentation.component';
 import { ViewQuestionComponent } from './presentation/view-question/view-question.component';
-import { TraineeScheduleComponent } from './modify/trainee-schedule/modify-trainee-schedule.component';
+import { ModifyTraineeScheduleComponent } from './modify/modify-trainee-schedule/modify-trainee-schedule.component';
 import { CurrentUserResolver } from '../shared/resolvers/current-user.resolver';
 import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
 import { NewPresentationComponent } from './presentation/new-presentation/new-presentation.component';
@@ -118,7 +118,7 @@ export const routes: Routes = [
 					},
 					{
 						path: 'trainee-schedule',
-						component: TraineeScheduleComponent,
+						component: ModifyTraineeScheduleComponent,
 						data: {
 							roles: RoleFlags.AssistantSupervisor,
 							name: 'Trainee Schedule',
