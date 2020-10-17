@@ -15,11 +15,11 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
 	selector: 'rd-trainee-schedule',
-	templateUrl: './trainee-schedule.component.html',
-	styleUrls: ['./trainee-schedule.component.scss'],
+	templateUrl: './modify-trainee-schedule.component.html',
+	styleUrls: ['./modify-trainee-schedule.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TraineeScheduleComponent extends DashboardContentBase implements OnInit, OnDestroy {
+export class ModifyTraineeScheduleComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	insertTrainingScheduleText = new FormControl('', [
 		Validators.required,
 		this.trainingScheduleFormat,
