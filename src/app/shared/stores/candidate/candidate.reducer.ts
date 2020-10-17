@@ -1,8 +1,8 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
-import * as CandidateStateAction from './candidate.action';
 import * as MainStateAction from '../main/main.action';
 import { SubcoCandidateAnswerModel, SubcoCandidateQuestionModel } from '../../models';
+import { FetchQuestions, FetchAnswers, FetchAnswersSuccess, FetchQuestionsSuccess, ViewSchedule } from './candidate.action';
 
 export interface ICandidateState {
 	questionModel: SubcoCandidateQuestionModel;
@@ -31,22 +31,22 @@ export const CandidateStateReducer = createReducer(
 		...initialState,
   })),
   
-	on(CandidateStateAction.FetchQuestions, (state) => ({ ...state, loadingQuestionsModel: true })),
-	on(CandidateStateAction.FetchAnswers, (state) => ({ ...state, loadingAnswersModel: true })),
+	on(FetchQuestions, (state) => ({ ...state, loadingQuestionsModel: true })),
+	on(FetchAnswers, (state) => ({ ...state, loadingAnswersModel: true })),
 
-	on(CandidateStateAction.FetchAnswersSuccess, (state, { payload }) => ({
+	on(FetchAnswersSuccess, (state, { payload }) => ({
 		...state,
     answerModels: payload,
     loadingAnswersModel: false
 	})),
 
-	on(CandidateStateAction.FetchQuestionsSuccess, (state, { payload }) => ({
+	on(FetchQuestionsSuccess, (state, { payload }) => ({
 		...state,
     questionModel: payload,
     loadingQuestionsModel: false
 	})),
 
-	on(CandidateStateAction.ViewSchedule, (state, { payload }) => ({
+	on(ViewSchedule, (state, { payload }) => ({
 		...state,
 		selectedAnswer: payload,
 	}))

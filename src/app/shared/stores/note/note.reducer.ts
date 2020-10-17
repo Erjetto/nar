@@ -1,6 +1,5 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
-import * as NoteStateAction from './note.action';
 import * as MainStateAction from '../main/main.action';
 import {
 	TraineePresentation,
@@ -8,7 +7,8 @@ import {
 	ClientEvaluation,
 	ClientTraineeData,
 } from '../../models';
-import { isEmpty as _isEmpty, sortBy as _sortBy} from 'lodash';
+import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
+import { FetchEvaluation, FetchEvaluationSuccess, SetEvaluationNoteFilter } from './note.action';
 
 export interface INoteState {
 	evaluations: ClientEvaluation;
@@ -45,18 +45,18 @@ export const NoteStateReducer = createReducer(
 		...initialState,
 	})),
 
-	on(NoteStateAction.FetchEvaluation, (state) => ({
+	on(FetchEvaluation, (state) => ({
 		...state,
 		loadingEvaluations: true,
 	})),
 
-	on(NoteStateAction.FetchEvaluationSuccess, (state, { payload }) => ({
+	on(FetchEvaluationSuccess, (state, { payload }) => ({
 		...state,
 		evaluations: payload,
 		loadingEvaluations: false,
 	})),
 
-	on(NoteStateAction.SetEvaluationNoteFilter, (state, data) => ({
+	on(SetEvaluationNoteFilter, (state, data) => ({
 		...state,
 		evaluationNoteFilters: data,
 	}))
@@ -76,8 +76,8 @@ export const isEvaluationsLoading = getNoteStateBy((s) => s.loadingEvaluations);
 export const getFilteredEvaluationNotes = createSelector(
 	getEvaluations,
 	getEvaluationNoteFilters,
-	(evaluation: ClientEvaluation, filters : any) => {
-    if(_isEmpty(evaluation?.EvaluationNote)) return [];
+	(evaluation: ClientEvaluation, filters: any) => {
+		if (_isEmpty(evaluation?.EvaluationNote)) return [];
 		let evals = [...evaluation.EvaluationNote];
 
 		evals = evals.filter(

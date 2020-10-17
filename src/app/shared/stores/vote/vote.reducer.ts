@@ -9,8 +9,16 @@ import {
 } from '../../models';
 import { getBinusianState, getTrainees, getTraineesEntity } from '../binusian/binusian.reducer';
 import { cloneDeep as _cloneDeep } from 'lodash';
-import * as VoteStateAction from './vote.action';
 import * as MainStateAction from '../main/main.action';
+import {
+	FetchTopBottomVoteSchedules,
+	FetchTopBottomVotesForSchedule,
+	FetchTrainerTopBottomVotesForSchedule,
+	FetchTopBottomVoteSchedulesSuccess,
+	FetchTopBottomVotesForScheduleSuccess,
+	FetchTrainerTopBottomVotesForScheduleSuccess,
+	SetFilterText,
+} from './vote.action';
 
 export interface IVoteState {
 	voteSchedules: TopBottomVoteSchedule[];
@@ -42,44 +50,40 @@ export const VOTESTATE_REDUCER_NAME = 'VoteState';
 
 export const VoteStateReducer = createReducer(
 	initialState,
-  // Remove all data when generation changed
+	// Remove all data when generation changed
 	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
 		...initialState,
 	})),
 
-	on(VoteStateAction.FetchTopBottomVoteSchedules, (state) => ({
+	on(FetchTopBottomVoteSchedules, (state) => ({
 		...state,
 		voteScheduleLoading: true,
 	})),
 
-	on(
-		VoteStateAction.FetchTopBottomVotesForSchedule,
-		VoteStateAction.FetchTrainerTopBottomVotesForSchedule,
-		(state) => ({
-			...state,
-			voteResultLoading: true,
-		})
-	),
+	on(FetchTopBottomVotesForSchedule, FetchTrainerTopBottomVotesForSchedule, (state) => ({
+		...state,
+		voteResultLoading: true,
+	})),
 
-	on(VoteStateAction.FetchTopBottomVoteSchedulesSuccess, (state, { payload }) => ({
+	on(FetchTopBottomVoteSchedulesSuccess, (state, { payload }) => ({
 		...state,
 		voteSchedules: payload,
 		voteScheduleLoading: false,
 	})),
 
-	on(VoteStateAction.FetchTopBottomVotesForScheduleSuccess, (state, { payload }) => ({
+	on(FetchTopBottomVotesForScheduleSuccess, (state, { payload }) => ({
 		...state,
 		traineeVotes: payload,
 		voteResultLoading: false,
 	})),
 
-	on(VoteStateAction.FetchTrainerTopBottomVotesForScheduleSuccess, (state, { payload }) => ({
+	on(FetchTrainerTopBottomVotesForScheduleSuccess, (state, { payload }) => ({
 		...state,
 		trainerVotes: payload,
 		voteResultLoading: false,
 	})),
 
-	on(VoteStateAction.SetFilterText, (state, { filterText }) => ({
+	on(SetFilterText, (state, { filterText }) => ({
 		...state,
 		filterText,
 	}))

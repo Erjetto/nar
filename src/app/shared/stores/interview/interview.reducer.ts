@@ -1,6 +1,5 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
-import * as InterviewStateAction from './interview.action';
 import * as MainStateAction from '../main/main.action';
 import {
 	ClientInterviewQuestion,
@@ -10,6 +9,7 @@ import {
 	ClientInterviewReport,
 	ClientInterviewResult,
 } from '../../models';
+import { FetchInterviewQuestions, FetchInterviewQuestionDetails, FetchInterviewSchedules, FetchInterviewSchedulesReport, FetchInterviewMaterials, FetchInterviewQuestionsSuccess, FetchInterviewQuestionDetailsSuccess, FetchInterviewSchedulesSuccess, FetchInterviewSchedulesReportSuccess, FetchInterviewMaterialsSuccess } from './interview.action';
 
 export interface IInterviewState {
 	interviewQuestions: ClientInterviewQuestion[];
@@ -54,56 +54,56 @@ export const InterviewStateReducer = createReducer(
 		...initialState,
 	})),
 
-	on(InterviewStateAction.FetchInterviewQuestions, (state) => ({
+	on(FetchInterviewQuestions, (state) => ({
 		...state,
 		loadingInterviewQuestions: true,
 	})),
 
-	on(InterviewStateAction.FetchInterviewQuestionDetails, (state) => ({
+	on(FetchInterviewQuestionDetails, (state) => ({
 		...state,
 		loadingInterviewQuestionDetails: true,
 	})),
 
-	on(InterviewStateAction.FetchInterviewSchedules, (state) => ({
+	on(FetchInterviewSchedules, (state) => ({
 		...state,
 		loadingInterviewSchedules: true,
 	})),
 
-	on(InterviewStateAction.FetchInterviewSchedulesReport, (state) => ({
+	on(FetchInterviewSchedulesReport, (state) => ({
 		...state,
 		loadingInterviewSchedulesReport: true,
 	})),
 
-	on(InterviewStateAction.FetchInterviewMaterials, (state) => ({
+	on(FetchInterviewMaterials, (state) => ({
 		...state,
 		loadingInterviewMaterials: true,
 	})),
 
-	on(InterviewStateAction.FetchInterviewQuestionsSuccess, (state, { payload }) => ({
+	on(FetchInterviewQuestionsSuccess, (state, { payload }) => ({
 		...state,
 		interviewQuestions: payload,
 		loadingInterviewQuestions: false,
 	})),
 
-	on(InterviewStateAction.FetchInterviewQuestionDetailsSuccess, (state, { payload }) => ({
+	on(FetchInterviewQuestionDetailsSuccess, (state, { payload }) => ({
 		...state,
 		interviewQuestionDetails: payload,
 		loadingInterviewQuestionDetails: false,
 	})),
 
-	on(InterviewStateAction.FetchInterviewSchedulesSuccess, (state, { payload }) => ({
+	on(FetchInterviewSchedulesSuccess, (state, { payload }) => ({
 		...state,
 		interviewSchedules: payload,
 		loadingInterviewSchedules: false,
 	})),
 
-	on(InterviewStateAction.FetchInterviewSchedulesReportSuccess, (state, { payload }) => ({
+	on(FetchInterviewSchedulesReportSuccess, (state, { payload }) => ({
 		...state,
 		interviewSchedulesReport: payload,
 		loadingInterviewSchedulesReport: false,
 	})),
 
-	on(InterviewStateAction.FetchInterviewMaterialsSuccess, (state, { payload }) => ({
+	on(FetchInterviewMaterialsSuccess, (state, { payload }) => ({
 		...state,
 		interviewMaterials: payload,
 		loadingInterviewMaterials: false,
@@ -148,7 +148,7 @@ export const isInterviewSchedulesReportLoading = getInterviewStateBy((s) => s.lo
 // 			if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
 // 			else {
 //         callbackIfEmpty();
-// 				this.store.dispatch(InterviewStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
+// 				this.store.dispatch(FetchSubjects({ phaseId: currPhase.PhaseId }));
 // 				return [];
 // 			}
 // 		})
@@ -160,7 +160,7 @@ export const isInterviewSchedulesReportLoading = getInterviewStateBy((s) => s.lo
 // 			if (!currPhase) return [];
 // 			if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
 // 			else {
-// 				this.store.dispatch(InterviewStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
+// 				this.store.dispatch(FetchSubjects({ phaseId: currPhase.PhaseId }));
 // 				return [];
 // 			}
 // 		})

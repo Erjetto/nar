@@ -1,8 +1,8 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
-import * as AttendanceStateAction from './attendance.action';
 import * as MainStateAction from '../main/main.action';
 import { TraineePresentation, ClientTraineeAttendanceReport, ClientEvaluation, ClientTraineeData } from '../../models';
+import { FetchAttendanceReportSuccess, FetchAttendanceReport } from './attendance.action';
 
 export interface IAttendanceState {
   attendanceReport: ClientTraineeAttendanceReport;
@@ -26,12 +26,12 @@ export const AttendanceStateReducer = createReducer(
 		...initialState,
   })),
   
-  on(AttendanceStateAction.FetchAttendanceReport, (state) => ({
+  on(FetchAttendanceReport, (state) => ({
     ...state,
     loadingAttendanceReport: true
   })),
   
-  on(AttendanceStateAction.FetchAttendanceReportSuccess, (state, {payload}) => ({
+  on(FetchAttendanceReportSuccess, (state, {payload}) => ({
     ...state,
     attendanceReport: payload,
     loadingAttendanceReport: false

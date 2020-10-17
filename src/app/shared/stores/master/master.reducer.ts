@@ -1,6 +1,5 @@
 import { createFeatureSelector, createReducer, createSelector, on, select } from '@ngrx/store';
 
-import * as MasterStateAction from './master.action';
 import * as MainStateAction from '../main/main.action';
 import {
 	Role,
@@ -14,6 +13,25 @@ import {
 import { getCurrentGeneration } from '../main/main.reducer';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import {
+	FetchRoles,
+	FetchUserInRoles,
+	FetchGenerations,
+	FetchPhases,
+	FetchTraineeInPhase,
+	FetchSubjects,
+	FetchSchedules,
+	FetchTraineeInSchedule,
+	FetchRolesSuccess,
+	FetchUserInRolesSuccess,
+	FetchGenerationsSuccess,
+	FetchPhasesSuccess,
+	FetchTraineeInPhaseSuccess,
+	FetchSubjectsSuccess,
+	FetchSchedulesSuccess,
+	FetchTraineeInScheduleSuccess,
+	FetchIPListSuccess,
+} from './master.action';
 
 export interface IMasterState {
 	roles: Role[];
@@ -90,96 +108,96 @@ export const MasterStateReducer = createReducer(
 		roles: state.roles,
 	})),
 
-	on(MasterStateAction.FetchRoles, (state) => ({
+	on(FetchRoles, (state) => ({
 		...state,
 		loadingRoles: true,
 	})),
 
-	on(MasterStateAction.FetchUserInRoles, (state) => ({
+	on(FetchUserInRoles, (state) => ({
 		...state,
 		loadingUserInRoles: true,
 	})),
 
-	on(MasterStateAction.FetchGenerations, (state) => ({
+	on(FetchGenerations, (state) => ({
 		...state,
 		loadingGenerations: true,
 	})),
 
-	on(MasterStateAction.FetchPhases, (state) => ({
+	on(FetchPhases, (state) => ({
 		...state,
 		loadingPhases: true,
 	})),
 
-	on(MasterStateAction.FetchTraineeInPhase, (state) => ({
+	on(FetchTraineeInPhase, (state) => ({
 		...state,
 		loadingTraineeInPhase: true,
 	})),
 
-	on(MasterStateAction.FetchSubjects, (state) => ({
+	on(FetchSubjects, (state) => ({
 		...state,
 		loadingSubjects: true,
 	})),
 
-	on(MasterStateAction.FetchSchedules, (state) => ({
+	on(FetchSchedules, (state) => ({
 		...state,
 		loadingSchedules: true,
 	})),
 
-	on(MasterStateAction.FetchTraineeInSchedule, (state) => ({
+	on(FetchTraineeInSchedule, (state) => ({
 		...state,
 		loadingTraineeInSchedule: true,
 	})),
 
-	on(MasterStateAction.FetchRolesSuccess, (state, { payload }) => ({
+	on(FetchRolesSuccess, (state, { payload }) => ({
 		...state,
 		roles: payload,
 		loadingRoles: false,
 	})),
 
-	on(MasterStateAction.FetchUserInRolesSuccess, (state, { payload }) => ({
+	on(FetchUserInRolesSuccess, (state, { payload }) => ({
 		...state,
 		userInRoles: payload,
 		loadingUserInRoles: false,
 	})),
 
-	on(MasterStateAction.FetchGenerationsSuccess, (state, { payload }) => ({
+	on(FetchGenerationsSuccess, (state, { payload }) => ({
 		...state,
 		generations: payload,
 		loadingGenerations: false,
 	})),
 
-	on(MasterStateAction.FetchPhasesSuccess, (state, { payload }) => ({
+	on(FetchPhasesSuccess, (state, { payload }) => ({
 		...state,
 		phases: payload,
 		loadingPhases: false,
 	})),
 
-	on(MasterStateAction.FetchTraineeInPhaseSuccess, (state, { payload, phaseId }) => ({
+	on(FetchTraineeInPhaseSuccess, (state, { payload, phaseId }) => ({
 		...state,
 		traineeInPhase: payload,
 		loadingTraineeInPhase: false,
 		traineesInPhaseEntity: { ...state.traineesInPhaseEntity, [phaseId]: payload },
 	})),
 
-	on(MasterStateAction.FetchSubjectsSuccess, (state, { payload, phaseId }) => ({
+	on(FetchSubjectsSuccess, (state, { payload, phaseId }) => ({
 		...state,
 		loadingSubjects: false,
 		subjects: payload,
 		maxFileSizes: {
 			...state.maxFileSizes,
-			...payload.reduce((acc, prev) => ({...acc, [prev.SubjectId]: prev.MaxFileSize}), {}),
+			...payload.reduce((acc, prev) => ({ ...acc, [prev.SubjectId]: prev.MaxFileSize }), {}),
 		},
 		subjectsByPhaseEntity: { ...state.subjectsByPhaseEntity, [phaseId]: payload },
 	})),
 
-	on(MasterStateAction.FetchSchedulesSuccess, (state, { payload, subjectId }) => ({
+	on(FetchSchedulesSuccess, (state, { payload, subjectId }) => ({
 		...state,
 		schedules: payload,
 		loadingSchedules: false,
 		schedulesBySubjectEntity: { ...state.schedulesBySubjectEntity, [subjectId]: payload },
 	})),
 
-	on(MasterStateAction.FetchTraineeInScheduleSuccess, (state, { payload, scheduleId }) => ({
+	on(FetchTraineeInScheduleSuccess, (state, { payload, scheduleId }) => ({
 		...state,
 		traineeInSchedule: payload,
 		loadingTraineeInSchedule: false,
@@ -187,7 +205,7 @@ export const MasterStateReducer = createReducer(
 	})),
 
 	// No need loadingIPList
-	on(MasterStateAction.FetchIPListSuccess, (state, { payload }) => ({
+	on(FetchIPListSuccess, (state, { payload }) => ({
 		...state,
 		ipList: payload,
 	}))

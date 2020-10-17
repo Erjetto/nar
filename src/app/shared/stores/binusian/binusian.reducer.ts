@@ -1,28 +1,44 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
-import * as BinusianStateAction from './binusian.action';
 import * as MainStateAction from '../main/main.action';
-import { Role, ClientTrainee, ClientTraineeData, ClientUserInRoles, SimpleTraineeData } from '../../models';
+import {
+	ClientTrainee,
+	ClientTraineeData,
+	ClientUserInRoles,
+	SimpleTraineeData,
+} from '../../models';
+import {
+	FetchAllTraineesInCurrentGen,
+	FetchTraineesSuccess,
+	FetchTraineesSimpleData,
+	FetchTraineesSimpleDataSuccess,
+	FetchTraineesData,
+	FetchTraineesDataSuccess,
+	FetchTraineesBy,
+  FetchAllTraineesSuccess,
+} from './binusian.action';
 
 export interface IBinusianState {
 	traineesEntity: { [id: string]: ClientTrainee };
 
-  trainees: ClientTrainee[];
-  traineesData: ClientTraineeData[];
-  traineesSimpleData: SimpleTraineeData[];
-  userInRoles: ClientUserInRoles[];
+	allTrainees: ClientTrainee[];
+	trainees: ClientTrainee[];
+	traineesData: ClientTraineeData[];
+	traineesSimpleData: SimpleTraineeData[];
+	userInRoles: ClientUserInRoles[];
 
-  loadingTrainees: boolean;
+	loadingTrainees: boolean;
 	loadingTraineesData: boolean;
 	loadingTraineesSimpleData: boolean;
 }
 
 export const initialState: IBinusianState = {
 	traineesEntity: null,
+	allTrainees: [],
 	trainees: [],
 	traineesData: [],
 	traineesSimpleData: [],
-  userInRoles: [],
-  
+	userInRoles: [],
+
 	loadingTrainees: false,
 	loadingTraineesData: false,
 	loadingTraineesSimpleData: false,
@@ -32,34 +48,43 @@ export const BINUSIANSTATE_REDUCER_NAME = 'BinusianState';
 
 export const BinusianStateReducer = createReducer(
 	initialState,
-  // Remove all data when generation changed
+	// Remove all data when generation changed
 	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
 		...initialState,
 	})),
 
-	on(BinusianStateAction.FetchTrainees, (state) => ({ ...state, loadingTrainees: true })),
-	on(BinusianStateAction.FetchTraineesSuccess, (state, { payload }) => ({
-    ...state,
-    loadingTrainees: false,
+	on(FetchAllTraineesInCurrentGen, FetchTraineesBy, (state) => ({
+		...state,
+		loadingTrainees: true,
+	})),
+	on(FetchAllTraineesSuccess, (state, { payload }) => ({
+		...state,
+		loadingTrainees: false,
+		allTrainees: payload,
+		traineesEntity: payload.reduce((accum, curr) => ({ ...accum, [curr.TraineeId]: curr }), {}),
+	})),
+	on(FetchTraineesSuccess, (state, { payload }) => ({
+		...state,
+		loadingTrainees: false,
 		trainees: payload,
 		traineesEntity: payload.reduce((accum, curr) => ({ ...accum, [curr.TraineeId]: curr }), {}),
 	})),
 
-	on(BinusianStateAction.FetchTraineesSimpleData, (state) => ({ ...state, loadingTraineesSimpleData: true })),
-	on(BinusianStateAction.FetchTraineesSimpleDataSuccess, (state, { payload }) => ({
-    ...state,
-    loadingTraineesSimpleData: false,
+	on(FetchTraineesSimpleData, (state) => ({ ...state, loadingTraineesSimpleData: true })),
+	on(FetchTraineesSimpleDataSuccess, (state, { payload }) => ({
+		...state,
+		loadingTraineesSimpleData: false,
 		traineesSimpleData: payload,
 	})),
 
-	on(BinusianStateAction.FetchTraineesData, (state) => ({ ...state, loadingTraineesData: true })),
-	on(BinusianStateAction.FetchTraineesDataSuccess, (state, { payload }) => ({
-    ...state,
-    loadingTraineesData: false,
+	on(FetchTraineesData, (state) => ({ ...state, loadingTraineesData: true })),
+	on(FetchTraineesDataSuccess, (state, { payload }) => ({
+		...state,
+		loadingTraineesData: false,
 		traineesData: payload,
-	})),
-	// on(BinusianStateAction.FetchTraineesByPhaseSuccess, (state, {payload}) => ({...state, traineesByPhase: payload})),
-	// on(BinusianStateAction.FetchTraineesByScheduleSuccess, (state, {payload}) => ({...state, traineesBySchedule: payload})),
+	}))
+	// on(FetchTraineesByPhaseSuccess, (state, {payload}) => ({...state, traineesByPhase: payload})),
+	// on(FetchTraineesByScheduleSuccess, (state, {payload}) => ({...state, traineesBySchedule: payload})),
 );
 
 export const getBinusianState = createFeatureSelector<IBinusianState>(BINUSIANSTATE_REDUCER_NAME);
@@ -68,6 +93,7 @@ export const getBinusianStateBy = (fn: (_: IBinusianState) => any) =>
 	createSelector(getBinusianState, fn);
 
 export const getTrainees = getBinusianStateBy((s) => s.trainees);
+export const getAllTrainees = getBinusianStateBy((s) => s.allTrainees);
 export const getTraineesEntity = getBinusianStateBy((s) => s.traineesEntity);
 export const getTraineesData = getBinusianStateBy((s) => s.traineesData);
 export const getTraineesSimpleData = getBinusianStateBy((s) => s.traineesSimpleData);

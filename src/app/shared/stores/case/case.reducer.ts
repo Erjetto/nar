@@ -5,9 +5,9 @@ import {
 	on,
 } from '@ngrx/store';
 
-import * as CaseStateAction from './case.action';
 import * as MainStateAction from '../main/main.action';
 import { Case, ClientCaseTrainer } from '../../models';
+import { FetchCases, FetchCasesSuccess } from './case.action';
 
 export interface ICaseState {
 	cases: Case[];
@@ -33,9 +33,9 @@ export const CaseStateReducer = createReducer(
 	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
 		...initialState,
 	})),
-	on(CaseStateAction.FetchCases, (state) => ({ ...state, loadingCases: true })),
+	on(FetchCases, (state) => ({ ...state, loadingCases: true })),
 
-	on(CaseStateAction.FetchCasesSuccess, (state, { payload }) => ({
+	on(FetchCasesSuccess, (state, { payload }) => ({
 		...state,
 		cases: payload,
 		loadingCases: false,

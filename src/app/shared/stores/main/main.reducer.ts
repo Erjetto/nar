@@ -1,6 +1,5 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
-import * as MainStateAction from './main.action';
 import { Toast, Message, User, ClientGeneration, Role } from '../../models';
 import {
 	isEmpty as _isEmpty,
@@ -9,6 +8,21 @@ import {
 	filter as _filter,
 	zip as _zip,
 } from 'lodash';
+import {
+	LoginSuccess,
+	SetCurrentUser,
+	LogoutSuccess,
+	ToastMessage,
+	RemoveMessage,
+	ChangeGenerationSuccess,
+	SetGeneration,
+	ChangeRoleSuccess,
+	FetchAnnouncements,
+	FetchAnnouncementsSuccess,
+	UploadFile,
+	UploadFileSuccess,
+	RemoveUploadedFiles,
+} from './main.action';
 
 export interface IMainState {
 	currentUser: User;
@@ -52,19 +66,19 @@ export const MAINSTATE_REDUCER_NAME = 'MainState';
 export const MainStateReducer = createReducer(
 	initialState,
 
-	on(MainStateAction.LoginSuccess, MainStateAction.SetCurrentUser, (state, { user }) => ({
+	on(LoginSuccess, SetCurrentUser, (state, { user }) => ({
 		...state,
 		currentUser: { ...user, ActiveRole: user.Role.roleName },
 		currentRole: user.Role,
 	})),
 
-	on(MainStateAction.LogoutSuccess, (state) => ({
+	on(LogoutSuccess, (state) => ({
 		...state,
 		currentUser: null,
 		currentRole: null,
 	})),
 
-	on(MainStateAction.ToastMessage, (state, { message, messageType }) => ({
+	on(ToastMessage, (state, { message, messageType }) => ({
 		...state,
 		// Only show the last n toast
 		messages: [
@@ -73,42 +87,42 @@ export const MainStateReducer = createReducer(
 		],
 	})),
 
-	on(MainStateAction.RemoveMessage, (state, { index }) => ({
+	on(RemoveMessage, (state, { index }) => ({
 		...state,
 		messages: _filter(state.messages, (v, i) => i !== index),
 	})),
 
-	on(MainStateAction.ChangeGenerationSuccess, MainStateAction.SetGeneration, (state, { gen }) => ({
+	on(ChangeGenerationSuccess, SetGeneration, (state, { gen }) => ({
 		...state,
 		currentGeneration: gen,
 		currentGenerationId: gen.GenerationId,
 	})),
 
-	on(MainStateAction.ChangeRoleSuccess, (state, { role }) => ({
+	on(ChangeRoleSuccess, (state, { role }) => ({
 		...state,
 		currentRole: role,
 	})),
 
-	on(MainStateAction.FetchAnnouncements, (state) => ({
+	on(FetchAnnouncements, (state) => ({
 		...state,
 		isLoadingAnnouncements: true,
 	})),
 
-	on(MainStateAction.FetchAnnouncementsSuccess, (state, { announcements }) => ({
+	on(FetchAnnouncementsSuccess, (state, { announcements }) => ({
 		...state,
 		announcements,
 		isLoadingAnnouncements: false,
 	})),
 
-	on(MainStateAction.UploadFile, (state) => ({ ...state, isUploadingFiles: true })),
+	on(UploadFile, (state) => ({ ...state, isUploadingFiles: true })),
 
-	on(MainStateAction.UploadFileSuccess, (state, { fileids, filenames }) => ({
+	on(UploadFileSuccess, (state, { fileids, filenames }) => ({
 		...state,
 		uploadedFiles: _zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
 		isUploadingFiles: false,
 	})),
 
-	on(MainStateAction.RemoveUploadedFiles, (state) => ({
+	on(RemoveUploadedFiles, (state) => ({
 		...state,
 		uploadedFiles: [],
 	}))

@@ -1,13 +1,23 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
-import * as PresentationStateAction from './presentation.action';
 import * as MainStateAction from '../main/main.action';
 import {
 	CoreTrainingPresentation,
 	TraineePresentation,
 	CoreTrainingPresentationQuestion,
 } from '../../models';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
+import {
+	FetchPresentationsBy,
+	FetchPresentationsByGenerationSuccess,
+	FetchPresentationsBySubjectSuccess,
+	FetchPresentationsByTraineeSuccess,
+	SetQuestionsFilter,
+	FetchPresentationStatus,
+	FetchPresentationStatusSuccess,
+	FetchPresentationsByDate,
+	FetchPresentationsByDateSuccess,
+} from './presentation.action';
 
 export interface IPresentationState {
 	// Entity digunakan utk mengakses data yg sudah diambil sebelumnya
@@ -26,6 +36,7 @@ export interface IPresentationState {
 	// Setiap fetch presentation, presentations akan selalu berubah
 	presentations: CoreTrainingPresentation[];
 	presentationsByDate: TraineePresentation[];
+	myPresentations: CoreTrainingPresentation[];
 
 	questionsFilter: any;
 
@@ -40,6 +51,7 @@ export const initialState: IPresentationState = {
 
 	presentations: [],
 	presentationsByDate: [],
+	myPresentations: [],
 
 	questionsFilter: { search: '', status: '', subjectId: '' },
 
@@ -56,12 +68,12 @@ export const PresentationStateReducer = createReducer(
 		...initialState,
 	})),
 
-	on(PresentationStateAction.FetchPresentationsBy, (state) => ({
+	on(FetchPresentationsBy, (state) => ({
 		...state,
 		loadingPresentations: true,
 	})),
 
-	on(PresentationStateAction.FetchPresentationsByGenerationSuccess, (state, { payload }) => ({
+	on(FetchPresentationsByGenerationSuccess, (state, { payload }) => ({
 		...state,
 		loadingPresentations: false,
 		presentations: payload,
@@ -82,66 +94,60 @@ export const PresentationStateReducer = createReducer(
 		}, {}),
 	})),
 
-	on(
-		PresentationStateAction.FetchPresentationsBySubjectSuccess,
-		(state, { payload, subjectId }) => ({
-			...state,
-			loadingPresentations: false,
-			presentations: payload,
-			presentationsBySubjectEntity: payload.reduce(
-				(acc, curr) => {
-					acc[subjectId] = [...acc[subjectId], curr];
-					return acc;
-				},
-				{ ...state.presentationsBySubjectEntity, [subjectId]: [] }
-			),
-			questionsBySubjectEntity: payload.reduce(
-				(acc, curr) => {
-					acc[subjectId] = [...acc[subjectId], ...curr.Questions];
-					return acc;
-				},
-				{ ...state.questionsBySubjectEntity, [subjectId]: [] }
-			),
-		})
-	),
+	on(FetchPresentationsBySubjectSuccess, (state, { payload, subjectId }) => ({
+		...state,
+		loadingPresentations: false,
+		presentations: payload,
+		presentationsBySubjectEntity: payload.reduce(
+			(acc, curr) => {
+				acc[subjectId] = [...acc[subjectId], curr];
+				return acc;
+			},
+			{ ...state.presentationsBySubjectEntity, [subjectId]: [] }
+		),
+		questionsBySubjectEntity: payload.reduce(
+			(acc, curr) => {
+				acc[subjectId] = [...acc[subjectId], ...curr.Questions];
+				return acc;
+			},
+			{ ...state.questionsBySubjectEntity, [subjectId]: [] }
+		),
+	})),
 
-	on(
-		PresentationStateAction.FetchPresentationsByTraineeSuccess,
-		(state, { payload, traineeId }) => ({
-			...state,
-			loadingPresentations: false,
-			presentations: payload,
-			questionsByTraineeEntity: payload.reduce(
-				(acc, curr) => {
-					acc[traineeId] = [...acc[traineeId], ...curr.Questions];
-					return acc;
-				},
-				{ ...state.questionsByTraineeEntity, [traineeId]: [] }
-			),
-		})
-	),
+	on(FetchPresentationsByTraineeSuccess, (state, { payload, traineeId }) => ({
+		...state,
+		loadingPresentations: false,
+		presentations: payload,
+		questionsByTraineeEntity: payload.reduce(
+			(acc, curr) => {
+				acc[traineeId] = [...acc[traineeId], ...curr.Questions];
+				return acc;
+			},
+			{ ...state.questionsByTraineeEntity, [traineeId]: [] }
+		),
+	})),
 
-	on(PresentationStateAction.SetQuestionsFilter, (state, data) => ({
+	on(SetQuestionsFilter, (state, data) => ({
 		...state,
 		questionsFilter: data,
 	})),
 
-	on(PresentationStateAction.FetchPresentationStatus, (state) => ({
+	on(FetchPresentationStatus, (state) => ({
 		...state,
 		presentationStatus: 'Loading...',
 	})),
 
-	on(PresentationStateAction.FetchPresentationStatusSuccess, (state, { payload }) => ({
+	on(FetchPresentationStatusSuccess, (state, { payload }) => ({
 		...state,
 		presentationStatus: payload,
 	})),
 
-	on(PresentationStateAction.FetchPresentationsByDate, (state) => ({
+	on(FetchPresentationsByDate, (state) => ({
 		...state,
 		loadingPresentations: true,
 	})),
 
-	on(PresentationStateAction.FetchPresentationsByDateSuccess, (state, { payload }) => ({
+	on(FetchPresentationsByDateSuccess, (state, { payload }) => ({
 		...state,
 		presentationsByDate: payload,
 		loadingPresentations: false,
@@ -156,6 +162,7 @@ export const getPresentationStateBy = (fn: (_: IPresentationState) => any) =>
 	createSelector(getPresentationState, fn);
 
 export const getPresentations = getPresentationStateBy((s) => s.presentations);
+export const getMyPresentations = getPresentationStateBy((s) => s.myPresentations);
 export const getPresentationStatus = getPresentationStateBy((s) => s.presentationStatus);
 export const getPresentationsBySubjectEntity = getPresentationStateBy(
 	(s) => s.presentationsBySubjectEntity
