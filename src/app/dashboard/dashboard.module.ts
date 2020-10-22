@@ -32,6 +32,7 @@ import { ModifyTraineeScheduleComponent } from './modify/modify-trainee-schedule
 import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
 import { NewPresentationComponent } from './presentation/new-presentation/new-presentation.component';
 import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote/top-bottom-vote.component';
+import { FillAnswersComponent } from './candidate/fill-answers/fill-answers.component';
 
 @NgModule({
 	declarations: [
@@ -69,6 +70,8 @@ import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote/top-bo
 		NewPresentationComponent,
     
 		TopBottomVoteComponent,
+    
+		FillAnswersComponent,
 	],
 	imports: [
 		SharedModule,

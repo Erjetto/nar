@@ -2,12 +2,21 @@ import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/
 
 import * as MainStateAction from '../main/main.action';
 import { SubcoCandidateAnswerModel, SubcoCandidateQuestionModel } from '../../models';
-import { FetchQuestions, FetchAnswers, FetchAnswersSuccess, FetchQuestionsSuccess, ViewSchedule } from './candidate.action';
+import {
+	FetchQuestionsForCurrentGen,
+	FetchAnswers,
+	FetchAnswersSuccess,
+	FetchQuestionsSuccess,
+	ViewSchedule,
+	FetchCurrentUserAnswer,
+	FetchTrainerAnswerSuccess,
+} from './candidate.action';
 
 export interface ICandidateState {
 	questionModel: SubcoCandidateQuestionModel;
 	answerModels: SubcoCandidateAnswerModel[];
 	selectedAnswer: SubcoCandidateAnswerModel;
+	currentUserAnswer: SubcoCandidateAnswerModel;
 
 	loadingQuestionsModel: boolean;
 	loadingAnswersModel: boolean;
@@ -15,8 +24,9 @@ export interface ICandidateState {
 
 export const initialState: ICandidateState = {
 	questionModel: null,
-	selectedAnswer: null,
 	answerModels: [],
+	selectedAnswer: null,
+	currentUserAnswer: null,
 
 	loadingQuestionsModel: false,
 	loadingAnswersModel: false,
@@ -29,21 +39,27 @@ export const CandidateStateReducer = createReducer(
 	// Remove all data when generation changed
 	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
 		...initialState,
-  })),
-  
-	on(FetchQuestions, (state) => ({ ...state, loadingQuestionsModel: true })),
-	on(FetchAnswers, (state) => ({ ...state, loadingAnswersModel: true })),
+	})),
+
+	on(FetchQuestionsForCurrentGen, (state) => ({ ...state, loadingQuestionsModel: true })),
+	on(FetchAnswers, FetchCurrentUserAnswer, (state) => ({ ...state, loadingAnswersModel: true })),
 
 	on(FetchAnswersSuccess, (state, { payload }) => ({
 		...state,
-    answerModels: payload,
-    loadingAnswersModel: false
+		answerModels: payload,
+		loadingAnswersModel: false,
+	})),
+
+	on(FetchTrainerAnswerSuccess, (state, { payload }) => ({
+		...state,
+		currentUserAnswer: payload,
+		loadingAnswersModel: false,
 	})),
 
 	on(FetchQuestionsSuccess, (state, { payload }) => ({
 		...state,
-    questionModel: payload,
-    loadingQuestionsModel: false
+		questionModel: payload,
+		loadingQuestionsModel: false,
 	})),
 
 	on(ViewSchedule, (state, { payload }) => ({
@@ -59,6 +75,7 @@ export const getCandidateStateBy = (fn: (_: ICandidateState) => any) =>
 
 export const getQuestionModel = getCandidateStateBy((s) => s.questionModel);
 export const getAnswerModels = getCandidateStateBy((s) => s.answerModels);
+export const getCurrentUserAnswer = getCandidateStateBy((s) => s.currentUserAnswer);
 export const getSelectedAnswer = getCandidateStateBy((s) => s.selectedAnswer);
 export const isLoadingQuestionsModel = getCandidateStateBy((s) => s.loadingQuestionsModel);
 export const isLoadingAnswersModel = getCandidateStateBy((s) => s.loadingAnswersModel);

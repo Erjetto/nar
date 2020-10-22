@@ -1,0 +1,43 @@
+<div class="container-lg">
+	<div class="row">
+		<div class="col">
+			<rd-card
+				[cardTitle]="'Fill Answers'"
+				[isLoading]="loadingViewQuestions$ | async"
+				[collapsible]="false"
+			>
+				<div class="row p-3" [hidden]="!(answersForm.controls.length == 0)">
+					<div class="col text-center">
+						<i>No questions for you...</i>
+					</div>
+				</div>
+				<div class="row p-3" [hidden]="!(answersForm.controls.length > 0 && !(canAnswer$ | async))">
+					<div class="col text-center">
+						<i>Deadline has been reached...</i>
+					</div>
+				</div>
+				<div class="row form-group" *ngFor="let answer of answersForm.controls; let i = index">
+					<div class="col">
+						<div class="row mb-2 font-weight-bold">
+							{{ i + 1 }}. {{ (questionModel$ | async)?.Questions[i] }}
+						</div>
+						<div class="row">
+							<textarea
+								class="form-control vertical-text-area minh-100px"
+								[formControl]="answer"
+								placeholder="Answer here"
+							></textarea>
+						</div>
+					</div>
+				</div>
+				<div [hidden]="!(canAnswer$ | async)">
+					<div class="col text-center">
+						<button class="btn btn-primary" (click)="saveAnswers()">
+							<fa-icon [icon]="['fas', 'pen']"></fa-icon>&nbsp;&nbsp;Save Answer
+						</button>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

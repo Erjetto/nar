@@ -69,7 +69,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 
 		// When change gen, reload question & answers
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
-			this.store.dispatch(CandidateStateAction.FetchQuestions());
+			this.store.dispatch(CandidateStateAction.FetchQuestionsForCurrentGen());
 			this.store.dispatch(CandidateStateAction.FetchAnswers());
 		});
 		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
@@ -88,7 +88,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 				this.store.dispatch(CandidateStateAction.FetchAnswers());
 			});
 
-		this.store.dispatch(CandidateStateAction.FetchQuestions());
+		this.store.dispatch(CandidateStateAction.FetchQuestionsForCurrentGen());
 		this.store.dispatch(CandidateStateAction.FetchAnswers());
 	}
 

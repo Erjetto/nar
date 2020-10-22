@@ -1,22 +1,67 @@
 import { RoleFlags } from './constants/role.constant';
-import { isNumber, map, isEmpty } from 'lodash';
+import { isNumber, map, isEmpty, cloneDeep } from 'lodash';
 import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 //#region Common methods or class unrelated to NAR backend
+export const dateInRange = (start: Date, end: Date, curr: Date = new Date()) => 
+  start.getTime() < curr.getTime() && curr.getTime() < end.getTime()
+
+/**
+ * Create array of duplicate value
+ * @param value value to duplicate, if function: call it, if object, clone it
+ * @param count amount
+ */
+export const arrayOfValue = (value: any, count: number) => {
+	switch (typeof value) {
+		case 'function':
+			return Array(count)
+				.fill(0)
+				.map(() => value());
+		case 'object':
+			return Array(count)
+				.fill(0)
+				.map(() => cloneDeep(value));
+		default:
+			return Array(count)
+				.fill(0)
+				.map(() => value);
+	}
+};
+/**
+ * Adjust the controls amount in form array
+ * @param arr the FormArray
+ * @param count the adjusted number
+ * @param formgroupFactory the method that is called to create the form group
+ */
+export const adjustControlsInFormArray = (
+	arr: FormArray,
+	count: number,
+	formgroupFactory?: () => any
+) => {
+	while (arr.length > count) {
+		arr.removeAt(arr.length - 1);
+  }
+  
+	while (arr.length < count) {
+		if (formgroupFactory) arr.push(new FormGroup(formgroupFactory()));
+		else arr.push(new FormControl());
+	}
+};
 
 /**
  * Template for most of downloadable item in NAR
  */
-export const GetDownloadLinkFromFileId = (fileId: string): string => 
-  `${environment.apiUrl}File.svc/GetFile/${fileId}`;
-   
+export const GetDownloadLinkFromFileId = (fileId: string): string =>
+	`${environment.apiUrl}File.svc/GetFile/${fileId}`;
+
 /**
  * Find Core training phase, if not found then return first phase
  * @param phases phases
  */
-export const TryGetCoreTrainingPhase = (phases: ClientPhase[]): ClientPhase => 
-  phases.find((p) => p.Description.includes('Core')) ?? phases[0]
+export const TryGetCoreTrainingPhase = (phases: ClientPhase[]): ClientPhase =>
+	phases.find((p) => p.Description.includes('Core')) ?? phases[0];
 
 export type AttendanceType = 'Rest' | 'Room' | 'Secretariat';
 export type QuestionStatus = 'wrong' | 'correct' | 'unchecked';
@@ -47,7 +92,10 @@ export class BaseModel {}
 
 // ClientRole -> Role
 export class Role {
-	public static readonly allRoles: Role[] = map(RoleFlags, (val: number, key) => new Role(key, val));
+	public static readonly allRoles: Role[] = map(
+		RoleFlags,
+		(val: number, key) => new Role(key, val)
+	);
 
 	constructor(public roleName = '', public roleNumber = 0, public roleId = '') {}
 
@@ -59,9 +107,9 @@ export class Role {
 	static from(input: string | number): Role {
 		// name/flag to Role
 		return this.allRoles.find((r) => r.roleName === input || r.roleNumber === input);
-  }
-  
-  // Ex: currentRole.is(RoleFlag.Subco, RoleFlag.Trainer, ....)
+	}
+
+	// Ex: currentRole.is(RoleFlag.Subco, RoleFlag.Trainer, ....)
 	is(...roleFlags: number[] | Role[]): boolean {
 		if (isNumber(roleFlags[0])) return roleFlags.some((num) => (num & this.roleNumber) !== 0);
 		else return roleFlags.some((role) => (role.roleNumber & this.roleNumber) !== 0);
@@ -331,21 +379,21 @@ export class AdditionalTraineeData extends BaseModel {
 }
 
 export class SimpleTraineeData extends BaseModel {
-  constructor(
-    public DeactivateReason: TraineeDeactivateReason = null,
-    public Status = '',
-    public TraineeCode = '',
-    public TraineeId = '',
-    public TraineeName = '',
-    public TraineeNumber = '',
-  ){
-    super();
-  }
+	constructor(
+		public DeactivateReason: TraineeDeactivateReason = null,
+		public Status = '',
+		public TraineeCode = '',
+		public TraineeId = '',
+		public TraineeName = '',
+		public TraineeNumber = ''
+	) {
+		super();
+	}
 	static fromJson(data?: any): SimpleTraineeData {
 		if (isEmpty(data)) return null;
 		return Object.assign(new SimpleTraineeData(), data, {
-      DeactivateReason: TraineeDeactivateReason.fromJson(data?.DeactivateReason)
-    });
+			DeactivateReason: TraineeDeactivateReason.fromJson(data?.DeactivateReason),
+		});
 	}
 }
 
@@ -376,7 +424,7 @@ export class ClientTraineeData extends BaseModel {
 	static fromJson(data?: any): ClientTraineeData {
 		if (isEmpty(data)) return null;
 		return Object.assign(new ClientTraineeData(), data, {
-      BirthDate: DateHelper.fromCSharpDate(data?.BirthDate),
+			BirthDate: DateHelper.fromCSharpDate(data?.BirthDate),
 			Scores: map(data?.Scores, ClientTraineeDataScore.fromJson),
 			Notes: map(data?.Notes, ClientNote.fromJson),
 			Attendances: map(data?.Attendances, ClientTraineeDataAttendance.fromJson),
@@ -719,15 +767,15 @@ export class CoreTrainingPresentation extends BaseModel {
 	}
 
 	static fromJson(data: any): CoreTrainingPresentation {
-    if (isEmpty(data)) return null;
-    let res = new CoreTrainingPresentation()
+		if (isEmpty(data)) return null;
+		let res = new CoreTrainingPresentation();
 		res = Object.assign(res, data, {
-      Deadline: DateHelper.fromCSharpDate(data?.Deadline),
-      Questions: map(data?.Questions, (q) => CoreTrainingPresentationQuestion.fromJson(q, res)),
+			Deadline: DateHelper.fromCSharpDate(data?.Deadline),
+			Questions: map(data?.Questions, (q) => CoreTrainingPresentationQuestion.fromJson(q, res)),
 			PresentationDate: DateHelper.fromCSharpDate(data?.PresentationDate),
 			PresentationComment: CoreTrainingPresentationItem.fromJson(data?.PresentationComment),
-    }) as CoreTrainingPresentation;
-    return res
+		}) as CoreTrainingPresentation;
+		return res;
 	}
 }
 
@@ -737,7 +785,7 @@ export class CoreTrainingPresentationComment extends BaseModel {
 		public Histories: DataHistory[] = [],
 		public Id = '',
 		public UserId = '',
-    public UserName = ''
+		public UserName = ''
 	) {
 		super();
 	}
@@ -745,7 +793,7 @@ export class CoreTrainingPresentationComment extends BaseModel {
 	static fromJson(data: any): CoreTrainingPresentationComment {
 		if (isEmpty(data)) return null;
 		return Object.assign(new CoreTrainingPresentationComment(), data, {
-      Histories: map(data?.Histories, DataHistory.fromJson),
+			Histories: map(data?.Histories, DataHistory.fromJson),
 		});
 	}
 }
@@ -771,8 +819,8 @@ export class CoreTrainingPresentationQuestion extends BaseModel {
 		public DeadlinePassed = '',
 		public Status = 'unchecked',
 		public StatusBy = '',
-    
-    public parent: CoreTrainingPresentation = null // Additional feature
+
+		public parent: CoreTrainingPresentation = null // Additional feature
 	) {
 		super();
 	}
@@ -780,18 +828,18 @@ export class CoreTrainingPresentationQuestion extends BaseModel {
 	get rightAnswer() {
 		// return this.Answers.find((q) => q.Id === this.AcceptedAnswerId);
 		return this.Answers.find((q) => q.Status === 'correct');
-  }
-  
-  get questionLink(){
-    return `${environment.apiUrl}/presentation/question/${this.Question.Id}`
-  }
+	}
+
+	get questionLink() {
+		return `${environment.apiUrl}/presentation/question/${this.Question.Id}`;
+	}
 
 	static fromJson(data: any, parent: any): CoreTrainingPresentationQuestion {
 		if (isEmpty(data)) return null;
 		return Object.assign(new CoreTrainingPresentationQuestion(), data, {
 			Question: CoreTrainingPresentationItem.fromJson(data?.Question),
 			Answers: map(data?.Answers, CoreTrainingPresentationItem.fromJson),
-      parent
+			parent,
 		});
 	}
 }
@@ -1087,7 +1135,9 @@ export class SubcoCandidateQuestionModel extends BaseModel {
 		return Object.assign(new SubcoCandidateQuestionModel(), data);
 	}
 }
-
+/**
+ * Basically schedule yang dapat dilihat di Answer Schedule
+ */
 export class SubcoCandidateAnswerModel extends BaseModel {
 	constructor(
 		public Id = '',

@@ -16,7 +16,7 @@ import { takeUntil, filter, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, merge } from 'rxjs';
 import { SubcoCandidateQuestionModel } from 'src/app/shared/models';
 import { FormBuilder, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
-import { FetchQuestions } from 'src/app/shared/stores/candidate/candidate.action';
+import { FetchQuestionsForCurrentGen } from 'src/app/shared/stores/candidate/candidate.action';
 
 @Component({
 	selector: 'rd-candidate-questions',
@@ -57,10 +57,10 @@ export class CandidateQuestionsComponent extends DashboardContentBase implements
 		merge(this.mainEffects.changeGen$, this.candidateEffects.updateQuestions$)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => {
-				this.store.dispatch(CandidateStateAction.FetchQuestions());
+				this.store.dispatch(CandidateStateAction.FetchQuestionsForCurrentGen());
 			});
 
-		this.store.dispatch(CandidateStateAction.FetchQuestions());
+		this.store.dispatch(CandidateStateAction.FetchQuestionsForCurrentGen());
 	}
 
 	get questionsArray() {

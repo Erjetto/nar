@@ -31,6 +31,7 @@ import { CurrentUserResolver } from '../shared/resolvers/current-user.resolver';
 import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
 import { NewPresentationComponent } from './presentation/new-presentation/new-presentation.component';
 import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote/top-bottom-vote.component';
+import { FillAnswersComponent } from './candidate/fill-answers/fill-answers.component';
 
 export const routes: Routes = [
 	{
@@ -460,11 +461,10 @@ export const routes: Routes = [
 				children: [
 					{
 						path: 'fill-answer',
-						redirectTo: '/home',
-						// component: null,
+						component: FillAnswersComponent,
 						data: {
 							roles: RoleFlags.Trainer,
-							name: 'Fill Answer (-)',
+							name: 'Fill Answer',
 						},
 					},
 					{

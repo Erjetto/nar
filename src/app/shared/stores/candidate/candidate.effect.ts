@@ -23,9 +23,17 @@ export class CandidateStateEffects {
 	) {}
 
 	@Effect()
-	getQuestions$: Observable<Action> = this.actions$.pipe(
-		ofType(CandidateStateAction.FetchQuestions),
+	getQuestionsForCurrentGen$: Observable<Action> = this.actions$.pipe(
+		ofType(CandidateStateAction.FetchQuestionsForCurrentGen),
 		switchMap(() => this.candidateService.GetQuestionsForTrainerGeneration()),
+		mergeMap((res) => of(CandidateStateAction.FetchQuestionsSuccess({ payload: res }))),
+		share()
+  );
+  
+	@Effect()
+	getQuestionsById$: Observable<Action> = this.actions$.pipe(
+		ofType(CandidateStateAction.FetchQuestionsById),
+		switchMap((data) => this.candidateService.GetQuestionsById(data)),
 		mergeMap((res) => of(CandidateStateAction.FetchQuestionsSuccess({ payload: res }))),
 		share()
 	);
@@ -37,6 +45,26 @@ export class CandidateStateEffects {
 		mergeMap((res) => of(CandidateStateAction.FetchAnswersSuccess({ payload: res }))),
 		share()
 	);
+
+	@Effect()
+	getTrainerAnswer$: Observable<Action> = this.actions$.pipe(
+		ofType(CandidateStateAction.FetchCurrentUserAnswer),
+		switchMap(() => this.candidateService.GetAnswersFromTrainer()),
+		mergeMap((res) => of(CandidateStateAction.FetchTrainerAnswerSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
+	updateAnswers$: Observable<Action> = this.actions$.pipe(
+		ofType(CandidateStateAction.SaveAnswers),
+		switchMap((data) => this.candidateService.SaveAnswers(data)),
+		mergeMap((res) =>
+			res
+				? of(MainStateAction.SuccessfullyMessage('updated answers'))
+				: of(MainStateAction.FailMessage('updating answers'))
+		),
+		share()
+  );
 
 	@Effect()
 	updateQuestions$: Observable<Action> = this.actions$.pipe(
