@@ -83,6 +83,14 @@ export const UploadFileFailed = createAction('[MainState] UploadFileFailed');
 export const RemoveUploadedFiles = createAction('[MainState] RemoveUploadedFiles');
 
 //#region Global
+export const TestRequest = createAction(
+  '[MainState] AfterRequest', 
+  props<{
+    link: string; 
+    method: 'get' | 'post'; 
+    body?: any 
+  }>()
+);
 export const AfterRequest = createAction('[MainState] AfterRequest');
 export const RequestFailed = createAction('[MainState] RequestFailed');
 export const RequestSuccess = createAction('[MainState] RequestSuccess');

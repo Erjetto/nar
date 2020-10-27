@@ -197,6 +197,15 @@ export class MainStateEffects {
 			} else return of(MainStateAction.UploadFileFailed()); // not needed?
 		}),
 		share()
+  );
+  
+  // Langsung subscribe ke effect buat dapatkan result
+  @Effect({ dispatch: false })
+	testRequest$: Observable<any> = this.actions$.pipe(
+    ofType(MainStateAction.TestRequest),
+    switchMap(data => this.otherService.TestRequest(data)),
+    tap(console.log),
+    share()
 	);
 	@Effect({ dispatch: false })
 	afterRequest$: Observable<Action> = this.actions$.pipe(

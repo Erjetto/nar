@@ -39,12 +39,12 @@ export class ToasterComponent implements OnInit, OnDestroy {
 				}
 			});
 
-		interval(7000)
-			.pipe(
-				takeUntil(this.stop$),
-				repeatWhen(() => this.start$)
-			)
-			.subscribe((v) => this.store.dispatch(MainStateAction.RemoveMessage({ index: 0 })));
+		// interval(7000)
+		// 	.pipe(
+		// 		takeUntil(this.stop$),
+		// 		repeatWhen(() => this.start$)
+		// 	)
+		// 	.subscribe((v) => this.store.dispatch(MainStateAction.RemoveMessage({ index: 0 })));
 		// this.decayTimer$.subscribe((val) => {
 		//   this.messages.pop();
 		//   if (this.messages.length === 0) this.stop$.next();

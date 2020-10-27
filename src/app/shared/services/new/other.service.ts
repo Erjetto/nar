@@ -6,7 +6,6 @@ import { Message, GetDownloadLinkFromFileId } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
-
 @Injectable({
 	providedIn: 'root',
 })
@@ -14,6 +13,18 @@ export class OtherService {
 	public baseUrl = environment.apiUrl;
 	// For links other than given service
 	constructor(protected httpClient: HttpClient) {}
+
+	public TestRequest(data: {
+    link: string; 
+    method: 'get' | 'post'; 
+    body?: any
+  }): Observable<any> {
+    switch (data.method) {
+      case 'get' : return this.httpClient.get(this.baseUrl + data.link);
+      case 'post': return this.httpClient.post(this.baseUrl + data.link, data.body ?? {});
+      default: return of(null);
+    }    
+	}
 
 	public UploadFiles(files: FileList): Observable<any> {
 		const formData = new FormData();
@@ -26,6 +37,6 @@ export class OtherService {
 	}
 
 	public DownloadFile(fileId: string): void {
-    window.open(GetDownloadLinkFromFileId(fileId));
+		window.open(GetDownloadLinkFromFileId(fileId));
 	}
 }
