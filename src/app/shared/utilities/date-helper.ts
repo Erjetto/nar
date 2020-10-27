@@ -2,6 +2,20 @@ import { DatePipe, registerLocaleData } from '@angular/common';
 import localeID from '@angular/common/locales/id';
 
 export class DateHelper {
+  // 
+	public static readonly DATETIME_LOCAL_FORMAT = 'yyyy-MM-ddTHH:mm:ss'
+	public static readonly FULL_DATE_FORMAT = 'yyyy-MM-dd'
+  public static readonly FULL_TIME_FORMAT = 'HH:mm:ss'
+  
+	public static readonly DMY_FORMAT = 'dd MMM yyyy'
+	public static readonly MDY_FORMAT = 'MMM dd, yyyy'
+  public static readonly YMD_FORMAT = 'yyyy MMM dd'
+  
+  public static readonly NORMAL_TIME_FORMAT = 'HH:mm'
+  
+  public static readonly TIME_DATE_FORMAT = 'HH:mm, dd MMM yyyy'
+
+
 	static singleton = new DateHelper();
 
 	datePipe: DatePipe;

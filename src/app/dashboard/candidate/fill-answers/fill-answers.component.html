@@ -5,38 +5,44 @@
 				[cardTitle]="'Fill Answers'"
 				[isLoading]="loadingViewQuestions$ | async"
 				[collapsible]="false"
-			>
-				<div class="row p-3" [hidden]="!(answersForm.controls.length == 0)">
-					<div class="col text-center">
-						<i>No questions for you...</i>
-					</div>
-				</div>
-				<div class="row p-3" [hidden]="!(answersForm.controls.length > 0 && !(canAnswer$ | async))">
-					<div class="col text-center">
-						<i>Deadline has been reached...</i>
-					</div>
-				</div>
-				<div class="row form-group" *ngFor="let answer of answersForm.controls; let i = index">
-					<div class="col">
-						<div class="row mb-2 font-weight-bold">
-							{{ i + 1 }}. {{ (questionModel$ | async)?.Questions[i] }}
-						</div>
-						<div class="row">
-							<textarea
-								class="form-control vertical-text-area minh-100px"
-								[formControl]="answer"
-								placeholder="Answer here"
-							></textarea>
+      >
+      <!-- Render stlh dapat question, tanpa ini view harus di-update manual dgn ChangeDetectorRef -->
+				<ng-container *ngIf="questionModel$ | async">
+					<div class="row p-3" [hidden]="!(answersForm.controls.length == 0)">
+						<div class="col text-center">
+							<i>No questions for you...</i>
 						</div>
 					</div>
-				</div>
-				<div [hidden]="!(canAnswer$ | async)">
-					<div class="col text-center">
-						<button class="btn btn-primary" (click)="saveAnswers()">
-							<fa-icon [icon]="['fas', 'pen']"></fa-icon>&nbsp;&nbsp;Save Answer
-						</button>
+					<div
+						class="row p-3"
+						[hidden]="!(answersForm.controls.length > 0 && !(canAnswer$ | async))"
+					>
+						<div class="col text-center">
+							<i>Deadline has been reached...</i>
+						</div>
 					</div>
-				</div>
+					<div class="row form-group" *ngFor="let answer of answersForm.controls; let i = index">
+						<div class="col">
+							<div class="row mb-2 font-weight-bold">
+								{{ i + 1 }}. {{ (questionModel$ | async)?.Questions[i] }}
+							</div>
+							<div class="row">
+								<textarea
+									class="form-control vertical-text-area minh-100px"
+									[formControl]="answer"
+									placeholder="Answer here"
+								></textarea>
+							</div>
+						</div>
+					</div>
+					<div [hidden]="!(canAnswer$ | async)">
+						<div class="col text-center">
+							<button class="btn btn-primary" (click)="saveAnswers()">
+								<fa-icon [icon]="['fas', 'pen']"></fa-icon>&nbsp;&nbsp;Save Answer
+							</button>
+						</div>
+					</div>
+				</ng-container>
 			</rd-card>
 		</div>
 	</div>

@@ -53,7 +53,13 @@ export class SubcoCandidateService {
 
 	public CreateSchedules(data: { schedules: SubcoCandidateAnswerModel[] }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'CreateSchedules', data)
+			.post(this.baseUrl + 'CreateSchedules', {
+        schedules: data.schedules.map(d => ({
+          ...d,
+          StartDate: DateHelper.toCSharpDate(d.StartDate),
+          EndDate: DateHelper.toCSharpDate(d.EndDate),
+        }))
+      })
 			.pipe(map((res: any) => res.d === true));
 	}
 

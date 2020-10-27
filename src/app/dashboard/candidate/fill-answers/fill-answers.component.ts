@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -39,14 +39,15 @@ export class FillAnswersComponent extends DashboardContentBase implements OnInit
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
 		private candidateEffects: CandidateStateEffects,
-		private fb: FormBuilder
+    private fb: FormBuilder
 	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
-		this.questionModel$ = this.store.pipe(select(fromCandidateState.getQuestionModel));
-		this.store
+    this.questionModel$ = this.store.pipe(select(fromCandidateState.getQuestionModel));
+    this.currentUserAnswer$ = this.store.pipe(select(fromCandidateState.getCurrentUserAnswer))
+    this.store
 			.pipe(takeUntil(this.destroyed$), select(fromCandidateState.isLoadingQuestionsModel))
 			.subscribe(this.loadingViewQuestions$);
 		this.store
@@ -67,7 +68,7 @@ export class FillAnswersComponent extends DashboardContentBase implements OnInit
 				]) => {
 					adjustControlsInFormArray(this.answersForm, qst.Questions.length);
 					if (!canAnswer) this.answersForm.controls.forEach((c) => c.disable());
-					this.answersForm.setValue(ans.Answers);
+          this.answersForm.patchValue(ans.Answers);
 				}
 			);
 
@@ -89,11 +90,12 @@ export class FillAnswersComponent extends DashboardContentBase implements OnInit
 				this.loadingViewQuestions$.next(false);
 			});
 
-		merge(this.mainEffects.changeGen$)
+		merge(this.mainEffects.changeGen$, this.candidateEffects.updateAnswers$)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => {
 				this.store.dispatch(CandidateStateAction.FetchCurrentUserAnswer());
 			});
+    this.store.dispatch(CandidateStateAction.FetchCurrentUserAnswer());
 	}
 
 	saveAnswers() {

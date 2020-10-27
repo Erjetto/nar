@@ -31,7 +31,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 	viewDateFormatWithoutYear = 'MMM dd HH:mm'; // Hilangkan tahun jika di tahun ini
 
 	addSchedulePlaceholder = '';
-	dateFormat = 'yyyy-MM-dd HH:mm';
+	dateFormat = DateHelper.DATETIME_LOCAL_FORMAT;
 
 	questions: SubcoCandidateQuestionModel;
 
