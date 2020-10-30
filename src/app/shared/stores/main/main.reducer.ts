@@ -1,4 +1,4 @@
-import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import { createFeatureSelector, createReducer, createSelector, MemoizedSelector, on } from '@ngrx/store';
 
 import { Toast, Message, User, ClientGeneration, Role } from '../../models';
 import {
@@ -68,7 +68,7 @@ export const MainStateReducer = createReducer(
 
 	on(LoginSuccess, SetCurrentUser, (state, { user }) => ({
 		...state,
-		currentUser: { ...user, ActiveRole: user.Role.roleName },
+		currentUser: { ...user, ActiveRole: Role.from(user.Role.roleName) },
 		currentRole: user.Role,
 	})),
 
@@ -132,7 +132,7 @@ export const getMainState = createFeatureSelector<IMainState>(MAINSTATE_REDUCER_
 
 export const getMainStateBy = (fn: (_: IMainState) => any) => createSelector(getMainState, fn);
 
-export const getCurrentUser = getMainStateBy((s) => s.currentUser);
+export const getCurrentUser= getMainStateBy((s) => s.currentUser);
 
 export const getToastMessages = getMainStateBy((s) => s.messages);
 export const getAnnouncements = getMainStateBy((s) => s.announcements);
@@ -140,7 +140,7 @@ export const isAnnouncementsLoading = getMainStateBy((s) => s.isLoadingAnnouncem
 
 export const getCurrentGeneration = getMainStateBy((s) => s.currentGeneration);
 export const getCurrentGenerationId = getMainStateBy((s) => s.currentGenerationId);
-export const getCurrentRole = getMainStateBy((s) => s.currentRole);
+export const getCurrentRole= getMainStateBy((s) => s.currentRole);
 
 export const getUploadedFiles = getMainStateBy((s) => s.uploadedFiles);
 export const isUploadingFiles = getMainStateBy((s) => s.isUploadingFiles);

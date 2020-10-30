@@ -1,7 +1,8 @@
-import { createAction, props, Action } from '@ngrx/store';
+import { createAction, props, Action, MemoizedSelector, State } from '@ngrx/store';
 import { Message, User, ClientGeneration, Role, ToastType } from '../../models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { IAppState } from 'src/app/app.reducer';
 
 export const Login = createAction(
 	'[MainState] Login',
@@ -157,3 +158,8 @@ export const NotImplementedMessage = (doingWhat: string): Action =>
 		message: 'Error in ' + doingWhat + ': Not implemented yet',
 	});
 //#endregion
+
+export const DispatchIfEmpty = createAction('[MainState] FetchIfEmpty', props<{
+  action: Action
+  selectorToBeChecked: MemoizedSelector<IAppState, any>
+}>());

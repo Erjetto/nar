@@ -16,10 +16,12 @@ import {
 	tap,
 	withLatestFrom,
 	exhaustMap,
+	concatMap,
+	filter,
 } from 'rxjs/operators';
 import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
-import { flatten as _flatten} from 'lodash';
+import { flatten as _flatten, isEmpty as _isEmpty } from 'lodash';
 import { GeneralService } from '../../services/new/general.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Cookies } from '../../constants/cookie.constants';
@@ -197,15 +199,14 @@ export class MainStateEffects {
 			} else return of(MainStateAction.UploadFileFailed()); // not needed?
 		}),
 		share()
-  );
-  
-  // Langsung subscribe ke effect buat dapatkan result
-  @Effect({ dispatch: false })
+	);
+
+	// Langsung subscribe ke effect buat dapatkan result
+	@Effect({ dispatch: false })
 	testRequest$: Observable<any> = this.actions$.pipe(
-    ofType(MainStateAction.TestRequest),
-    switchMap(data => this.otherService.TestRequest(data)),
-    tap(console.log),
-    share()
+		ofType(MainStateAction.TestRequest),
+		switchMap((data) => this.otherService.TestRequest(data)),
+		share()
 	);
 	@Effect({ dispatch: false })
 	afterRequest$: Observable<Action> = this.actions$.pipe(
@@ -223,22 +224,15 @@ export class MainStateEffects {
 		share()
 	);
 
-	// // Kalau {dispatch: true}, action akan infinite-loop dispatch
-	// @Effect({ dispatch: false })
-	// crudSuccess$: Observable<Action> = this.actions$.pipe(
-	// 	ofType(
-	// 		MainStateAction.CreateSuccess,
-	// 		MainStateAction.UpdateSuccess,
-	// 		MainStateAction.DeleteSuccess
-	// 	)
-	// );
-
-	// @Effect({ dispatch: false })
-	// createSuccess$: Observable<Action> = this.actions$.pipe(ofType(MainStateAction.CreateSuccess));
-
-	// @Effect({ dispatch: false })
-	// updateSuccess$: Observable<Action> = this.actions$.pipe(ofType(MainStateAction.UpdateSuccess));
-
-	// @Effect({ dispatch: false })
-	// deleteSuccess$: Observable<Action> = this.actions$.pipe(ofType(MainStateAction.DeleteSuccess));
+  // IMPORTANT -- Checks if the selector returns null or empty, if so then fetch
+	@Effect()
+	dispatchIfEmpty$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.DispatchIfEmpty),
+		concatMap((action) =>
+			of(action).pipe(withLatestFrom(this.store.pipe(select(action.selectorToBeChecked))))
+		),
+		filter(([action, data]) => _isEmpty(data)),
+		map(([action, data]) => action.action),
+		share()
+	);
 }
