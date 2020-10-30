@@ -28,8 +28,8 @@ import { DateHelper } from 'src/app/shared/utilities/date-helper';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageCaseComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	viewDateFormat = 'HH:mm, dd MMM yyyy';
-	editDateFormat = 'yyyy-MM-dd\THH:mm:ss';
+	viewDateFormat = DateHelper.TIME_DATE_FORMAT;
+	editDateFormat = DateHelper.DATETIME_LOCAL_FORMAT;
 	todayEditDate = DateHelper.dateToInputFormat(new Date(), this.editDateFormat);
 
 	currentViewPhase$ = new BehaviorSubject<ClientPhase>(null);
@@ -149,7 +149,10 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 					);
 			});
 		//#endregion
-		this.store.dispatch(MasterStateAction.FetchPhases());
+		this.store.dispatch(MainStateAction.DispatchIfEmpty({
+      action: MasterStateAction.FetchPhases(),
+      selectorToBeChecked: fromMasterState.getPhases
+    }));
 	}
 
 	get isEditing() {

@@ -143,7 +143,7 @@
 					</thead>
 					<tbody>
 						<tr *ngIf="(phases$ | async)?.length === 0">
-							<td colspan="4">No phases yet</td>
+							<td class="p-3" colspan="4">No phases yet</td>
 						</tr>
 						<tr
 							*ngFor="let phase of phases$ | async"

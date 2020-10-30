@@ -72,7 +72,7 @@ export class HomeComponent extends DashboardContentBase implements OnInit, OnDes
 			.pipe(
 				filter((res) => !_isEmpty(res)),
 				takeUntil(this.destroyed$),
-				tap(() => this.loadingTraineeStatistic$.next(true)),
+				// tap(() => this.loadingTraineeStatistic$.next(true)),
 				switchMap((phase) => this.generalService.GetStatisticTrainee({ phaseId: phase.PhaseId }))
 			)
 			.subscribe((statistics) => {
@@ -85,7 +85,12 @@ export class HomeComponent extends DashboardContentBase implements OnInit, OnDes
 			this.store.dispatch(MainStateAction.FetchAnnouncements());
 		});
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
 		this.store.dispatch(MainStateAction.FetchAnnouncements());
 	}
 }

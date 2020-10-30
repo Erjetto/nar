@@ -11,9 +11,9 @@ import {
 	fromMasterState,
 	MasterStateEffects,
 	MainStateEffects,
+	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { map, takeUntil, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
-
 
 @Component({
 	selector: 'rd-manage-phase',
@@ -26,7 +26,7 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 	editDateFormat = 'yyyy-MM-dd';
 	viewDateFormat = 'EEEE, MMM dd yyyy';
 
-  // Ganti jadi ambil dari store
+	// Ganti jadi ambil dari store
 	phaseTypes = [{ key: 'ar', val: 'Assistant Recruitment' }];
 
 	editForm$ = new BehaviorSubject<ClientPhase>(null);
@@ -91,7 +91,12 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 
 		//#endregion
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
 	}
 
 	getPhaseType(key) {
@@ -169,7 +174,7 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 					return [];
 				}
 			}),
-      distinctUntilChanged()
+			distinctUntilChanged()
 		);
 	}
 }

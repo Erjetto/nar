@@ -18,6 +18,8 @@ import {
 	MasterStateAction,
 	MasterStateEffects,
 	MainStateEffects,
+	MainStateAction,
+	fromMainState,
 } from 'src/app/shared/store-modules';
 import {
 	NgForm,
@@ -27,7 +29,7 @@ import {
 	FormControl,
 	AbstractControl,
 } from '@angular/forms';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
 
 /*
 NOTE: Schedule HAS NO UPDATE
@@ -259,7 +261,12 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 					MasterStateAction.FetchTraineeInSchedule({ scheduleId: schedule.ScheduleId })
 				)
 			);
-		this.store.dispatch(MasterStateAction.FetchPhases());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
 	}
 	//#region Easy get scheduleForm
 	get isEditing() {

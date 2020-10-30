@@ -31,8 +31,8 @@ export class ModifyInterviewScheduleComponent
 	statusClass = { Acc: 'acc', Rej: 'reject', Pos: 'pos' };
 
 	titleSelect = new FormControl('', Validators.required);
-  schedulesText = new FormControl('', Validators.required);
-  deleteReasonText = new FormControl('', Validators.required);
+	schedulesText = new FormControl('', Validators.required);
+	deleteReasonText = new FormControl('', Validators.required);
 
 	interviewScheduleReport$: Observable<ClientInterviewReport>;
 	interviewQuestions$: Observable<ClientInterviewQuestion[]>;
@@ -87,8 +87,18 @@ export class ModifyInterviewScheduleComponent
 			.subscribe(() => this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport()));
 		//#endregion
 
-		this.store.dispatch(InterviewStateAction.FetchInterviewQuestions());
-		this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: InterviewStateAction.FetchInterviewQuestions(),
+				selectorToBeChecked: fromInterviewState.getInterviewQuestions,
+			})
+		);
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: InterviewStateAction.FetchInterviewSchedulesReport(),
+				selectorToBeChecked: fromInterviewState.getInterviewSchedulesReport,
+			})
+		);
 	}
 
 	isLocationLink(str: string) {
@@ -112,6 +122,6 @@ export class ModifyInterviewScheduleComponent
 				note: '',
 			})
 		);
-    this.deleteReasonText.reset();
+		this.deleteReasonText.reset();
 	}
 }

@@ -11,6 +11,7 @@ import {
 	MainStateEffects,
 	PresentationStateEffects,
   fromMainState,
+  MainStateAction,
 } from 'src/app/shared/store-modules';
 
 import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
@@ -21,7 +22,6 @@ import {
 	TraineePresentation,
   CoreTrainingPresentationItem,
   CoreTrainingPresentationQuestion,
-  TryGetCoreTrainingPhase,
   User,
   ClientGeneration,
 } from 'src/app/shared/models';
@@ -29,6 +29,7 @@ import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 import { takeUntil, filter, withLatestFrom, map, tap } from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
+import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-view-all-presentation',
@@ -222,7 +223,6 @@ export class ViewAllPresentationComponent
       .pipe(
         takeUntil(this.destroyed$), 
         filter(values => values.every(v => !_isEmpty(v))),
-        tap(console.log)
       )
       .subscribe(([user, gen]: [User, ClientGeneration]) => {
 				this.store.dispatch(
@@ -234,7 +234,12 @@ export class ViewAllPresentationComponent
       })
 		//#endregion
 
-    this.store.dispatch(MasterStateAction.FetchPhases());
+    this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
 	}
 
 	get understandingValue() {

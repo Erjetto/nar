@@ -9,9 +9,11 @@ import {
 	MasterStateAction,
 	BinusianStateAction,
 	BinusianStateEffects,
+  MainStateAction,
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { takeUntil } from 'rxjs/operators';
+import { TraineeSchedule } from 'src/app/shared/models';
 
 @Component({
 	selector: 'rd-trainee-schedule',
@@ -46,6 +48,16 @@ export class ModifyTraineeScheduleComponent extends DashboardContentBase impleme
 			this.loadingFormInsertTraineeAttendance$.next(false);
 			this.loadingFormInsertLectureSchedule$.next(false);
     });
+
+    this.store.dispatch(MainStateAction.TestRequest({
+      // link: 'REST.svc/TraineeSchedule/Get/405c8061-2dd1-e411-8e96-d8d385fcda38/2c42ab6f-1ed2-e411-8e96-d8d385fcda38/secretariat/03-aug-2015/425de1b9-338f-4912-b735-cb2712a8f07f',
+      link: 'REST.svc/TraineeSchedule/Create',
+      // link: 'File.svc/GetZipFile/asdfasdf',
+      method: 'post',
+      body: {
+        data: new TraineeSchedule('asasdf','asdf','asdf','asdf','asdf','asdf',new Date(), 'asdf', 'asdf',  'asdf', new Date(), 'asdf', 'asdf')
+      }
+    }));
 	}
 
 	submitInsertTrainingSchedule() {

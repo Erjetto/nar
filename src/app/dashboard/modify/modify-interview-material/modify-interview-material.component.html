@@ -63,7 +63,6 @@
 							<div class="col">
 								<ng-select
 									[items]="allTrainees$ | async"
-									bindLabel="TraineeCode"
 									bindValue="TraineeId"
 									[clearable]="false"
 									[searchable]="true"
@@ -167,7 +166,7 @@
 					</thead>
 					<tbody>
 						<tr *ngIf="(interviewMaterials$ | async)?.length === 0">
-							<td colspan="3" class="text-center">No interview materials yet</td>
+							<td class="p-3" colspan="3" class="text-center">No interview materials yet</td>
 						</tr>
 						<ng-container
 							class="cursor-pointer"

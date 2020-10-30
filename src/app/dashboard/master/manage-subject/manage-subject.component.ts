@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { isEmpty as _isEmpty, max as _max} from 'lodash';
+import { isEmpty as _isEmpty, max as _max } from 'lodash';
 import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { IAppState } from 'src/app/app.reducer';
@@ -10,6 +10,7 @@ import {
 	fromMasterState,
 	MasterStateEffects,
 	MainStateEffects,
+	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { map, takeUntil, withLatestFrom, tap } from 'rxjs/operators';
 import { NgModel, NgForm, FormBuilder, Validators } from '@angular/forms';
@@ -130,7 +131,12 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 				else this.subjectForm.get('name').disable();
 			});
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
 	}
 
 	get isEditing() {

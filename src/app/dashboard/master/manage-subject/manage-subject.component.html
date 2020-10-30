@@ -109,7 +109,7 @@
 					</thead>
 					<tbody>
 						<tr *ngIf="(viewSubjectList$ | async)?.length === 0">
-							<td colspan="3">No subject yet</td>
+							<td class="p-3" colspan="3">No subject yet</td>
 						</tr>
 						<tr
 							*ngFor="let subject of viewSubjectList$ | async"

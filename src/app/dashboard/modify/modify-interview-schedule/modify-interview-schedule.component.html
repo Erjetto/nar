@@ -106,7 +106,7 @@
 						</thead>
 						<tbody>
 							<tr *ngIf="(interviewScheduleReport$ | async)?.Schedules.length === 0">
-								<td colspan="10">No schedules yet</td>
+								<td class="p-3" colspan="10">No schedules yet</td>
 							</tr>
 							<tr
 								*ngFor="let interview of (interviewScheduleReport$ | async)?.Schedules"

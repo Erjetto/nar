@@ -10,6 +10,7 @@ import {
 	MasterStateAction,
 	MainStateEffects,
 	MasterStateEffects,
+	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { NgForm, FormControl } from '@angular/forms';
 
@@ -77,7 +78,13 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 				this.store.dispatch(MasterStateAction.FetchUserInRoles());
 			});
 
-		this.store.dispatch(MasterStateAction.FetchRoles());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchRoles(),
+				selectorToBeChecked: fromMasterState.getRoles,
+			})
+    );
+    // Always get updated data?
 		this.store.dispatch(MasterStateAction.FetchUserInRoles());
 	}
 

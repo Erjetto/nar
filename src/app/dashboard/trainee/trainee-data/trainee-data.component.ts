@@ -8,6 +8,7 @@ import {
 	MasterStateEffects,
 	fromBinusianState,
 	BinusianStateAction,
+  MainStateAction,
 } from 'src/app/shared/store-modules';
 import { ClientTraineeData } from 'src/app/shared/models';
 import { takeUntil, map } from 'rxjs/operators';
@@ -41,7 +42,13 @@ export class TraineeDataComponent extends DashboardContentBase implements OnInit
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(BinusianStateAction.FetchTraineesData()));
 
-		this.store.dispatch(BinusianStateAction.FetchTraineesData());
+    this.store.dispatch(BinusianStateAction.FetchTraineesData());
+    this.store.dispatch(
+      MainStateAction.DispatchIfEmpty({
+        action: BinusianStateAction.FetchTraineesData(),
+        selectorToBeChecked: fromBinusianState.getTraineesData,
+      })
+    );
   }
   
   showTraineeData(data: ClientTraineeData){

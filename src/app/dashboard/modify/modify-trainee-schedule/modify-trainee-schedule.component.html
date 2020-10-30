@@ -1,6 +1,24 @@
 <div class="container-lg">
 	<div class="row">
 		<div class="col">
+			<rd-card [cardTitle]="'View Training Schedule'">
+        <div class="row">
+          <table class="table table-sm table-striped table-hover text-center">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
 			<rd-card
 				[cardTitle]="'Insert Trainee Training Schedule'"
 				[isLoading]="loadingFormInsertTrainingSchedule$ | async"

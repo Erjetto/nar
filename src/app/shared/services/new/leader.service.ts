@@ -19,7 +19,7 @@ import {
 	SimpleTraineeData,
 } from '../../models';
 import { environment } from 'src/environments/environment';
-import { map as _map} from 'lodash';
+import { map as _map } from 'lodash';
 import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
@@ -354,9 +354,11 @@ export class LeaderService {
 			.pipe(map((r: any) => _map(r.d, ClientPhase.fromJson)));
 	}
 
-	public GetTopBottomVoteSchedules(): Observable<TopBottomVoteSchedule[]> {
+	public GetTopBottomVoteSchedules(data: {
+		isTrainer: boolean;
+	}): Observable<TopBottomVoteSchedule[]> {
 		return this.httpClient
-			.post(this.baseUrl + 'GetTopBottomVoteSchedules', {})
+			.post(this.baseUrl + 'GetTopBottomVoteSchedules', data)
 			.pipe(map((r: any) => _map(r.d, TopBottomVoteSchedule.fromJson)));
 	}
 

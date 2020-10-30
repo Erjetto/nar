@@ -6,7 +6,8 @@ import {
 	PresentationStateEffects,
 	PresentationStateAction,
 	fromMasterState,
-  MasterStateAction,
+	MasterStateAction,
+	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -18,11 +19,11 @@ import {
 	CoreTrainingPresentationComment,
 	CoreTrainingPresentationQuestion,
 	CoreTrainingPresentationItem,
-  TryGetCoreTrainingPhase,
 } from 'src/app/shared/models';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, takeUntil, filter } from 'rxjs/operators';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
+import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-new-presentation',
@@ -31,9 +32,9 @@ import { isEmpty as _isEmpty} from 'lodash';
 })
 export class NewPresentationComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	phases$: Observable<ClientPhase[]>;
-  subjects$: Observable<ClientSubject[]>;
-  
-  loadingFormPresentation$ = new BehaviorSubject<boolean>(false);
+	subjects$: Observable<ClientSubject[]>;
+
+	loadingFormPresentation$ = new BehaviorSubject<boolean>(false);
 
 	presentationForm = this.fb.group({
 		materialName: ['', Validators.required],
@@ -57,48 +58,56 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 		this.subjects$ = this.store.pipe(
 			select(fromMasterState.getSubjects),
 			map((subs: ClientSubject[]) => [...subs].reverse()) // The last subject is the first in list
-    );
-    
-    this.phases$
-    .pipe(
-      filter((res) => !_isEmpty(res)),
-      takeUntil(this.destroyed$)
-    )
-    .subscribe((phases) => {
-      const corePhase = TryGetCoreTrainingPhase(phases);
-      this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: corePhase.PhaseId }));
-    });
-    
-    this.subjects$
-      .pipe(filter(v => !_isEmpty(v)), takeUntil(this.destroyed$))
-      .subscribe((subjects) => {
-        this.presentationForm.get('subjectId').setValue(subjects[0].SubjectId)
-      });
-      
+		);
+
+		this.phases$
+			.pipe(
+				filter((res) => !_isEmpty(res)),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe((phases) => {
+				const corePhase = TryGetCoreTrainingPhase(phases);
+				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: corePhase.PhaseId }));
+			});
+
+		this.subjects$
+			.pipe(
+				filter((v) => !_isEmpty(v)),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe((subjects) => {
+				this.presentationForm.get('subjectId').setValue(subjects[0].SubjectId);
+			});
+
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());
-    });
-    
-    this.store.dispatch(MasterStateAction.FetchPhases());
-  }
-  
-  get questionsArray() {
-    return this.presentationForm.get('questions') as FormArray;
-  }
+		});
 
-  deleteQuestion(index){
-    this.questionsArray.removeAt(index);
-  }
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
+	}
 
-  addQuestion(){
-    const c = this.fb.control('')
-    this.questionsArray.push(c)
-    // Auto focus here
-  }
+	get questionsArray() {
+		return this.presentationForm.get('questions') as FormArray;
+	}
+
+	deleteQuestion(index) {
+		this.questionsArray.removeAt(index);
+	}
+
+	addQuestion() {
+		const c = this.fb.control('');
+		this.questionsArray.push(c);
+		// Auto focus here
+	}
 
 	saveCoreTrainingPresentation() {
-    console.log(this.presentationForm.value);
-    return;
+		console.log(this.presentationForm.value);
+		return;
 		const { materialName, subjectId, questions, comments } = this.presentationForm.value;
 
 		this.store.dispatch(
@@ -118,7 +127,7 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 								new CoreTrainingPresentationItem([], [], '', '', '', '', q)
 							)
 					),
-					subjectId,
+					subjectId
 				),
 			})
 		);

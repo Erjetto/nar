@@ -25,7 +25,7 @@ import {
 } from 'src/app/shared/store-modules';
 import { takeUntil, withLatestFrom, filter, map, tap } from 'rxjs/operators';
 import { NgForm, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { isEmpty as _isEmpty, map as _map} from 'lodash';
+import { isEmpty as _isEmpty, map as _map } from 'lodash';
 
 @Component({
 	selector: 'rd-modify-interview-material',
@@ -42,8 +42,8 @@ export class ModifyInterviewMaterialComponent
 		materialName: ['', Validators.required],
 		trainee_Id: ['', Validators.required],
 	});
-  massUploadFiles: { fileIds: string[]; fileNames: string[] }; // for dispatch massupload
-  deleteReasonText = new FormControl('', Validators.required);
+	massUploadFiles: { fileIds: string[]; fileNames: string[] }; // for dispatch massupload
+	deleteReasonText = new FormControl('', Validators.required);
 
 	// true if uploading per trainee, false if mass upload
 	isUploadingSingle$ = new BehaviorSubject<boolean>(true);
@@ -159,8 +159,18 @@ export class ModifyInterviewMaterialComponent
 		});
 		//#endregion
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
-		this.store.dispatch(BinusianStateAction.FetchAllTraineesInCurrentGen());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: BinusianStateAction.FetchAllTraineesInCurrentGen(),
+				selectorToBeChecked: fromBinusianState.getAllTrainees,
+			})
+		);
 	}
 
 	get hasSingleFile() {
@@ -194,7 +204,7 @@ export class ModifyInterviewMaterialComponent
 				traineeid: m.Trainee.TraineeId,
 				reason: this.deleteReasonText.value,
 			})
-    );
-    this.deleteReasonText.reset();
+		);
+		this.deleteReasonText.reset();
 	}
 }

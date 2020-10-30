@@ -11,6 +11,7 @@ import {
 	fromBinusianState,
 	BinusianStateAction,
 	BinusianStateEffects,
+  MainStateAction,
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { NgForm, FormBuilder, Validators } from '@angular/forms';
@@ -98,7 +99,10 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(BinusianStateAction.FetchTraineesSimpleData()));
 
-		this.store.dispatch(BinusianStateAction.FetchTraineesSimpleData());
+		this.store.dispatch(MainStateAction.DispatchIfEmpty({
+      action: BinusianStateAction.FetchTraineesSimpleData(),
+      selectorToBeChecked: fromBinusianState.getTraineesSimpleData
+    }));
 	}
 
 	get isEditing() {

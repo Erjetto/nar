@@ -20,12 +20,12 @@ import {
 	ClientSubject,
 	ClientGeneration,
 	ClientPhase,
-  TryGetCoreTrainingPhase,
 } from 'src/app/shared/models';
 import { filter, withLatestFrom, takeUntil, tap, map, distinctUntilChanged } from 'rxjs/operators';
 import { isEmpty as _isEmpty} from 'lodash';
 import { FormControl, FormBuilder } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
+import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-view-all-question',
@@ -120,7 +120,12 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((data) => this.store.dispatch(PresentationStateAction.SetQuestionsFilter(data)));
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
+    this.store.dispatch(
+      MainStateAction.DispatchIfEmpty({
+        action: MasterStateAction.FetchPhases(),
+        selectorToBeChecked: fromMasterState.getPhases,
+      })
+    );
 	}
 
 	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}

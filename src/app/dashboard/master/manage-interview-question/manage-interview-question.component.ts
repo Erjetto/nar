@@ -9,6 +9,7 @@ import {
 	InterviewStateAction,
 	MasterStateEffects,
 	InterviewStateEffects,
+	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { Observable, BehaviorSubject, Subject, combineLatest } from 'rxjs';
 import { takeUntil, map, withLatestFrom, tap } from 'rxjs/operators';
@@ -93,7 +94,12 @@ export class ManageInterviewQuestionComponent
 		});
 		//#endregion
 
-		this.store.dispatch(InterviewStateAction.FetchInterviewQuestions());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: InterviewStateAction.FetchInterviewQuestions(),
+				selectorToBeChecked: fromInterviewState.getInterviewQuestions,
+			})
+		);
 	}
 
 	submitInterviewQuestionForm() {

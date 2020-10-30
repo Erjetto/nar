@@ -1,40 +1,42 @@
 <!-- Templates -->
 <div>
-  <ng-template #changeFullDayPermissionTemplate> 
-    <textarea
-      class="form-control"
-      cols="30"
-      rows="4"
-      placeholder="Reasons..."
-      [formControl]="changeFullDayPermissionReason"
-    ></textarea>
-  </ng-template>
+	<ng-template #changeFullDayPermissionTemplate>
+		<textarea
+			class="form-control"
+			cols="30"
+			rows="4"
+			placeholder="Reasons..."
+			[formControl]="changeFullDayPermissionReason"
+		></textarea>
+	</ng-template>
 
-  <ng-template #changeAttendanceContent>
-    <div class="col" [formGroup]="changeAttendanceForm">
-      <ng-select
-        [items]="attendanceStatus"
-        placeholder="Permission"
-        [clearable]="false"
-        appendTo="body"
-        formControlName="status"
-      ></ng-select>
-      <hr class="my-2" />
-      <textarea
-        class="form-control"
-        cols="30"
-        rows="4"
-        placeholder="Reasons..."
-        formControlName="note"
-      ></textarea>
-    </div>
-  </ng-template>
+	<ng-template #changeAttendanceContent>
+		<div class="col" [formGroup]="changeAttendanceForm">
+			<ng-select
+				[items]="attendanceStatus"
+				placeholder="Permission"
+				[clearable]="false"
+				appendTo="body"
+				formControlName="status"
+			></ng-select>
+			<hr class="my-2" />
+			<textarea
+				class="form-control"
+				cols="30"
+				rows="4"
+				placeholder="Reasons..."
+				formControlName="note"
+			></textarea>
+		</div>
+	</ng-template>
 </div>
 <div class="container-lg">
 	<div class="row">
-		<div class="col-3">
-			<rd-card [cardTitle]="'View Evaluation - ' + currentDate.value">
-				<input class="form-control" type="date" [formControl]="currentDate" />
+		<div class="col-auto">
+			<rd-card [cardTitle]="'View Evaluation - '" [expanded]="false" [collapsible]="false">
+				<div rdCardBadges class="ml-2">
+					<input class="form-control" type="date" [formControl]="currentDate" />
+				</div>
 			</rd-card>
 		</div>
 	</div>
@@ -155,7 +157,10 @@
 							<div class="col">
 								<div class="row p-2">
 									<div class="col">
-										<div class="pre-wrap" [innerHTML]="note.Notes.substring(note.Notes.indexOf('-') + 2)"></div>
+										<div
+											class="pre-wrap"
+											[innerHTML]="note.Notes.substring(note.Notes.indexOf('-') + 2)"
+										></div>
 										<div class="pl-4 pt-1">
 											<span class="font-weight-bold">- {{ note.SavedBy }}</span>
 											at {{ note.SavedAt | date: detailedViewDateFormat }}
@@ -217,7 +222,7 @@
 					</thead>
 					<tbody>
 						<tr *ngIf="(todaysPresentation$ | async)[0]?.length === 0">
-							<td colspan="6">No presentations yet</td>
+							<td class="p-3" colspan="6">No presentations yet</td>
 						</tr>
 						<tr
 							*ngFor="let presentation of (todaysPresentation$ | async)[0]"
@@ -251,7 +256,7 @@
 					</thead>
 					<tbody>
 						<tr *ngIf="(todaysPresentation$ | async)[1]?.length === 0">
-							<td colspan="6">No presentations yet</td>
+							<td class="p-3" colspan="6">No presentations yet</td>
 						</tr>
 						<tr
 							*ngFor="let presentation of (todaysPresentation$ | async)[1]"
@@ -393,7 +398,7 @@
 					</thead>
 					<tbody>
 						<tr *ngIf="(attendanceReport$ | async)?.Attendances.length === 0">
-							<td colspan="14">No data yet</td>
+							<td class="p-3" colspan="14">No data yet</td>
 						</tr>
 						<tr *ngFor="let at of (attendanceReport$ | async)?.Attendances">
 							<td class="trainee-details-hotspot">
@@ -538,11 +543,11 @@
 										at.FulldayPermission
 											? 'Remove All Day Permission?'
 											: 'Set Permission to All Day?'
-                  "
-                  [description]="changeFullDayPermissionTemplate"
-                  (confirm)="toggleFullDayPermission(at)"
-                  (cancel)="changeFullDayPermissionReason.reset()"
-                  class="cursor-pointer"
+									"
+									[description]="changeFullDayPermissionTemplate"
+									(confirm)="toggleFullDayPermission(at)"
+									(cancel)="changeFullDayPermissionReason.reset()"
+									class="cursor-pointer"
 								>
 									{{ at.FulldayPermission ? '&#x2611;' : '&#x2610;' }}
 								</rd-confirmable-pop-up>
@@ -550,7 +555,7 @@
 							<td>
 								<div *ngFor="let permission of at.AttendanceTimePermission">
 									<span
-                    [ngbPopover]="permission.Reason"
+										[ngbPopover]="permission.Reason"
 										triggers="mouseenter:mouseleave"
 										container="body"
 									>

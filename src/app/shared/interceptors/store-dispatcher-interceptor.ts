@@ -24,7 +24,6 @@ export class StoreDispatcherInterceptor implements HttpInterceptor {
       tap(() => this.store.dispatch(MainStateAction.RequestSuccess())),
       
 			catchError((error: HttpErrorResponse) => {
-        console.log(error);
 				this.store.dispatch(MainStateAction.RequestFailedMessage(error));
         this.store.dispatch(MainStateAction.RequestFailed());
         return throwError(error);

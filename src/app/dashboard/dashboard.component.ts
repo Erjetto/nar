@@ -17,8 +17,8 @@ import { filter, takeUntil, distinctUntilChanged, first, tap, mapTo } from 'rxjs
 import { CookieService } from 'ngx-cookie-service';
 import { trigger, transition, query, style, group, animate } from '@angular/animations';
 import { Cookies } from '../shared/constants/cookie.constants';
-import { isEmpty as _isEmpty} from 'lodash';
 import { Title } from '@angular/platform-browser';
+import { isEmpty as _isEmpty } from 'lodash';
 
 @Component({
 	selector: 'rd-dashboard',
