@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action, select, Store } from '@ngrx/store';
 
 import * as MainStateAction from '../main/main.action';
+import * as fromMainState from '../main/main.reducer';
 import * as VoteStateAction from './vote.action';
 import * as fromVoteState from './vote.reducer';
+
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, tap, share } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, tap, share, withLatestFrom } from 'rxjs/operators';
 import { VoteService } from '../../services/new/vote.service';
 import { LeaderService } from '../../services/new/leader.service';
+import { IAppState } from 'src/app/app.reducer';
+import { Role, User } from '../../models';
+import { RoleFlags } from '../../constants/role.constant';
 
 @Injectable({
 	providedIn: 'root',
@@ -17,14 +22,18 @@ import { LeaderService } from '../../services/new/leader.service';
 export class VoteStateEffects {
 	constructor(
 		private actions$: Actions,
+		private store: Store<IAppState>,
 		private voteService: VoteService,
 		private leaderService: LeaderService
 	) {}
 
 	@Effect()
 	getTopBottomVoteSchedules$: Observable<Action> = this.actions$.pipe(
-		ofType(VoteStateAction.FetchTopBottomVoteSchedules),
-		switchMap(() => this.leaderService.GetTopBottomVoteSchedules()),
+    ofType(VoteStateAction.FetchTopBottomVoteSchedules),
+    withLatestFrom(this.store.pipe(select(fromMainState.getCurrentRole))),
+    switchMap(([act, role]: [Action, Role]) => 
+      this.leaderService.GetTopBottomVoteSchedules({isTrainer: role.is(RoleFlags.Trainer)})
+    ),
 		mergeMap((res) => of(VoteStateAction.FetchTopBottomVoteSchedulesSuccess({ payload: res }))),
 		share()
 	);
@@ -76,10 +85,30 @@ export class VoteStateEffects {
 		ofType(VoteStateAction.DeleteTopBottomVoteSchedule),
 		switchMap((data) => this.leaderService.DeleteTopBottomVoteSchedule(data)),
 		mergeMap((res) =>
-			res === false
+			res === true
 				? of(MainStateAction.SuccessfullyMessage('deleted schedule'))
 				: of(MainStateAction.FailMessage('deleting schedule'))
 		),
 		share()
-	);
+  );
+  
+	@Effect()
+	trainerSubmitVote$: Observable<Action> = this.actions$.pipe(
+    ofType(VoteStateAction.SubmitTopBottomVote),
+    withLatestFrom(
+      this.store.pipe(select(fromMainState.getCurrentRole)),
+      this.store.pipe(select(fromMainState.getCurrentUser)),
+    ),
+    switchMap(([data, role, user]) => 
+      role.is(RoleFlags.Trainer)
+        ? this.voteService.SaveTrainerTopBottomVote({...data, trainerName: user.UserName})
+        : this.voteService.SaveTopBottomVote({...data, traineeId: user.UserId})
+    ),
+		mergeMap((res) =>
+			res != null
+				? of(MainStateAction.SuccessfullyMessage('submitted vote'))
+				: of(MainStateAction.FailMessage('submitting vote'))
+		),
+		share()
+  );
 }

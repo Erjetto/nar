@@ -14,10 +14,40 @@
 							</thead>
 							<tbody>
 								<tr *ngIf="(voteSchedules$ | async)?.length === 0">
-									<td colspan="2">No votes yet</td>
-								</tr>
+									<td class="p-3" colspan="2">No schedules yet</td>
+                </tr>
+                <!-- For Trainee -->
+                <tr>
+                  <td class="p-2 font-weight-bold" colspan="2">
+                    Trainee's Vote
+                  </td>
+                </tr>
+                <!-- Kalo kosong kasi '-' -->
+                <tr *ngIf="(traineeVoteSchedules$ | async)?.length === 0">
+									<td class="p-3" colspan="2"> - </td>
+                </tr>
 								<tr
-									*ngFor="let schedule of voteSchedules$ | async"
+									*ngFor="let schedule of traineeVoteSchedules$ | async"
+									(click)="selectSchedule(schedule)"
+                  class="cursor-pointer"
+								>
+									<td>{{ schedule.ScheduleName }}</td>
+									<td>
+										{{ schedule.StartDate | date: viewDateFormat }} -
+										{{ schedule.EndDate | date: viewDateFormat }}
+									</td>
+                </tr>
+                <!-- For Trainer -->
+                <tr>
+                  <td class="p-2 font-weight-bold" colspan="2">
+                    Trainer's Vote
+                  </td>
+                </tr>
+                <tr *ngIf="(trainerVoteSchedules$ | async)?.length === 0">
+									<td class="p-3" colspan="2"> - </td>
+                </tr>
+								<tr
+									*ngFor="let schedule of trainerVoteSchedules$ | async"
 									(click)="selectSchedule(schedule)"
 									class="cursor-pointer"
 								>
@@ -110,14 +140,17 @@
 				[cardTitle]="
 					'Vote Result' + (isEditing ? ' - ' + this.voteForm.get('scheduleName').value : '')
 				"
-				[isLoading]="loadingViewVoteResult$ | async"
-			>
+        [expanded]="isEditing"
+        [collapsible]="false"
+        >
+        <!-- [isLoading]="loadingViewVoteResult$ | async" -->
 				<div class="row">
-					<div class="col">
-						<ul class="nav nav-tabs">
+					<div class="col justify-content-end">
+            <h4 class="m-0 p-1 border-bottom border-lightgrey">
+              {{currentVote == 'trainer' ? 'Trainer\'s ' : 'Trainee\'s '}} Vote
+            </h4>
+						<!-- <ul class="nav nav-tabs">
 							<li class="nav-item cursor-pointer">
-								<!-- [class.active]="(currentVote$|async) === 'trainee'"
-                (click)="currentVote$.next('trainee')" -->
 								<b
 									class="nav-link"
 									[class.active]="currentVote === 'trainee'"
@@ -135,7 +168,7 @@
 									Trainer
 								</b>
 							</li>
-						</ul>
+						</ul> -->
 					</div>
 					<div class="col-4">
 						<input
@@ -148,7 +181,7 @@
 				<div class="content">
 					<div class="vote-list maxh-550px row" [hidden]="currentVote !== 'trainee'">
 						<div
-							class="pl-4 row justify-content-center"
+							class="p-4 row justify-content-center"
 							[hidden]="(traineeVotesFiltered$ | async)?.length > 0"
 						>
 							No votes yet...
@@ -211,7 +244,7 @@
 					</div>
 					<div class="vote-list maxh-550px row" [hidden]="currentVote !== 'trainer'">
 						<div
-							class="pl-4 row justify-content-center"
+							class="p-4 row justify-content-center"
 							[hidden]="(trainerVotesFiltered$ | async)?.length > 0"
 						>
 							No votes yet...

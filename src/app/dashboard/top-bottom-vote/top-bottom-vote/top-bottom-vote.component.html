@@ -1,18 +1,118 @@
 <div class="container-lg">
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Vote Schedule'" [isLoading]="false"> </rd-card>
+			<rd-card [cardTitle]="'Vote Schedule'" [isLoading]="loadingViewVote$ | async">
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Date</th>
+								<th># of votes</th>
+								<th>For Trainer</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(voteSchedules$ | async)?.length === 0">
+								<td class="p-3" colspan="10">No schedules yet</td>
+							</tr>
+							<tr
+								class="cursor-pointer"
+								*ngFor="let schedule of voteSchedules$ | async"
+								(click)="selectVoteSchedule(schedule)"
+							>
+								<td>{{ schedule.ScheduleName }}</td>
+								<td>
+									{{ schedule.StartDate | date: viewDateFormat }} -
+									{{ schedule.EndDate | date: viewDateFormat }}
+								</td>
+								<td>{{ schedule.VoteCount }}</td>
+								<td>{{ schedule.isForTrainer ? '&#x2611;' : '&#x2610;' }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col">
-      <rd-card 
-        [cardTitle]="'Vote'" 
-        [isLoading]="false"
-        [collapsible]="false"
-        [expanded]="voteForm.get('voteScheduleId').value !== ''"
-      > 
-      </rd-card>
+			<rd-card
+				[cardTitle]="this.voteForm.get('voteScheduleName').value || 'Vote'"
+				[isLoading]="loadingFormVote$ | async"
+				[collapsible]="false"
+				[expanded]="isVoting"
+				[formGroup]="voteForm"
+			>
+				<!-- [expanded]="voteForm.get('voteScheduleId').value !== ''" -->
+				<div rdCardBadges [hidden]="!isVoting">
+					<div class="col text-right">
+						<button class="btn btn-sm btn-primary mr-2" (click)="saveVote()">Save Vote</button>
+						<button class="btn btn-sm btn-secondary" (click)="cancelVote()">Cancel</button>
+					</div>
+				</div>
+				<div class="row">
+					<!-- Top Vote -->
+					<div class="col">
+						<div class="row form-group border-bottom border-lightgrey">
+							<h3 class="col text-center">Top</h3>
+						</div>
+						<div class="row form-group" *ngFor="let item of topArray.controls; let i = index">
+							<div class="col">
+								<ng-select
+									class="mb-2"
+									placeholder="T000 - Trainee"
+									[items]="trainees$ | async"
+									bindValue="TraineeId"
+									[formControl]="topArray.controls[i].get('trainee')"
+								>
+									<ng-template ng-label-tmp let-item="item">
+										<span>{{ item.codeAndName }}</span>
+									</ng-template>
+									<ng-template ng-option-tmp let-item="item" let-index="index">
+										<span>{{ item.codeAndName }}</span>
+									</ng-template>
+								</ng-select>
+								<textarea
+									class="form-control vertical-text-area minh-100px"
+									[formControl]="topArray.controls[i].get('reason')"
+									placeholder="Reasons"
+								></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="col-auto px-0 mx-2" style="border-left: 1px solid grey"></div>
+					<!-- Bottom Vote -->
+					<div class="col">
+						<div class="row form-group border-bottom border-lightgrey">
+							<h3 class="col text-center">Bottom</h3>
+						</div>
+						<div class="row form-group" *ngFor="let item of bottomArray.controls; let i = index">
+							<div class="col">
+								<ng-select
+									class="mb-2"
+									placeholder="T000 - Trainee"
+									[items]="trainees$ | async"
+									bindValue="TraineeId"
+									[formControl]="bottomArray.controls[i].get('trainee')"
+								>
+									<ng-template ng-label-tmp let-item="item">
+										<span>{{ item.codeAndName }}</span>
+									</ng-template>
+									<ng-template ng-option-tmp let-item="item" let-index="index">
+										<span>{{ item.codeAndName }}</span>
+									</ng-template>
+								</ng-select>
+								<textarea
+									class="form-control vertical-text-area minh-100px"
+									[formControl]="bottomArray.controls[i].get('reason')"
+									placeholder="Reasons"
+								></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</rd-card>
 		</div>
 	</div>
 </div>

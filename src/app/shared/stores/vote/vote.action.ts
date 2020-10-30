@@ -45,21 +45,10 @@ export const CreateTopBottomVoteSchedule = createAction(
 	}>()
 );
 
-export const SaveTraineeTopBottomVote = createAction(
+export const SubmitTopBottomVote = createAction(
 	'[VoteState] SaveTraineeTopBottomVote',
 	props<{
 		scheduleId: string;
-		traineeId: string;
-		topJson: string;
-		bottomJson: string;
-	}>()
-);
-
-export const SaveTrainerTopBottomVote = createAction(
-	'[VoteState] SaveTrainerTopBottomVote',
-	props<{
-		scheduleId: string;
-		trainerName: string;
 		topJson: string;
 		bottomJson: string;
 	}>()
