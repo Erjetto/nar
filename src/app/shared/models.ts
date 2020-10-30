@@ -2,66 +2,8 @@ import { RoleFlags } from './constants/role.constant';
 import { isNumber, map, isEmpty, cloneDeep } from 'lodash';
 import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { GetDownloadLinkFromFileId } from './methods';
 
-//#region Common methods or class unrelated to NAR backend
-export const dateInRange = (start: Date, end: Date, curr: Date = new Date()) => 
-  start.getTime() < curr.getTime() && curr.getTime() < end.getTime()
-
-/**
- * Create array of duplicate value
- * @param value value to duplicate, if function: call it, if object, clone it
- * @param count amount
- */
-export const arrayOfValue = (value: any, count: number) => {
-	switch (typeof value) {
-		case 'function':
-			return Array(count)
-				.fill(0)
-				.map(() => value());
-		case 'object':
-			return Array(count)
-				.fill(0)
-				.map(() => cloneDeep(value));
-		default:
-			return Array(count)
-				.fill(0)
-				.map(() => value);
-	}
-};
-/**
- * Adjust the controls amount in form array
- * @param arr the FormArray
- * @param count the adjusted number
- * @param formgroupFactory the method that is called to create the form group
- */
-export const adjustControlsInFormArray = (
-	arr: FormArray,
-	count: number,
-	formgroupFactory?: () => any
-) => {
-	while (arr.length > count) {
-		arr.removeAt(arr.length - 1);
-  }
-  
-	while (arr.length < count) {
-		if (formgroupFactory) arr.push(new FormGroup(formgroupFactory()));
-		else arr.push(new FormControl());
-	}
-};
-
-/**
- * Template for most of downloadable item in NAR
- */
-export const GetDownloadLinkFromFileId = (fileId: string): string =>
-	`${environment.apiUrl}File.svc/GetFile/${fileId}`;
-
-/**
- * Find Core training phase, if not found then return first phase
- * @param phases phases
- */
-export const TryGetCoreTrainingPhase = (phases: ClientPhase[]): ClientPhase =>
-	phases.find((p) => p.Description.includes('Core')) ?? phases[0];
 
 export type AttendanceType = 'Rest' | 'Room' | 'Secretariat';
 export type QuestionStatus = 'wrong' | 'correct' | 'unchecked';
@@ -132,9 +74,10 @@ export class User extends BaseModel {
 	public Role: Role = Role.from('AssistantSupervisor');
 	constructor(
 		public UserId = '',
-		public UserName = '',
-		public Name = '',
-		public ActiveRole = '',
+		public UserName = '', // Initial
+    public Name = '', // Full Name
+    // Don't use this, use fromMainState.getCurrentRole instead
+		public ActiveRole: Role = null,
 		public TraineeId = ''
 	) {
 		super();
@@ -143,6 +86,7 @@ export class User extends BaseModel {
 		if (isEmpty(data)) return null;
 		return Object.assign(new User(), data, {
 			Role: Role.from(data?.Role || 'Guest'),
+			ActiveRole: Role.from(data?.ActiveRole || 'Guest'),
 		});
 	}
 }
