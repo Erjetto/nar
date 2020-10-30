@@ -32,6 +32,8 @@ import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.compon
 import { NewPresentationComponent } from './presentation/new-presentation/new-presentation.component';
 import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote/top-bottom-vote.component';
 import { FillAnswersComponent } from './candidate/fill-answers/fill-answers.component';
+import { LogRoomComponent } from './log/log-room/log-room.component';
+import { LogBookComponent } from './log/log-book/log-book.component';
 
 export const routes: Routes = [
 	{
@@ -208,10 +210,9 @@ export const routes: Routes = [
 				data: { roles: RoleFlags.Trainee, name: 'Log' },
 				children: [
 					{
-						path: 'room',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Room (-)' },
+            path: 'room',
+            component: LogRoomComponent,
+						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Room' },
 					},
 					{
 						path: 'room/detail/:id',
@@ -220,10 +221,9 @@ export const routes: Routes = [
 						data: { roles: RoleGroups.SENIOR_ROLES },
 					},
 					{
-						path: 'book',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Book (-)' },
+            path: 'book',
+            component: LogBookComponent,
+						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Book' },
 					},
 					{
 						path: 'book/detail/:id',
