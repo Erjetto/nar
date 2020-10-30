@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	OnDestroy,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+} from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -7,17 +13,14 @@ import {
 	CandidateStateEffects,
 	CandidateStateAction,
 	fromCandidateState,
+	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { FormBuilder } from '@angular/forms';
 import { Observable, merge, BehaviorSubject, Subject } from 'rxjs';
-import {
-	SubcoCandidateQuestionModel,
-	adjustControlsInFormArray,
-	SubcoCandidateAnswerModel,
-	dateInRange,
-} from 'src/app/shared/models';
+import { SubcoCandidateQuestionModel, SubcoCandidateAnswerModel } from 'src/app/shared/models';
 import { takeUntil, filter, withLatestFrom } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
+import { adjustControlsInFormArray, dateInRange } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-fill-answers',
@@ -39,15 +42,15 @@ export class FillAnswersComponent extends DashboardContentBase implements OnInit
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
 		private candidateEffects: CandidateStateEffects,
-    private fb: FormBuilder
+		private fb: FormBuilder
 	) {
 		super(store);
 	}
 
 	ngOnInit(): void {
-    this.questionModel$ = this.store.pipe(select(fromCandidateState.getQuestionModel));
-    this.currentUserAnswer$ = this.store.pipe(select(fromCandidateState.getCurrentUserAnswer))
-    this.store
+		this.questionModel$ = this.store.pipe(select(fromCandidateState.getQuestionModel));
+		this.currentUserAnswer$ = this.store.pipe(select(fromCandidateState.getCurrentUserAnswer));
+		this.store
 			.pipe(takeUntil(this.destroyed$), select(fromCandidateState.isLoadingQuestionsModel))
 			.subscribe(this.loadingViewQuestions$);
 		this.store
@@ -68,7 +71,7 @@ export class FillAnswersComponent extends DashboardContentBase implements OnInit
 				]) => {
 					adjustControlsInFormArray(this.answersForm, qst.Questions.length);
 					if (!canAnswer) this.answersForm.controls.forEach((c) => c.disable());
-          this.answersForm.patchValue(ans.Answers);
+					this.answersForm.patchValue(ans.Answers);
 				}
 			);
 
@@ -78,11 +81,14 @@ export class FillAnswersComponent extends DashboardContentBase implements OnInit
 			} else {
 				this.answerId = a.Id;
 				this.canAnswer$.next(dateInRange(a.StartDate, a.EndDate));
-				this.store.dispatch(CandidateStateAction.FetchQuestionsById({
-          questionId: a.SubcoCandidateQuestionId
-        }));
+				this.store.dispatch(
+					CandidateStateAction.FetchQuestionsById({
+						questionId: a.SubcoCandidateQuestionId,
+					})
+				);
 			}
 		});
+		this.canAnswer$.pipe(takeUntil(this.destroyed$)).subscribe((v) => console.log(v));
 
 		this.candidateEffects.getAnswers$ // saveanswer
 			.pipe(takeUntil(this.destroyed$))
@@ -95,7 +101,13 @@ export class FillAnswersComponent extends DashboardContentBase implements OnInit
 			.subscribe(() => {
 				this.store.dispatch(CandidateStateAction.FetchCurrentUserAnswer());
 			});
-    this.store.dispatch(CandidateStateAction.FetchCurrentUserAnswer());
+
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: CandidateStateAction.FetchCurrentUserAnswer(),
+				selectorToBeChecked: fromCandidateState.getCurrentUserAnswer,
+			})
+		);
 	}
 
 	saveAnswers() {

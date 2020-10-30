@@ -13,11 +13,12 @@ import {
 	MasterStateEffects,
 	fromMasterState,
 } from 'src/app/shared/store-modules';
-import { take, takeUntil, map } from 'rxjs/operators';
+import { take, takeUntil, map, tap } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { sortBy as _sortBy} from 'lodash';
+import { STATE_PROVIDERS } from '@ngrx/store/src/state';
 
 @Component({
 	selector: 'rd-answer-schedule',
@@ -27,8 +28,8 @@ import { sortBy as _sortBy} from 'lodash';
 })
 export class AnswerScheduleComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	currentYear = new Date().getFullYear();
-	viewDateFormat = 'yyyy MMM dd HH:mm';
-	viewDateFormatWithoutYear = 'MMM dd HH:mm'; // Hilangkan tahun jika di tahun ini
+	viewDateFormat = 'yyyy MMM dd, HH:mm';
+	viewDateFormatWithoutYear = 'MMM dd, HH:mm'; // Hilangkan tahun jika di tahun ini
 
 	addSchedulePlaceholder = '';
 	dateFormat = DateHelper.DATETIME_LOCAL_FORMAT;
@@ -56,7 +57,8 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 
 	ngOnInit(): void {
 		this.trainerSchedule$ = this.store.pipe(
-			select(fromCandidateState.getAnswerModels),
+      select(fromCandidateState.getAnswerModels),
+      tap(console.log),
 			map((schedules) => _sortBy(schedules, 'TrainerName')) // Temporary until table have sort feature
 		);
 		this.selectedSchedule$ = this.store.pipe(select(fromCandidateState.getSelectedAnswer));
@@ -88,8 +90,16 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 				this.store.dispatch(CandidateStateAction.FetchAnswers());
 			});
 
-		this.store.dispatch(CandidateStateAction.FetchQuestionsForCurrentGen());
-		this.store.dispatch(CandidateStateAction.FetchAnswers());
+    
+      
+		this.store.dispatch(MainStateAction.DispatchIfEmpty({
+      action: CandidateStateAction.FetchQuestionsForCurrentGen(),
+      selectorToBeChecked: fromCandidateState.getQuestionModel
+    }));
+		this.store.dispatch(MainStateAction.DispatchIfEmpty({
+      action: CandidateStateAction.FetchAnswers(),
+      selectorToBeChecked: fromCandidateState.getAnswerModels
+    }));
 	}
 
 	selectSchedule(row: SubcoCandidateAnswerModel) {
@@ -111,8 +121,8 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		this.store.dispatch(
 			CandidateStateAction.UpdateSchedule({
 				answerId,
-				endDate: startTime,
-				startDate: endTime,
+				endDate: endTime,
+				startDate: startTime,
 			})
 		);
 	}
@@ -151,5 +161,9 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 
 	exportToExcel() {
 		this.store.dispatch(CandidateStateAction.ExportAnswersToExcel());
-	}
+  }
+  
+  trackScheduleById(idx: number, s: SubcoCandidateAnswerModel){
+    return s.Id
+  }
 }

@@ -17,16 +17,21 @@
 								</thead>
 								<tbody>
 									<tr *ngIf="(trainerSchedule$ | async)?.length === 0">
-										<td colspan="2">No schedules yet</td>
+										<td class="p-3" colspan="2">No schedules yet</td>
 									</tr>
 									<tr
-										*ngFor="let schedule of trainerSchedule$ | async"
+										*ngFor="let schedule of (trainerSchedule$ | async); trackBy:trackScheduleById"
 										(click)="selectSchedule(schedule)"
 										class="cursor-pointer"
 									>
 										<td>{{ schedule.TrainerName }}</td>
 										<!-- Hilangkan tahun jika di tahun ini -->
-										<ng-container [ngSwitch]="schedule.StartDate.getFullYear() !== currentYear">
+										<ng-container
+											[ngSwitch]="
+												schedule.StartDate.getFullYear() !== currentYear ||
+												schedule.EndDate.getFullYear() !== currentYear
+											"
+										>
 											<td *ngSwitchCase="true">
 												{{ schedule.StartDate | date: viewDateFormat }} -
 												{{ schedule.EndDate | date: viewDateFormat }}

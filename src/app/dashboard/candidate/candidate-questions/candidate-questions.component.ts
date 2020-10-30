@@ -9,6 +9,7 @@ import {
 	CandidateStateEffects,
 	fromMainState,
 	fromMasterState,
+  MainStateAction,
 } from 'src/app/shared/store-modules';
 import { isEmpty as _isEmpty} from 'lodash';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -60,7 +61,10 @@ export class CandidateQuestionsComponent extends DashboardContentBase implements
 				this.store.dispatch(CandidateStateAction.FetchQuestionsForCurrentGen());
 			});
 
-		this.store.dispatch(CandidateStateAction.FetchQuestionsForCurrentGen());
+    this.store.dispatch(MainStateAction.DispatchIfEmpty({
+      action: CandidateStateAction.FetchQuestionsForCurrentGen(),
+      selectorToBeChecked: fromCandidateState.getQuestionModel
+    }));
 	}
 
 	get questionsArray() {
