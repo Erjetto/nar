@@ -21,6 +21,8 @@ import {
 } from './vote.action';
 
 export interface IVoteState {
+  voteInScheduleEntity: { [scheduleId: string]: TopBottomVote[] | TrainerTopBottomVote[] }
+
 	voteSchedules: TopBottomVoteSchedule[];
 	trainerVotes: TrainerTopBottomVote[];
 	traineeVotes: TopBottomVote[];
@@ -34,6 +36,8 @@ export interface IVoteState {
 }
 
 export const initialState: IVoteState = {
+  voteInScheduleEntity: {},
+
 	voteSchedules: [],
 	trainerVotes: [],
 	traineeVotes: [],
@@ -71,14 +75,16 @@ export const VoteStateReducer = createReducer(
 		voteScheduleLoading: false,
 	})),
 
-	on(FetchTopBottomVotesForScheduleSuccess, (state, { payload }) => ({
-		...state,
+	on(FetchTopBottomVotesForScheduleSuccess, (state, { scheduleId, payload }) => ({
+    ...state,
+    voteInScheduleEntity: {...state.voteInScheduleEntity, [scheduleId]: payload},
 		traineeVotes: payload,
 		voteResultLoading: false,
 	})),
 
-	on(FetchTrainerTopBottomVotesForScheduleSuccess, (state, { payload }) => ({
+	on(FetchTrainerTopBottomVotesForScheduleSuccess, (state, { scheduleId, payload }) => ({
 		...state,
+    voteInScheduleEntity: {...state.voteInScheduleEntity, [scheduleId]: payload},
 		trainerVotes: payload,
 		voteResultLoading: false,
 	})),
@@ -94,6 +100,7 @@ export const getVoteState = createFeatureSelector<IVoteState>(VOTESTATE_REDUCER_
 export const getVoteStateBy = (fn: (_: IVoteState) => any) => createSelector(getVoteState, fn);
 
 export const getVoteSchedules = getVoteStateBy((s) => s.voteSchedules);
+export const getVoteInScheduleEntity = getVoteStateBy((s) => s.voteInScheduleEntity);
 export const getTraineeVotes = getVoteStateBy((s) => s.traineeVotes);
 export const getTrainerVotes = getVoteStateBy((s) => s.trainerVotes);
 export const getFilterText = getVoteStateBy((s) => s.filterText);

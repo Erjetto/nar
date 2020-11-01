@@ -9,7 +9,7 @@ import * as VoteStateAction from './vote.action';
 import * as fromVoteState from './vote.reducer';
 
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, tap, share, withLatestFrom } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, tap, share, withLatestFrom, map } from 'rxjs/operators';
 import { VoteService } from '../../services/new/vote.service';
 import { LeaderService } from '../../services/new/leader.service';
 import { IAppState } from 'src/app/app.reducer';
@@ -29,11 +29,11 @@ export class VoteStateEffects {
 
 	@Effect()
 	getTopBottomVoteSchedules$: Observable<Action> = this.actions$.pipe(
-    ofType(VoteStateAction.FetchTopBottomVoteSchedules),
-    withLatestFrom(this.store.pipe(select(fromMainState.getCurrentRole))),
-    switchMap(([act, role]: [Action, Role]) => 
-      this.leaderService.GetTopBottomVoteSchedules({isTrainer: role.is(RoleFlags.Trainer)})
-    ),
+		ofType(VoteStateAction.FetchTopBottomVoteSchedules),
+		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentRole))),
+		switchMap(([act, role]: [Action, Role]) =>
+			this.leaderService.GetTopBottomVoteSchedules({ isTrainer: role.is(RoleFlags.Trainer) })
+		),
 		mergeMap((res) => of(VoteStateAction.FetchTopBottomVoteSchedulesSuccess({ payload: res }))),
 		share()
 	);
@@ -41,17 +41,27 @@ export class VoteStateEffects {
 	@Effect()
 	getTopBottomVoteForSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(VoteStateAction.FetchTopBottomVotesForSchedule),
-		switchMap((data) => this.voteService.GetTopBottomVotesForSchedule(data)),
-		mergeMap((res) => of(VoteStateAction.FetchTopBottomVotesForScheduleSuccess({ payload: res }))),
+		switchMap((data) =>
+			this.voteService
+				.GetTopBottomVotesForSchedule(data)
+				.pipe(map((res) => ({ scheduleId: data.scheduleId, res })))
+		),
+		mergeMap(({ scheduleId, res }) =>
+			of(VoteStateAction.FetchTopBottomVotesForScheduleSuccess({ payload: res, scheduleId }))
+		),
 		share()
 	);
 
 	@Effect()
 	getTrainerTopBottomVoteForSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(VoteStateAction.FetchTrainerTopBottomVotesForSchedule),
-		switchMap((data) => this.voteService.GetTrainerTopBottomVotesForSchedule(data)),
-		mergeMap((res) =>
-			of(VoteStateAction.FetchTrainerTopBottomVotesForScheduleSuccess({ payload: res }))
+		switchMap((data) =>
+			this.voteService
+				.GetTrainerTopBottomVotesForSchedule(data)
+				.pipe(map((res) => ({ scheduleId: data.scheduleId, res })))
+		),
+		mergeMap(({ scheduleId, res }) =>
+			of(VoteStateAction.FetchTrainerTopBottomVotesForScheduleSuccess({ payload: res, scheduleId }))
 		),
 		share()
 	);
@@ -86,29 +96,29 @@ export class VoteStateEffects {
 		switchMap((data) => this.leaderService.DeleteTopBottomVoteSchedule(data)),
 		mergeMap((res) =>
 			res === true
-				? of(MainStateAction.SuccessfullyMessage('deleted schedule'))
-				: of(MainStateAction.FailMessage('deleting schedule'))
+				? of(MainStateAction.SuccessfullyMessage('deleted vote schedule'))
+				: of(MainStateAction.FailMessage('deleting vote schedule'))
 		),
 		share()
-  );
-  
+	);
+
 	@Effect()
 	trainerSubmitVote$: Observable<Action> = this.actions$.pipe(
-    ofType(VoteStateAction.SubmitTopBottomVote),
-    withLatestFrom(
-      this.store.pipe(select(fromMainState.getCurrentRole)),
-      this.store.pipe(select(fromMainState.getCurrentUser)),
-    ),
-    switchMap(([data, role, user]) => 
-      role.is(RoleFlags.Trainer)
-        ? this.voteService.SaveTrainerTopBottomVote({...data, trainerName: user.UserName})
-        : this.voteService.SaveTopBottomVote({...data, traineeId: user.UserId})
-    ),
+		ofType(VoteStateAction.SubmitTopBottomVote),
+		withLatestFrom(
+			this.store.pipe(select(fromMainState.getCurrentRole)),
+			this.store.pipe(select(fromMainState.getCurrentUser))
+		),
+		switchMap(([data, role, user]) =>
+			role.is(RoleFlags.Trainer)
+				? this.voteService.SaveTrainerTopBottomVote({ ...data, trainerName: user.UserName })
+				: this.voteService.SaveTopBottomVote({ ...data, traineeId: user.UserId })
+		),
 		mergeMap((res) =>
 			res != null
 				? of(MainStateAction.SuccessfullyMessage('submitted vote'))
 				: of(MainStateAction.FailMessage('submitting vote'))
 		),
 		share()
-  );
+	);
 }

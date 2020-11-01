@@ -26,12 +26,12 @@ export const FetchTopBottomVoteSchedulesSuccess = createAction(
 
 export const FetchTopBottomVotesForScheduleSuccess = createAction(
 	'[VoteState] FetchTopBottomVotesForScheduleSuccess',
-	props<{ payload: TopBottomVote[] }>()
+	props<{ scheduleId: string; payload: TopBottomVote[] }>()
 );
 
 export const FetchTrainerTopBottomVotesForScheduleSuccess = createAction(
 	'[VoteState] FetchTrainerTopBottomVotesForScheduleSuccess',
-	props<{ payload: TrainerTopBottomVote[] }>()
+	props<{ scheduleId: string; payload: TrainerTopBottomVote[] }>()
 );
 
 export const CreateTopBottomVoteSchedule = createAction(
@@ -46,7 +46,7 @@ export const CreateTopBottomVoteSchedule = createAction(
 );
 
 export const SubmitTopBottomVote = createAction(
-	'[VoteState] SaveTraineeTopBottomVote',
+	'[VoteState] SubmitTopBottomVote',
 	props<{
 		scheduleId: string;
 		topJson: string;
