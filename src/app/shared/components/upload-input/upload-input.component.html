@@ -1,11 +1,28 @@
-<input type="file" class="form-control" (change)="uploadFile($event.target.files)" #fileUploader />
+
+<span class="form-control" (click)="inputFile.click()">
+	<ng-container [ngSwitch]="hasFile">
+		<span *ngSwitchCase="false">
+			<i>Click here to upload</i>
+		</span>
+		<span *ngSwitchDefault>
+			<i>{{ fileNamesArr }}</i>
+		</span>
+	</ng-container>
+</span>
+<input
+	#inputFile
+	type="file"
+	class="form-control"
+	(change)="uploadFile($event.target.files)"
+	#fileUploader
+/>
 <div class="input-group-append" [hidden]="!hasFile">
 	<ng-template #popContent>
 		<div class="p-2">
 			Remove uploaded files?
 			<ul class="pl-3">
-				<li>
-
+				<li *ngFor="let file of filesForm.value">
+					{{ file.fileName }}
 				</li>
 			</ul>
 		</div>
@@ -16,6 +33,7 @@
 		triggers="mouseenter:mouseleave"
 		title="Remove uploaded files"
 		(click)="removeUploadedFiles($event)"
+		[hidden]="!hasFile"
 	>
 		<fa-icon [icon]="['fas', 'check']" class="not-hovered"></fa-icon>
 		<fa-icon [icon]="['fas', 'times']" class="hovered"></fa-icon>
