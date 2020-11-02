@@ -121,61 +121,10 @@
 									/>
 								</div>
 							</div>
-							<div class="row form-group">
+              <div class="row form-group">
 								<label class="col-3 col-form-label">File</label>
-								<div class="col input-group">
-									<input
-										class="form-control"
-										type="file"
-										(change)="uploadFile($event.target.files)"
-									/>
-									<div class="input-group-append">
-										<button
-											class="btn btn-info"
-											[ngbPopover]="'Download ' + caseForm.value.fileName"
-											triggers="mouseenter:mouseleave"
-											(click)="downloadFile()"
-											[hidden]="!hasFile || !isEditing"
-										>
-											<fa-icon [icon]="['fas', 'download']"></fa-icon>
-										</button>
-										<button
-											class="btn btn-info hover-switch-content"
-											[ngbPopover]="popContent"
-											triggers="mouseenter:mouseleave"
-											title="Remove uploaded files"
-											(click)="removeFile($event)"
-											[hidden]="!hasFile || isEditing"
-										>
-											<ng-template #popContent>
-												<div class="p-2">
-													Remove uploaded files?
-													<ul class="pl-3">
-														<li>
-															{{ caseForm.get('fileName').value }}
-														</li>
-													</ul>
-												</div>
-											</ng-template>
-											<fa-icon [icon]="['fas', 'check']" class="not-hovered"></fa-icon>
-											<fa-icon [icon]="['fas', 'times']" class="hovered"></fa-icon>
-										</button>
-									</div>
-								</div>
-								<!-- <div class="col input-group">
-									<input type="file" id="fileUpload" name="fileUpload" class="col form-control" />
-									<div class="input-group-append" *ngIf="caseForm$ | async">
-										<button
-											class="btn btn-info"
-											(click)="downloadFile()"
-											ngbPopover="Download (filename).pdf"
-											triggers="mouseenter:mouseleave"
-										>
-											<fa-icon [icon]="['fas', 'download']"></fa-icon>
-										</button>
-									</div>
-								</div> -->
-							</div>
+                <rd-upload-input [filesForm]="caseForm.get('fileForm')"></rd-upload-input>
+              </div>
 						</div>
 						<div class="col">
 							<div class="row form-group" [hidden]="isEditing">

@@ -20,6 +20,7 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { isEmpty as _isEmpty} from 'lodash';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
+import { adjustControlsInFormArray } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-manage-case',
@@ -53,7 +54,9 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	caseForm = this.fb.group({
 		caseId: [''], // Update
 		changedFile: [false], // Check if 'edit case' uploads new file
-		fileName: [null], // View uploaded file
+    fileName: [null], // View uploaded file
+    
+    fileForm: this.fb.array([this.fb.group({fileId: [''], fileName: ['']})]),
 
 		fileId: [null],
 		subject: [null, Validators.required], // Value is object so we can use it for entity
@@ -96,19 +99,6 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
     this.caseListLoading$ = this.store.pipe(select(fromCaseState.getCasesLoading));
     
-		// Get uploaded files to caseForm
-		this.store
-			.pipe(
-				select(fromMainState.getUploadedFiles),
-				filter((v) => !_isEmpty(v)),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe((files) => {
-				this.formCaseLoading$.next(false);
-				this.caseForm.get('changedFile').setValue(true);
-				this.caseForm.get('fileId').setValue(files[0].fileid);
-				this.caseForm.get('fileName').setValue(files[0].filename);
-			});
 		//#endregion
 
 		//#region auto select first in array
@@ -163,8 +153,9 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	}
 
 	onSelectCase(row: Case) {
-		this.caseForm.patchValue(
+    this.caseForm.patchValue(
 			{
+        fileForm: [{fileId: row.FileId, fileName: row.FileName}],
 				changedFile: false,
 				caseId: row.CaseId,
 				fileId: row.FileId,
@@ -187,11 +178,6 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			trainerDays: DateHelper.dateToInputFormat(new Date(), this.editDateFormat),
 			scheduleDate: DateHelper.dateToInputFormat(new Date(), this.editDateFormat),
 		});
-	}
-
-	uploadFile(files: FileList) {
-		this.formCaseLoading$.next(true);
-		this.store.dispatch(MainStateAction.UploadFile({ files: { ...files, length: files.length } }));
 	}
 
 	removeFile(element) {

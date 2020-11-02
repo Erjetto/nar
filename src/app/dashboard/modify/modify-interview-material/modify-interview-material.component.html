@@ -86,36 +86,8 @@
 						</div>
 						<div class="row form-group">
 							<div class="row">
-								<label for="materialUpload" class="col-3 col-form-label"> File </label>
-								<div class="col input-group">
-									<input
-										class="form-control"
-										type="file"
-										(change)="uploadSingleFile($event.target.files)"
-									/>
-									<div class="input-group-append" [hidden]="!hasSingleFile">
-										<ng-template #popContent>
-											<div class="p-2">
-												Remove uploaded files?
-												<ul class="pl-3">
-													<li>
-														{{ singleUploadForm.get('fileName').value }}
-													</li>
-												</ul>
-											</div>
-										</ng-template>
-										<button
-											class="btn btn-info hover-switch-content"
-											[ngbPopover]="popContent"
-											triggers="mouseenter:mouseleave"
-											title="Remove uploaded files"
-											(click)="removeSingleUploadFile()"
-										>
-											<fa-icon [icon]="['fas', 'check']" class="not-hovered"></fa-icon>
-											<fa-icon [icon]="['fas', 'times']" class="hovered"></fa-icon>
-										</button>
-									</div>
-								</div>
+                <label for="materialUpload" class="col-3 col-form-label"> File </label>
+                <rd-upload-input [filesForm]="singleUploadForm.get('fileForm')"></rd-upload-input>
 							</div>
 						</div>
 						<div class="row form-group justify-content-center">
@@ -133,17 +105,21 @@
 							<h6><b>Mass Insert</b></h6>
 						</div>
 						<div class="row form-group">
-							<input type="file" multiple (change)="massUpload($event.target.files)" />
-							<span class="font-italic">Note: Files must have prefix 'T999_name'</span>
-						</div>
-						<div class="row" [hidden]="isUploadingSingle$ | async">Uploaded Files:</div>
-						<div class="row" [hidden]="isUploadingSingle$ | async">
+              <div class="col-3 col-form-label">Files</div>
+              <rd-upload-input [filesForm]="massUploadFileForm"></rd-upload-input>
+							<!-- <input type="file" multiple (change)="massUpload($event.target.files)" /> -->
+            </div>
+            <div class="row">
+              <span class="font-italic">Note: Files must have prefix 'T999_name'</span>
+            </div>
+						<div class="row" [hidden]="massUploadFileForm.length == 0">Uploaded Files:</div>
+						<div class="row" [hidden]="massUploadFileForm.length == 0">
 							<ul>
-								<li *ngFor="let file of uploadedFiles$ | async">{{ file.filename }}</li>
+								<li *ngFor="let file of massUploadFileForm.value">{{ file.fileName }}</li>
 							</ul>
 						</div>
 						<div class="row form-group justify-content-around">
-							<button class="btn btn-primary" [disabled]="!(isUploadingSingle$ | async)">
+							<button class="btn btn-primary" [disabled]="massUploadFileForm.invalid">
 								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Submit
 							</button>
 						</div>

@@ -3,4 +3,10 @@
   input[type=file]{
     display: none;
   }
+  
+  .file-placeholder{
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: pre;
+  }
 }

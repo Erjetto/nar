@@ -6,11 +6,27 @@
           <table class="table table-sm table-striped table-hover text-center">
             <thead>
               <tr>
-                <th>Name</th>
                 <th>Date</th>
+                <th>Shift</th>
+                <th>Duration</th>
+                <th>Room</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
+              <tr *ngFor="let schedule of viewTraineeTrainingSchedule$|async">
+                <td>{{schedule.AttendanceDate | date: viewDateFormat}}</td>
+                <td>{{schedule.Shift}}</td>
+                <td>{{schedule.TimeIn}} - {{schedule.TimeOut}}</td>
+                <td>{{schedule.Room}}</td>
+                <td>
+                  <rd-confirmable-pop-up (confirm)="deleteTraineeTrainingSchedule(schedule)">
+                    <button class="btn btn-danger">
+                      <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+                    </button>
+                  </rd-confirmable-pop-up>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>

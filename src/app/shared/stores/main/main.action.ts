@@ -75,17 +75,17 @@ export const CreateAnnouncementSuccess = createAction('[MainState] CreateAnnounc
 export const UpdateAnnouncementSuccess = createAction('[MainState] UpdateAnnouncementSuccess');
 
 export const DownloadFile = createAction('[MainState] DownloadFile', props<{ fileId: string}>());
-export const UploadFile = createAction('[MainState] UploadFile', props<{ files: FileList }>());
-export const UploadFileSuccess = createAction(
-	'[MainState] UploadFileSuccess',
-	props<{ fileids: string[]; filenames: string[] }>()
-);
+// export const UploadFile = createAction('[MainState] UploadFile', props<{ uploaderId?:string; files: FileList }>());
+// export const UploadFileSuccess = createAction(
+// 	'[MainState] UploadFileSuccess',
+// 	props<{ uploaderId?: string; fileids: string[]; filenames: string[] }>()
+// );
 export const UploadFileFailed = createAction('[MainState] UploadFileFailed');
 export const RemoveUploadedFiles = createAction('[MainState] RemoveUploadedFiles');
 
 //#region Global
 export const TestRequest = createAction(
-  '[MainState] AfterRequest', 
+  '[MainState] TestRequest', 
   props<{
     link: string; 
     method: 'get' | 'post'; 
@@ -95,9 +95,6 @@ export const TestRequest = createAction(
 export const AfterRequest = createAction('[MainState] AfterRequest');
 export const RequestFailed = createAction('[MainState] RequestFailed');
 export const RequestSuccess = createAction('[MainState] RequestSuccess');
-// export const CreateSuccess = createAction('[MainState] CreateSuccess');
-// export const UpdateSuccess = createAction('[MainState] UpdateSuccess');
-// export const DeleteSuccess = createAction('[MainState] DeleteSuccess');
 //#endregion
 
 //#region Simplified Toast Message
@@ -134,23 +131,11 @@ export const WarningMessage = (what: string): Action =>
 		message: what,
 	});
 
-// export const ErrorGetMessage = (what: string): Action =>
-// 	ToastMessage({
-// 		messageType: 'danger',
-// 		message: 'Failed to get ' + what,
-// 	});
-
 export const FailMessage = (doingWhat: string, why?: string): Action =>
 	ToastMessage({
 		messageType: 'danger',
 		message: 'Failed ' + doingWhat + (!!why ? ': \n' + why : ''),
 	});
-
-// export const EmptyGetMessage = (what: string): Action =>
-// 	ToastMessage({
-// 		messageType: 'danger',
-// 		message: what + ' is empty',
-// 	});
 
 export const NotImplementedMessage = (doingWhat: string): Action =>
 	ToastMessage({

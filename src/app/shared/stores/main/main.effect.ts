@@ -175,37 +175,38 @@ export class MainStateEffects {
 		share()
 	);
 
-	@Effect()
-	uploadFile$: Observable<Action> = this.actions$.pipe(
-		ofType(MainStateAction.UploadFile),
-		pluck('files'),
-		tap(() => this.store.dispatch(MainStateAction.InfoMessage('Uploading files...'))),
-		switchMap((files) => this.otherService.UploadFiles(files)),
-		mergeMap((res) => {
-			if (res != null) {
-				// If files is possibly string or string[], so make an array then flatten it to force string[]
-				// If it's array, then 2D arr be flattened
-				// If it's string, then it becomes arr
-				const fileIdsArr: string[] = _flatten([res.fileid]);
-				const fileNamesArr: string[] = _flatten([res.filename]);
+	// @Effect()
+	// uploadFile$: Observable<Action> = this.actions$.pipe(
+	// 	ofType(MainStateAction.UploadFile),
+	// 	pluck('files'),
+	// 	tap(() => this.store.dispatch(MainStateAction.InfoMessage('Uploading files...'))),
+	// 	switchMap((files) => this.otherService.UploadFiles(files)),
+	// 	mergeMap((res) => {
+	// 		if (res != null) {
+	// 			// If files is possibly string or string[], so make an array then flatten it to force string[]
+	// 			// If it's array, then 2D arr be flattened
+	// 			// If it's string, then it becomes arr
+	// 			const fileIdsArr: string[] = _flatten([res.fileid]);
+	// 			const fileNamesArr: string[] = _flatten([res.filename]);
 
-				return of(
-					MainStateAction.SuccessfullyMessage('uploaded file(s) : ' + fileNamesArr.join(', ')),
-					MainStateAction.UploadFileSuccess({
-						fileids: fileIdsArr,
-						filenames: fileNamesArr,
-					})
-				);
-			} else return of(MainStateAction.UploadFileFailed()); // not needed?
-		}),
-		share()
-	);
+	// 			return of(
+	// 				MainStateAction.SuccessfullyMessage('uploaded file(s) : ' + fileNamesArr.join(', ')),
+	// 				MainStateAction.UploadFileSuccess({
+	// 					fileids: fileIdsArr,
+	// 					filenames: fileNamesArr,
+	// 				})
+	// 			);
+	// 		} else return of(MainStateAction.UploadFileFailed()); // not needed?
+	// 	}),
+	// 	share()
+	// );
 
 	// Langsung subscribe ke effect buat dapatkan result
 	@Effect({ dispatch: false })
 	testRequest$: Observable<any> = this.actions$.pipe(
 		ofType(MainStateAction.TestRequest),
-		switchMap((data) => this.otherService.TestRequest(data)),
+    switchMap((data) => this.otherService.TestRequest(data)),
+    mergeMap(res => of(res)),
 		share()
 	);
 	@Effect({ dispatch: false })

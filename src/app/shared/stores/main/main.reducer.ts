@@ -19,8 +19,8 @@ import {
 	ChangeRoleSuccess,
 	FetchAnnouncements,
 	FetchAnnouncementsSuccess,
-	UploadFile,
-	UploadFileSuccess,
+	// UploadFile,
+	// UploadFileSuccess,
 	RemoveUploadedFiles,
 } from './main.action';
 
@@ -32,8 +32,8 @@ export interface IMainState {
 
 	announcements: Message[]; // Home Message
 	isLoadingAnnouncements: boolean;
-	uploadedFiles: { fileid: string; filename: string }[];
-	isUploadingFiles: boolean;
+	// uploadedFiles: { fileid: string; filename: string }[];
+	// isUploadingFiles: boolean;
 
 	currentRole: Role;
 	currentGeneration: ClientGeneration;
@@ -50,8 +50,8 @@ export const initialState: IMainState = {
 		// new Toast('warning', 'Fetch data failed 3'),
 		// new Toast('danger', 'Fetch data failed 4'),
 	],
-	uploadedFiles: [],
-	isUploadingFiles: false,
+	// uploadedFiles: [],
+	// isUploadingFiles: false,
 
 	announcements: [],
 	isLoadingAnnouncements: false,
@@ -114,13 +114,13 @@ export const MainStateReducer = createReducer(
 		isLoadingAnnouncements: false,
 	})),
 
-	on(UploadFile, (state) => ({ ...state, isUploadingFiles: true })),
+	// on(UploadFile, (state) => ({ ...state, isUploadingFiles: true })),
 
-	on(UploadFileSuccess, (state, { fileids, filenames }) => ({
-		...state,
-		uploadedFiles: _zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
-		isUploadingFiles: false,
-	})),
+	// on(UploadFileSuccess, (state, { fileids, filenames }) => ({
+	// 	...state,
+	// 	uploadedFiles: _zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
+	// 	isUploadingFiles: false,
+	// })),
 
 	on(RemoveUploadedFiles, (state) => ({
 		...state,
@@ -142,5 +142,5 @@ export const getCurrentGeneration = getMainStateBy((s) => s.currentGeneration);
 export const getCurrentGenerationId = getMainStateBy((s) => s.currentGenerationId);
 export const getCurrentRole= getMainStateBy((s) => s.currentRole);
 
-export const getUploadedFiles = getMainStateBy((s) => s.uploadedFiles);
-export const isUploadingFiles = getMainStateBy((s) => s.isUploadingFiles);
+// export const getUploadedFiles = getMainStateBy((s) => s.uploadedFiles);
+// export const isUploadingFiles = getMainStateBy((s) => s.isUploadingFiles);

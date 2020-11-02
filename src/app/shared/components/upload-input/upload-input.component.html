@@ -1,25 +1,25 @@
-
-<span class="form-control" (click)="inputFile.click()">
+<span class="file-placeholder form-control" (click)="fileUploader.click()">
 	<ng-container [ngSwitch]="hasFile">
-		<span *ngSwitchCase="false">
+		<span *ngSwitchCase="false" class="cursor-pointer">
 			<i>Click here to upload</i>
 		</span>
-		<span *ngSwitchDefault>
-			<i>{{ fileNamesArr }}</i>
+		<span *ngSwitchDefault class="cursor-pointer">
+			<i>{{ fileNames }}</i>
 		</span>
 	</ng-container>
 </span>
 <input
-	#inputFile
+	#fileUploader
 	type="file"
 	class="form-control"
+	[multiple]="multiple"
 	(change)="uploadFile($event.target.files)"
-	#fileUploader
 />
 <div class="input-group-append" [hidden]="!hasFile">
-	<ng-template #popContent>
+	<!-- Button for download -->
+	<ng-template #downloadPopContent>
 		<div class="p-2">
-			Remove uploaded files?
+			Download:
 			<ul class="pl-3">
 				<li *ngFor="let file of filesForm.value">
 					{{ file.fileName }}
@@ -28,13 +28,35 @@
 		</div>
 	</ng-template>
 	<button
+		class="btn btn-info"
+		[ngbPopover]="downloadPopContent"
+		triggers="mouseenter:mouseleave"
+		(click)="downloadFile()"
+		[hidden]="!hasFile"
+	>
+		<fa-icon [icon]="['fas', 'download']"></fa-icon>
+	</button>
+
+	<!-- Button to remove uploaded file -->
+	<button
 		class="btn btn-info hover-switch-content"
-		[ngbPopover]="popContent"
+		[ngbPopover]="removePopContent"
 		triggers="mouseenter:mouseleave"
 		title="Remove uploaded files"
 		(click)="removeUploadedFiles($event)"
-		[hidden]="!hasFile"
+    [hidden]="!hasFile"
+    style="width: 37px;"
 	>
+		<ng-template #removePopContent>
+			<div class="p-2">
+				Remove uploaded files?
+				<ul class="pl-3">
+					<li *ngFor="let file of filesForm.value">
+						{{ file.fileName }}
+					</li>
+				</ul>
+			</div>
+		</ng-template>
 		<fa-icon [icon]="['fas', 'check']" class="not-hovered"></fa-icon>
 		<fa-icon [icon]="['fas', 'times']" class="hovered"></fa-icon>
 	</button>

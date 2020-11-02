@@ -37,18 +37,14 @@ export class ModifyInterviewMaterialComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
 	singleUploadForm = this.fb.group({
-		fileName: [''], // Only for view purpose
-		fileId: ['', Validators.required],
+		fileForm: this.fb.array([], Validators.required),
 		materialName: ['', Validators.required],
 		trainee_Id: ['', Validators.required],
 	});
-	massUploadFiles: { fileIds: string[]; fileNames: string[] }; // for dispatch massupload
+	// massUploadFiles: { fileIds: string[]; fileNames: string[] }; // for dispatch massupload
+	massUploadFileForm = this.fb.array([], Validators.required);
 	deleteReasonText = new FormControl('', Validators.required);
 
-	// true if uploading per trainee, false if mass upload
-	isUploadingSingle$ = new BehaviorSubject<boolean>(true);
-
-	uploadedFiles$: Observable<{ fileid: string; filename: string }[]>;
 	phaseTypes$: Observable<any[]>;
 	phases$: Observable<ClientPhase[]>;
 	allTrainees$: Observable<ClientTrainee[]>;
@@ -60,7 +56,6 @@ export class ModifyInterviewMaterialComponent
 
 	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
-	isUploadingFiles$: Observable<boolean>;
 	editForm = new InterviewMaterialDetail();
 
 	constructor(
@@ -87,30 +82,6 @@ export class ModifyInterviewMaterialComponent
 				...trainees,
 			])
 		);
-		this.uploadedFiles$ = this.store.pipe(select(fromMainState.getUploadedFiles));
-		this.isUploadingFiles$ = this.store.pipe(select(fromMainState.isUploadingFiles));
-
-		// If single upload, add it to form
-		// If mass upload, save it into massUploadFiles
-		this.uploadedFiles$
-			.pipe(
-				filter((v) => !_isEmpty(v)),
-				withLatestFrom(this.isUploadingSingle$),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe(([files, isPerTrainee]) => {
-				if (isPerTrainee)
-					this.singleUploadForm.patchValue({
-						fileId: files[0].fileid,
-						fileName: files[0].filename,
-					});
-				else
-					this.massUploadFiles = {
-						fileIds: _map(files, 'fileid'),
-						fileNames: _map(files, 'filename'),
-					};
-			});
-		//#endregion
 
 		//#region Auto select first in array
 		this.phases$
@@ -180,20 +151,25 @@ export class ModifyInterviewMaterialComponent
 		this.singleUploadForm.get('fileId').setValue(null);
 	}
 	submitInsertPerTraineeForm() {
-		this.store.dispatch(InterviewStateAction.CreateInterviewMaterial(this.singleUploadForm.value));
+		const { fileForm, materialName, trainee_Id } = this.singleUploadForm.value;
+		this.store.dispatch(
+			InterviewStateAction.CreateInterviewMaterial({
+				trainee_Id,
+				materialName,
+				fileId: fileForm[0].fileId,
+			})
+		);
 	}
 	submitMassInsertForm() {
-		this.store.dispatch(InterviewStateAction.MassCreateInterviewMaterial(this.massUploadFiles));
-	}
-
-	uploadSingleFile(files: FileList) {
-		this.isUploadingSingle$.next(true);
-		this.store.dispatch(MainStateAction.UploadFile({ files: { ...files, length: files.length } }));
-	}
-
-	massUpload(files: FileList) {
-		this.isUploadingSingle$.next(false);
-		this.store.dispatch(MainStateAction.UploadFile({ files: { ...files, length: files.length } }));
+    // Split jadi 2 array
+		const { fileIds, fileNames } = this.massUploadFileForm.value.reduce(
+			(prev, curr) => {
+				prev.fileIds.push(curr.fileId);
+				prev.fileNames.push(curr.fileName);
+			},
+			{ fileId: [], fileName: [] }
+		);
+		this.store.dispatch(InterviewStateAction.MassCreateInterviewMaterial({ fileIds, fileNames }));
 	}
 
 	deleteTraineeFile(m: InterviewMaterial, d: InterviewMaterialDetail) {
