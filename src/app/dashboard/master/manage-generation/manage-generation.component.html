@@ -212,13 +212,24 @@
                 <td>{{ trainee.TraineeCode }}</td>
                 <td>{{ trainee.TraineeName }}</td>
                 <td>{{ trainee.Status }}</td>
-                <td>
+                <td class="text-left">
                   <rd-confirmable-pop-up
                     [description]="'Delete ' + trainee.TraineeName + '?'"
                     (confirm)="deleteTrainee(trainee)"
                   >
                     <button class="btn btn-xs btn-danger">
                       <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+                    </button>
+                  </rd-confirmable-pop-up>
+                  <rd-confirmable-pop-up
+                    [description]="'Toggle ' + trainee.TraineeName + '\'s active?'"
+                    (confirm)="toggleTraineeActive(trainee)"
+                  >
+                    <button class="btn btn-xs btn-warning" [hidden]="!trainee.isActive">
+                      <fa-icon [icon]="['fas', 'times']"></fa-icon> Deactivate
+                    </button>
+                    <button class="btn btn-xs btn-success" [hidden]="trainee.isActive">
+                      <fa-icon [icon]="['fas', 'check']"></fa-icon> Activate
                     </button>
                   </rd-confirmable-pop-up>
                 </td>
