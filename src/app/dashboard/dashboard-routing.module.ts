@@ -30,10 +30,11 @@ import { ModifyTraineeScheduleComponent } from './modify/modify-trainee-schedule
 import { CurrentUserResolver } from '../shared/resolvers/current-user.resolver';
 import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
 import { NewPresentationComponent } from './presentation/new-presentation/new-presentation.component';
-import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote/top-bottom-vote.component';
+import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote.component';
 import { FillAnswersComponent } from './candidate/fill-answers/fill-answers.component';
 import { LogRoomComponent } from './log/log-room/log-room.component';
 import { LogBookComponent } from './log/log-book/log-book.component';
+import { TraineeUploadComponent } from './trainee-upload/trainee-upload.component';
 
 export const routes: Routes = [
 	{
@@ -145,16 +146,18 @@ export const routes: Routes = [
 					},
 				],
 			},
-			// {
-			// 	path: 'my-data',
-			// 	component: null,
-			// 	data: { roles: RoleFlags.Trainee, name: 'My Data' },
-			// },
-			// {
-			// 	path: 'my-schedule',
-			// 	component: null,
-			// 	data: { roles: RoleFlags.Trainee, name: 'My Schedule' },
-			// },
+			{
+				path: 'my-data',
+				// component: null,
+				redirectTo: '/home',
+				data: { roles: RoleFlags.Trainee, name: 'My Data (-)' },
+			},
+			{
+				path: 'my-schedule',
+				// component: null,
+				redirectTo: '/home',
+				data: { roles: RoleFlags.Trainee, name: 'My Schedule (-)' },
+			},
 			// {
 			// 	path: 'dummy.aspx',
 			// 	component: null,
@@ -180,26 +183,17 @@ export const routes: Routes = [
 			// },
 			{
 				path: 'top-bottom-vote',
-				data: { name: 'Top Bottom Vote' },
-        children:[
-					{
-						path: 'vote',
-            component: TopBottomVoteComponent,
-            data:{
-              roles:
-                RoleFlags.Trainee |
-                RoleFlags.Trainer |
-                RoleFlags.Interviewer,
-              name: 'Top Bottom Vote'
-            }
-					},
-        ]
+				component: TopBottomVoteComponent,
+				data: {
+					roles: RoleFlags.Trainee | RoleFlags.Trainer | RoleFlags.Interviewer,
+					name: 'Top Bottom Vote',
+				},
 			},
-			// {
-			// 	path: 'upload',
-			// 	component: null,
-			// 	data: { roles: RoleFlags.Trainee, name: 'Upload' },
-			// },
+			{
+				path: 'upload',
+				component: TraineeUploadComponent,
+				data: { roles: RoleFlags.Trainee, name: 'Upload' },
+			},
 			// {
 			// 	path: 'interview',
 			// 	component: null,
@@ -210,8 +204,8 @@ export const routes: Routes = [
 				data: { roles: RoleFlags.Trainee, name: 'Log' },
 				children: [
 					{
-            path: 'room',
-            component: LogRoomComponent,
+						path: 'room',
+						component: LogRoomComponent,
 						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Room' },
 					},
 					{
@@ -221,8 +215,8 @@ export const routes: Routes = [
 						data: { roles: RoleGroups.SENIOR_ROLES },
 					},
 					{
-            path: 'book',
-            component: LogBookComponent,
+						path: 'book',
+						component: LogBookComponent,
 						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Book' },
 					},
 					{
@@ -234,8 +228,8 @@ export const routes: Routes = [
 				],
 			},
 			{
-        path: 'room',
-        data: {name : 'Room'},
+				path: 'room',
+				data: { name: 'Room' },
 				children: [
 					{
 						path: 'room-active',
@@ -485,12 +479,12 @@ export const routes: Routes = [
 					},
 				],
 			},
-    ],
-  },
-  {
-    path: '**',
-    redirectTo: '',
-  }
+		],
+	},
+	{
+		path: '**',
+		redirectTo: '',
+	},
 ];
 
 @NgModule({

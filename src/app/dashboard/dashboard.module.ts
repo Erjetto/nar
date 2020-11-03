@@ -31,10 +31,11 @@ import { ViewQuestionComponent } from './presentation/view-question/view-questio
 import { ModifyTraineeScheduleComponent } from './modify/modify-trainee-schedule/modify-trainee-schedule.component';
 import { TraineeDataComponent } from './trainee/trainee-data/trainee-data.component';
 import { NewPresentationComponent } from './presentation/new-presentation/new-presentation.component';
-import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote/top-bottom-vote.component';
+import { TopBottomVoteComponent } from './top-bottom-vote/top-bottom-vote.component';
 import { FillAnswersComponent } from './candidate/fill-answers/fill-answers.component';
 import { LogRoomComponent } from './log/log-room/log-room.component';
 import { LogBookComponent } from './log/log-book/log-book.component';
+import { TraineeUploadComponent } from './trainee-upload/trainee-upload.component';
 
 @NgModule({
 	declarations: [
@@ -78,6 +79,8 @@ import { LogBookComponent } from './log/log-book/log-book.component';
 		LogRoomComponent,
     
 		LogBookComponent,
+    
+		TraineeUploadComponent,
 	],
 	imports: [
 		SharedModule,
