@@ -37,7 +37,7 @@ export class ModifyInterviewMaterialComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
 	singleUploadForm = this.fb.group({
-		fileForm: this.fb.array([], Validators.required),
+		fileForm: this.fb.group({ fileId: '', fileName: '' }),
 		materialName: ['', Validators.required],
 		trainee_Id: ['', Validators.required],
 	});
@@ -156,12 +156,12 @@ export class ModifyInterviewMaterialComponent
 			InterviewStateAction.CreateInterviewMaterial({
 				trainee_Id,
 				materialName,
-				fileId: fileForm[0].fileId,
+				fileId: fileForm.fileId,
 			})
 		);
 	}
 	submitMassInsertForm() {
-    // Split jadi 2 array
+		// Split jadi 2 array
 		const { fileIds, fileNames } = this.massUploadFileForm.value.reduce(
 			(prev, curr) => {
 				prev.fileIds.push(curr.fileId);

@@ -31,8 +31,8 @@
 							</div>
 							<div class="row form-group">
 								<label class="col-4 col-form-label"> Attachment </label>
-
-								<div class="col input-group">
+                <rd-upload-input [singleFileForm]="announcementForm.get('fileForm')"></rd-upload-input>
+								<!-- <div class="col input-group">
 									<input
 										type="file"
 										class="form-control"
@@ -61,7 +61,7 @@
 											<fa-icon [icon]="['fas', 'times']" class="hovered"></fa-icon>
 										</button>
 									</div>
-								</div>
+								</div> -->
 							</div>
 						</div>
 						<div class="col">

@@ -56,7 +56,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		changedFile: [false], // Check if 'edit case' uploads new file
     fileName: [null], // View uploaded file
     
-    fileForm: this.fb.array([this.fb.group({fileId: [''], fileName: ['']})]),
+    fileForm: this.fb.group({fileId: [''], fileName: ['']}),
 
 		fileId: [null],
 		subject: [null, Validators.required], // Value is object so we can use it for entity
@@ -155,7 +155,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	onSelectCase(row: Case) {
     this.caseForm.patchValue(
 			{
-        fileForm: [{fileId: row.FileId, fileName: row.FileName}],
+        fileForm: {fileId: row.FileId, fileName: row.FileName},
 				changedFile: false,
 				caseId: row.CaseId,
 				fileId: row.FileId,

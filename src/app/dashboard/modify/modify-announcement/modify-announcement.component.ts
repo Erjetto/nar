@@ -17,9 +17,10 @@ import {
 	fromMasterState,
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { takeUntil, filter, map } from 'rxjs/operators';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
+import { adjustControlsInFormArray } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-modify-announcement',
@@ -28,23 +29,24 @@ import { isEmpty as _isEmpty} from 'lodash';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModifyAnnouncementComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	@ViewChild('fileUploader') uploader: ElementRef;
+	// @ViewChild('fileUploader') uploader: ElementRef;
 
 	announcementForm = this.fb.group({
 		messageId: [''],
 		memberType: ['ar', Validators.required],
 		title: ['', Validators.required],
 		note: ['', Validators.required],
-		fileId: [''],
-		fileName: [''],
+		fileForm: this.fb.group({ fileId: [''], fileName: [''] }),
+		// fileId: [''],
+		// fileName: [''],
 	});
 	hasFile$: Observable<boolean>;
 	phaseTypes$: Observable<{ key: string; val: string }>;
 
 	announcements$: Observable<Message[]>;
 
-	uploadedFiles$: Observable<{ fileid: string; filename: string }[]>;
-	uploadedFileId: string; // NOTE: Utk sekarang announcement hanya upload 1 file saja
+	// uploadedFiles$: Observable<{ fileid: string; filename: string }[]>;
+	// uploadedFileId: string; // NOTE: Utk sekarang announcement hanya upload 1 file saja
 	loadingFormAnnouncement$ = new BehaviorSubject<boolean>(false);
 	loadingViewAnnouncements$: Observable<boolean>;
 
@@ -61,22 +63,22 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 		this.phaseTypes$ = this.store.pipe(select(fromMasterState.getPhaseTypes));
 		this.announcements$ = this.store.pipe(select(fromMainState.getAnnouncements));
 		this.loadingViewAnnouncements$ = this.store.pipe(select(fromMainState.isAnnouncementsLoading));
-		this.uploadedFiles$ = this.store.pipe(select(fromMainState.getUploadedFiles));
+		// this.uploadedFiles$ = this.store.pipe(select(fromMainState.getUploadedFiles));
 
-		this.uploadedFiles$
-			.pipe(
-				filter((v) => !_isEmpty(v)),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe((files) => {
-				this.announcementForm.patchValue({
-					fileId: files[0].fileid,
-					fileName: files[0].filename,
-				});
-			});
-		this.hasFile$ = this.announcementForm
-			.get('fileId')
-			.valueChanges.pipe(map((id) => !_isEmpty(id)));
+		// this.uploadedFiles$
+		// 	.pipe(
+		// 		filter((v) => !_isEmpty(v)),
+		// 		takeUntil(this.destroyed$)
+		// 	)
+		// 	.subscribe((files) => {
+		// 		this.announcementForm.patchValue({
+		// 			fileId: files[0].fileid,
+		// 			fileName: files[0].filename,
+		// 		});
+		// 	});
+		// this.hasFile$ = this.announcementForm
+		// 	.get('fileId')
+		// 	.valueChanges.pipe(map((id) => !_isEmpty(id)));
 		//#endregion
 
 		//#region Subscribe to effects
@@ -109,18 +111,28 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 		this.announcementForm.reset({
 			memberType: 'ar',
 		});
-		this.uploader.nativeElement.value = '';
+		// this.uploader.nativeElement.value = '';
 	}
 
 	submitAnnouncementForm() {
+		const { fileName, fileId } = this.announcementForm.value.fileForm;
 		if (this.isEditing)
 			this.store.dispatch(
 				MainStateAction.UpdateAnnouncement({
 					...this.announcementForm.value,
+					fileId,
+					fileName,
 					mtype: this.announcementForm.value.memberType,
 				})
 			);
-		else this.store.dispatch(MainStateAction.CreateAnnouncement(this.announcementForm.value));
+		else
+			this.store.dispatch(
+				MainStateAction.CreateAnnouncement({
+					...this.announcementForm.value,
+					fileId,
+					fileName,
+				})
+			);
 		this.loadingFormAnnouncement$.next(true);
 	}
 
@@ -135,21 +147,26 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 			memberType: ann.MemberType,
 			title: ann.Title,
 			note: ann.Note,
-			fileId: ann.FileId !== '00000000-0000-0000-0000-000000000000' ? ann.FileId : null,
-			fileName: ann.FileName,
+			fileForm: {
+				fileId: ann.FileId !== '00000000-0000-0000-0000-000000000000' ? ann.FileId : null,
+				fileName: ann.FileName,
+			},
+
+			// fileId: ann.FileId !== '00000000-0000-0000-0000-000000000000' ? ann.FileId : null,
+			// fileName: ann.FileName,
 		});
 	}
 
-	removeUploadedFiles() {
-		// If fileId is null, then it will use different method
-		this.uploader.nativeElement.value = '';
-		this.store.dispatch(MainStateAction.RemoveUploadedFiles());
-		this.announcementForm.get('fileId').setValue(null);
-	}
+	// removeUploadedFiles() {
+	// 	// If fileId is null, then it will use different method
+	// 	// this.uploader.nativeElement.value = '';
+	// 	this.store.dispatch(MainStateAction.RemoveUploadedFiles());
+	// 	this.announcementForm.get('fileId').setValue(null);
+	// }
 
-	uploadFile(files: FileList) {
-		// Harus {...files} untuk membuang object sebelumnya yg read-only
-		this.store.dispatch(MainStateAction.UploadFile({ files: { ...files, length: files.length } }));
-		this.loadingFormAnnouncement$.next(true);
-	}
+	// uploadFile(files: FileList) {
+	// 	// Harus {...files} untuk membuang object sebelumnya yg read-only
+	// 	// this.store.dispatch(MainStateAction.UploadFile({ files: { ...files, length: files.length } }));
+	// 	this.loadingFormAnnouncement$.next(true);
+	// }
 }

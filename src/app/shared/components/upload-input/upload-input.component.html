@@ -19,10 +19,17 @@
 	<!-- Button for download -->
 	<ng-template #downloadPopContent>
 		<div class="p-2">
-			Download:
-			<ul class="pl-3">
+      Download:
+      <!-- If multiple -->
+			<ul class="pl-3" *ngIf="multiple">
 				<li *ngFor="let file of filesForm.value">
 					{{ file.fileName }}
+				</li>
+      </ul>
+      <!-- If single -->
+			<ul class="pl-3" *ngIf="!multiple">
+				<li>
+					{{ singleFileForm.value.fileName }}
 				</li>
 			</ul>
 		</div>
@@ -50,11 +57,18 @@
 		<ng-template #removePopContent>
 			<div class="p-2">
 				Remove uploaded files?
-				<ul class="pl-3">
-					<li *ngFor="let file of filesForm.value">
-						{{ file.fileName }}
-					</li>
-				</ul>
+        <!-- If multiple -->
+        <ul class="pl-3" *ngIf="multiple">
+          <li *ngFor="let file of filesForm.value">
+            {{ file.fileName }}
+          </li>
+        </ul>
+        <!-- If single -->
+        <ul class="pl-3" *ngIf="!multiple">
+          <li>
+            {{ singleFileForm.value.fileName }}
+          </li>
+        </ul>
 			</div>
 		</ng-template>
 		<fa-icon [icon]="['fas', 'check']" class="not-hovered"></fa-icon>
