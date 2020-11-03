@@ -23,6 +23,7 @@ import {
 	// UploadFileSuccess,
 	RemoveUploadedFiles,
 } from './main.action';
+import { RoleFlags } from '../../constants/role.constant';
 
 export interface IMainState {
 	currentUser: User;
@@ -75,7 +76,7 @@ export const MainStateReducer = createReducer(
 	on(LogoutSuccess, (state) => ({
 		...state,
 		currentUser: null,
-		currentRole: null,
+		currentRole: Role.from(RoleFlags.Guest),
 	})),
 
 	on(ToastMessage, (state, { message, messageType }) => ({

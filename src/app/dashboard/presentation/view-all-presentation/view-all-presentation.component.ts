@@ -162,7 +162,7 @@ export class ViewAllPresentationComponent
 		this.presentationEffects.saveTraineePresentation$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((act) => {
-				// if it's successfully message, hide scoring and re-fetch status code
+        // NOTE: Masih bar-bar, harus bikin tempat khusus utk tahu apakah resultnya success
 				// tslint:disable-next-line: no-string-literal
 				if (act['messageType'].includes('success')) {
 					this.showScoringForm$.next(false);

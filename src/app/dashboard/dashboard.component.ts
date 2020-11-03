@@ -15,7 +15,7 @@ import { MenuService } from '../shared/services/menu.service';
 import { Route, Router, ActivatedRoute, NavigationEnd, RouterOutlet } from '@angular/router';
 import { filter, takeUntil, distinctUntilChanged, first, tap, mapTo } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { trigger, transition, query, style, group, animate } from '@angular/animations';
+import { query, style, group, animate } from '@angular/animations';
 import { Cookies } from '../shared/constants/cookie.constants';
 import { Title } from '@angular/platform-browser';
 import { isEmpty as _isEmpty } from 'lodash';
@@ -36,8 +36,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	menuList: Route[];
 	currentRoute: Route;
 	currentActiveHeader = '';
-	// Not working yet
-	pageTitle = document.head.getElementsByTagName('title')[0];
 
 	constant = {
 		role: RoleFlags,
@@ -121,11 +119,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			.pipe(filter((u) => u?.Role?.is(RoleFlags.AssistantSupervisor)))
 			.subscribe((u) => {
 				this.initiateRoleAndGen();
+        this.store.dispatch(MasterStateAction.FetchGenerations());
+        this.store.dispatch(MainStateAction.FetchCurrentGeneration());
 			});
 		//#endregion
 
-		this.store.dispatch(MasterStateAction.FetchGenerations());
-		this.store.dispatch(MainStateAction.FetchCurrentGeneration());
 	}
 
 	ngOnDestroy(): void {

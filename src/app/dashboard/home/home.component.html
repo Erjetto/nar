@@ -1,5 +1,32 @@
 <div class="container-lg">
-	<div class="row">
+	<!-- My attendance for Trainee -->
+	<div class="row" *ngIf="(currentUser$ | async).Role.is('Trainee')">
+		<div class="col">
+			<rd-card [cardTitle]="'My Attendance Today'" [isLoading]="loadingTraineeStatistic$ | async">
+				<div class="row">
+					<div class="col">
+						<b>Secretariat</b>
+						<ul>
+							<li>In:</li>
+							<li>Out:</li>
+						</ul>
+						<b>Room</b>
+						<ul>
+							<li>In:</li>
+							<li>Out:</li>
+						</ul>
+						<b>Rest</b>
+						<ul>
+							<li>In:</li>
+							<li>Out:</li>
+						</ul>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<!-- Trainee Statistic for non-Trainee -->
+	<div class="row" *ngIf="(currentUser$ | async).Role.is('Trainee') == false">
 		<div class="col">
 			<rd-card [cardTitle]="'Trainee Statistic'" [isLoading]="loadingTraineeStatistic$ | async">
 				<div class="row mb-2">
@@ -13,12 +40,16 @@
 							[clearable]="false"
 							bindLabel="Description"
 							[searchable]="false"
-							[ngModel]="currentPhase$ | async"
-							(change)="currentPhase$.next($event)"
+							[formControl]="currentPhase"
 						></ng-select>
+						<!-- NOTE: menggunakan ngModel kadang" akan muncul selected yg kosong
+              karena ngModel ke-trigger duluan sebelum [items] ada -->
+
+						<!-- [ngModel]="currentPhase$ | async"
+							(change)="currentPhase$.next($event)" -->
 					</div>
 				</div>
-				<div class="row">
+				<div class="row px-3">
 					<table class="mr-2" *ngFor="let stat of statistics$ | async">
 						<thead>
 							<tr>
@@ -43,6 +74,7 @@
 			</rd-card>
 		</div>
 	</div>
+	<!-- Announcement for all -->
 	<div class="row">
 		<div class="col">
 			<rd-card [cardTitle]="'Announcements'" [isLoading]="loadingAnnouncements$ | async">
@@ -57,7 +89,7 @@
                 >
               </p> -->
 						</div>
-          </div>
+					</div>
 				</div>
 			</rd-card>
 		</div>

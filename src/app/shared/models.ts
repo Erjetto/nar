@@ -1,9 +1,8 @@
 import { RoleFlags } from './constants/role.constant';
-import { isNumber, map, isEmpty, cloneDeep } from 'lodash';
+import { isNumber, map, isEmpty, cloneDeep, isString } from 'lodash';
 import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
 import { GetDownloadLinkFromFileId } from './methods';
-
 
 export type AttendanceType = 'Rest' | 'Room' | 'Secretariat';
 export type QuestionStatus = 'wrong' | 'correct' | 'unchecked';
@@ -33,6 +32,7 @@ export class Toast {
 export class BaseModel {}
 
 // ClientRole -> Role
+// allRoles = [{'SPV', 1}, {'SubCo', 2},...]
 export class Role {
 	public static readonly allRoles: Role[] = map(
 		RoleFlags,
@@ -52,8 +52,9 @@ export class Role {
 	}
 
 	// Ex: currentRole.is(RoleFlag.Subco, RoleFlag.Trainer, ....)
-	is(...roleFlags: number[] | Role[]): boolean {
+	is(...roleFlags: number[] | Role[] | string[]): boolean {
 		if (isNumber(roleFlags[0])) return roleFlags.some((num) => (num & this.roleNumber) !== 0);
+		else if (isString(roleFlags[0])) return roleFlags.some((str) => str === this.roleName);
 		else return roleFlags.some((role) => (role.roleNumber & this.roleNumber) !== 0);
 	}
 }
@@ -75,8 +76,8 @@ export class User extends BaseModel {
 	constructor(
 		public UserId = '',
 		public UserName = '', // Initial
-    public Name = '', // Full Name
-    // Don't use this, use fromMainState.getCurrentRole instead
+		public Name = '', // Full Name
+		// Don't use this, use fromMainState.getCurrentRole instead
 		public ActiveRole: Role = null,
 		public TraineeId = ''
 	) {
@@ -332,6 +333,9 @@ export class SimpleTraineeData extends BaseModel {
 		public TraineeNumber = ''
 	) {
 		super();
+	}
+	get isActive() {
+		return this.DeactivateReason === null;
 	}
 	static fromJson(data?: any): SimpleTraineeData {
 		if (isEmpty(data)) return null;
@@ -976,6 +980,18 @@ export class ClientCaseTraineeDetail extends BaseModel {
 		public isLevelUp = false
 	) {
 		super();
+	}
+	get noCaseFile() {
+		return this.FileId === '00000000-0000-0000-0000-000000000000';
+	}
+	get noAnswerYet() {
+		return this.AnswerId === '00000000-0000-0000-0000-000000000000';
+	}
+	get caseLink() {
+		return GetDownloadLinkFromFileId(this.FileId);
+	}
+	get answerLink() {
+		return GetDownloadLinkFromFileId(this.AnswerId);
 	}
 
 	static fromJson(data?: any): ClientCaseTrainer {

@@ -15,19 +15,28 @@ import {
 	mergeMap,
 } from 'rxjs/operators';
 
-import { ClientPhase, ClientStatistic, Message } from 'src/app/shared/models';
+import {
+	ClientPhase,
+	ClientStatistic,
+	ClientTraineeDailyAttendance,
+	Message,
+} from 'src/app/shared/models';
 import {
 	MasterStateAction,
 	fromMasterState,
 	fromMainState,
 	MainStateAction,
 	MainStateEffects,
+	fromBinusianState,
+	BinusianStateAction,
 } from 'src/app/shared/store-modules';
 
 import { Observable, of, Subject, interval, BehaviorSubject } from 'rxjs';
 import { DashboardContentBase } from '../dashboard-content-base.component';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
 import { GeneralService } from 'src/app/shared/services/new/general.service';
+import { FormControl } from '@angular/forms';
+import { RoleFlags } from 'src/app/shared/constants/role.constant';
 
 @Component({
 	selector: 'rd-home',
@@ -39,10 +48,12 @@ export class HomeComponent extends DashboardContentBase implements OnInit, OnDes
 	phases$: Observable<ClientPhase[]>;
 	announcements$: Observable<Message[]>;
 
-	currentPhase$ = new Subject<ClientPhase>();
+	traineeDailyAttendance$: Observable<ClientTraineeDailyAttendance>;
+
+	currentPhase = new FormControl();
 	statistics$ = new Subject<ClientStatistic[]>();
 
-	loadingTraineeStatistic$ = new BehaviorSubject<boolean>(true);
+	loadingTraineeStatistic$ = new BehaviorSubject<boolean>(false);
 	loadingAnnouncements$: Observable<boolean>;
 	// isLoading = {isLoading: true};
 	destroyed$: Subject<any> = new Subject();
@@ -57,28 +68,35 @@ export class HomeComponent extends DashboardContentBase implements OnInit, OnDes
 
 	ngOnInit(): void {
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
+		this.traineeDailyAttendance$ = this.store.pipe(select(fromBinusianState.getDailyAttendance));
 		this.announcements$ = this.store.pipe(select(fromMainState.getAnnouncements));
 		this.loadingAnnouncements$ = this.store.pipe(select(fromMainState.isAnnouncementsLoading));
 
-		this.phases$
-			.pipe(
-				filter((v) => !_isEmpty(v)),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe((phases) => this.currentPhase$.next(phases[0]));
+		if (this.currentUser$.value.Role.is(RoleFlags.Trainee) === false) {
+			// NOTE: Urutan subscription penting, karena currentPhase akan ambil initial value
+			//       dari phase kalau phases di Master state sudah ada value, jadi
+			//       kalau phases$ di-subscribe duluan nanti sub dari currentPhase$ ngga ke-trigger
+			//       ketika currentPhase ambil initial value
+			this.currentPhase.valueChanges
+				.pipe(
+					filter((res) => !_isEmpty(res)),
+					takeUntil(this.destroyed$),
+					switchMap((phase) => this.generalService.GetStatisticTrainee({ phaseId: phase.PhaseId }))
+				)
+				.subscribe((statistics) => {
+					this.loadingTraineeStatistic$.next(false);
+					this.statistics$.next(statistics);
+				});
 
-		// On phase change, get statistic trainee
-		this.currentPhase$
-			.pipe(
-				filter((res) => !_isEmpty(res)),
-				takeUntil(this.destroyed$),
-				// tap(() => this.loadingTraineeStatistic$.next(true)),
-				switchMap((phase) => this.generalService.GetStatisticTrainee({ phaseId: phase.PhaseId }))
-			)
-			.subscribe((statistics) => {
-				this.loadingTraineeStatistic$.next(false);
-				this.statistics$.next(statistics);
-			});
+			this.phases$
+				.pipe(
+					filter((v) => !_isEmpty(v)),
+					takeUntil(this.destroyed$)
+				)
+				.subscribe((phases) => this.currentPhase.setValue(phases[0]));
+		} else {
+			this.store.dispatch(BinusianStateAction.FetchDailyAttendance());
+		}
 
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());

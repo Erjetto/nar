@@ -151,5 +151,9 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 		this.store.dispatch(
 			BinusianStateAction.DeleteTrainee({ binusianNumber: trainee.TraineeNumber })
 		);
-	}
+  }
+  
+  toggleTraineeActive(trainee: SimpleTraineeData){
+		this.loadingViewTrainee$.next(true);
+  }
 }

@@ -88,7 +88,7 @@ export class FillAnswersComponent extends DashboardContentBase implements OnInit
 				);
 			}
 		});
-		this.canAnswer$.pipe(takeUntil(this.destroyed$)).subscribe((v) => console.log(v));
+		
 
 		this.candidateEffects.getAnswers$ // saveanswer
 			.pipe(takeUntil(this.destroyed$))

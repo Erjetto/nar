@@ -9,6 +9,7 @@ import {
 	ClientSchedule,
 	ClientUserInRoles,
 	ClientTrainee,
+	TraineeSchedule,
 } from '../../models';
 import { getCurrentGeneration } from '../main/main.reducer';
 import { combineLatest, Observable, Subject } from 'rxjs';
@@ -61,6 +62,11 @@ export interface IMasterState {
 	loadingTraineeInPhase: boolean;
 	loadingSchedules: boolean;
 	loadingTraineeInSchedule: boolean;
+
+	// Modify section
+	traineeTrainingSchedule: TraineeSchedule[];
+
+	loadingTraineeTrainingSchedule: boolean;
 }
 
 export const initialState: IMasterState = {
@@ -94,6 +100,11 @@ export const initialState: IMasterState = {
 	loadingTraineeInPhase: false,
 	loadingSchedules: false,
 	loadingTraineeInSchedule: false,
+
+	// Modify section
+	traineeTrainingSchedule: [],
+
+	loadingTraineeTrainingSchedule: false,
 };
 
 export const MASTERSTATE_REDUCER_NAME = 'MasterState';
@@ -244,6 +255,15 @@ export const isPhasesLoading = getMasterStateBy((s) => s.loadingPhases);
 export const isTraineeInPhaseLoading = getMasterStateBy((s) => s.loadingTraineeInPhase);
 export const isSchedulesLoading = getMasterStateBy((s) => s.loadingSchedules);
 export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTraineeInSchedule);
+//#endregion
+
+//#region  Modify tab
+export const getTraineeTrainingSchedule = getMasterStateBy((s) => s.traineeTrainingSchedule);
+
+
+export const isTraineeTrainingScheduleLoading = getMasterStateBy(
+	(s) => s.loadingTraineeTrainingSchedule
+);
 //#endregion
 
 //#region Extras

@@ -56,16 +56,16 @@
           div.col-5
         </div> -->
 				<div class="row">
-					<div class="col-7">
+					<div class="col">
 						<span class="row justify-content-center pr-2 mb-2"><b>Notes</b></span>
 						<div
-							class="v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8 py-2"
+							class="v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8 p-2"
 						>
-							<div class="row" *ngIf="traineeDetail.Notes.length === 0">
+							<!-- <div class="row" *ngIf="traineeDetail.Notes.length === 0">
 								<div class="col align-items-center justify-content-center">
 									<i>No notes yet</i>
 								</div>
-							</div>
+							</div> -->
 							<div class="row" *ngFor="let note of traineeDetail.Notes">
 								<!-- Need extra col-row due to v-list-m-6 styling 
                 prevents > 1 child element -->
@@ -96,20 +96,61 @@
 									</div>
 								</div>
 							</div>
+							<div class="row">
+								<div class="col">
+									<div class="row">
+										<div class="col-9">
+											<textarea
+												name="evalNote"
+												id="evalNote"
+												class="form-control h-100"
+												style="resize: none"
+												placeholder="Add new notes"
+											></textarea>
+										</div>
+										<div class="col-3">
+											<div class="row mb-2">
+												<div class="col">
+													<ng-select
+														id="evalType"
+														name="evalType"
+														class="col"
+														[searchable]="false"
+														[clearable]="false"
+													></ng-select>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col">
+													<button type="submit" class="btn btn-block btn-primary">
+														Insert New Note
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="col col-flex ml-2 border-left border-lightgrey">
+					<!-- <div class="col col-flex ml-2 border-left border-lightgrey">
 						<span class="row justify-content-center pr-2 mb-2"><b>Insert new Note</b></span>
-						<!-- <b class="row">Insert new Note</b> -->
 						<form class="row">
 							<div class="col">
-								<textarea
-									name="evalNote"
-									id="evalNote"
-									class="form-control h-100"
-									style="resize: none"
-									placeholder="Notes"
-								></textarea>
+                <div class="row">
+                  <div class="col">
+                    <textarea
+                      name="evalNote"
+                      id="evalNote"
+                      class="form-control h-100"
+                      style="resize: none"
+                      placeholder="Notes"
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  div
+                </div>
 							</div>
 							<div class="col-4 v-list-m-12 col-flex justify-content-center">
 								<div class="row">
@@ -126,7 +167,7 @@
 								</div>
 							</div>
 						</form>
-					</div>
+					</div> -->
 				</div>
 			</rd-card>
 		</div>
