@@ -90,7 +90,7 @@ export class GeneralService {
 
 	public GetTraineesInLatestPhase(): Observable<ClientTraineeView[]> {
 		return this.httpClient
-			.post(this.baseUrl + 'GetTraineesInLatestPhaseg', {})
+			.post(this.baseUrl + 'GetTraineesInLatestPhase', {})
 			.pipe(map((res: any) => _map(res.d, ClientTraineeView.fromJson)));
 	}
 

@@ -2,6 +2,7 @@ import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/
 import * as MainStateAction from '../main/main.action';
 import {
 	ClientTrainee,
+  ClientTraineeDailyAttendance,
 	ClientTraineeData,
 	ClientUserInRoles,
 	SimpleTraineeData,
@@ -18,6 +19,8 @@ import {
 } from './binusian.action';
 
 export interface IBinusianState {
+  traineeDailyAttendance: ClientTraineeDailyAttendance;
+
 	traineesEntity: { [id: string]: ClientTrainee };
 
 	allTrainees: ClientTrainee[];
@@ -32,7 +35,9 @@ export interface IBinusianState {
 }
 
 export const initialState: IBinusianState = {
-	traineesEntity: null,
+  traineeDailyAttendance: null,
+
+	traineesEntity: {},
 	allTrainees: [],
 	trainees: [],
 	traineesData: [],
@@ -92,6 +97,7 @@ export const getBinusianState = createFeatureSelector<IBinusianState>(BINUSIANST
 export const getBinusianStateBy = (fn: (_: IBinusianState) => any) =>
 	createSelector(getBinusianState, fn);
 
+export const getDailyAttendance = getBinusianStateBy((s) => s.traineeDailyAttendance);
 export const getTrainees = getBinusianStateBy((s) => s.trainees);
 export const getAllTrainees = getBinusianStateBy((s) => s.allTrainees);
 export const getTraineesEntity = getBinusianStateBy((s) => s.traineesEntity);

@@ -21,7 +21,7 @@ import {
 	TrainerTopBottomVote,
 	TopBottomVote,
 } from 'src/app/shared/models';
-import { takeUntil, filter, map } from 'rxjs/operators';
+import { takeUntil, filter, map, withLatestFrom } from 'rxjs/operators';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 import { isEmpty as _isEmpty } from 'lodash';
 import { adjustControlsInFormArray, arrayOfValue } from 'src/app/shared/methods';
@@ -38,8 +38,6 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 	loadingViewVote$: Observable<boolean>;
 	loadingFormVote$ = new BehaviorSubject<boolean>(false);
 	isVoting$: Observable<boolean>;
-
-	phases$: Observable<ClientPhase>;
 
 	voteInScheduleEntity$: Observable<{ [scheduleId: string]: TopBottomVote[] }>;
 	voteSchedules$: Observable<TopBottomVoteSchedule[]>;
@@ -64,8 +62,14 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 		super(store);
 	}
 	ngOnInit(): void {
-		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.trainees$ = this.store.pipe(select(fromBinusianState.getTrainees));
+    // Only get active trainee
+		this.trainees$ = this.store.pipe(
+			select(fromBinusianState.getTrainees),
+			withLatestFrom(this.currentUser$),
+			map(([trainees, currUser]) =>
+				trainees.filter((t) => t.IsActive && t.TraineeId !== currUser.TraineeId)
+			)
+		);
 		this.voteSchedules$ = this.store.pipe(select(fromVoteState.getVoteSchedules));
 		this.voteInScheduleEntity$ = this.store.pipe(select(fromVoteState.getVoteInScheduleEntity));
 		this.loadingViewVote$ = this.store.pipe(select(fromVoteState.isVoteScheduleLoading));
@@ -73,26 +77,13 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 			.pipe(select(fromVoteState.isVoteScheduleLoading), takeUntil(this.destroyed$))
 			.subscribe(this.loadingFormVote$);
 
-		this.phases$
-			.pipe(
-				filter((v) => !_isEmpty(v)),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe((phases) => {
-				this.store.dispatch(
-					BinusianStateAction.FetchTraineesBy({
-						phaseId: phases[0].PhaseId,
-					})
-				);
-			});
-
 		this.voteInScheduleEntity$
-			.pipe(filter((v) => !_isEmpty(v), takeUntil(this.destroyed$)))
-			.subscribe((en) => {
+			.pipe(filter((v) => !_isEmpty(v), takeUntil(this.destroyed$)), withLatestFrom(this.currentUser$))
+			.subscribe(([en, currUser]) => {
 				const voteResult = en[this.voteForm.get('voteScheduleId').value];
-				if (_isEmpty(voteResult)) return;
-				const currUser = this.currentUser$.value;
-				const currUserKey = currUser.Role.is(RoleFlags.Trainee)
+        if (_isEmpty(voteResult)) return;
+        
+				const currUserKey = currUser?.Role.is(RoleFlags.Trainee)
 					? currUser.TraineeId
 					: currUser.UserName;
 				const currUserVote = voteResult.find(
@@ -106,16 +97,27 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 						bottom: currUserVote.BottomVotes,
 					});
 				}
-			});
+      });
+      
 		this.isVoting$ = this.voteForm
 			.get('voteScheduleId')
-			.valueChanges //.pipe(map((id) => !_isEmpty(id) && this.voteForm.enabled));
+			.valueChanges.pipe(map((v) => !_isEmpty(v)));
 
 		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.loadingFormVote$.next(false);
-		});
+    });
+    
+    // Disable setelah vote
+    this.voteEffects.trainerSubmitVote$.pipe(takeUntil(this.destroyed$)).subscribe((act) => {
+      // NOTE: Masih bar-bar, harus bikin tempat khusus utk tahu apakah resultnya success
+      // tslint:disable-next-line: no-string-literal
+      if(act['messageType'].includes('success')){
+			  this.voteForm.disable();
+      }
+    });
 
-		this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
+    this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
+    this.store.dispatch(BinusianStateAction.FetchAllTraineesInLatestPhase());
 	}
 
 	get topArray() {

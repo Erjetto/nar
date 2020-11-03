@@ -112,7 +112,7 @@ export class VoteStateEffects {
 		switchMap(([data, role, user]) =>
 			role.is(RoleFlags.Trainer)
 				? this.voteService.SaveTrainerTopBottomVote({ ...data, trainerName: user.UserName })
-				: this.voteService.SaveTopBottomVote({ ...data, traineeId: user.UserId })
+				: this.voteService.SaveTopBottomVote({ ...data, traineeId: user.TraineeId })
 		),
 		mergeMap((res) =>
 			res != null

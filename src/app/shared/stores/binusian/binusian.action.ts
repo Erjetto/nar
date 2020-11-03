@@ -1,13 +1,23 @@
 import { createAction, props } from '@ngrx/store';
-import { ClientTrainee, ClientTraineeData, SimpleTraineeData } from '../../models';
+import {
+	ClientTrainee,
+	ClientTraineeDailyAttendance,
+	ClientTraineeData,
+	SimpleTraineeData,
+} from '../../models';
 
 export const FetchTraineesSimpleData = createAction('[BinusianState] FetchTraineesSimpleData');
 export const FetchTraineesData = createAction('[BinusianState] FetchTraineesData');
 // TODO: Ganti semua FetchTrainees jadi FetchTraineesBy
-export const FetchAllTraineesInCurrentGen = createAction('[BinusianState] FetchAllTraineesInCurrentGen');
+export const FetchAllTraineesInLatestPhase = createAction(
+	'[BinusianState] FetchAllTraineesInLatestPhase'
+);
+export const FetchAllTraineesInCurrentGen = createAction(
+	'[BinusianState] FetchAllTraineesInCurrentGen'
+);
 export const FetchTraineesBy = createAction(
-  '[BinusianState] FetchTrainees', 
-  props<{ scheduleId?: string, phaseId?: string }>()
+	'[BinusianState] FetchTrainees',
+	props<{ scheduleId?: string; phaseId?: string }>()
 );
 
 export const FetchTraineesSimpleDataSuccess = createAction(
@@ -37,7 +47,6 @@ export const CreateTrainees = createAction(
 	props<{ datas: string[] }>()
 );
 
-
 // HMM: Move this to Master because this is unrelated to binusian and it's crud?
 export const CreateTrainingSchedules = createAction(
 	'[BinusianState] CreateTrainingSchedules',
@@ -54,3 +63,9 @@ export const CreateLectureSchedules = createAction(
 	props<{ schedules: string[] }>()
 );
 
+// Used in home
+export const FetchDailyAttendance = createAction('[BinusianState] FetchDailyAttendance');
+export const FetchDailyAttendanceSuccess = createAction(
+	'[BinusianState] FetchDailyAttendanceSuccess',
+	props<{ payload: ClientTraineeDailyAttendance }>()
+);

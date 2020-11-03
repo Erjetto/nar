@@ -15,6 +15,7 @@ import { LeaderService } from '../../services/new/leader.service';
 import { TraineeService } from '../../services/new/trainee.service';
 import { GeneralService } from '../../services/new/general.service';
 import { TraineeAttendanceService } from '../../services/new/trainee-attendance.service';
+import { ClientTrainee } from '../../models';
 
 @Injectable({
 	providedIn: 'root',
@@ -29,10 +30,18 @@ export class BinusianStateEffects {
 	) {}
 
 	@Effect()
-	getTrainees$: Observable<Action> = this.actions$.pipe(
+	getTraineesInCurrentGen$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchAllTraineesInCurrentGen),
 		switchMap(() => this.generalService.GetTrainees()),
 		mergeMap((results) => of(BinusianStateAction.FetchAllTraineesSuccess({ payload: results }))),
+		share()
+  );
+  
+	@Effect()
+	getTraineesInLatestPhase$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.FetchAllTraineesInLatestPhase),
+		switchMap(() => this.generalService.GetTraineesInLatestPhase()),
+		mergeMap((results) => of(BinusianStateAction.FetchTraineesSuccess({ payload: results.map(v => ClientTrainee.fromJson(v)) }))),
 		share()
 	);
 
