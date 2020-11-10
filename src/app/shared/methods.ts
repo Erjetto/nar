@@ -55,6 +55,11 @@ export const adjustControlsInFormArray = (
 	}
 };
 
+export const fileFormFactory = () => ({
+  fileName: new FormControl(''),
+  fileId: new FormControl(''),
+});
+
 /**
  * Template for most of downloadable item in NAR
  */
@@ -72,4 +77,8 @@ export const GetMemoryFileLinkFromFileKey = (key: string): string =>
  * @param phases phases
  */
 export const TryGetCoreTrainingPhase = (phases: ClientPhase[]): ClientPhase =>
-	phases.find((p) => p.Description.includes('Core')) ?? phases[0];
+phases.find((p) => p.Description.includes('Core')) ?? phases[0];
+
+
+export const isEmptyGuid = (str: string): boolean => str === '00000000-0000-0000-0000-000000000000'
+

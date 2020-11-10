@@ -37,7 +37,7 @@ export class PresentationStateEffects {
 	@Effect()
 	getPresentationsBy$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentationsBy),
-		switchMap(
+		mergeMap( // use merge because its possible to have multiple running request
 			({ generationId, traineeId, subjectId }) =>
 				// Gunakan antara ketiga method yg returnnya sama
 				(!_isEmpty(traineeId)
@@ -119,11 +119,28 @@ export class PresentationStateEffects {
 		),
 		share()
 	);
-	//#endregion
+  
+  //#endregion
+  
+  //#region Create
+	@Effect()
+	createTraineePresentation$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.SaveCoreTrainingPresentation),
+		switchMap((data) => this.presentationService.SaveCoreTrainingPresentation({presentation: data.data})),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('created presentation'))
+				: of(MainStateAction.FailMessage('creating presentation'))
+		),
+		share()
+	);
+  
+  //#endregion
+  
 
 	//#region Update
 	@Effect()
-	saveTraineePresentation$: Observable<Action> = this.actions$.pipe(
+	updateTraineePresentation$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.SaveTraineePresentation),
 		switchMap((data) => this.presentationService.SaveTraineePresentation(data)),
 		mergeMap((res) =>

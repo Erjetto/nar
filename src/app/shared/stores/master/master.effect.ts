@@ -15,7 +15,7 @@ import {
 	switchMapTo,
 	catchError,
 	exhaustMap,
-  defaultIfEmpty,
+	defaultIfEmpty,
 } from 'rxjs/operators';
 
 import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
@@ -37,7 +37,8 @@ import { VoteService } from 'src/app/shared/services/new/vote.service';
 import { IAppState } from 'src/app/app.reducer';
 
 import { ClientTrainee } from 'src/app/shared/models';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
+import { RESTService } from '../../services/new/rest.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -54,7 +55,8 @@ export class MasterStateEffects {
 		private presentationService: PresentationService,
 		private traineeAttendanceService: TraineeAttendanceService,
 		private traineeService: TraineeService,
-		private voteService: VoteService
+		private voteService: VoteService,
+		private restService: RESTService
 	) {}
 
 	//#region get
@@ -83,10 +85,12 @@ export class MasterStateEffects {
 	);
 	@Effect()
 	getSubjects$: Observable<Action> = this.actions$.pipe(
-    ofType(MasterStateAction.FetchSubjects),
-    withLatestFrom(this.store.pipe(select(fromMasterState.getMaxFileSizes))),
+		ofType(MasterStateAction.FetchSubjects),
+		withLatestFrom(this.store.pipe(select(fromMasterState.getMaxFileSizes))),
 		switchMap(([data, sizes]) =>
-			this.generalService.GetSubjects(data).pipe(map((res) => ({ phaseId: data.phaseId, res, sizes })))
+			this.generalService
+				.GetSubjects(data)
+				.pipe(map((res) => ({ phaseId: data.phaseId, res, sizes })))
 		),
 		switchMap(({ phaseId, res, sizes }) =>
 			res.length === 0
@@ -98,11 +102,11 @@ export class MasterStateEffects {
 						// Possible Bug: Jika ada yg GetMaxFileSize nya error jadi ngga dapat semua
 						res.reduce(
 							(acc, sbj) => ({
-                ...acc,
-                // Ambil dari state jika sudah ada, request jika blum ada
-                [sbj.SubjectId]: sizes[sbj.SubjectId] 
-                  ? of(sizes[sbj.SubjectId]) 
-                  : this.leaderService.GetMaximumFileSize({subjectId: sbj.SubjectId}),
+								...acc,
+								// Ambil dari state jika sudah ada, request jika blum ada
+								[sbj.SubjectId]: sizes[sbj.SubjectId]
+									? of(sizes[sbj.SubjectId])
+									: this.leaderService.GetMaximumFileSize({ subjectId: sbj.SubjectId }),
 							}),
 							{}
 						)
@@ -425,7 +429,25 @@ export class MasterStateEffects {
 	);
 	//#endregion
 
-	//#region Modify tab
-
+  //#region Modify tab
+  @Effect()
+	getTraineeSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.FetchTraineeSchedulesBy),
+		switchMap((data) =>
+			this.restService.FetchTraineeScheduleBy(
+				data.generationId,
+				data.traineeId,
+				data.scheduleType,
+				data.date,
+				data.traineeScheduleId
+			)
+		),
+		mergeMap((res) =>
+			!_isEmpty(res)
+				? of(MasterStateAction.FetchTraineeSchedulesSuccess({ payload: res }))
+				: of(MainStateAction.FailMessage('delete user'))
+		),
+		share()
+	);
 	//#endregion
 }

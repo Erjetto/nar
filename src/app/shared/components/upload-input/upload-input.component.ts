@@ -14,8 +14,8 @@ import { IAppState } from 'src/app/app.reducer';
 import { OtherService } from '../../services/new/other.service';
 import { MainStateEffects, MainStateAction } from '../../store-modules';
 import { flatten as _flatten, isEmpty as _isEmpty } from 'lodash';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { adjustControlsInFormArray } from '../../methods';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { adjustControlsInFormArray, fileFormFactory } from '../../methods';
 import { takeUntil } from 'rxjs/operators';
 
 /*
@@ -39,7 +39,7 @@ export class UploadInputComponent implements OnInit {
 	@Input() filesForm: FormArray = this.fb.array([]);
 	@Input() singleFileForm: FormGroup = this.fb.group({ fileId: [''], fileName: [''] });
 	@Input() multiple = false;
-	@Input() upload = new EventEmitter();
+	@Output() upload = new EventEmitter<AbstractControl>(); // emit filesForm atau singleFileForm
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -49,7 +49,7 @@ export class UploadInputComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-    // Detect changes when form is updated
+		// Detect changes when form is updated
 		merge(this.filesForm.valueChanges, this.singleFileForm.valueChanges).subscribe(() =>
 			this.cdr.markForCheck()
 		);
@@ -81,10 +81,6 @@ export class UploadInputComponent implements OnInit {
 				MainStateAction.SuccessfullyMessage('uploaded file(s) : ' + fileNamesArr.join(', '))
 			);
 			if (this.multiple) {
-				const fileFormFactory = () => ({
-					fileName: new FormControl(''),
-					fileId: new FormControl(''),
-				});
 				adjustControlsInFormArray(this.filesForm, fileIdsArr.length, fileFormFactory);
 				this.filesForm.patchValue(
 					Array(fileIdsArr.length)
@@ -94,13 +90,14 @@ export class UploadInputComponent implements OnInit {
 							fileName: fileNamesArr[idx],
 						}))
 				);
+				this.upload.emit(this.filesForm);
 			} else {
 				this.singleFileForm.patchValue({
 					fileId: fileIdsArr[0],
 					fileName: fileNamesArr[0],
 				});
+				this.upload.emit(this.singleFileForm);
 			}
-			this.upload.emit();
 		});
 	}
 

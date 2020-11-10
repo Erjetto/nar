@@ -22,7 +22,7 @@ import {
 	ClientPhase,
 } from 'src/app/shared/models';
 import { filter, withLatestFrom, takeUntil, tap, map, distinctUntilChanged } from 'rxjs/operators';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
 import { FormControl, FormBuilder } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
@@ -67,10 +67,10 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 		this.presentations$ = this.store.pipe(select(fromPresentationState.getPresentations));
 		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
 		this.loadingSubjects$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
-    this.loadingPresentations$ = this.store.pipe(
-      select(fromPresentationState.isPresentationsLoading)
-    );
-    this.loadingViewQuestions$ = merge(this.loadingPresentations$, this.loadingSubjects$);
+		this.loadingPresentations$ = this.store.pipe(
+			select(fromPresentationState.isPresentationsLoading)
+		);
+		this.loadingViewQuestions$ = merge(this.loadingPresentations$, this.loadingSubjects$);
 		this.questionsBySubjectEntity$ = this.store.pipe(
 			select(fromPresentationState.getQuestionsBySubject)
 		);
@@ -78,7 +78,11 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 
 		// Auto fetch presentations by subject
 		combineLatest([this.filterForm.get('subjectId').valueChanges, this.currentGeneration$])
-			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.questionsBySubjectEntity$))
+			.pipe(
+				takeUntil(this.destroyed$),
+				withLatestFrom(this.questionsBySubjectEntity$),
+				filter(([[subId, gen], entity]) => gen != null)
+			)
 			.subscribe(([[subId, gen], entity]) => {
 				if (!subId) return [];
 				if (!!subId && !_isEmpty(entity[subId])) return entity[subId];
@@ -98,7 +102,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 				filter((v) => !_isEmpty(v), takeUntil(this.destroyed$))
 			)
 			.subscribe((phases: ClientPhase[]) => {
-        const corePhase = TryGetCoreTrainingPhase(phases);
+				const corePhase = TryGetCoreTrainingPhase(phases);
 				if (corePhase)
 					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: corePhase.PhaseId }));
 			});
@@ -120,12 +124,12 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((data) => this.store.dispatch(PresentationStateAction.SetQuestionsFilter(data)));
 
-    this.store.dispatch(
-      MainStateAction.DispatchIfEmpty({
-        action: MasterStateAction.FetchPhases(),
-        selectorToBeChecked: fromMasterState.getPhases,
-      })
-    );
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
 	}
 
 	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}

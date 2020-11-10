@@ -21,7 +21,7 @@ import {
 	CoreTrainingPresentationItem,
 } from 'src/app/shared/models';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, takeUntil, filter } from 'rxjs/operators';
+import { map, takeUntil, filter, withLatestFrom } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
 import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 
@@ -37,6 +37,8 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 	loadingFormPresentation$ = new BehaviorSubject<boolean>(false);
 
 	presentationForm = this.fb.group({
+		generationId: [''],
+		phaseId: [''],
 		materialName: ['', Validators.required],
 		subjectId: ['', Validators.required],
 		questions: this.fb.array([this.fb.control('')]),
@@ -63,10 +65,15 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 		this.phases$
 			.pipe(
 				filter((res) => !_isEmpty(res)),
-				takeUntil(this.destroyed$)
+				takeUntil(this.destroyed$),
+				withLatestFrom(this.currentGeneration$)
 			)
-			.subscribe((phases) => {
+			.subscribe(([phases, gen]) => {
 				const corePhase = TryGetCoreTrainingPhase(phases);
+				this.presentationForm.patchValue({
+					generationId: gen.GenerationId,
+					phaseId: corePhase.PhaseId,
+				});
 				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: corePhase.PhaseId }));
 			});
 
@@ -82,6 +89,12 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());
 		});
+
+		this.presentationEffects.createTraineePresentation$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => {
+				this.loadingFormPresentation$.next(false);
+			});
 
 		this.store.dispatch(
 			MainStateAction.DispatchIfEmpty({
@@ -100,36 +113,33 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 	}
 
 	addQuestion() {
-		const c = this.fb.control('');
+		const c = this.fb.control('', Validators.required);
 		this.questionsArray.push(c);
 		// Auto focus here
 	}
 
 	saveCoreTrainingPresentation() {
-		console.log(this.presentationForm.value);
-		return;
-		const { materialName, subjectId, questions, comments } = this.presentationForm.value;
+		this.loadingFormPresentation$.next(true);
 
-		this.store.dispatch(
-			PresentationStateAction.SaveCoreTrainingPresentation({
-				data: new CoreTrainingPresentation(
-					'',
-					null,
-					'',
-					materialName,
-					'',
-					new CoreTrainingPresentationComment(comments),
-					null,
-					0,
-					questions.map(
-						(q: string) =>
-							new CoreTrainingPresentationQuestion(
-								new CoreTrainingPresentationItem([], [], '', '', '', '', q)
-							)
-					),
-					subjectId
-				),
-			})
+		const {
+			generationId,
+			phaseId,
+			materialName,
+			subjectId,
+			questions,
+			comments,
+		} = this.presentationForm.value;
+
+		const data = new CoreTrainingPresentation();
+		data.GenerationId = generationId;
+		data.PhaseId = phaseId;
+		data.SubjectId = subjectId;
+		data.PresentationComment = new CoreTrainingPresentationComment(comments);
+		data.Material = materialName;
+		data.Questions = questions.map(
+			(q: string) => new CoreTrainingPresentationQuestion(new CoreTrainingPresentationItem(q))
 		);
+		data.PresentationDate = new Date();
+		this.store.dispatch(PresentationStateAction.SaveCoreTrainingPresentation({ data }));
 	}
 }

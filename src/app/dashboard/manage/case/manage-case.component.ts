@@ -31,7 +31,7 @@ import { adjustControlsInFormArray } from 'src/app/shared/methods';
 export class ManageCaseComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	viewDateFormat = DateHelper.TIME_DATE_FORMAT;
 	editDateFormat = DateHelper.DATETIME_LOCAL_FORMAT;
-	todayEditDate = DateHelper.dateToInputFormat(new Date(), this.editDateFormat);
+	todayEditDate = DateHelper.dateToFormat(new Date(), this.editDateFormat);
 
 	currentViewPhase$ = new BehaviorSubject<ClientPhase>(null);
 	currentViewSubject$ = new BehaviorSubject<ClientSubject>(null);
@@ -54,13 +54,9 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	caseForm = this.fb.group({
 		caseId: [''], // Update
 		changedFile: [false], // Check if 'edit case' uploads new file
-    fileName: [null], // View uploaded file
     
-    fileForm: this.fb.group({fileId: [''], fileName: ['']}),
+    fileForm: this.fb.group({fileId: [''], fileName: ['']}, Validators.required),
 
-		fileId: [null],
-		subject: [null, Validators.required], // Value is object so we can use it for entity
-		scheduleId: [null, Validators.required],
 		caseName: ['', Validators.required],
 		correctorNames: ['', Validators.required],
 		traineeDays: [this.todayEditDate, Validators.required],
@@ -86,10 +82,6 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
     
 		this.subjectList$ = this.getSubjectsFromEntity(this.currentViewPhase$);
 		this.viewScheduleList$ = this.getSchedulesFromEntity(this.currentViewSubject$);
-		this.formScheduleList$ = this.getSchedulesFromEntity(
-			this.caseForm.get('subject').valueChanges,
-			this.formCaseLoading$
-    );
     
 		this.viewCaseLoading$ = this.store.pipe(
 			select(fromMasterState.getMasterState),
@@ -107,12 +99,11 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		});
 		this.subjectList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
 			this.currentViewSubject$.next(res[0]);
-      this.caseForm.get('subject').setValue(res[0]);
 		});
 		this.viewScheduleList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
 			this.currentViewSchedule$.next(res[0]);
-      this.caseForm.get('scheduleId').setValue(res[0]?.ScheduleId);
-		});
+    });
+    
 		//#endregion
 
 		//#region Subscribe to effects
@@ -124,6 +115,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
 
+    // Reload when doing CRUD
 		merge(
 			this.currentViewSchedule$,
 			this.caseEffects.createCase$,
@@ -154,29 +146,24 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 
 	onSelectCase(row: Case) {
     this.caseForm.patchValue(
-			{
+      {
         fileForm: {fileId: row.FileId, fileName: row.FileName},
 				changedFile: false,
 				caseId: row.CaseId,
 				fileId: row.FileId,
-				fileName: row.FileName,
-				caseName: row.CaseName,
 				correctorNames: row.correctorList,
-				traineeDays: DateHelper.dateToInputFormat(row.TraineeDeadline, this.editDateFormat),
-				trainerDays: DateHelper.dateToInputFormat(row.TrainerDeadline, this.editDateFormat),
-				scheduleDate: DateHelper.dateToInputFormat(row.ScheduleDate, this.editDateFormat),
-				scheduleId: ' ',
-				subject: ' ',
+				traineeDays: DateHelper.dateToFormat(row.TraineeDeadline, this.editDateFormat),
+				trainerDays: DateHelper.dateToFormat(row.TrainerDeadline, this.editDateFormat),
+				scheduleDate: DateHelper.dateToFormat(row.ScheduleDate, this.editDateFormat),
 			},
-			{ emitEvent: false } // Prevent loading subject or schedule when changing value
 		);
 	}
 
 	cancelEdit() {
 		this.caseForm.reset({
-			traineeDays: DateHelper.dateToInputFormat(new Date(), this.editDateFormat),
-			trainerDays: DateHelper.dateToInputFormat(new Date(), this.editDateFormat),
-			scheduleDate: DateHelper.dateToInputFormat(new Date(), this.editDateFormat),
+			traineeDays: DateHelper.dateToFormat(new Date(), this.editDateFormat),
+			trainerDays: DateHelper.dateToFormat(new Date(), this.editDateFormat),
+			scheduleDate: DateHelper.dateToFormat(new Date(), this.editDateFormat),
 		});
 	}
 
@@ -194,11 +181,13 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 
 	createCase() {
 		this.formCaseLoading$.next(true);
-		const { subject, correctorNames } = this.caseForm.value;
+		const { correctorNames, fileForm } = this.caseForm.value;
 		this.store.dispatch(
 			CaseStateAction.CreateCase({
-				...this.caseForm.value,
-				subjectId: subject.SubjectId,
+        ...this.caseForm.value,
+        fileId: fileForm.fileId,
+        subjectId: this.currentViewSubject$.value.SubjectId,
+        scheduleId: this.currentViewSchedule$.value.ScheduleId,
 				correctorNames: correctorNames.split('\n'),
 			})
 		);

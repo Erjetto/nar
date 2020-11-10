@@ -1,14 +1,18 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col-4">
-			<rd-card [cardTitle]="isEditing ? 'Edit Schedule' : 'Insert New Schedule'">
+			<rd-card
+				[cardTitle]="
+					isEditing ? 'Edit Schedule' : 'Insert New Schedule - ' + (viewCurrSubject$ | async)?.Name
+				"
+			>
 				<div rdCardBadges class="" *ngIf="isEditing">
 					<button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
 				<form [formGroup]="scheduleForm">
-					<div class="row form-group">
+					<!-- <div class="row form-group">
 						<label class="col-4 col-form-label"> Phase </label>
 						<div class="col">
 							<ng-select
@@ -34,7 +38,7 @@
 								formControlName="subjectId"
 							></ng-select>
 						</div>
-					</div>
+					</div> -->
 					<div class="row form-group">
 						<label class="col-4 col-form-label"> Schedule Type </label>
 						<div class="col col-form-label">
@@ -242,9 +246,11 @@
 					</div>
 				</form>
 			</rd-card>
-			<rd-card [cardTitle]="'Insert Trainee in Schedule'">
+			<rd-card
+				[cardTitle]="'Insert Trainee into Schedule - ' + (viewCurrSchedule$ | async)?.ScheduleName"
+			>
 				<form [formGroup]="insertTraineeInScheduleForm">
-					<div class="row form-group">
+					<!-- <div class="row form-group">
 						<label class="col-4 col-form-label">Phase</label>
 						<div class="col">
 							<ng-select
@@ -255,10 +261,6 @@
 								[searchable]="false"
 								formControlName="phase"
 							></ng-select>
-							<!-- id="selectPhase"
-              name="selectPhase"
-								[ngModel]="insertTraineeCurrPhase$ | async"
-								(change)="insertTraineeCurrPhase$.next($event)" -->
 						</div>
 					</div>
 					<div class="row form-group">
@@ -272,10 +274,6 @@
 								[searchable]="false"
 								formControlName="subject"
 							></ng-select>
-							<!-- id="selectSubject"
-              name="selectSubject"
-								[ngModel]="insertTraineeCurrSubject$ | async"
-								(change)="insertTraineeCurrSubject$.next($event)" -->
 						</div>
 					</div>
 					<div class="row form-group">
@@ -289,16 +287,13 @@
 								[searchable]="false"
 								formControlName="schedule"
 							></ng-select>
-							<!-- id="selectSchedule"
-              name="selectSchedule"
-								[ngModel]="(insertTraineeScheduleList$ | async)[0]" -->
 						</div>
-					</div>
+					</div> -->
 					<div class="row form-group">
 						<label class="col-4 col-form-label">Trainee</label>
 						<div class="col">
 							<textarea
-								class="form-control vertical-text-area"
+								class="form-control vertical-text-area minh-200px"
 								formControlName="binusianNumbers"
 							></textarea>
 						</div>

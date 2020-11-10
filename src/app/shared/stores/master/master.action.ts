@@ -7,6 +7,8 @@ import {
 	ClientSchedule,
 	ClientUserInRoles,
 	ClientTrainee,
+	AttendanceType,
+  TraineeSchedule,
 } from '../../models';
 
 //#region Fetch
@@ -221,5 +223,25 @@ export const DeleteAllSchedule = createAction(
 export const DeleteTraineeInSchedule = createAction(
 	'[MasterState] DeleteTraineeInSchedule',
 	props<{ ScheduleId: string; TraineeId: string }>()
+);
+//#endregion
+
+//#region Modify
+/**
+ * date in `dd-MMM-yyyy` format
+ */
+export const FetchTraineeSchedulesBy = createAction(
+	'[MasterState] FetchTraineeSchedulesBy',
+	props<{
+		generationId?: string;
+		traineeId?: string;
+		scheduleType?: AttendanceType;
+		date?: string;
+		traineeScheduleId?: string;
+	}>()
+);
+export const FetchTraineeSchedulesSuccess = createAction(
+  '[MasterState] FetchTraineeSchedulesSuccess',
+  props<{payload: TraineeSchedule[]}>()
 );
 //#endregion

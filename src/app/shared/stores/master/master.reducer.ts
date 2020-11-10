@@ -32,6 +32,8 @@ import {
 	FetchSchedulesSuccess,
 	FetchTraineeInScheduleSuccess,
 	FetchIPListSuccess,
+  FetchTraineeSchedulesBy,
+  FetchTraineeSchedulesSuccess,
 } from './master.action';
 
 export interface IMasterState {
@@ -219,7 +221,19 @@ export const MasterStateReducer = createReducer(
 	on(FetchIPListSuccess, (state, { payload }) => ({
 		...state,
 		ipList: payload,
-	}))
+  })),
+  
+  //#region Modify tab
+	on(FetchTraineeSchedulesBy, (state) => ({
+		...state,
+		loadingTraineeTrainingSchedule: true,
+	})),
+	on(FetchTraineeSchedulesSuccess, (state, { payload }) => ({
+    ...state,
+    traineeTrainingSchedule: payload,
+		loadingTraineeTrainingSchedule: false,
+	})),
+  //#endregion
 );
 
 export const getMasterState = createFeatureSelector<IMasterState>(MASTERSTATE_REDUCER_NAME);

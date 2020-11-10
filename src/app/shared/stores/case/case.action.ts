@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Case, ClientUploadAnswer, ClientCaseTrainer } from '../../models';
+import { Case, ClientUploadAnswer, ClientCaseTrainer, ClientCaseTrainee } from '../../models';
 
 export const FetchCases = createAction('[CaseState] FetchCases', props<{ scheduleId: string }>());
 export const FetchClientCaseTrainers = createAction('[CaseState] FetchClientCaseTrainers');
@@ -48,9 +48,26 @@ export const UpdateCase = createAction(
 export const DeleteCase = createAction(
 	'[CaseState] DeleteCase',
 	props<{
-    caseId: string;
-    reason: string;
+		caseId: string;
+		reason: string;
 	}>()
 );
 
-export const DownloadCase = createAction('[CaseState] DownloadCase', props<{ fileId: string }>());
+//#region Trainee
+export const FetchTraineeCasesBy = createAction(
+	'[CaseState] FetchTraineeCasesBy',
+	props<{
+		phaseId: string;
+		subjectId?: string;
+	}>()
+);
+export const FetchTraineeCasesSuccess = createAction(
+	'[CaseState] FetchTraineeCasesSuccess',
+	props<{ payload: ClientCaseTrainee }>()
+);
+
+export const SubmitTraineeAnswer = createAction(
+	'[CaseState] SubmitTraineeAnswer',
+	props<{ phaseId: string; caseId: string; fileId: string }>()
+);
+//#endregion

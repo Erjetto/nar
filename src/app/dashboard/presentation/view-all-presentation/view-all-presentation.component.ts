@@ -10,8 +10,8 @@ import {
 	fromPresentationState,
 	MainStateEffects,
 	PresentationStateEffects,
-  fromMainState,
-  MainStateAction,
+	fromMainState,
+	MainStateAction,
 } from 'src/app/shared/store-modules';
 
 import { Observable, Subject, combineLatest, BehaviorSubject } from 'rxjs';
@@ -20,13 +20,13 @@ import {
 	CoreTrainingPresentation,
 	ClientPhase,
 	TraineePresentation,
-  CoreTrainingPresentationItem,
-  CoreTrainingPresentationQuestion,
-  User,
-  ClientGeneration,
+	CoreTrainingPresentationItem,
+	CoreTrainingPresentationQuestion,
+	User,
+	ClientGeneration,
 } from 'src/app/shared/models';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
-import { takeUntil, filter, withLatestFrom, map, tap } from 'rxjs/operators';
+import { takeUntil, filter, withLatestFrom, map, tap, delay } from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
@@ -40,17 +40,15 @@ import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 export class ViewAllPresentationComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
-  subjects: ClientSubject[]; // to find subject name by id
+	subjects: ClientSubject[]; // to find subject name by id
 
-  phases$: Observable<ClientPhase[]>;
-  subjects$: Observable<ClientSubject[]>;
+	phases$: Observable<ClientPhase[]>;
+	subjects$: Observable<ClientSubject[]>;
 	presentations$: Observable<CoreTrainingPresentation[]>;
 	traineesInSubject$: Observable<string[]>;
 	presentationsForTrainee$: Observable<CoreTrainingPresentation[]>;
 	myPresentationList$: Observable<CoreTrainingPresentation[]>;
-  presentationStatus$: Observable<string>;
-  
-
+	presentationStatus$: Observable<string>;
 
 	currentPresentation$: BehaviorSubject<CoreTrainingPresentation> = new BehaviorSubject(null);
 	currentTraineeCode$: Subject<string> = new Subject();
@@ -68,16 +66,16 @@ export class ViewAllPresentationComponent
 		classControl: ['', Validators.required],
 		understanding: ['', Validators.required],
 		voice: ['', Validators.required],
-  });
-  deleteQuestionReason = this.fb.control('');
+	});
+	deleteQuestionReason = this.fb.control('');
 
 	subjectsLoading$: Observable<boolean>;
 	presentationsLoading$: Observable<boolean>;
-  loadingViewPresentation$ = new BehaviorSubject<boolean>(false);
-  
-  constant = {
-    role: RoleFlags
-  }
+	loadingViewPresentation$ = new BehaviorSubject<boolean>(false);
+
+	constant = {
+		role: RoleFlags,
+	};
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -102,11 +100,11 @@ export class ViewAllPresentationComponent
 		this.presentationsLoading$ = this.store.pipe(
 			select(fromPresentationState.isPresentationsLoading)
 		);
-    
-    this.myPresentationList$ = this.store.pipe(
-      select(fromPresentationState.getMyPresentations),
-      map(presentations => _sortBy(presentations, 'PresentationDate').reverse())
-    )
+
+		this.myPresentationList$ = this.store.pipe(
+			select(fromPresentationState.getMyPresentations),
+			map((presentations) => _sortBy(presentations, 'PresentationDate').reverse())
+		);
 		//#endregion
 
 		// When one of these changed, also change filtered trainees
@@ -132,11 +130,11 @@ export class ViewAllPresentationComponent
 			map(([sbj, presentations, traineeCode]) =>
 				presentations.filter((p) => p.SubjectId === sbj?.SubjectId && p.TraineeCode === traineeCode)
 			)
-    );
+		);
 
 		//#region Auto get first value in array
-		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.currentPhase$.next(TryGetCoreTrainingPhase(res));
+		this.phases$.pipe(delay(100),takeUntil(this.destroyed$)).subscribe((res) => {
+			this.currentPhase$.next(res[0]);
 		});
 
 		this.subjects$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
@@ -152,17 +150,17 @@ export class ViewAllPresentationComponent
 			.subscribe((presentations) => this.currentPresentation$.next(presentations[0]));
 		//#endregion
 
-    //#region Bind to effects
-    this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
-      this.loadingViewPresentation$.next(false);
-    });
+		//#region Bind to effects
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+			this.loadingViewPresentation$.next(false);
+		});
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());
 		});
-		this.presentationEffects.saveTraineePresentation$
+		this.presentationEffects.updateTraineePresentation$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((act) => {
-        // NOTE: Masih bar-bar, harus bikin tempat khusus utk tahu apakah resultnya success
+				// NOTE: Masih bar-bar, harus bikin tempat khusus utk tahu apakah resultnya success
 				// tslint:disable-next-line: no-string-literal
 				if (act['messageType'].includes('success')) {
 					this.showScoringForm$.next(false);
@@ -203,7 +201,7 @@ export class ViewAllPresentationComponent
 		this.currentPresentation$ // Auto fetch Presentation Status
 			.pipe(
 				filter((res) => !_isEmpty(res)),
-				takeUntil(this.destroyed$)
+        takeUntil(this.destroyed$),
 			)
 			.subscribe((res) => {
 				this.store.dispatch(
@@ -217,24 +215,25 @@ export class ViewAllPresentationComponent
 					traineeId: res.TraineeId,
 					presentationNo: res.PresentationNo,
 				});
-      });
-      // Dari dashboard content base
-      combineLatest([ this.currentUser$, this.currentGeneration$ ])
-      .pipe(
-        takeUntil(this.destroyed$), 
-        filter(values => values.every(v => !_isEmpty(v))),
-      )
-      .subscribe(([user, gen]: [User, ClientGeneration]) => {
+			});
+		// Dari dashboard content base
+		combineLatest([this.currentUser$, this.currentGeneration$])
+			.pipe(
+				takeUntil(this.destroyed$),
+				filter((values) => values.every((v) => !_isEmpty(v)))
+			)
+			.subscribe(([user, gen]: [User, ClientGeneration]) => {
 				this.store.dispatch(
-          PresentationStateAction.FetchPresentationsBy({
-            generationId: gen.GenerationId,
-            traineeId: user.TraineeId
-          })
-        )
-      })
+					PresentationStateAction.FetchPresentationsBy({
+						generationId: gen.GenerationId,
+						traineeId: user.TraineeId,
+					})
+				);
+			});
 		//#endregion
 
-    this.store.dispatch(
+		this.store.dispatch(
+      // MasterStateAction.FetchPhases()
 			MainStateAction.DispatchIfEmpty({
 				action: MasterStateAction.FetchPhases(),
 				selectorToBeChecked: fromMasterState.getPhases,
@@ -256,11 +255,11 @@ export class ViewAllPresentationComponent
 
 	get statusValue() {
 		return this.scoringForm.get('status').value;
-  }
-  
-  getSubjectById(subId){
-    return this.subjects.find(s => s.SubjectId === subId);
-  }
+	}
+
+	getSubjectById(subId) {
+		return this.subjects.find((s) => s.SubjectId === subId);
+	}
 
 	submitScoringForm() {
 		this.loadingViewPresentation$.next(true);
@@ -273,10 +272,12 @@ export class ViewAllPresentationComponent
 
 	deleteQuestion(question: CoreTrainingPresentationQuestion) {
 		this.loadingViewPresentation$.next(true);
-		this.store.dispatch(PresentationStateAction.DeleteCoreTrainingPresentationItem({
-      filename: question.parent.presentationFileName,
-      itemId: question.Question.Id,
-      note: this.deleteQuestionReason.value ?? '',
-    }));
+		this.store.dispatch(
+			PresentationStateAction.DeleteCoreTrainingPresentationItem({
+				filename: question.parent.presentationFileName,
+				itemId: question.Question.Id,
+				note: this.deleteQuestionReason.value ?? '',
+			})
+		);
 	}
 }

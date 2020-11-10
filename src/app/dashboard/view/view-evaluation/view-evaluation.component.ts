@@ -40,7 +40,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	viewDateFormat = 'dd MMM yyyy';
 
 	// currentDate = new FormControl(DateHelper.dateToInputFormat(new Date()));
-	currentDate = this.fb.control(DateHelper.dateToInputFormat(new Date()), { updateOn: 'change' });
+	currentDate = this.fb.control(DateHelper.dateToFormat(new Date()));
 	filterEvaluationForm = this.fb.group({
 		evalType: [null],
 		search: [''],
@@ -188,7 +188,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		this.loadingViewEvaluations$.next(true);
 		this.store.dispatch(
 			NoteStateAction.DeleteEvaluationNote({
-				noteId: note.NoteId,
+        noteId: note.NoteId,
 			})
 		);
 	}

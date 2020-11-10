@@ -22,7 +22,7 @@
 
 <div
 	class="click-through absolute-center"
-	[ngClass]="{ 'z-index-15': isLoading, 'z-index--1': isLoading }"
+	[ngClass]="{ 'z-index-15': isLoading, 'z-index--1': !isLoading }"
 >
 	<span [@swipeAnimation]="isLoading ? 'shown' : 'hidden'">
 		<div class="lds-ring">

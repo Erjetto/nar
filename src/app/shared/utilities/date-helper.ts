@@ -59,7 +59,7 @@ export class DateHelper {
 	 * @param input Date to transform, can be ISO number
 	 * @param format By default uses yyyy-MM-dd
 	 */
-	static dateToInputFormat(input: Date | number, format?: string) {
+	static dateToFormat(input: Date | number, format?: string) {
 		return DateHelper.singleton.datePipe.transform(input, format || 'yyyy-MM-dd');
 	}
 }

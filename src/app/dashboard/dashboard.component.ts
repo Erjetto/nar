@@ -120,8 +120,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			.subscribe((u) => {
 				this.initiateRoleAndGen();
         this.store.dispatch(MasterStateAction.FetchGenerations());
-        this.store.dispatch(MainStateAction.FetchCurrentGeneration());
 			});
+    this.store.dispatch(MainStateAction.FetchCurrentGeneration());
 		//#endregion
 
 	}

@@ -2,7 +2,9 @@ import { RoleFlags } from './constants/role.constant';
 import { isNumber, map, isEmpty, cloneDeep, isString } from 'lodash';
 import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
-import { GetDownloadLinkFromFileId } from './methods';
+import { GetDownloadLinkFromFileId, isEmptyGuid } from './methods';
+
+const emptyGuid = '00000000-0000-0000-0000-000000000000'
 
 export type AttendanceType = 'Rest' | 'Room' | 'Secretariat';
 export type QuestionStatus = 'wrong' | 'correct' | 'unchecked';
@@ -39,7 +41,7 @@ export class Role {
 		(val: number, key) => new Role(key, val)
 	);
 
-	constructor(public roleName = '', public roleNumber = 0, public roleId = '') {}
+	constructor(public roleName = '', public roleNumber = 0, public roleId = emptyGuid) {}
 
 	static fromJson(data: any) {
 		if (isEmpty(data)) return null;
@@ -61,7 +63,7 @@ export class Role {
 //#endregion
 
 export class ClientUserInRoles extends BaseModel {
-	constructor(public Role = '', public UserInRoleId = '', public UserName = '') {
+	constructor(public Role = '', public UserInRoleId = emptyGuid, public UserName = '') {
 		super();
 	}
 
@@ -74,12 +76,12 @@ export class ClientUserInRoles extends BaseModel {
 export class User extends BaseModel {
 	public Role: Role = Role.from('AssistantSupervisor');
 	constructor(
-		public UserId = '',
+		public UserId = emptyGuid,
 		public UserName = '', // Initial
 		public Name = '', // Full Name
 		// Don't use this, use fromMainState.getCurrentRole instead
 		public ActiveRole: Role = null,
-		public TraineeId = ''
+		public TraineeId = emptyGuid
 	) {
 		super();
 	}
@@ -93,7 +95,7 @@ export class User extends BaseModel {
 }
 
 export class Binusian extends BaseModel {
-	constructor(public Name = '', public UserId = '') {
+	constructor(public Name = '', public UserId = emptyGuid) {
 		super();
 	}
 	static fromJson(data?: any): Binusian {
@@ -104,7 +106,7 @@ export class Binusian extends BaseModel {
 
 export class ClientGeneration extends BaseModel {
 	constructor(
-		public GenerationId = '',
+		public GenerationId = emptyGuid,
 		public Description = '',
 		public Semester = '',
 		public Year = 0
@@ -125,7 +127,7 @@ export class ClientPhase extends BaseModel {
 		public BeginDate: Date = null,
 		public EndDate: Date = null,
 		public Description = '',
-		public PhaseId = '',
+		public PhaseId = emptyGuid,
 		public PhaseType = ''
 	) {
 		super();
@@ -140,7 +142,7 @@ export class ClientPhase extends BaseModel {
 }
 
 export class ClientPhaseSimple extends BaseModel {
-	constructor(public Description = '', public PhaseId = '') {
+	constructor(public Description = '', public PhaseId = emptyGuid) {
 		super();
 	}
 	static fromJson(data?: any): ClientPhaseSimple {
@@ -155,7 +157,7 @@ export class ClientSchedule extends BaseModel {
 		public Start: Date = null,
 		public End: Date = null,
 		public IsSpecific = false,
-		public ScheduleId = '',
+		public ScheduleId = emptyGuid,
 		public ScheduleName = '',
 		public ScheduleDates: Date[] = []
 	) {
@@ -177,11 +179,11 @@ export class ClientSchedule extends BaseModel {
 
 export class ClientSubject extends BaseModel {
 	constructor(
-		public HasPresentation = false,
-		public Name = '',
+    public Name = '',
+		public SubjectId = emptyGuid,
 		public Phase: ClientPhase = null,
-		public SubjectId = '',
-		public MaxFileSize = 1 // in bytes
+		public MaxFileSize = 1, // in bytes
+		public HasPresentation = false,
 	) {
 		super();
 	}
@@ -196,7 +198,7 @@ export class ClientSubject extends BaseModel {
 //#region Trainee
 export class ClientTrainee extends BaseModel {
 	constructor(
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public TraineeCode = '',
 		public TraineeName = '',
 		public TraineeNumber = '',
@@ -217,8 +219,8 @@ export class ClientTrainee extends BaseModel {
 
 export class TraineeDeactivateReason extends BaseModel {
 	constructor(
-		public GenerationId = '',
-		public TraineeId = '',
+		public GenerationId = emptyGuid,
+		public TraineeId = emptyGuid,
 		public Reason = '',
 		public Date: Date = null,
 		public UserName = ''
@@ -237,8 +239,8 @@ export class TraineeDeactivateReason extends BaseModel {
 export class ClientTraineeDeactivateReason extends BaseModel {
 	constructor(
 		public GenerationName = '',
-		public GenerationId = '',
-		public TraineeId = '',
+		public GenerationId = emptyGuid,
+		public TraineeId = emptyGuid,
 		public Reason = '',
 		public Date: Date = null,
 		public UserName = ''
@@ -255,12 +257,12 @@ export class ClientTraineeDeactivateReason extends BaseModel {
 
 export class ClientTraineeReputation extends BaseModel {
 	constructor(
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public TraineeName = '',
 		public TraineeCode = '',
 		public TraineeNumber = '',
 		public Gender = 'Asex',
-		public PictureId = '',
+		public PictureId = emptyGuid,
 		public Minus = 0,
 		public Neutral = 0,
 		public Plus = 0,
@@ -299,8 +301,8 @@ export class ClientTraineeReputationPaging extends BaseModel {
 // fiename: GenerationId|TaineeId
 export class AdditionalTraineeData extends BaseModel {
 	constructor(
-		public GenerationId = '',
-		public TraineeId = '',
+		public GenerationId = emptyGuid,
+		public TraineeId = emptyGuid,
 		public NameBasedOnIDCard = '',
 		public KPTOrPassport = '',
 		public KPTOrPassportDescrption = '',
@@ -328,7 +330,7 @@ export class SimpleTraineeData extends BaseModel {
 		public DeactivateReason: TraineeDeactivateReason = null,
 		public Status = '',
 		public TraineeCode = '',
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public TraineeName = '',
 		public TraineeNumber = ''
 	) {
@@ -347,8 +349,8 @@ export class SimpleTraineeData extends BaseModel {
 
 export class ClientTraineeData extends BaseModel {
 	constructor(
-		public TraineeId = '',
-		public PictureId = '',
+		public TraineeId = emptyGuid,
+		public PictureId = emptyGuid,
 		public BirthDate: Date = null,
 		public TraineeCode = '',
 		public TraineeName = '',
@@ -386,7 +388,7 @@ export class ClientNote extends BaseModel {
 	constructor(
 		public Description = '',
 		public IsDeleteAble = false,
-		public NoteId = '',
+		public NoteId = emptyGuid,
 		public Reputation = 0,
 		public SavedAt: Date = null,
 		public SavedBy = ''
@@ -479,7 +481,7 @@ export class ClientTraineeView extends BaseModel {
 	constructor(
 		public TraineeCode = '',
 		public TraineeName = '',
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public IsActive = false
 	) {
 		super();
@@ -511,9 +513,9 @@ export class ClientScoreTrainee extends BaseModel {
 
 export class TraineeAttendance extends BaseModel {
 	constructor(
-		public GenerationId = '',
-		public AttendanceId = '',
-		public TraineeId = '',
+		public GenerationId = emptyGuid,
+		public AttendanceId = emptyGuid,
+		public TraineeId = emptyGuid,
 		public TraineeCode = '',
 		public TraineeName = '',
 		public TraineeNumber = '',
@@ -537,7 +539,7 @@ export class TraineeAttendance extends BaseModel {
 export class ClientTraineeDailyAttendance extends BaseModel {
 	constructor(
 		public TraineeCode = '',
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public TraineeName = '',
 		public Rest: ClientTraineeAttendanceTimeDetail = null,
 		public Secretariat: ClientTraineeAttendanceTimeDetail = null,
@@ -597,7 +599,7 @@ export class ClientTraineeAttendanceSummary extends BaseModel {
 export class ClientTraineeAttendance extends BaseModel {
 	constructor(
 		public TraineeCode = '',
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public TraineeName = '',
 		public AttendanceTimePermission: ClientTraineeAttendanceDetail[] = [],
 		public FulldayPermission = false,
@@ -661,11 +663,11 @@ export class ClientTraineeAttendanceDetail extends BaseModel {
 
 export class TraineePresentation extends BaseModel {
 	constructor(
-		public generationId = '',
-		public phaseId = '',
-		public presentationId = '',
-		public subjectId = '',
-		public traineeId = '',
+		public generationId = emptyGuid,
+		public phaseId = emptyGuid,
+		public presentationId = emptyGuid,
+		public subjectId = emptyGuid,
+		public traineeId = emptyGuid,
 		public traineeCode = '',
 		public traineeName = '',
 		public presentationNo = 0,
@@ -695,16 +697,16 @@ export class CoreTrainingPresentation extends BaseModel {
 	constructor(
 		public Comment = '',
 		public Deadline: Date = null,
-		public GenerationId = '',
+		public GenerationId = emptyGuid,
 		public Material = '',
-		public PhaseId = '',
+		public PhaseId = emptyGuid,
 		public PresentationComment: CoreTrainingPresentationComment = null,
 		public PresentationDate: Date = null,
 		public PresentationNo = 0,
 		public Questions: CoreTrainingPresentationQuestion[] = [],
-		public SubjectId = '',
+		public SubjectId = emptyGuid,
 		public TraineeCode = '',
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public TraineeName = ''
 	) {
 		super();
@@ -731,8 +733,8 @@ export class CoreTrainingPresentationComment extends BaseModel {
 	constructor(
 		public Comment = '',
 		public Histories: DataHistory[] = [],
-		public Id = '',
-		public UserId = '',
+		public Id = emptyGuid,
+		public UserId = emptyGuid,
 		public UserName = ''
 	) {
 		super();
@@ -747,7 +749,7 @@ export class CoreTrainingPresentationComment extends BaseModel {
 }
 
 export class DataHistory extends BaseModel {
-	constructor(public Text = '', public UserId = '', public SavedDate: Date = null) {
+	constructor(public Text = '', public UserId = emptyGuid, public SavedDate: Date = null) {
 		super();
 	}
 
@@ -763,8 +765,8 @@ export class CoreTrainingPresentationQuestion extends BaseModel {
 	constructor(
 		public Question: CoreTrainingPresentationItem = null,
 		public Answers: CoreTrainingPresentationItem[] = [],
-		public AcceptedAnswerId = '',
-		public DeadlinePassed = '',
+		public AcceptedAnswerId = emptyGuid,
+		public DeadlinePassed = false,
 		public Status = 'unchecked',
 		public StatusBy = '',
 
@@ -805,14 +807,14 @@ export class CoreTrainingPresentationQuestionSummary extends BaseModel {
 
 export class CoreTrainingPresentationItem extends BaseModel {
 	constructor(
+		public Text = '',
 		public Comments: CoreTrainingPresentationComment[] = [],
 		public Histories: DataHistory[] = [],
-		public Id = '',
 		public RespondenUserName = '',
 		public Status = '',
 		public StatusBy = '',
-		public Text = '',
-		public UserId = '',
+		public Id = emptyGuid,
+		public UserId = emptyGuid,
 		public UserName = ''
 	) {
 		super();
@@ -850,8 +852,8 @@ export class TraineeComment extends BaseModel {
 
 export class TraineeCommentHistory extends BaseModel {
 	constructor(
-		public TraineeId = '',
-		public NoteId = '',
+		public TraineeId = emptyGuid,
+		public NoteId = emptyGuid,
 		public TraineeCode = '',
 		public Date: Date = null,
 		public Comment = '',
@@ -902,10 +904,10 @@ export class TraineeCommentHistory extends BaseModel {
 //#region Case
 export class Case extends BaseModel {
 	constructor(
-		public CaseId = '',
+		public CaseId = emptyGuid,
 		public CaseName = '',
 		public Corrector: Binusian[] = [],
-		public FileId = '',
+		public FileId = emptyGuid,
 		public FileName = '',
 		public ScheduleDate: Date = null,
 		public ScheduleName = '',
@@ -930,11 +932,11 @@ export class Case extends BaseModel {
 
 export class ClientCaseTrainer extends BaseModel {
 	constructor(
-		public CaseId = '',
+		public CaseId = emptyGuid,
 		public CaseName = '',
 		public Corrector: string[] = [],
-		public FileId = '',
-		public ScheduleId = '',
+		public FileId = emptyGuid,
+		public ScheduleId = emptyGuid,
 		public StartDate: Date = null,
 		public ScheduleDate: Date = null,
 		public ScheduleName = '',
@@ -960,32 +962,34 @@ export class ClientCaseTrainee extends BaseModel {
 		super();
 	}
 
-	static fromJson(data?: any): ClientCaseTrainer {
+	static fromJson(data?: any): ClientCaseTrainee {
 		if (isEmpty(data)) return null;
-		return Object.assign(new ClientCaseTrainer(), data, {});
+		return Object.assign(new ClientCaseTrainee(), data, {
+      Detail: map(data.Detail, ClientCaseTraineeDetail.fromJson)
+    });
 	}
 }
 
 export class ClientCaseTraineeDetail extends BaseModel {
 	constructor(
-		public SubjectId = '',
-		public CaseId = '',
+		public SubjectId = emptyGuid,
+		public CaseId = emptyGuid,
 		public CaseName = '',
 		public Score = '',
 		public UploadDate = '',
 		public Deadline: Date = null,
 		public isAlreadyPassed = false,
-		public FileId = '',
-		public AnswerId = '',
+		public FileId = emptyGuid,
+		public AnswerId = emptyGuid,
 		public isLevelUp = false
 	) {
 		super();
 	}
 	get noCaseFile() {
-		return this.FileId === '00000000-0000-0000-0000-000000000000';
+		return isEmptyGuid(this.FileId);
 	}
 	get noAnswerYet() {
-		return this.AnswerId === '00000000-0000-0000-0000-000000000000';
+		return isEmptyGuid(this.AnswerId);
 	}
 	get caseLink() {
 		return GetDownloadLinkFromFileId(this.FileId);
@@ -994,9 +998,9 @@ export class ClientCaseTraineeDetail extends BaseModel {
 		return GetDownloadLinkFromFileId(this.AnswerId);
 	}
 
-	static fromJson(data?: any): ClientCaseTrainer {
+	static fromJson(data?: any): ClientCaseTraineeDetail {
 		if (isEmpty(data)) return null;
-		return Object.assign(new ClientCaseTrainer(), data, {
+		return Object.assign(new ClientCaseTraineeDetail(), data, {
 			Deadline: DateHelper.fromCSharpDate(data?.Deadline),
 		});
 	}
@@ -1004,12 +1008,12 @@ export class ClientCaseTraineeDetail extends BaseModel {
 
 export class UploadAnswer extends BaseModel {
 	constructor(
-		public CaseId = '',
+		public CaseId = emptyGuid,
 		public CaseName = '',
-		public FileItemId = '',
+		public FileItemId = emptyGuid,
 		public FileName = '',
-		public PhaseId = '',
-		public TraineeId = '',
+		public PhaseId = emptyGuid,
+		public TraineeId = emptyGuid,
 		public UploadDate: Date = null,
 		public UploadBy: Date = null
 	) {
@@ -1027,20 +1031,20 @@ export class UploadAnswer extends BaseModel {
 
 export class ClientUploadAnswer extends BaseModel {
 	constructor(
-		public CaseId = '',
+		public CaseId = emptyGuid,
 		public CaseName = '',
 		public Corrector = '',
-		public CorrectorId = '',
+		public CorrectorId = emptyGuid,
 		public EntryDate: Date = null,
-		public FileItemId = '',
+		public FileItemId = emptyGuid,
 		public FileName = '',
 		public HasFile = false,
 		public HasScore = false,
-		public PhaseId = '',
+		public PhaseId = emptyGuid,
 		public Score = '',
 		public ScoreUpdate = null,
 		public TraineeCode = '',
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public TraineeName = '',
 		public TraineeNumber = '',
 		public UploadDate: Date = null,
@@ -1060,10 +1064,10 @@ export class ClientUploadAnswer extends BaseModel {
 
 export class RealScore extends BaseModel {
 	constructor(
-		public PhaseId = '',
-		public CaseId = '',
+		public PhaseId = emptyGuid,
+		public CaseId = emptyGuid,
 		public CaseName = '',
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public Score = '',
 		public EntryBy: Binusian = null,
 		public UpdateBy: Binusian = null,
@@ -1087,7 +1091,7 @@ export class RealScore extends BaseModel {
 
 //#region Candidate
 export class SubcoCandidateQuestionModel extends BaseModel {
-	constructor(public GenerationId = '', public Id = '', public Questions: string[] = []) {
+	constructor(public GenerationId = emptyGuid, public Id = emptyGuid, public Questions: string[] = []) {
 		super();
 	}
 	static fromJson(data?: any): SubcoCandidateQuestionModel {
@@ -1100,8 +1104,8 @@ export class SubcoCandidateQuestionModel extends BaseModel {
  */
 export class SubcoCandidateAnswerModel extends BaseModel {
 	constructor(
-		public Id = '',
-		public SubcoCandidateQuestionId = '',
+		public Id = emptyGuid,
+		public SubcoCandidateQuestionId = emptyGuid,
 		public TrainerName = '',
 		public Answers: string[] = [],
 		public StartDate: Date = null,
@@ -1146,15 +1150,15 @@ export class ClientStatistic extends BaseModel {
 
 export class Message extends BaseModel {
 	constructor(
-		public FileId = '',
+		public FileId = emptyGuid,
 		public FileName = '',
 		public Generation = '',
-		public GenerationId = '',
+		public GenerationId = emptyGuid,
 		public HasFile = '',
 		public InsertBy: Binusian = null,
 		public InsertOn: Date = null,
 		public MemberType = '',
-		public MessageId = '',
+		public MessageId = emptyGuid,
 		public Note = '',
 		public Title = ''
 	) {
@@ -1181,7 +1185,7 @@ export class Message extends BaseModel {
 // GenerationId|MaterialId|TraineeId
 export class InterviewMaterial extends BaseModel {
 	constructor(
-		public MaterialId = '',
+		public MaterialId = emptyGuid,
 		public Trainee: ClientTrainee = null,
 		public Materials: InterviewMaterialDetail[] = []
 	) {
@@ -1197,7 +1201,7 @@ export class InterviewMaterial extends BaseModel {
 }
 
 export class InterviewMaterialDetail extends BaseModel {
-	constructor(public MaterialName = '', public FileId = '', public FileName = '') {
+	constructor(public MaterialName = '', public FileId = emptyGuid, public FileName = '') {
 		super();
 	}
 	get downloadLink() {
@@ -1215,11 +1219,11 @@ export class InterviewMaterialDetail extends BaseModel {
 // SubjectId|MaterialId
 export class Material extends BaseModel {
 	constructor(
-		public SubjectId = '',
+		public SubjectId = emptyGuid,
 		public SubjectName = '',
-		public MaterialId = '',
+		public MaterialId = emptyGuid,
 		public MaterialName = '',
-		public FileId = '',
+		public FileId = emptyGuid,
 		public FileName = ''
 	) {
 		super();
@@ -1233,8 +1237,8 @@ export class Material extends BaseModel {
 // GenerationId|TraineeId|LectureDate(dd-MMM-yyyy)
 export class TraineeLectureSchedule extends BaseModel {
 	constructor(
-		public GenerationId = '',
-		public TraineeId = '',
+		public GenerationId = emptyGuid,
+		public TraineeId = emptyGuid,
 		public TraineeCode = '',
 		public TraineeName = '',
 		public TraineeNumber = '',
@@ -1254,8 +1258,8 @@ export class TraineeLectureSchedule extends BaseModel {
 // GenerationId|TraineeId|PermissionDate(dd-MMM-yyyy)
 export class TraineePermission extends BaseModel {
 	constructor(
-		public GenerationId = '',
-		public TraineeId = '',
+		public GenerationId = emptyGuid,
+		public TraineeId = emptyGuid,
 		public TraineeCode = '',
 		public TraineeName = '',
 		public TraineeNumber = '',
@@ -1276,14 +1280,14 @@ export class TraineePermission extends BaseModel {
 // Type -> Room, Rest, Secretariat
 export class TraineeSchedule extends BaseModel {
 	constructor(
-		public TraineeScheduleId = '',
-		public GenerationId = '',
-		public TraineeId = '',
+		public TraineeScheduleId = emptyGuid,
+		public GenerationId = emptyGuid,
+		public TraineeId = emptyGuid,
 		public TraineeCode = '',
 		public TraineeName = '',
 		public TraineeNumber = '',
 		public AttendanceDate: Date = null,
-		public Type = '',
+		public Type: AttendanceType = null,
 		public TimeIn = '',
 		public TimeOut = '',
 		public InsertedDate: Date = null,
@@ -1343,9 +1347,9 @@ export class SchedulePerWeek extends BaseModel {
 
 export class ScheduleVariation extends BaseModel {
 	constructor(
-		public DataFileId = '',
-		public VariationId = '',
-		public SubjectId = '',
+		public DataFileId = emptyGuid,
+		public VariationId = emptyGuid,
+		public SubjectId = emptyGuid,
 		public ScheduleName = '',
 		public MeetingNo = 0,
 		public VariationNo = 0,
@@ -1378,8 +1382,8 @@ export class ScheduleDetail extends BaseModel {
 // GenerationId|TraineeId|LectureDate(dd-MMM-yyyy)
 // export class TraineeBeeLectureSchedule extends BaseModel {
 // 	constructor(
-// 		public GenerationId = '',
-// 		public TraineeId = '',
+// 		public GenerationId = emptyGuid,
+// 		public TraineeId = emptyGuid,
 // 		public TraineeName = '',
 // 		public TraineeNumber = '',
 // 		public LectureDate: Date = null,
@@ -1395,7 +1399,7 @@ export class ScheduleDetail extends BaseModel {
 
 //#region Top Bottom Vote
 export class VoteItem extends BaseModel {
-	constructor(public TraineeId = '', public Reason = '') {
+	constructor(public TraineeId = emptyGuid, public Reason = '') {
 		super();
 	}
 	static fromJson(data?: any): VoteItem {
@@ -1406,9 +1410,9 @@ export class VoteItem extends BaseModel {
 
 export class TopBottomVote extends BaseModel {
 	constructor(
-		public TraineeId = '',
-		public VoteId = '',
-		public ScheduleID = '',
+		public TraineeId = emptyGuid,
+		public VoteId = emptyGuid,
+		public ScheduleID = emptyGuid,
 		public TopVotes: VoteItem[] = [],
 		public BottomVotes: VoteItem[] = []
 	) {
@@ -1426,8 +1430,8 @@ export class TopBottomVote extends BaseModel {
 export class TrainerTopBottomVote extends BaseModel {
 	constructor(
 		public TrainerName = '',
-		public VoteId = '',
-		public ScheduleID = '',
+		public VoteId = emptyGuid,
+		public ScheduleID = emptyGuid,
 		public TopVotes: VoteItem[] = [],
 		public BottomVotes: VoteItem[] = []
 	) {
@@ -1444,7 +1448,7 @@ export class TrainerTopBottomVote extends BaseModel {
 
 export class TopBottomVoteSchedule extends BaseModel {
 	constructor(
-		public ScheduleId = '',
+		public ScheduleId = emptyGuid,
 		public ScheduleName = '',
 		public VoteCount = 0,
 		public StartDate: Date = null,
@@ -1463,7 +1467,7 @@ export class TopBottomVoteSchedule extends BaseModel {
 }
 
 export class ClientVoteBestTrainer extends BaseModel {
-	constructor(public UserId = '', public UserName = '', public VoteCount = 0) {
+	constructor(public UserId = emptyGuid, public UserName = '', public VoteCount = 0) {
 		super();
 	}
 	static fromJson(data?: any): ClientVoteBestTrainer {
@@ -1474,7 +1478,7 @@ export class ClientVoteBestTrainer extends BaseModel {
 
 export class ClientVoteBestTrainerSchedule extends BaseModel {
 	constructor(
-		public VoteBestTrainerScheduleId = '',
+		public VoteBestTrainerScheduleId = emptyGuid,
 		public VoteName = '',
 		public StartDate: Date = null,
 		public EndDate: Date = null,
@@ -1500,7 +1504,7 @@ export class ClientVoteBestTrainerSchedule extends BaseModel {
 
 //#region Interview Question
 export class ClientInterviewQuestion extends BaseModel {
-	constructor(public InterviewQuestionId = '', public InterviewQuestionName = '') {
+	constructor(public InterviewQuestionId = emptyGuid, public InterviewQuestionName = '') {
 		super();
 	}
 	static fromJson(data: any) {
@@ -1556,7 +1560,7 @@ export class ClientInterviewSchedule extends BaseModel {
 		public MainInterviewer = '',
 		public CoInterviewer = '',
 		public InterviewDate: Date = null,
-		public InterviewScheduleId = '',
+		public InterviewScheduleId = emptyGuid,
 		public InterviewScore = '',
 		public Location = '',
 		public Result = '',
@@ -1586,15 +1590,15 @@ export class ClientInterviewResult extends BaseModel {
 		public Major = '',
 		public Location = '',
 		public IsSaved = false,
-		public InterviewScheduleId = '',
+		public InterviewScheduleId = emptyGuid,
 		public TraineeCode = '',
 		public RegistrationCode = '',
-		public TraineeId = '',
+		public TraineeId = emptyGuid,
 		public TraineeName = '',
 		public TraineeNumber = '',
 		public InterviewDate: Date = null,
 		public StartTime = '',
-		public PictureId = '',
+		public PictureId = emptyGuid,
 		public EndTime = '',
 		public MainInterviewer = '',
 		public CoInterviewer = '',
@@ -1749,7 +1753,7 @@ export class AbsentNote extends BaseModel {
 
 export class EvaluationNote extends BaseModel {
 	constructor(
-		public NoteId = '',
+		public NoteId = emptyGuid,
 		public Notes = '',
 		public SavedBy = '',
 		public EvaluationDate: Date = null,
@@ -1768,7 +1772,7 @@ export class EvaluationNote extends BaseModel {
 
 export class ClientEvaluationNote extends BaseModel {
 	constructor(
-		public NoteId = '',
+		public NoteId = emptyGuid,
 		public Notes = '',
 		public SavedBy = '',
 		public EvaluationDate: Date = null,
@@ -1804,14 +1808,27 @@ export class ClientNoteDetail extends BaseModel {
 //#endregion
 
 //#region Log
+
+export class ClientRoom extends BaseModel {
+	constructor(
+		public RoomName = '',
+		public RoomId = emptyGuid,
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientRoom {
+		if (isEmpty(data)) return null;
+		return Object.assign(new ClientRoom(), data);
+	}
+}
 export class LogRoomPIC extends BaseModel {
 	constructor(
-		public Id = '',
+		public Id = emptyGuid,
 		public Room = '',
-		public UserId = '',
-		public ComputerSeat = '',
-		public Log = '',
-		public Presentation = '',
+		public UserId = emptyGuid,
+		public ComputerSeat: {seat, trainee}[] = [],
+		public Log: {trainee, start:Date, end:Date, note}[] = [],
+		public Presentation: {trainee, start:Date, go:Date, end:Date, pic, room, materi}[] = [],
 		public SavedDate: Date = null
 	) {
 		super();
@@ -1819,7 +1836,10 @@ export class LogRoomPIC extends BaseModel {
 	static fromJson(data?: any): LogRoomPIC {
 		if (isEmpty(data)) return null;
 		return Object.assign(new LogRoomPIC(), data, {
-			SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
+      SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
+      ComputerSeat: JSON.parse(data.ComputerSeat),
+      Log: JSON.parse(data.Log),
+      Presentation: JSON.parse(data.Presentation),
 		});
 	}
 }
@@ -1836,7 +1856,7 @@ export class LogBookPICData extends BaseModel {
 
 export class LogBookPIC extends BaseModel {
 	constructor(
-		public Id = '',
+		public Id = emptyGuid,
 		public Data = '',
 		public Subject = '',
 		public PIC = '',

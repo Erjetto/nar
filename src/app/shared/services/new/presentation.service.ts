@@ -13,6 +13,7 @@ import {
 } from '../../models';
 import { environment } from 'src/environments/environment';
 import { map as _map} from 'lodash';
+import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
 	providedIn: 'root',
@@ -128,7 +129,11 @@ export class PresentationService {
 		presentation: CoreTrainingPresentation;
 	}): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'SaveCoreTrainingPresentation', data)
+			.post(this.baseUrl + 'SaveCoreTrainingPresentation', {
+        presentation: {
+          ...data.presentation,
+          PresentationDate: DateHelper.toCSharpDate(data.presentation.PresentationDate)
+        }})
 			.pipe(map((res: any) => res.d === true));
   }
 

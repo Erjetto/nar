@@ -83,7 +83,7 @@ import { swipeAnimation, faderAnimation } from '../../angular-animations';
 			// transition('collapse => expand', animate('300ms ease-out')),
 		]),
 		swipeAnimation('down', 15, 200),
-		faderAnimation(1, 300),
+		faderAnimation(1, 200),
 		// scaleAnimation([
 		// 	{ x: 0, y: 0, offset: 0 },
 		// 	{ x: 100, y: 0, offset: 0.5 },

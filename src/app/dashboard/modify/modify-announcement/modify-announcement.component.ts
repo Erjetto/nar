@@ -20,7 +20,7 @@ import {
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { takeUntil, filter, map } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
-import { adjustControlsInFormArray } from 'src/app/shared/methods';
+import { adjustControlsInFormArray, isEmptyGuid } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-modify-announcement',
@@ -148,12 +148,10 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 			title: ann.Title,
 			note: ann.Note,
 			fileForm: {
-				fileId: ann.FileId !== '00000000-0000-0000-0000-000000000000' ? ann.FileId : null,
+				fileId: !isEmptyGuid(ann.FileId) ? ann.FileId : null,
 				fileName: ann.FileName,
 			},
 
-			// fileId: ann.FileId !== '00000000-0000-0000-0000-000000000000' ? ann.FileId : null,
-			// fileName: ann.FileName,
 		});
 	}
 

@@ -1,22 +1,30 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subject, merge } from 'rxjs';
+import { filter, map, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
-import { ClientSubject, ClientPhase, Case, ClientCaseTrainee } from 'src/app/shared/models';
 import {
+	ClientSubject,
+	ClientPhase,
+	Case,
+	ClientCaseTrainee,
+	ClientCaseTraineeDetail,
+} from 'src/app/shared/models';
+import {
+	CaseStateAction,
 	CaseStateEffects,
 	fromCaseState,
-  fromMainState,
+	fromMainState,
 	fromMasterState,
 	MainStateAction,
 	MainStateEffects,
 	MasterStateAction,
 } from 'src/app/shared/store-modules';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { DashboardContentBase } from '../dashboard-content-base.component';
+import { adjustControlsInFormArray, fileFormFactory, isEmptyGuid } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-trainee-upload',
@@ -33,14 +41,14 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 	caseList$: Observable<ClientCaseTrainee>;
 	subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
 
-  loadingPage$ = new BehaviorSubject<boolean>(false);
-  uploadForms = this.fb.array([]);
+	loadingPage$ = new BehaviorSubject<boolean>(false);
+	uploadForms = this.fb.array([]);
 
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
-    private caseEffects: CaseStateEffects,
-    private fb: FormBuilder
+		private caseEffects: CaseStateEffects,
+		private fb: FormBuilder
 	) {
 		super(store);
 	}
@@ -50,13 +58,27 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 
 		this.subjectsEntity$ = this.store.pipe(select(fromMasterState.getSubjectsEntity));
-		this.subjectList$ = this.getSubjectsFromEntity(this.currentViewPhase$);
+		this.subjectList$ = this.getSubjectsFromEntity(this.currentViewPhase$).pipe(
+			map((subs) => [new ClientSubject('All'), ...subs])
+		);
 
-		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
+		this.caseList$ = this.store.pipe(
+			select(fromCaseState.getClientCaseTrainees),
+			tap((cases) => {
+				if (cases == null) return;
+        this.uploadForms.reset();
+				
+        adjustControlsInFormArray(this.uploadForms, cases.Detail.length, fileFormFactory);
+        this.uploadForms.patchValue(cases.Detail.map(d => ({
+          fileId: !isEmptyGuid(d.AnswerId) ? d.AnswerId : null,
+          fileName: `${d.CaseName} answer`,
+        })))
+			})
+		);
 		this.store
 			.pipe(select(fromCaseState.getCasesLoading), takeUntil(this.destroyed$))
-      .subscribe(this.loadingPage$);
-      
+			.subscribe(this.loadingPage$);
+
 		//#endregion
 
 		//#region auto select first in array
@@ -66,12 +88,28 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 		this.subjectList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
 			this.currentViewSubject$.next(res[0]);
 		});
+
+    // Reload cases ketika submit atau ubah subject
+		merge(this.currentViewSubject$, this.caseEffects.submitTraineeAnswer$)
+			.pipe(
+				takeUntil(this.destroyed$),
+				withLatestFrom(this.currentViewSubject$, this.currentViewPhase$),
+				filter(([_, sub, phs]) => !_isEmpty(phs))
+			)
+			.subscribe(([_, sub, phs]) => {
+				this.store.dispatch(
+					CaseStateAction.FetchTraineeCasesBy({
+						phaseId: phs.PhaseId,
+						subjectId: sub.Name === 'All' ? undefined : sub.SubjectId,
+					})
+				);
+			});
 		//#endregion
 
 		//#region Subscribe to effects
-		this.mainEffects.afterRequest$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.loadingPage$.next(false));
+		// this.mainEffects.afterRequest$
+		// 	.pipe(takeUntil(this.destroyed$))
+		// 	.subscribe(() => this.loadingPage$.next(false));
 
 		//#endregion
 
@@ -81,7 +119,19 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 				selectorToBeChecked: fromMasterState.getPhases,
 			})
 		);
-	}
+  }
+
+	uploadAnswer(control: AbstractControl, c: ClientCaseTraineeDetail) {
+		this.loadingPage$.next(true);
+		this.store.dispatch(
+			CaseStateAction.SubmitTraineeAnswer({
+				phaseId: this.currentViewPhase$.value.PhaseId,
+				caseId: c.CaseId,
+				fileId: control.get('fileId').value,
+			})
+		);
+  }
+  
 
 	getSubjectsFromEntity(phaseObservable: Observable<ClientPhase>, loader?: Subject<boolean>) {
 		return combineLatest([this.subjectsEntity$, phaseObservable]).pipe(

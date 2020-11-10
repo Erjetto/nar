@@ -80,7 +80,7 @@ export class NoteService {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteEvaluationNote', {
 				...data,
-				sdate: '', // Tidak dipake tapi tetep diminta
+				sdate: DateHelper.toCSharpDate(new Date()), // Tidak dipake tapi tetep diminta
 			})
 			.pipe(map((res: any) => res.d === true));
 	}

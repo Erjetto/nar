@@ -1,4 +1,4 @@
-<div class="container-lg">
+<div class="container-xl">
 	<div class="row">
 		<div class="col-3">
 			<rd-card #viewCaseCard [cardTitle]="'View Cases'" [isLoading]="viewCaseLoading$ | async">
@@ -92,7 +92,7 @@
 				<form [formGroup]="caseForm">
 					<div class="row">
 						<div class="col">
-							<div class="row form-group" [hidden]="isEditing">
+							<!-- <div class="row form-group" [hidden]="isEditing">
 								<label class="col-3 col-form-label">Subject</label>
 								<div class="col">
 									<ng-select
@@ -104,7 +104,7 @@
 										formControlName="subject"
 									></ng-select>
 								</div>
-							</div>
+							</div> -->
 							<div class="row form-group">
 								<label class="col-3 col-form-label">Case Name</label>
 								<div class="col">
@@ -127,7 +127,7 @@
               </div>
 						</div>
 						<div class="col">
-							<div class="row form-group" [hidden]="isEditing">
+							<!-- <div class="row form-group" [hidden]="isEditing">
 								<label class="col-4 col-form-label">Schedule</label>
 								<div class="col">
 									<ng-select
@@ -140,7 +140,7 @@
 										formControlName="scheduleId"
 									></ng-select>
 								</div>
-							</div>
+							</div> -->
 							<div class="row form-group">
 								<label class="col-4 col-form-label">Starts at</label>
 								<div class="col">

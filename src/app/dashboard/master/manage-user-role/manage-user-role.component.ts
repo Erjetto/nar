@@ -62,7 +62,6 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 			this.userInRoles$,
 			this.searchTextControl.valueChanges.pipe(startWith('')),
 		]).pipe(
-			takeUntil(this.destroyed$),
 			map(([users, searchText]) =>
 				users.filter((u) => `${u.UserName} ${u.Role}`.toLowerCase().includes(searchText))
 			)

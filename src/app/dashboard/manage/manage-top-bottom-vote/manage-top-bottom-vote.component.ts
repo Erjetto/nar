@@ -147,8 +147,8 @@ export class ManageTopBottomVoteComponent
 			scheduleId: row.ScheduleId,
 			scheduleName: row.ScheduleName,
 			voteCount: row.VoteCount,
-			startDate: DateHelper.dateToInputFormat(row.StartDate),
-			endDate: DateHelper.dateToInputFormat(row.EndDate),
+			startDate: DateHelper.dateToFormat(row.StartDate),
+			endDate: DateHelper.dateToFormat(row.EndDate),
 			isForTrainer: row.isForTrainer,
 		});
 

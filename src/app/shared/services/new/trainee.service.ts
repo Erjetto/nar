@@ -11,6 +11,7 @@ import {
 	ClientCaseTrainer,
 	SchedulePerWeek,
 	ClientSpecificSchedule,
+  ClientCaseTrainee,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -65,16 +66,16 @@ export class TraineeService {
 	public GetCaseBySubject(data: {
 		phaseId: string;
 		subjectId: string;
-	}): Observable<ClientCaseTrainer> {
+	}): Observable<ClientCaseTrainee> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetCaseBySubject', data)
-			.pipe(map((res: any) => ClientCaseTrainer.fromJson(res.d)));
+			.pipe(map((res: any) => ClientCaseTrainee.fromJson(res.d)));
 	}
 
-	public GetCaseByPhase(data: { phaseId: string }): Observable<TraineeSchedule[]> {
+	public GetCaseByPhase(data: { phaseId: string }): Observable<ClientCaseTrainee> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetCaseByPhase', data)
-			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
+			.pipe(map((res: any) => ClientCaseTrainee.fromJson(res.d)));
 	}
 
 	public SaveAnswer(data: {

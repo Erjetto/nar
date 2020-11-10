@@ -36,6 +36,7 @@ import { FillAnswersComponent } from './candidate/fill-answers/fill-answers.comp
 import { LogRoomComponent } from './log/log-room/log-room.component';
 import { LogBookComponent } from './log/log-book/log-book.component';
 import { TraineeUploadComponent } from './trainee-upload/trainee-upload.component';
+import { MyScheduleComponent } from './my-schedule/my-schedule.component';
 
 @NgModule({
 	declarations: [
@@ -81,6 +82,8 @@ import { TraineeUploadComponent } from './trainee-upload/trainee-upload.componen
 		LogBookComponent,
     
 		TraineeUploadComponent,
+    
+		MyScheduleComponent,
 	],
 	imports: [
 		SharedModule,

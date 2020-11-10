@@ -12,58 +12,65 @@
 		color: #555;
 	}
 
-	.eval-attendance .Early {
-		background-color: blue;
-		color: white;
-	}
+	.eval-attendance {
+		.Early {
+			background-color: blue;
+			color: white;
+		}
 
-	.eval-attendance .notDone {
-		background-color: red;
-		color: white;
-	}
+		.notDone {
+			background-color: red;
+			color: white;
+		}
 
-	.eval-attendance .Late {
-		background-color: blue;
-		color: white;
-	}
+		.Late {
+			background-color: blue;
+			color: white;
+		}
 
-	.eval-attendance .Permission {
-		background-color: yellow;
-		color: black;
-	}
+		.Permission {
+			background-color: yellow;
+			color: black;
+		}
 
-	.eval-attendance .Neglects {
-		background-color: orange;
-		color: white;
-	}
+		.College {
+			background-color: #adff2f;
+			color: black;
+		}
 
-	.eval-attendance .Present {
-		background-color: limegreen;
-		color: black;
-	}
+		.Neglects {
+			background-color: orange;
+			color: white;
+		}
 
-	.eval-attendance .Absent {
-		background-color: red;
-		color: white;
-	}
+		.Present {
+			background-color: limegreen;
+			color: black;
+		}
 
-	.eval-attendance .legend {
-		border: 1px solid rgba(0, 0, 0, 0.1);
-		color: black;
-		display: inline-block;
-		width: 20px;
-		height: 20px;
-		margin: 0 4px 0 10px;
-	}
+		.Absent {
+			background-color: red;
+			color: white;
+		}
 
-	.eval-attendance table thead th {
-		vertical-align: middle;
-		text-align: center;
-	}
+		.legend {
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			color: black;
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			margin: 0 4px 0 10px;
+		}
 
-	.eval-attendance table th,
-	.eval-attendance table td {
-		border: 1px solid #666;
+		table thead th {
+			vertical-align: middle;
+			text-align: center;
+		}
+
+		table th,
+		table td {
+			border: 1px solid #666;
+		}
 	}
 
 	.eval-trainee-comments .table > tbody + tbody {

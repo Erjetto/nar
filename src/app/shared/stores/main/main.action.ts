@@ -109,8 +109,8 @@ export const RequestFailedMessage = (error: HttpErrorResponse): Action =>
 		messageType: 'danger',
     message: `Request Failed :
 URL: ${error.url.replace(environment.apiUrl, '')}
-Exception Type: ${error.error.ExceptionType}
-"${error.error.Message}"`,
+Exception Type: ${error.error?.ExceptionType ?? '-'}
+"${error.error?.Message ?? 'No error message'}"`,
 	});
 
 export const UnexpectedResultMessage = (doingWhat: string, result: any): Action =>

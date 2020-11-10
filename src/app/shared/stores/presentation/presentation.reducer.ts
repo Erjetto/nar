@@ -17,6 +17,7 @@ import {
 	FetchPresentationStatusSuccess,
 	FetchPresentationsByDate,
 	FetchPresentationsByDateSuccess,
+  FetchMyPresentationsSuccess,
 } from './presentation.action';
 
 export interface IPresentationState {
@@ -125,7 +126,12 @@ export const PresentationStateReducer = createReducer(
 			},
 			{ ...state.questionsByTraineeEntity, [traineeId]: [] }
 		),
-	})),
+  })),
+  
+  on(FetchMyPresentationsSuccess, (state, { payload }) => ({
+    ...state,
+    myPresentations: payload
+  })),
 
 	on(SetQuestionsFilter, (state, data) => ({
 		...state,

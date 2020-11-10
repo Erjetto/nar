@@ -14,8 +14,8 @@
 									bindLabel="PhaseType"
 									[searchable]="false"
 									placeholder="Phase"
-									[ngModel]="(phases$ | async)[0]"
-									(change)="onChangePhase($event)"
+									[ngModel]="(currentPhase$ | async)"
+									(change)="currentPhase$.next($event)"
 								></ng-select>
 							</div>
 						</div>
@@ -36,11 +36,16 @@
 							<div class="btn-group">
 								<button
 									class="btn btn-primary"
-									(click)="viewMode = 'thumbnail'"
+                  (click)="viewMode = 'thumbnail'"
+                  [class.active]="viewMode === 'thumbnail'"
 								>
 									Thumbnail
 								</button>
-								<button class="btn btn-primary" (click)="viewMode = 'list'">
+                <button 
+                  class="btn btn-primary" 
+                  (click)="viewMode = 'list'"
+                  [class.active]="viewMode === 'list'"
+                >
 									List
 								</button>
 							</div>

@@ -137,7 +137,8 @@
 								<div class="row">
 									<button
 										type="submit"
-										class="btn btn-block btn-primary"
+                    class="btn btn-block btn-primary"
+                    (click)="saveEvaluationNote()"
 										[disabled]="insertEvaluationForm.invalid"
 									>
 										Insert New Evaluation
@@ -177,7 +178,10 @@
 										<div class="row">
 											<div class="col">
 												<!-- *ngIf="note.IsDeleteAble" -->
-												<rd-confirmable-pop-up *ngIf="note.IsDeleteAble">
+                        <rd-confirmable-pop-up 
+                          *ngIf="note.IsDeleteAble"
+                          (confirm)="deleteEvaluation(note)"  
+                        >
 													<!-- (confirm)="deleteNote(note)" -->
 													<button class="btn btn-danger">
 														<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
@@ -362,6 +366,7 @@
 					<span class="Present legend"></span> OK <span class="Late legend"></span> Late / Early
 					<span class="notDone legend"></span> Absent
 					<span class="Permission legend"></span> Permission
+					<span class="College legend"></span> College Permission
 					<span class="Neglects legend"></span> Neglects attendance
 				</div>
 				<table class="table table-sm table-striped text-center">

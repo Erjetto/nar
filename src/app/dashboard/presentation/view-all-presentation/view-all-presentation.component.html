@@ -52,23 +52,32 @@
 					</div>
 				</div>
 			</rd-card>
-			<rd-card [cardTitle]="'My Presentations'" [isLoading]="false">
+			<rd-card
+				[cardTitle]="'My Presentations'"
+				[isLoading]="false"
+				*ngIf="(currentUser$ | async)?.Role.is(constant.role.Trainee)"
+			>
 				<div class="col v-list-m-12 v-list-bordered px-0">
 					<div class="row">
 						<div class="col">
 							<ng-select
 								[items]="myPresentationList$ | async"
-                [clearable]="false"
-                placeholder="Subject - No."
+								[clearable]="false"
+								placeholder="Subject - No."
 								(change)="currentPresentation$.next($event)"
-              >
-                <ng-template ng-label-tmp let-item="item">
-                  {{getSubjectById(item.SubjectId)}} - {{item.PresentationNo}}
-                </ng-template>
-                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                  {{getSubjectById(item.SubjectId)}} - {{item.PresentationNo}}
-                </ng-template>
-              </ng-select>
+							>
+								<ng-template ng-label-tmp let-item="item">
+									{{ getSubjectById(item.SubjectId) }} - {{ item.PresentationNo }}
+								</ng-template>
+								<ng-template
+									ng-option-tmp
+									let-item="item"
+									let-index="index"
+									let-search="searchTerm"
+								>
+									{{ getSubjectById(item.SubjectId) }} - {{ item.PresentationNo }}
+								</ng-template>
+							</ng-select>
 						</div>
 					</div>
 				</div>
@@ -83,13 +92,13 @@
 				[isLoading]="loadingViewPresentation$ | async"
 			>
 				<div rdCardBadges>
-          <!-- Button hanya kalau blum di-score & bukan utk trainee -->
+					<!-- Button hanya kalau blum di-score & bukan utk trainee -->
 					<button
 						class="btn btn-sm btn-primary mr-1"
-            [hidden]="
-              (presentationStatus$ | async) !== 'Not Yet Input' 
-              || !(currentUser$ | async)?.Role.is(constant.role.Trainee)
-            "
+						[hidden]="
+							(presentationStatus$ | async) !== 'Not Yet Input' ||
+							(currentUser$ | async)?.Role.is(constant.role.Trainee)
+						"
 						(click)="showScoringForm$.next(!showScoringForm$.value)"
 					>
 						{{ (showScoringForm$ | async) ? 'Hide Scoring Form' : 'Show Scoring Form' }}
@@ -294,12 +303,15 @@
 							>
 								<!-- currentGenId="(currentGeneration$ | async)?.GenerationId" -->
 								<!-- TODO: Add role validation here (!= Trainee) -->
-								<div class="actions" *ngIf="(currentUser$ | async)?.Role.is(constant.role.AssistantSupervisor)">
+								<div
+									class="actions"
+									*ngIf="(currentUser$ | async)?.Role.is(constant.role.AssistantSupervisor)"
+								>
 									<rd-confirmable-pop-up
 										[description]="deleteReasonTemplate"
 										[title]="'Delete this question?'"
-                    (confirm)="deleteQuestion(question)"
-                    (cancel)="deleteQuestionReason.reset()"
+										(confirm)="deleteQuestion(question)"
+										(cancel)="deleteQuestionReason.reset()"
 									>
 										<ng-template #deleteReasonTemplate>
 											<textarea

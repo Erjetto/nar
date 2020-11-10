@@ -6,6 +6,7 @@ import {
 	ClientTraineeData,
 	ClientUserInRoles,
 	SimpleTraineeData,
+  TraineeSchedule,
 } from '../../models';
 import {
 	FetchAllTraineesInCurrentGen,
@@ -19,7 +20,11 @@ import {
 } from './binusian.action';
 
 export interface IBinusianState {
+  //#region Current User data here
   traineeDailyAttendance: ClientTraineeDailyAttendance;
+
+  traineeSchedule: TraineeSchedule[];
+  //#endregion
 
 	traineesEntity: { [id: string]: ClientTrainee };
 
@@ -36,6 +41,7 @@ export interface IBinusianState {
 
 export const initialState: IBinusianState = {
   traineeDailyAttendance: null,
+  traineeSchedule: [],
 
 	traineesEntity: {},
 	allTrainees: [],

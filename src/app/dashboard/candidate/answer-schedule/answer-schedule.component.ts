@@ -51,7 +51,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		private candidateEffects: CandidateStateEffects
 	) {
 		super(store);
-		const today = DateHelper.dateToInputFormat(Date.now(), this.dateFormat);
+		const today = DateHelper.dateToFormat(Date.now(), this.dateFormat);
 		this.addSchedulePlaceholder = `${today}, ${today}, XX99-9`;
 	}
 
