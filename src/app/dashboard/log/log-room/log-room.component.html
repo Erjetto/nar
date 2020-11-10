@@ -1,0 +1,223 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col-4">
+			<rd-card [cardTitle]="'View Log Room'" [isLoading]="loadingLogRooms$ | async" [expanded]="!isEditing">
+				<div rdCardBadges *ngIf="isEditing">
+					<button class="btn btn-sm btn-primary mr-1" (click)="updateLogRoom()">
+						<fa-icon [icon]="['fas', 'pen']"></fa-icon> Update
+					</button>
+					<button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
+						<fa-icon [icon]="['fas', 'times']"></fa-icon> Close
+					</button>
+				</div>
+				<div class="row form-group">
+					<input class="form-control" type="date" [formControl]="dateControl" />
+				</div>
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th>No.</th>
+								<th>Time</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(logRooms$ | async)?.length === 0">
+								<td class="p-3" colspan="10">No schedules yet</td>
+							</tr>
+							<tr
+								class="cursor-pointer"
+								*ngFor="let log of logRooms$ | async; let idx = index"
+								(click)="selectLog(log)"
+							>
+								<td>{{ idx + 1 }}</td>
+								<td>{{ log.SavedDate | date: viewDateFormat }}</td>
+							</tr>
+						</tbody>
+					</table>
+        </div>
+        <div class="row">
+					<button class="btn btn-primary" (click)="addNewLog()">
+						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add New
+					</button>
+        </div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Computer Seat'" [expanded]="isEditing" [collapsible]="isEditing">
+				<div class="row mb-2">
+          <div class="col">
+
+          </div>
+          <div class="col-auto col-form-label">
+            <b>Room: </b>
+          </div>
+          <div class="col-auto minw-150px">
+            <ng-select
+              [items]="rooms$ | async"
+              bindLabel="RoomName"
+              bindValue="RoomName"
+              [formControl]="logRoom"
+            ></ng-select>
+          </div>
+        </div>
+				<div class="row">
+					<div class="col seat-map">
+						<div
+							class="seat"
+							*ngFor="let seatForm of logRoomComputerSeat.controls; let idx = index"
+							[formGroup]="seatForm"
+						>
+							<div class="row">
+								<div class="col" [title]="seatForm.get('trainee').value?.TraineeName">
+									{{ idx + 1 }}. {{ seatForm.get('trainee').value?.TraineeName }}
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<ng-select
+										[items]="trainees$ | async"
+                    bindLabel="TraineeCode"
+										formControlName="trainee"
+									></ng-select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Log Room'" [expanded]="isEditing" [collapsible]="isEditing">
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th width="60px">No.</th>
+								<th width="200px">Trainee</th>
+								<th width="100px">Start</th>
+								<th width="100px">End</th>
+								<th>Note</th>
+								<th width="60px">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								*ngFor="let noteForm of logRoomNote.controls; let idx = index"
+								[formGroup]="noteForm"
+							>
+								<td>{{ idx + 1 }}</td>
+								<td class="text-left">
+									<ng-select
+										[items]="trainees$ | async"
+										bindLabel="TraineeCode"
+										formControlName="trainee"
+									>
+										<ng-template ng-label-tmp let-item="item">
+											<span>{{ item.codeAndName }}</span>
+										</ng-template>
+										<ng-template ng-option-tmp let-item="item" let-index="index">
+											<span>{{ item.codeAndName }}</span>
+										</ng-template>
+									</ng-select>
+								</td>
+								<td>
+									<input class="form-control" type="time" formControlName="start" />
+								</td>
+								<td>
+									<input class="form-control" type="time" formControlName="end" />
+								</td>
+								<td>
+									<textarea
+										class="form-control vertical-text-area"
+										formControlName="note"
+									></textarea>
+								</td>
+								<td>
+									<button class="btn btn-danger" (click)="deleteLogRoomNote(idx)">
+										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<button class="btn btn-primary" (click)="addLogRoomNote()">
+						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
+					</button>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Log Presentation'" [expanded]="isEditing" [collapsible]="isEditing">
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th width="60px">No.</th>
+								<th width="100px">Trainee</th>
+								<th width="100px">Start</th>
+								<th width="100px">Go</th>
+								<th width="100px">End</th>
+								<th width="100px">PIC</th>
+								<th width="100px">Room</th>
+								<th>Materi</th>
+								<th width="60px">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								*ngFor="let presentationForm of logRoomPresentation.controls; let idx = index"
+								[formGroup]="presentationForm"
+							>
+								<td>{{ idx + 1 }}</td>
+								<td class="text-left">
+									<ng-select
+										[items]="trainees$ | async"
+										bindLabel="TraineeCode"
+										formControlName="trainee"
+									></ng-select>
+								</td>
+								<td>
+									<input class="form-control" type="time" formControlName="start" />
+								</td>
+								<td>
+									<input class="form-control" type="time" formControlName="go" />
+								</td>
+								<td>
+									<input class="form-control" type="time" formControlName="end" />
+								</td>
+								<td>
+									<input class="form-control" formControlName="pic" />
+								</td>
+								<td>
+									<ng-select
+										[items]="rooms$ | async"
+										bindLabel="RoomName"
+										formControlName="room"
+									></ng-select>
+								</td>
+								<td>
+									<input class="form-control" formControlName="materi" />
+								</td>
+								<td>
+									<button class="btn btn-danger" (click)="deleteLogRoomPresentation(idx)">
+										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<button class="btn btn-primary" (click)="addLogRoomPresentation()">
+						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
+					</button>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,23 @@
+:host{
+  .seat-map{
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0px, 100px));
+    gap: 8px;
+
+    > .seat{
+
+      > .row:first-child > .col{
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  ::ng-deep .ng-input{
+    padding-right: 20px !important;
+  }
+  ::ng-deep .ng-arrow-wrapper{
+    display: none;
+  }
+}

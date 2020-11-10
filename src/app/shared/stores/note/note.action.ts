@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ClientEvaluation } from '../../models';
+import { ClientEvaluation, ClientTraineeReputation } from '../../models';
 
 export const FetchEvaluation = createAction(
 	'[NoteState] FetchEvaluation',
@@ -32,4 +32,14 @@ export const SetEvaluationNoteFilter = createAction(
 		sort: string;
 		asc: string;
 	}>()
+);
+
+
+export const FetchTraineesReputation = createAction(
+	'[NoteState] FetchTraineesReputation',
+	props<{ phaseId: string }>()
+);
+export const FetchTraineesReputationSuccess = createAction(
+	'[NoteState] FetchTraineesReputationSuccess',
+	props<{ payload: ClientTraineeReputation[] }>()
 );

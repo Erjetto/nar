@@ -29,7 +29,7 @@ export class NoteStateEffects {
 		ofType(NoteStateAction.CreateEvaluationNote),
 		switchMap((data) =>
 			this.noteService.SaveEvaluationNote({
-				notes: `[ ${data.evalType} ] - ${data.notes}`,
+				notes: `[${data.evalType}] - ${data.notes}`,
 				sdate: data.sdate,
 			})
 		),
@@ -53,5 +53,7 @@ export class NoteStateEffects {
 				: of(MainStateAction.FailMessage('deleting evaluation note'))
 		),
 		share()
-	);
+  );
+  
+
 }
