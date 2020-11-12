@@ -78,7 +78,7 @@ export class ModifyInterviewMaterialComponent
 		this.allTrainees$ = this.store.pipe(
 			select(fromBinusianState.getAllTrainees),
 			map((trainees: ClientTrainee[]) => [
-				new ClientTrainee('0', 'T000', 'All', '', false), // Add for all trainee
+				new ClientTrainee('T000', 'All'), // Add for all trainee
 				...trainees,
 			])
 		);
@@ -108,7 +108,8 @@ export class ModifyInterviewMaterialComponent
 			);
 		merge(
 			this.interviewEffects.createInterviewMaterials$,
-			this.interviewEffects.massCreateInterviewMaterials$
+      this.interviewEffects.massCreateInterviewMaterials$,
+      this.interviewEffects.deleteInterviewMaterial$
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
 			.subscribe(([action, currPhase]) => {

@@ -123,9 +123,9 @@ export class InterviewStateEffects {
 		ofType(InterviewStateAction.CreateInterviewSchedule),
 		switchMap((data) => this.interviewService.SaveInterviewSchedule(data)),
 		mergeMap((res) =>
-			!_isEmpty(res)
+			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created interview schedules'))
-				: of(MainStateAction.FailMessage('Saving interview schedules'))
+				: of(MainStateAction.FailMessage('creating interview schedules', res.join('\n')))
 		),
 		share()
 	);
@@ -166,9 +166,21 @@ export class InterviewStateEffects {
 		ofType(InterviewStateAction.DeleteInterviewSchedule),
 		switchMap((data) => this.interviewService.DeleteInterviewSchedule(data)),
 		mergeMap((res) =>
-			!_isEmpty(res)
-				? of(MainStateAction.SuccessfullyMessage('created interview schedules'))
-				: of(MainStateAction.FailMessage('Saving interview schedules'))
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted interview schedule'))
+				: of(MainStateAction.FailMessage('deleting interview schedule'))
+		),
+		share()
+	);
+
+	@Effect()
+	deleteInterviewMaterial$: Observable<Action> = this.actions$.pipe(
+		ofType(InterviewStateAction.DeleteInterviewMaterial),
+		switchMap((data) => this.interviewService.DeleteInterviewMaterial(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted interview material'))
+				: of(MainStateAction.FailMessage('deleting interview material'))
 		),
 		share()
 	);

@@ -86,8 +86,10 @@
 						</div>
 						<div class="row form-group">
 							<div class="row">
-                <label for="materialUpload" class="col-3 col-form-label"> File </label>
-                <rd-upload-input [filesForm]="singleUploadForm.get('fileForm')"></rd-upload-input>
+								<label for="materialUpload" class="col-3 col-form-label"> File </label>
+								<rd-upload-input
+									[singleFileForm]="singleUploadForm.get('fileForm')"
+								></rd-upload-input>
 							</div>
 						</div>
 						<div class="row form-group justify-content-center">
@@ -105,13 +107,13 @@
 							<h6><b>Mass Insert</b></h6>
 						</div>
 						<div class="row form-group">
-              <div class="col-3 col-form-label">Files</div>
-              <rd-upload-input [multiple]="true" [filesForm]="massUploadFileForm"></rd-upload-input>
+							<div class="col-3 col-form-label">Files</div>
+							<rd-upload-input [multiple]="true" [filesForm]="massUploadFileForm"></rd-upload-input>
 							<!-- <input type="file" multiple (change)="massUpload($event.target.files)" /> -->
-            </div>
-            <div class="row">
-              <span class="font-italic">Note: Files must have prefix 'T999_name'</span>
-            </div>
+						</div>
+						<div class="row">
+							<span class="font-italic">Note: Files must have prefix 'T999_name'</span>
+						</div>
 						<div class="row" [hidden]="massUploadFileForm.length == 0">Uploaded Files:</div>
 						<div class="row" [hidden]="massUploadFileForm.length == 0">
 							<ul>
@@ -119,7 +121,11 @@
 							</ul>
 						</div>
 						<div class="row form-group justify-content-around">
-							<button class="btn btn-primary" [disabled]="massUploadFileForm.invalid">
+							<button
+								class="btn btn-primary"
+								[disabled]="massUploadFileForm.invalid"
+								(click)="submitMassInsertForm()"
+							>
 								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Submit
 							</button>
 						</div>
@@ -159,21 +165,21 @@
 								</td>
 								<td class="text-center">
 									<rd-confirmable-pop-up
-                    [title]="'Delete ' + material.MaterialName + '?'"
-                    [description]="deleteReasonTemplate"
-                    [canConfirm]="deleteReasonText.valid"
-                    (confirm)="deleteTraineeFile(interviewMaterial, material)"
-                    (cancel)="deleteReasonText.reset()"
+										[title]="'Delete ' + material.MaterialName + '?'"
+										[description]="deleteReasonTemplate"
+										[canConfirm]="deleteReasonText.valid"
+										(confirm)="deleteTraineeFile(interviewMaterial, material)"
+										(cancel)="deleteReasonText.reset()"
 									>
 										<ng-template #deleteReasonTemplate>
-                      <textarea
-                        class="form-control"
-                        [formControl]="deleteReasonText"
-                        placeholder="Input reasons here..."
-                        cols="30"
-                        rows="4"
-                      ></textarea>
-                    </ng-template>
+											<textarea
+												class="form-control"
+												[formControl]="deleteReasonText"
+												placeholder="Input reasons here..."
+												cols="30"
+												rows="4"
+											></textarea>
+										</ng-template>
 										<button class="btn btn-xs btn-danger">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 										</button>

@@ -99,7 +99,7 @@ export class InterviewService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveInterviewResult', data)
-			.pipe(map((res: any) => res === true));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveInterviewResultDecision(data: {
@@ -112,7 +112,7 @@ export class InterviewService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveInterviewResultDecision', data)
-			.pipe(map((res: any) => res === true));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public GetInterviewTraineeDetail(data: {
@@ -130,7 +130,7 @@ export class InterviewService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveInterviewMaterial', data)
-			.pipe(map((res: any) => res === true));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public MassSaveInterviewMaterial(data: {
@@ -139,7 +139,7 @@ export class InterviewService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'MassSaveInterviewMaterial', data)
-			.pipe(map((res: any) => res === true));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteInterviewMaterial(data: {
@@ -150,7 +150,7 @@ export class InterviewService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteInterviewMaterial', data)
-			.pipe(map((res: any) => res === true));
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public DeleteInterviewSchedule(data: {
@@ -159,6 +159,6 @@ export class InterviewService {
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteInterviewSchedule', data)
-			.pipe(map((res: any) => res === true));
+			.pipe(map((res: any) => res.d === true));
 	}
 }

@@ -198,9 +198,9 @@ export class ClientSubject extends BaseModel {
 //#region Trainee
 export class ClientTrainee extends BaseModel {
 	constructor(
-		public TraineeId = emptyGuid,
 		public TraineeCode = '',
 		public TraineeName = '',
+		public TraineeId = emptyGuid,
 		public TraineeNumber = '',
 		public IsActive = false
 	) {
