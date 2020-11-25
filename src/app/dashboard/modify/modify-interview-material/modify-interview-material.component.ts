@@ -164,11 +164,13 @@ export class ModifyInterviewMaterialComponent
 	submitMassInsertForm() {
 		// Split jadi 2 array
 		const { fileIds, fileNames } = this.massUploadFileForm.value.reduce(
-			(prev, curr) => {
-				prev.fileIds.push(curr.fileId);
-				prev.fileNames.push(curr.fileName);
-			},
-			{ fileId: [], fileName: [] }
+			(prev, curr) => ({
+        fileIds: [...prev.fileIds, curr.fileId],
+        fileNames: [...prev.fileNames, curr.fileName],
+				// prev.fileIds.push(curr.fileId);
+        // prev.fileNames.push(curr.fileName);
+			}),
+			{ fileIds: [], fileNames: [] }
 		);
 		this.store.dispatch(InterviewStateAction.MassCreateInterviewMaterial({ fileIds, fileNames }));
 	}
