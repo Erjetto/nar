@@ -11,9 +11,11 @@ import {
 	EvaluationNote,
 	ClientEvaluation,
 	TraineeComment,
+  ClientTraineeReputation,
+  TraineeCommentHistory,
 } from '../../models';
 import { environment } from 'src/environments/environment';
-import { map as _map} from 'lodash';
+import { map as _map } from 'lodash';
 import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
@@ -33,14 +35,17 @@ export class NoteService {
 			.pipe(map((res: any) => res.d === true));
 	}
 
+  // NOTE: ClientTraineeReputationPaging tak digunakan, ambil semua aja langsung
 	public GetTraineesReputationByPhase(data: {
 		phaseId: string;
-		index: number;
-		search: string;
-	}): Observable<ClientTraineeReputationPaging> {
+	}): Observable<ClientTraineeReputation[]> {
 		return this.httpClient
-			.post(this.baseUrl + 'GetTraineesReputationByPhase', data)
-			.pipe(map((res: any) => ClientTraineeReputationPaging.fromJson(res.d)));
+			.post(this.baseUrl + 'GetTraineesReputationByPhase', {
+				phaseId: data.phaseId,
+				index: 1,
+				search: '',
+			})
+			.pipe(map((res: any) => _map(res.d.TraineeReputation, ClientTraineeReputation.fromJson)));
 	}
 
 	public GetTraineeDataForTrainer(data: { traineeId: string }): Observable<ClientTraineeData> {
@@ -85,10 +90,10 @@ export class NoteService {
 			.pipe(map((res: any) => res.d === true));
 	}
 
-	public GetTraineeCommentHistory(): Observable<TraineeComment> {
+	public GetTraineeCommentHistory(): Observable<TraineeCommentHistory[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeCommentHistory', {})
-			.pipe(map((res: any) => TraineeComment.fromJson(res.d)));
+			.pipe(map((res: any) => _map(res.d, TraineeCommentHistory.fromJson)));
 	}
 
 	public DeleteTraineeCommentHistory(data: {

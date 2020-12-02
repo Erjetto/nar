@@ -20,6 +20,8 @@ import {
 	ClientStatistic,
 	ClientTraineeDailyAttendance,
 	Message,
+	TraineeComment,
+	TraineeCommentHistory,
 } from 'src/app/shared/models';
 import {
 	MasterStateAction,
@@ -29,6 +31,8 @@ import {
 	MainStateEffects,
 	fromBinusianState,
 	BinusianStateAction,
+	NoteStateAction,
+	fromNoteState,
 } from 'src/app/shared/store-modules';
 
 import { Observable, of, Subject, interval, BehaviorSubject } from 'rxjs';
@@ -37,6 +41,7 @@ import { isEmpty as _isEmpty } from 'lodash';
 import { GeneralService } from 'src/app/shared/services/new/general.service';
 import { FormControl } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
+import { NoteService } from 'src/app/shared/services/new/note.service';
 
 @Component({
 	selector: 'rd-home',
@@ -52,15 +57,17 @@ export class HomeComponent extends DashboardContentBase implements OnInit, OnDes
 
 	currentPhase = new FormControl();
 	statistics$ = new Subject<ClientStatistic[]>();
+	commentHistory$ = new Subject<TraineeCommentHistory[]>();
 
 	loadingTraineeStatistic$ = new BehaviorSubject<boolean>(false);
 	loadingAnnouncements$: Observable<boolean>;
-	// isLoading = {isLoading: true};
+
 	destroyed$: Subject<any> = new Subject();
 
 	constructor(
 		protected store: Store<IAppState>,
 		private generalService: GeneralService,
+		private noteService: NoteService,
 		private mainEffects: MainStateEffects
 	) {
 		super(store);
@@ -81,6 +88,7 @@ export class HomeComponent extends DashboardContentBase implements OnInit, OnDes
 				.pipe(
 					filter((res) => !_isEmpty(res)),
 					takeUntil(this.destroyed$),
+					// Contoh kalau tidak menggunakan store, langsung pake service
 					switchMap((phase) => this.generalService.GetStatisticTrainee({ phaseId: phase.PhaseId }))
 				)
 				.subscribe((statistics) => {
@@ -94,13 +102,21 @@ export class HomeComponent extends DashboardContentBase implements OnInit, OnDes
 					takeUntil(this.destroyed$)
 				)
 				.subscribe((phases) => this.currentPhase.setValue(phases[0]));
+
+			this.noteService
+				.GetTraineeCommentHistory()
+				.subscribe((res) => this.commentHistory$.next(res));
 		} else {
 			this.store.dispatch(BinusianStateAction.FetchDailyAttendance());
 		}
 
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());
-			this.store.dispatch(MainStateAction.FetchAnnouncements());
+      this.store.dispatch(MainStateAction.FetchAnnouncements());
+      
+			this.noteService 
+        .GetTraineeCommentHistory()
+        .subscribe((res) => this.commentHistory$.next(res));
 		});
 
 		this.store.dispatch(

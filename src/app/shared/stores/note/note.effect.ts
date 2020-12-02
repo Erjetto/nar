@@ -44,16 +44,62 @@ export class NoteStateEffects {
 	@Effect()
 	deleteEvaluationNote$: Observable<Action> = this.actions$.pipe(
 		ofType(NoteStateAction.DeleteEvaluationNote),
-		switchMap((data) =>
-			this.noteService.DeleteEvaluationNote(data)
-		),
+		switchMap((data) => this.noteService.DeleteEvaluationNote(data)),
 		mergeMap((res) =>
 			res === true
 				? of(MainStateAction.SuccessfullyMessage('deleted evaluation note'))
 				: of(MainStateAction.FailMessage('deleting evaluation note'))
 		),
 		share()
+	);
+
+	@Effect()
+	getTraineesReputation$: Observable<Action> = this.actions$.pipe(
+		ofType(NoteStateAction.FetchTraineesReputation),
+		switchMap((data) => this.noteService.GetTraineesReputationByPhase(data)),
+		mergeMap((res) => of(NoteStateAction.FetchTraineesReputationSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
+	getTraineeData$: Observable<Action> = this.actions$.pipe(
+		ofType(NoteStateAction.FetchTraineeDataForTrainer),
+		switchMap((data) => this.noteService.GetTraineeDataForTrainer(data)),
+		mergeMap((res) => of(NoteStateAction.FetchTraineeDataForTrainerSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
+	createTraineeNote$: Observable<Action> = this.actions$.pipe(
+		ofType(NoteStateAction.CreateNote),
+		switchMap((data) => this.noteService.SaveNote(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('inserted note'))
+				: of(MainStateAction.FailMessage('inserting note'))
+		),
+		share()
+	);
+
+	@Effect()
+	deleteTraineeNote$: Observable<Action> = this.actions$.pipe(
+		ofType(NoteStateAction.DeleteNote),
+		switchMap((data) => this.noteService.DeleteReputationNote(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted note'))
+				: of(MainStateAction.FailMessage('deleting note'))
+		),
+		share()
   );
   
+	// @Effect()
+	// getTraineeCommentHistory$: Observable<Action> = this.actions$.pipe(
+	// 	ofType(NoteStateAction.FetchTraineeCommentHistory),
+	// 	switchMap((data) => this.noteService.GetTraineeCommentHistory()),
+	// 	mergeMap((res) => of(NoteStateAction.FetchTraineeCommentHistorySuccess({ payload: res }))),
+	// 	share()
+	// );
+
 
 }

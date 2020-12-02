@@ -1,5 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { ClientEvaluation, ClientTraineeReputation } from '../../models';
+import {
+	ClientEvaluation,
+	ClientTraineeData,
+	ClientTraineeReputation,
+	TraineeComment,
+} from '../../models';
 
 export const FetchEvaluation = createAction(
 	'[NoteState] FetchEvaluation',
@@ -13,10 +18,6 @@ export const FetchEvaluationSuccess = createAction(
 export const CreateEvaluationNote = createAction(
 	'[NoteState] CreateEvaluationNote',
 	props<{ notes: string; evalType: string; sdate: Date }>()
-);
-export const CreateNote = createAction(
-	'[NoteState] CreateNote',
-	props<{ traineeId: string; note: string; reputation: number }>()
 );
 
 export const DeleteEvaluationNote = createAction(
@@ -34,7 +35,7 @@ export const SetEvaluationNoteFilter = createAction(
 	}>()
 );
 
-
+//#region View Trainee
 export const FetchTraineesReputation = createAction(
 	'[NoteState] FetchTraineesReputation',
 	props<{ phaseId: string }>()
@@ -43,3 +44,30 @@ export const FetchTraineesReputationSuccess = createAction(
 	'[NoteState] FetchTraineesReputationSuccess',
 	props<{ payload: ClientTraineeReputation[] }>()
 );
+
+export const FetchTraineeDataForTrainer = createAction(
+	'[NoteState] FetchTraineeDataForTrainer',
+	props<{ traineeId: string }>()
+);
+export const FetchTraineeDataForTrainerSuccess = createAction(
+	'[NoteState] FetchTraineeDataForTrainerSuccess',
+	props<{ payload: ClientTraineeData }>()
+);
+
+export const CreateNote = createAction(
+	'[NoteState] CreateNote',
+	props<{ traineeId: string; note: string; reputation: number }>()
+);
+export const DeleteNote = createAction(
+	'[NoteState] DeleteNote',
+	props<{ noteId: string; traineeId: string }>()
+);
+//#endregion
+
+//#region Home
+// export const FetchTraineeCommentHistory = createAction('[NoteState] FetchTraineeCommentHistory');
+// export const FetchTraineeCommentHistorySuccess = createAction(
+// 	'[NoteState] FetchTraineeCommentHistorySuccess',
+// 	props<{ payload: TraineeComment[] }>()
+// );
+//#endregion
