@@ -48,8 +48,8 @@
 				[isLoading]="loadingViewEvaluations$ | async"
 			>
 				<div class="row">
-					<div class="col border-lightgrey border-right" [formGroup]="filterEvaluationForm">
-						<div class="row form-group border-lightgrey border-bottom justify-content-center">
+					<div class="col bd-lightgrey bd-right" [formGroup]="filterEvaluationForm">
+						<div class="row form-group bd-lightgrey bd-bottom justify-content-center">
 							<h6><b>Filter Evaluation View</b></h6>
 						</div>
 						<!-- <span class="row justify-content-end pr-2"><b>Filter</b></span> -->
@@ -112,7 +112,7 @@
 						</div>
 					</div>
 					<div class="col-7 col-flex">
-						<div class="row form-group border-lightgrey border-bottom justify-content-center">
+						<div class="row form-group bd-lightgrey bd-bottom justify-content-center">
 							<h6><b>Insert New Evaluation</b></h6>
 						</div>
 						<!-- <b class="row">Insert new Evaluation</b> -->
@@ -150,7 +150,7 @@
 				</div>
 				<div class="row pt-2">
 					<div
-						class="col v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8"
+						class="col v-list-m-6 v-list-bordered bd-lightgrey bd-full-solid bd-rad-8"
 					>
 						<div class="row" *ngFor="let note of filteredEvalNotes$ | async">
 							<!-- Need extra col-row due to v-list-m-6 styling 
@@ -407,10 +407,14 @@
 						</tr>
 						<tr *ngFor="let at of (attendanceReport$ | async)?.Attendances">
 							<td class="trainee-details-hotspot">
-								<!-- [ngClass]="{ Permission: at.FulldayPermission }"  -->
-								<a [routerLink]="['#View/Trainee', at.TraineeId, 'false']" class="pointer relative">
-									{{ at.TraineeCode }}
-								</a>
+                <!-- [ngClass]="{ Permission: at.FulldayPermission }"  -->
+                <rd-trainee-detail-on-hover
+                  [traineeId]="at.TraineeId"
+                >
+                  <a [routerLink]="['#View/Trainee', at.TraineeId, 'false']" class="pointer relative">
+                    {{ at.TraineeCode }}
+                  </a>
+                </rd-trainee-detail-on-hover>
 							</td>
 							<td>{{ at.Secretariat.TimeIn || '-' }}</td>
 							<td>{{ at.Secretariat.TimeOut || '-' }}</td>

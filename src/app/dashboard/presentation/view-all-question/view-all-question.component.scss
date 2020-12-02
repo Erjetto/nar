@@ -1,3 +1,5 @@
+@import '/src/variables';
+
 :host {
 	.question-item {
 		padding: 1rem;
@@ -12,10 +14,10 @@
 
 	.row-checked,
 	.question-correct {
-		background: #6bf0cb4d;
+		background: $color-good;
 	}
 
 	.question-wrong {
-		background: #f06b6b4d;
+		background: $color-bad;
 	}
 }

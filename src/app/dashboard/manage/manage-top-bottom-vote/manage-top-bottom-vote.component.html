@@ -146,7 +146,7 @@
         <!-- [isLoading]="loadingViewVoteResult$ | async" -->
 				<div class="row">
 					<div class="col justify-content-end">
-            <h4 class="m-0 p-1 border-bottom border-lightgrey">
+            <h4 class="m-0 p-1 bd-bottom bd-lightgrey">
               {{currentVote == 'trainer' ? 'Trainer\'s ' : 'Trainee\'s '}} Vote
             </h4>
 						<!-- <ul class="nav nav-tabs">
@@ -187,7 +187,7 @@
 							No votes yet...
 						</div>
 						<div
-							class="vote-item row border-bottom"
+							class="vote-item row bd-bottom"
 							*ngFor="let voter of traineeVotesFiltered$ | async"
 						>
 							<div class="col">
@@ -250,7 +250,7 @@
 							No votes yet...
 						</div>
 						<div
-							class="vote-item row border-bottom"
+							class="vote-item row bd-bottom"
 							*ngFor="let voter of trainerVotesFiltered$ | async"
 						>
 							<div class="col">

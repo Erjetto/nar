@@ -163,41 +163,47 @@ a {
 	}
 }
 
+.row-striped{
+  & > .row:nth-child(odd){
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
 // Border
-.border-lightgrey {
+.bd-lightgrey {
 	border-color: lightgrey !important;
 }
 
-.border-full-solid {
+.bd-full-solid {
 	border: 1px solid;
 }
-.border-full-dash {
+.bd-full-dash {
 	border-right: 1px dashed;
 }
 
-.border-right {
+.bd-right {
 	border-right: 1px solid;
 }
-.border-left {
+.bd-left {
 	border-left: 1px solid;
 }
-.border-top {
+.bd-top {
 	border-top: 1px solid;
 }
-.border-bottom {
+.bd-bottom {
 	border-bottom: 1px solid;
 }
 
-.border-rad-4 {
+.bd-rad-4 {
 	border-radius: 4px;
 }
-.border-rad-8 {
+.bd-rad-8 {
 	border-radius: 8px;
 }
-.border-rad-12 {
+.bd-rad-12 {
 	border-radius: 12px;
 }
-.border-circle {
+.bd-circle {
 	border-radius: 50%;
 }
 
@@ -274,9 +280,17 @@ a {
 		max-width: #{$i * 50}px;
 	}
 }
+.v-scroll{
+  overflow-y: auto;
+}
+.h-scroll{
+  overflow-x: auto;
+}
 
 // font-size
+.font-x-small{font-size: x-small;}
 .font-small{font-size: small;}
+.font-smaller{font-size: smaller;}
 .font-large{font-size: large;}
 .font-x-large{font-size: x-large;}
 .font-xx-large{font-size: xx-large;}
@@ -350,11 +364,11 @@ a {
 
 // Background colors
 .bg-green {
-  background: #6bf0cb4d;
+  background: $color-good;
 }
 
 .bg-red {
-  background: #f06b6b4d;
+  background: $color-bad;
 }
 
 // tables

@@ -84,37 +84,6 @@ import { swipeAnimation, faderAnimation } from '../../angular-animations';
 		]),
 		swipeAnimation('down', 15, 200),
 		faderAnimation(1, 200),
-		// scaleAnimation([
-		// 	{ x: 0, y: 0, offset: 0 },
-		// 	{ x: 100, y: 0, offset: 0.5 },
-		// 	{ x: 100, y: 100, offset: 1 },
-		// ]),
-		// trigger('scaleAnimation', [
-		// 	state('shown', style({ 'transform-origin': 'top' })),
-		// 	state('hidden', style({ transform: 'scaleY(0)', width: 0, 'transform-origin': 'top' })),
-		// 	transition(
-		// 		'hidden => shown',
-		// 		animate(
-		// 			500 + 'ms ease-out',
-		// 			keyframes([
-		// 				style({ transform: 'scaleY(0)', width: 0, offset: 0 }),
-		// 				style({ transform: 'scaleY(0)', width: '*', offset: 0.5 }),
-		// 				style({ transform: 'scaleY(1)', width: '*', offset: 1 }),
-		// 			])
-		// 		)
-		// 	),
-		// 	transition(
-		// 		'shown => hidden',
-		// 		animate(
-		// 			500 + 'ms ease-out',
-		// 			keyframes([
-		// 				style({ transform: 'scaleY(1)', width: '*', 'overflow-x':'hidden', offset: 0 }),
-		// 				style({ transform: 'scaleY(1)', width: '*', offset: 0.5 }),
-		// 				style({ transform: 'scaleY(1)', width: 0, offset: 1 }),
-		// 			])
-		// 		)
-		// 	),
-		// ]),
 	],
 })
 export class CardComponent implements OnInit {
@@ -129,7 +98,8 @@ export class CardComponent implements OnInit {
 
 	@Output() toggleExpand = new EventEmitter<boolean>(); // Is it needed?
 	@Input() expanded = true;
-	@Input() isLoading = false;
+  @Input() isLoading = false;
+  @Input() maxHeight = 0;
 
 	constructor(private cdr: ChangeDetectorRef) {}
 
