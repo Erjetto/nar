@@ -1,38 +1,41 @@
 <div class="container-xl">
 	<div class="row">
-		<div class="col">
-			<rd-card [cardTitle]="'Trainee ' + traineeDetail.TraineeCode">
+		<div class="col-7">
+			<rd-card
+				[cardTitle]="'Trainee ' + (traineeDetail$ | async)?.TraineeCode"
+				[isLoading]="loadingViewTrainee$ | async"
+			>
 				<div class="row">
 					<div class="col-auto">
-						<img [src]="traineeDetail.imageLink" style="width: auto; height: 100%" />
+						<img [src]="(traineeDetail$ | async)?.imageLink" style="width: auto; height: 100%" />
 					</div>
 					<div class="col">
 						<div class="row">
 							<div class="col font-weight-bold">Binusian Number</div>
-							<div class="col">: {{ traineeDetail.TraineeNumber }}</div>
+							<div class="col">: {{ (traineeDetail$ | async)?.TraineeNumber }}</div>
 						</div>
 						<div class="row">
 							<div class="col font-weight-bold">Name</div>
-							<div class="col">: {{ traineeDetail.TraineeName }}</div>
+							<div class="col">: {{ (traineeDetail$ | async)?.TraineeName }}</div>
 						</div>
 						<div class="row">
 							<div class="col font-weight-bold">Gender</div>
-							<div class="col">: {{ traineeDetail.Gender }}</div>
+							<div class="col">: {{ (traineeDetail$ | async)?.Gender }}</div>
 						</div>
 						<div class="row">
 							<div class="col font-weight-bold">Major</div>
-							<div class="col">: {{ traineeDetail.Major }}</div>
+							<div class="col">: {{ (traineeDetail$ | async)?.Major }}</div>
 						</div>
 					</div>
 				</div>
 			</rd-card>
 		</div>
 		<!-- If veteran -->
-		<div class="col-5" *ngIf="traineeDetail.IsVeteran">
+		<div class="col-5" *ngIf="(traineeDetail$ | async)?.IsVeteran">
 			<rd-card [cardTitle]="'Trainee Veteran History'">
 				<div class="row">
 					<div class="col v-list-m-6 v-list-bordered">
-						<div class="row" *ngFor="let history of traineeDetail.DeactivateReasons">
+						<div class="row" *ngFor="let history of (traineeDetail$ | async)?.DeactivateReasons">
 							<div class="col">
 								<div class="font-weight-bold">Generation: {{ history.GenerationName }}</div>
 								<div class="pl-4">{{ history.Reason }}</div>
@@ -50,29 +53,29 @@
 	</div>
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Trainee Notes'">
+			<rd-card
+				[cardTitle]="'Trainee Notes'"
+				[isLoading]="(loadingViewNote$ | async) || (loadingViewTrainee$ | async)"
+			>
 				<!-- <div class="row form-group">
           <label for="addNewNote" class="col-auto col-form-label"></label>
           div.col-5
         </div> -->
 				<div class="row">
 					<div class="col">
-						<span class="row justify-content-center pr-2 mb-2"><b>Notes</b></span>
-						<div
-							class="v-list-m-6 v-list-bordered border-lightgrey border-full-solid border-rad-8 p-2"
-						>
+						<div class="v-list-m-6 v-list-bordered p-2">
 							<!-- <div class="row" *ngIf="traineeDetail.Notes.length === 0">
 								<div class="col align-items-center justify-content-center">
 									<i>No notes yet</i>
 								</div>
 							</div> -->
-							<div class="row" *ngFor="let note of traineeDetail.Notes">
+							<div class="row" *ngFor="let note of (traineeDetail$ | async)?.Notes">
 								<!-- Need extra col-row due to v-list-m-6 styling 
                 prevents > 1 child element -->
 								<div class="col">
-									<div class="row">
-										<div class="col-auto">
-											<div class="font-weight-bold">
+									<div class="row reputation{{ note.Reputation }}">
+										<div class="col-auto" style="width: 40px">
+											<div class="font-weight-bold absolute-center">
 												{{ note.Reputation }}
 											</div>
 										</div>
@@ -83,13 +86,13 @@
 												at {{ note.SavedAt | date: viewDateFormat }}
 											</div>
 										</div>
-										<div class="col-auto">
-											<rd-confirmable-pop-up
-												[title]="'Delete Note from' + note.SavedBy + '?'"
-												(confirm)="deleteNote(note)"
-											>
+										<div
+											class="col-auto p-2"
+											*ngIf="note.SavedBy == (currentUser$ | async).UserName"
+										>
+											<rd-confirmable-pop-up (confirm)="deleteNote(note)">
 												<button class="btn btn-danger">
-													<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+													<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
 												</button>
 											</rd-confirmable-pop-up>
 										</div>
@@ -98,22 +101,23 @@
 							</div>
 							<div class="row">
 								<div class="col">
-									<div class="row">
+									<div class="row" [formGroup]="noteForm">
 										<div class="col-9">
 											<textarea
-												name="evalNote"
-												id="evalNote"
 												class="form-control h-100"
 												style="resize: none"
 												placeholder="Add new notes"
+												formControlName="note"
 											></textarea>
 										</div>
 										<div class="col-3">
 											<div class="row mb-2">
 												<div class="col">
 													<ng-select
-														id="evalType"
-														name="evalType"
+														formControlName="reputation"
+														[items]="reputations"
+														bindLabel="label"
+														bindValue="val"
 														class="col"
 														[searchable]="false"
 														[clearable]="false"
@@ -122,7 +126,11 @@
 											</div>
 											<div class="row">
 												<div class="col">
-													<button type="submit" class="btn btn-block btn-primary">
+													<button
+														[disabled]="noteForm.invalid"
+														(click)="saveNote()"
+														class="btn btn-block btn-primary"
+													>
 														Insert New Note
 													</button>
 												</div>
@@ -133,7 +141,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="col col-flex ml-2 border-left border-lightgrey">
+					<!-- <div class="col col-flex ml-2 bd-left bd-lightgrey">
 						<span class="row justify-content-center pr-2 mb-2"><b>Insert new Note</b></span>
 						<form class="row">
 							<div class="col">
