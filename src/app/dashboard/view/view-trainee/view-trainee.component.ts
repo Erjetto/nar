@@ -21,9 +21,10 @@ import { Observable, of, Subject, interval, BehaviorSubject, combineLatest } fro
 
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { MockData } from 'src/app/shared/mock-data';
-import { map, startWith, takeUntil } from 'rxjs/operators';
+import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 import { FormControl } from '@angular/forms';
+import { isEmpty as _isEmpty } from 'lodash';
 
 @Component({
 	selector: 'rd-view-trainee',
@@ -55,7 +56,7 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 		this.trainees$ = this.store.pipe(select(fromNoteState.getTraineesReputation));
 		this.filteredTrainees$ = combineLatest([
 			this.trainees$,
-			this.searchTextControl.valueChanges.pipe(startWith('')),
+			this.searchTextControl.valueChanges.pipe(startWith(''), debounceTime(400), distinctUntilChanged()),
 		]).pipe(
 			map(([trainees, searchText]) =>
 				trainees.filter((t) =>
@@ -75,7 +76,7 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 			.pipe(takeUntil(this.destroyed$), map(TryGetCoreTrainingPhase))
 			.subscribe(this.currentPhase$);
 
-		this.currentPhase$.pipe(takeUntil(this.destroyed$)).subscribe((phase) => {
+		this.currentPhase$.pipe(filter(v=>!_isEmpty(v)),takeUntil(this.destroyed$)).subscribe((phase) => {
 			this.store.dispatch(
 				NoteStateAction.FetchTraineesReputation({
 					phaseId: phase.PhaseId,
@@ -83,6 +84,7 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 			);
 		});
 		//#endregion
+
 
 		this.store.dispatch(
 			MainStateAction.DispatchIfEmpty({

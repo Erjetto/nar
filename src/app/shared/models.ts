@@ -261,18 +261,20 @@ export class ClientTraineeReputation extends BaseModel {
 		public TraineeName = '',
 		public TraineeCode = '',
 		public TraineeNumber = '',
-		public Gender = 'Asex',
+		public Gender = '',
 		public PictureId = emptyGuid,
 		public Minus = 0,
 		public Neutral = 0,
 		public Plus = 0,
 		public IsActive = 0,
 		public IsVeteran = 0,
-		public Major = 'Com suki',
+		public Major = '',
 		public DeactivateReason = ''
 	) {
 		super();
-	}
+  }
+  
+  get thumbnailLink() {return `${environment.apiUrl}File.svc/GetThumbnail/${this.PictureId}/95`}
 
 	static fromJson(data?: any): ClientTraineeReputation {
 		if (isEmpty(data)) return null;

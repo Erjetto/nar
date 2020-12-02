@@ -37,7 +37,7 @@
 				>
 					<div class="col">
 						<div class="row answer__head">
-							<span class="text-primary">{{ answer.UserName }}</span>
+							<span class="text-primary">{{ answer.RespondenUserName }}</span>
               &nbsp; - &nbsp; 
               {{answer.Histories[answer.Histories.length - 1].SavedDate | date: 'dd MMM yyyy hh:mm a'}}
             </div>
@@ -144,10 +144,9 @@
 								<input type="hidden" name="itemId" [ngModel]="answer.Id"/>
 								<div class="col">
 									<textarea
-										class="form-control vertical-text-area"
+										class="form-control vertical-text-area bd-bottom"
 										placeholder="Add comment here"
 										rows="1"
-										style="border: none; border-bottom: 1px solid"
 										name="comment"
 										ngModel
 									></textarea>

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://nar.binus.ac.id/'
+  apiUrl: 'https://nar.slc.net/'
 };

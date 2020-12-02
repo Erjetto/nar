@@ -7,11 +7,14 @@ import {
 	ClientEvaluation,
 	ClientTraineeData,
 	ClientTraineeReputation,
+  TraineeComment,
 } from '../../models';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 import {
 	FetchEvaluation,
 	FetchEvaluationSuccess,
+  FetchTraineeDataForTrainer,
+  FetchTraineeDataForTrainerSuccess,
 	FetchTraineesReputation,
 	FetchTraineesReputationSuccess,
 	SetEvaluationNoteFilter,
@@ -31,8 +34,12 @@ export interface INoteState {
 
 	//#region View Trainee
 	traineesReputation: ClientTraineeReputation[];
-	loadingViewTrainees: boolean;
-	//#endregion
+  loadingViewTrainees: boolean;
+  
+  currentTraineeDetail: ClientTraineeData;
+  loadingCurrentTraineeDetail: boolean;
+  //#endregion
+
 }
 
 export const initialState: INoteState = {
@@ -49,8 +56,12 @@ export const initialState: INoteState = {
 
 	//#region View Trainee
 	traineesReputation: [],
-	loadingViewTrainees: false,
-	//#endregion
+  loadingViewTrainees: false,
+  
+  currentTraineeDetail: null,
+  loadingCurrentTraineeDetail: false,
+  //#endregion
+  
 };
 
 export const NOTESTATE_REDUCER_NAME = 'NoteState';
@@ -87,9 +98,17 @@ export const NoteStateReducer = createReducer(
 		...state,
 		traineesReputation: payload,
 		loadingViewTrainees: false,
-	}))
-
-	//#endregion
+	})),
+	on(FetchTraineeDataForTrainer, (state) => ({
+		...state,
+		loadingCurrentTraineeDetail: true
+	})),
+	on(FetchTraineeDataForTrainerSuccess, (state, { payload }) => ({
+		...state,
+		currentTraineeDetail: payload,
+		loadingCurrentTraineeDetail: false
+	})),
+  //#endregion
 );
 
 export const getNoteState = createFeatureSelector<INoteState>(NOTESTATE_REDUCER_NAME);
@@ -99,7 +118,12 @@ export const getNoteStateBy = (fn: (_: INoteState) => any) => createSelector(get
 export const getEvaluations = getNoteStateBy((s) => s.evaluations);
 export const getEvaluationNoteFilters = getNoteStateBy((s) => s.evaluationNoteFilters);
 export const isEvaluationsLoading = getNoteStateBy((s) => s.loadingEvaluations);
+
+//#region View Trainee
 export const getTraineesReputation = getNoteStateBy((s) => s.traineesReputation);
+export const getCurrentTraineeDetail = getNoteStateBy((s) => s.currentTraineeDetail);
+export const isLoadingCurrentTraineeDetail = getNoteStateBy((s) => s.loadingCurrentTraineeDetail);
+//#endregion
 
 export const getFilteredEvaluationNotes = createSelector(
 	getEvaluations,

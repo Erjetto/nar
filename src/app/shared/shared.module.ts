@@ -24,22 +24,24 @@ import { EasyHorizontalSrollDirective } from './directives/easy-horizontal-sroll
 import { PresentationQuestionComponent } from './components/presentation-question/presentation-question.component';
 import { VarDirective } from './directives/var.directive';
 import { UploadInputComponent } from './components/upload-input/upload-input.component';
+import { TraineeDetailOnHoverComponent } from './components/trainee-detail-on-hover/trainee-detail-on-hover.component';
 
 const SHARED_DECLARATIONS = [
-	// Shared components, pipes, and directives, ex: SearchComponent, CurrencyPipe
+	// Shared components, pipes, and directives, ex: SearchComponent, 
 	ClockComponent,
 	CardComponent,
 	ToasterComponent,
 	ModalComponent,
 	ConfirmablePopUpComponent,
 	PresentationQuestionComponent,
-	FilterByInputComponent,
+	FilterByInputComponent, // Not used yet
 	UploadInputComponent,
+  TraineeDetailOnHoverComponent,
 
 	ClickStopPropagationDirective,
-	ContrastTextColorDirective,
-	EasyHorizontalSrollDirective,
-	VarDirective,
+	ContrastTextColorDirective, // Not used yet
+	EasyHorizontalSrollDirective, // Not used yet
+  VarDirective, // Not used yet
 ];
 
 @NgModule({

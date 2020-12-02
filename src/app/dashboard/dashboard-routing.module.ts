@@ -258,21 +258,16 @@ export const routes: Routes = [
 							name: 'Top Bottom Vote',
 						},
 					},
-					{
-						path: 'trainee',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee (-)' },
-					},
 				],
 			},
-			// {
-			// 	path: 'correction',
-			// 	data: {
-			// 		roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
-			// 		name: 'Correction',
-			// 	},
-			// },
+			{
+        path: 'correction',
+        redirectTo: null,
+				data: {
+					roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
+					name: 'Correction (-)',
+				},
+			},
 			{
 				path: 'presentation',
 				data: {

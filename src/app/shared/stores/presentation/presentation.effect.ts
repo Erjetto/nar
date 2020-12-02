@@ -164,7 +164,7 @@ export class PresentationStateEffects {
 		),
 		mergeMap((res) =>
 			res === true
-				? of(MainStateAction.SuccessfullyMessage('updateed answer'))
+				? of(MainStateAction.SuccessfullyMessage('updated answer'))
 				: of(MainStateAction.FailMessage('updating answer'))
 		),
 		share()
