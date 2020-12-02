@@ -1,0 +1,12 @@
+@import '/src/variables';
+
+:host{
+  
+	.reputation1 {
+		background: $color-good;
+	}
+
+	.reputation-1 {
+		background: $color-bad;
+	}
+}
