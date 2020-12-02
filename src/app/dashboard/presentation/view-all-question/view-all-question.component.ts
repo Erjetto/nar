@@ -130,7 +130,20 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 				selectorToBeChecked: fromMasterState.getPhases,
 			})
 		);
-	}
+  }
+  
+  refreshData(){
+    this.store.dispatch(
+      PresentationStateAction.FetchPresentationsBy({
+        generationId: this.currentGeneration$.value.GenerationId,
+        subjectId: this.filterForm.get('subjectId').value,
+      })
+    );
+  }
 
-	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}
+  deleteQuestion(qst: CoreTrainingPresentationQuestion) {}
+  
+  trackByQuestionId(idx: number, qst: CoreTrainingPresentationQuestion){
+    return qst.Question.Id
+  }
 }

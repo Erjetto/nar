@@ -1,7 +1,12 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'View All Questions'" [isLoading]="loadingViewQuestions$ | async">
+			<rd-card [cardTitle]="'View All Questions'" [isLoading]="loadingViewQuestions$ | async" [collapsible]="false">
+				<div rdCardBadges>
+					<button class="btn btn-sm btn-secondary" (click)="refreshData()">
+						<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Refresh
+					</button>
+				</div>
 				<div class="row form-group">
 					<div class="col-2">
 						<ng-select
@@ -57,9 +62,9 @@
 						<button class="btn text-white bg-excel w-100">Export into Excel</button>
 					</div>
 				</div>
-				<div class="row" style="max-height: 600px; overflow: auto">
+				<div class="row maxh-600px v-scroll">
 					<div class="col">
-						<ng-container *ngFor="let question of filteredQuestions$ | async">
+						<ng-container *ngFor="let question of filteredQuestions$ | async; trackBy: trackByQuestionId">
 							<rd-presentation-question [presentation]="question.parent" [question]="question">
 								<div
 									class="actions"
