@@ -1,0 +1,141 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Case List'" [isLoading]="loadingViewCases$ | async">
+				<div class="row mb-3">
+					<div class="col-4">
+						<ng-select
+							[items]="phases$ | async"
+							[clearable]="false"
+							[searchable]="false"
+							bindLabel="Description"
+							[ngModel]="viewCurrentPhase$ | async"
+							(change)="viewCurrentPhase$.next($event)"
+							placeholder="Phase"
+						></ng-select>
+					</div>
+					<div class="col-4">
+						<ng-select
+							[items]="viewSubjectList$ | async"
+							[clearable]="false"
+							[searchable]="false"
+							bindLabel="Name"
+							[ngModel]="viewCurrentSubject$ | async"
+							(change)="viewCurrentSubject$.next($event)"
+							placeholder="Subject"
+						></ng-select>
+					</div>
+				</div>
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Date</th>
+								<th>Correction Date</th>
+								<th>Case File</th>
+								<th>Completed</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(viewCaseList$ | async)?.length === 0">
+								<td class="p-3" colspan="6">No cases yet</td>
+							</tr>
+							<tr
+								*ngFor="let case of viewCaseList$ | async"
+								class="cursor-pointer"
+								(click)="showScoringForCase(case)"
+							>
+								<td>{{ case.CaseName }}</td>
+								<td>{{ case.ScheduleDate | date: scheduleDateFormat }}</td>
+								<td>
+									{{ case.StartDate | date: 'dd MMM' }} - {{ case.Deadline | date: 'dd MMM yyyy' }}
+								</td>
+								<td><a [href]="case.downloadLink">Download</a></td>
+								<td>{{ case.Done }} of {{ case.All }}</td>
+								<td>
+									<div [ngSwitch]="case.isAvailable">
+										<div *ngSwitchCase="false">Not yet started</div>
+
+										<div *ngSwitchDefault [ngSwitch]="case.Done < case.All">
+											<div *ngSwitchCase="true">{{ case.All - case.Done }} remaining</div>
+											<div *ngSwitchDefault>Done</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<button
+						class="btn btn-secondary"
+						[hidden]="(viewCaseList$ | async)?.length == 0"
+						(click)="downloadAllCases()"
+					>
+						<fa-icon [icon]="['fas', 'download']"></fa-icon> Download All Cases
+					</button>
+				</div>
+			</rd-card>
+			<rd-card
+				[cardTitle]="
+					'Scoring ' +
+					(!!(viewCurrentCase$ | async) ? '- ' + (viewCurrentCase$ | async)?.CaseName : '')
+				"
+				[isLoading]="loadingScoreList$ | async"
+				[expanded]="(viewCurrentCase$ | async) != null"
+				[collapsible]="(viewCurrentCase$ | async) != null"
+			>
+				<!-- Hanya bisa dibuka tutup kalo ada currentCase -->
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th width="80">Code</th>
+								<th width="300">Name</th>
+								<th width="150">Upload Date</th>
+								<th width="100">Answer</th>
+                <th width="100">Score</th>
+                <th>Zeroing Reason</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let answer of answerList$ | async; let i = index">
+								<td>{{ answer.TraineeCode }}</td>
+								<td class="text-left">{{ answer.TraineeName }}</td>
+								<td>{{ answer.UploadDate | date: uploadDateFormat }}</td>
+								<td [ngSwitch]="answer.hasNoAnswer">
+                  <span *ngSwitchCase="true">-</span>
+                  <a *ngSwitchDefault [href]="answer.answerDownloadLink">Download</a>
+                </td>
+								<td>
+									<input type="number" class="form-control" [formControl]="score.at(i)" />
+								</td>
+								<td [hidden]="score.at(i).value != 0">
+									<input
+										class="form-control"
+										placeholder="Reason"
+										[formControl]="zeroingReason.at(i)"
+									/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row" [hidden]="(answerList$ | async)?.length == 0">
+					<button
+						class="btn btn-primary mr-3"
+						[disabled]="score.invalid"
+						(click)="downloadAllAnswers()"
+					>
+						<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save All Answers
+					</button>
+					<button class="btn btn-secondary" (click)="downloadAllAnswers()">
+						<fa-icon [icon]="['fas', 'download']"></fa-icon> Download All Answers
+					</button>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

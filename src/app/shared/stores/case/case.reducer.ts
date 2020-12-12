@@ -1,10 +1,14 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
 import * as MainStateAction from '../main/main.action';
-import { Case, ClientCaseTrainee, ClientCaseTrainer } from '../../models';
+import { Case, ClientCaseTrainee, ClientCaseTrainer, ClientUploadAnswer } from '../../models';
 import {
 	FetchCases,
 	FetchCasesSuccess,
+	FetchCorrectionListBy,
+	FetchCorrectionListSuccess,
+  FetchCorrectionScoring,
+  FetchCorrectionScoringSuccess,
 	FetchTraineeCasesBy,
 	FetchTraineeCasesSuccess,
 } from './case.action';
@@ -13,18 +17,20 @@ export interface ICaseState {
 	cases: Case[];
 	clientCaseTrainers: ClientCaseTrainer[];
 	clientCaseTrainees: ClientCaseTrainee;
-	// answers: ClientSchedule[];
+	answers: ClientUploadAnswer[];
 
 	loadingCases: boolean;
+	loadingAnswers: boolean;
 }
 
 export const initialState: ICaseState = {
 	cases: [],
 	clientCaseTrainers: [],
 	clientCaseTrainees: null,
-	// answers: [],
+	answers: [],
 
 	loadingCases: false,
+	loadingAnswers: false,
 };
 
 export const CASESTATE_REDUCER_NAME = 'CaseState';
@@ -35,7 +41,10 @@ export const CaseStateReducer = createReducer(
 	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
 		...initialState,
 	})),
-	on(FetchCases, FetchTraineeCasesBy, (state) => ({ ...state, loadingCases: true })),
+	on(FetchCases, FetchTraineeCasesBy, FetchCorrectionListBy, (state) => ({
+		...state,
+		loadingCases: true,
+	})),
 
 	on(FetchCasesSuccess, (state, { payload }) => ({
 		...state,
@@ -49,7 +58,25 @@ export const CaseStateReducer = createReducer(
 		...state,
 		clientCaseTrainees: payload,
 		loadingCases: false,
-	}))
+	})),
+
+	on(FetchCorrectionListSuccess, (state, { payload }) => ({
+		...state,
+		clientCaseTrainers: payload,
+		loadingCases: false,
+  })),
+  
+	on(FetchCorrectionScoring, (state) => ({
+		...state,
+		loadingAnswers: true,
+	})),
+  
+	on(FetchCorrectionScoringSuccess, (state, { payload }) => ({
+		...state,
+    loadingAnswers: false,
+    answers: payload
+	})),
+
 );
 
 export const getCaseState = createFeatureSelector<ICaseState>(CASESTATE_REDUCER_NAME);
@@ -57,6 +84,9 @@ export const getCaseState = createFeatureSelector<ICaseState>(CASESTATE_REDUCER_
 export const getCaseStateBy = (fn: (_: ICaseState) => any) => createSelector(getCaseState, fn);
 
 export const getCases = getCaseStateBy((s) => s.cases);
-export const getCasesLoading = getCaseStateBy((s) => s.loadingCases);
+export const isCasesLoading = getCaseStateBy((s) => s.loadingCases);
 export const getClientCaseTrainers = getCaseStateBy((s) => s.clientCaseTrainers);
 export const getClientCaseTrainees = getCaseStateBy((s) => s.clientCaseTrainees);
+
+export const getTraineeAnswers = getCaseStateBy((s) => s.answers);
+export const isAnswersLoading = getCaseStateBy((s) => s.loadingAnswers);

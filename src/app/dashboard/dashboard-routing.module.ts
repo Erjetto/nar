@@ -35,6 +35,7 @@ import { FillAnswersComponent } from './candidate/fill-answers/fill-answers.comp
 import { LogRoomComponent } from './log/log-room/log-room.component';
 import { LogBookComponent } from './log/log-book/log-book.component';
 import { TraineeUploadComponent } from './trainee-upload/trainee-upload.component';
+import { CorrectionComponent } from './correction/correction.component';
 
 export const routes: Routes = [
 	{
@@ -262,10 +263,10 @@ export const routes: Routes = [
 			},
 			{
         path: 'correction',
-        redirectTo: null,
+        component: CorrectionComponent,
 				data: {
 					roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
-					name: 'Correction (-)',
+					name: 'Correction',
 				},
 			},
 			{
@@ -353,12 +354,6 @@ export const routes: Routes = [
 				path: 'view',
 				data: { name: 'View' },
 				children: [
-					{
-						path: 'score',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Score (-)' },
-					},
 					{
 						path: 'trainee',
 						component: ViewTraineeComponent,

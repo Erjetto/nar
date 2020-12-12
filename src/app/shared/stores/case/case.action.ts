@@ -2,16 +2,11 @@ import { createAction, props } from '@ngrx/store';
 import { Case, ClientUploadAnswer, ClientCaseTrainer, ClientCaseTrainee } from '../../models';
 
 export const FetchCases = createAction('[CaseState] FetchCases', props<{ scheduleId: string }>());
-export const FetchClientCaseTrainers = createAction('[CaseState] FetchClientCaseTrainers');
 export const FetchAnswers = createAction('[CaseState] FetchAnswers');
 
 export const FetchCasesSuccess = createAction(
 	'[CaseState] FetchCasesSuccess',
 	props<{ payload: Case[] }>()
-);
-export const FetchClientCaseTrainersSuccess = createAction(
-	'[CaseState] FetchClientCaseTrainersSuccess',
-	props<{ payload: ClientCaseTrainer[] }>()
 );
 export const FetchAnswersSuccess = createAction(
 	'[CaseState] FetchAnswersSuccess',
@@ -69,5 +64,37 @@ export const FetchTraineeCasesSuccess = createAction(
 export const SubmitTraineeAnswer = createAction(
 	'[CaseState] SubmitTraineeAnswer',
 	props<{ phaseId: string; caseId: string; fileId: string }>()
+);
+//#endregion
+
+//#region Correction
+export const FetchCorrectionListBy = createAction(
+	'[CaseState] FetchCorrectionListBy',
+	props<{
+		phaseId?: string;
+		subjectId?: string;
+	}>()
+);
+export const FetchCorrectionListSuccess = createAction(
+	'[CaseState] FetchCorrectionListSuccess',
+	props<{ payload: ClientCaseTrainer[] }>()
+);
+export const FetchCorrectionScoring = createAction(
+	'[CaseState] FetchCorrectionScoring',
+	props<{ caseId: string }>()
+);
+export const FetchCorrectionScoringSuccess = createAction(
+	'[CaseState] FetchCorrectionScoringSuccess',
+	props<{ payload: ClientUploadAnswer[] }>()
+);
+export const SaveTraineeScores = createAction(
+	'[CaseState] SaveTraineeScores',
+	props<{
+		phaseId: string;
+		caseId: string;
+		traineeId: string[];
+		score: number[];
+		zeroingReason: string[];
+	}>()
 );
 //#endregion

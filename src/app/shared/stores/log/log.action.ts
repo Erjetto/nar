@@ -20,11 +20,19 @@ export const SaveLogRooms = createAction(
 	'[LogState] SaveLogRooms',
 	props<{ computerSeat; note; presentation; room; id: string }>()
 );
+export const SaveLogBooks = createAction(
+	'[LogState] SaveLogBooks',
+	props<{ data: LogBookPIC; }>()
+);
 
-// export const SaveLogBooks = createAction(
-// 	'[LogState] SaveLogBooks',
-// 	props<{ data: any; id: string; time: Date }>()
-// );
+export const DeleteLogRoom = createAction(
+	'[LogState] DeleteLogRoom',
+	props<{ id:string }>()
+);
+export const DeleteLogBook = createAction(
+	'[LogState] DeleteLogBook',
+	props<{ id:string }>()
+);
 
 export const FetchRooms = createAction('[LogState] FetchRooms');
 

@@ -8,11 +8,12 @@ import * as MainStateAction from '../main/main.action';
 
 import * as fromMainState from '../main/main.reducer';
 
-import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, share, pluck } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { switchMap, mergeMap, share, pluck, map, catchError } from 'rxjs/operators';
 import { LeaderService } from '../../services/new/leader.service';
 import { isEmpty as _isEmpty } from 'lodash';
 import { TraineeService } from '../../services/new/trainee.service';
+import { TrainerService } from '../../services/new/trainer.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -21,9 +22,11 @@ export class CaseStateEffects {
 	constructor(
 		private actions$: Actions,
 		private leaderService: LeaderService,
-		private traineeService: TraineeService
+		private traineeService: TraineeService,
+		private trainerService: TrainerService
 	) {}
 
+	//#region Trainee Case
 	@Effect()
 	getCases$: Observable<Action> = this.actions$.pipe(
 		ofType(CaseStateAction.FetchCases),
@@ -95,4 +98,52 @@ export class CaseStateEffects {
 		),
 		share()
 	);
+	//#endregion
+
+	//#region Trainer Case
+	@Effect()
+	getCasesForTrainer$: Observable<Action> = this.actions$.pipe(
+		ofType(CaseStateAction.FetchCorrectionListBy),
+		switchMap((data) =>
+			_isEmpty(data.subjectId)
+				? this.trainerService.GetAllCases({ phaseId: data.phaseId })
+				: this.trainerService.GetCaseBySubject({ subjectId: data.subjectId })
+		),
+		mergeMap((results) => of(CaseStateAction.FetchCorrectionListSuccess({ payload: results }))),
+		share()
+  );
+  
+	@Effect()
+	fetchCorrectionScoring$: Observable<Action> = this.actions$.pipe(
+		ofType(CaseStateAction.FetchCorrectionScoring),
+		switchMap((data) => this.trainerService.GetTraineeAnswer(data)),
+		mergeMap((results) => of(CaseStateAction.FetchCorrectionScoringSuccess({ payload: results }))),
+		share()
+	);
+
+	@Effect()
+	saveTraineeScores$: Observable<Action> = this.actions$.pipe(
+		ofType(CaseStateAction.SaveTraineeScores),
+    switchMap((data) =>
+      // Create array of saveScore request
+			forkJoin(
+				data.traineeId.map((t, idx) =>
+					this.trainerService.SaveScore({
+						phaseId: data.phaseId,
+						caseId: data.caseId,
+						traineeId: t,
+						score: data.score[idx],
+						zeroingReason: data.zeroingReason[idx],
+					}).pipe(catchError(error => of(false)))
+				)
+			)
+		),
+		mergeMap((results) => {
+      const failed = results.filter(r => !r).length;
+      if(failed > 0) return of(MainStateAction.SuccessfullyMessage('saved score'))
+      else return of(MainStateAction.FailMessage('saving score', failed + ' scores failed to be saved'))
+    }),
+		share()
+	);
+	//#endregion
 }

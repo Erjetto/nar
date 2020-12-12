@@ -16,6 +16,7 @@ import { DateHelper } from '../../utilities/date-helper';
 
 import { User } from '../../models';
 import { IAppState } from 'src/app/app.reducer';
+import { isEmptyGuid } from '../../methods';
 
 @Injectable({
 	providedIn: 'root',
@@ -32,19 +33,19 @@ export class LogStateEffects {
 	getLogRooms$: Observable<Action> = this.actions$.pipe(
 		ofType(LogStateAction.FetchLogRooms),
 		switchMap((data) => this.roomService.GetLogPICRoomNote(data)),
-    mergeMap((res) => of(LogStateAction.FetchLogRoomsSuccess({ payload: res }))),
-    share()
+		mergeMap((res) => of(LogStateAction.FetchLogRoomsSuccess({ payload: res }))),
+		share()
 	);
 
 	@Effect()
 	getLogBooks$: Observable<Action> = this.actions$.pipe(
 		ofType(LogStateAction.FetchLogBooks),
 		switchMap((data) => this.roomService.GetBookLog(data)),
-    mergeMap((res) => of(LogStateAction.FetchLogBooksSuccess({ payload: res }))),
-    share()
+		mergeMap((res) => of(LogStateAction.FetchLogBooksSuccess({ payload: res }))),
+		share()
 	);
 
-  @Effect()
+	@Effect()
 	saveLogRooms$: Observable<Action> = this.actions$.pipe(
 		ofType(LogStateAction.SaveLogRooms),
 		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentUser))),
@@ -65,16 +66,32 @@ export class LogStateEffects {
 			res === true
 				? of(MainStateAction.SuccessfullyMessage('saved the log'))
 				: of(MainStateAction.FailMessage('saving log'))
-    ),
-    share()
-  );
-  
-  
+		),
+		share()
+	);
+
+	@Effect()
+	saveLogBooks$: Observable<Action> = this.actions$.pipe(
+		ofType(LogStateAction.SaveLogBooks),
+		pluck('data'),
+		switchMap((data) =>
+			isEmptyGuid(data.Id)
+				? this.roomService.SaveBookLog({ data })
+				: this.roomService.UpdateBookLogDetail({ data, id: data.Id })
+		),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('saved the log'))
+				: of(MainStateAction.FailMessage('saving log'))
+		),
+		share()
+	);
+
 	@Effect()
 	getRooms$: Observable<Action> = this.actions$.pipe(
 		ofType(LogStateAction.FetchRooms),
 		switchMap((data) => this.roomService.GetAllRooms()),
-    mergeMap((res) => of(LogStateAction.FetchRoomsSuccess({ payload: res }))),
-    share()
+		mergeMap((res) => of(LogStateAction.FetchRoomsSuccess({ payload: res }))),
+		share()
 	);
 }

@@ -220,5 +220,9 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 	compSeatFactory = () => ({
 		seat: this.fb.control(null, Validators.required),
 		trainee: this.fb.control(null, Validators.required),
-	});
+  });
+  
+	searchByTraineeCodeAndName(term: string, item: ClientTrainee) {
+		return item.codeAndName.toLowerCase().includes(term.toLowerCase());
+	}
 }

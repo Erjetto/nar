@@ -68,6 +68,3 @@ export const getLogBooks = getLogStateBy((s) => s.logBooks);
 export const getLogRooms = getLogStateBy((s) => s.logRooms);
 export const isLogBooksLoading = getLogStateBy((s) => s.loadingLogBooks);
 export const isLogRoomsLoading = getLogStateBy((s) => s.loadingLogRooms);
-// export const getEvaluationLogFilters = getLogStateBy((s) => s.evaluationLogFilters);
-// export const isEvaluationsLoading = getLogStateBy((s) => s.loadingEvaluations);
-// export const getTraineesReputation = getLogStateBy((s) => s.traineesReputation);

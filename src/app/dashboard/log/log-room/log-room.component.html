@@ -115,7 +115,8 @@
 									<ng-select
 										[items]="trainees$ | async"
 										bindLabel="TraineeCode"
-										formControlName="trainee"
+                    formControlName="trainee"
+                    [searchFn]="searchByTraineeCodeAndName"
 									>
 										<ng-template ng-label-tmp let-item="item">
 											<span>{{ item.codeAndName }}</span>

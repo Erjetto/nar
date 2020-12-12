@@ -1,1 +1,177 @@
-<p>log-book works!</p>
+<div class="container-xl">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Log Book'" [isLoading]="loadingLogBook$ | async">
+				<div class="row mb-3" [formGroup]="viewLogBookForm">
+					<div class="col-auto col-form-label">From</div>
+					<div class="col-3">
+						<input type="date" class="form-control" formControlName="start" />
+					</div>
+					<div class="col-auto col-form-label">To</div>
+					<div class="col-3">
+						<input type="date" class="form-control" formControlName="end" />
+					</div>
+					<div class="col">
+						<ng-select
+							[items]="trainees$ | async"
+							[formControl]="traineeFilter"
+							placeholder="Filter by Trainee"
+							bindValue="TraineeCode"
+							[searchFn]="searchByTraineeCodeAndName"
+						>
+							<ng-template ng-label-tmp let-item="item">
+								<span>{{ item.codeAndName }}</span>
+							</ng-template>
+							<ng-template ng-option-tmp let-item="item" let-index="index">
+								<span>{{ item.codeAndName }}</span>
+							</ng-template>
+						</ng-select>
+					</div>
+				</div>
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th>PIC</th>
+								<th>Subject</th>
+								<th>Date</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(viewLogBookFiltered$ | async)?.length == 0">
+								<td colspan="4">No log yet</td>
+							</tr>
+							<tr
+								*ngFor="let log of viewLogBookFiltered$ | async; let i = index"
+								(click)="showLogDetail(log)"
+								class="cursor-pointer"
+							>
+								<td>{{ log.PIC }}</td>
+								<td>{{ log.Subject }}</td>
+								<td>{{ log.SavedDate | date: logDateFormat }}</td>
+								<td>
+									<rd-confirmable-pop-up
+										[description]="'Delete this log?'"
+										(confirm)="deleteLog(log)"
+									>
+										<button class="btn btn-xs btn-danger">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+										</button>
+									</rd-confirmable-pop-up>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+			<rd-card
+				[cardTitle]="'Log Book Detail'"
+				[isLoading]="loadingLogBookForm$ | async"
+				[collapsible]="false"
+				[expanded]="(viewCurrentLogBook$ | async) != null"
+			>
+				<div rdCardBadges [ngSwitch]="(viewCurrentLogBook$ | async) != null">
+					<!-- Buat Edit & Cancel -->
+					<ng-container *ngSwitchCase="true">
+						<button
+							class="btn btn-sm btn-primary mr-2"
+							[disabled]="logBookForm.invalid"
+							(click)="updateLogBook()"
+						>
+							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Update
+						</button>
+						<button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
+							<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
+						</button>
+					</ng-container>
+					<!-- Buat Add New -->
+					<ng-container *ngSwitchDefault>
+						<button class="btn btn-sm btn-primary" (click)="newLogBook()">
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> New Log Book
+						</button>
+					</ng-container>
+				</div>
+				<div class="row mb-3" [formGroup]="logBookForm">
+					<div class="col">
+						<input type="date" class="form-control" formControlName="SavedDate" [disabled]="" />
+					</div>
+					<div class="col">
+						<ng-select
+							[items]="subjects$ | async"
+							bindLabel="Name"
+							bindValue="Name"
+							[clearable]="false"
+							formControlName="Subject"
+							placeholder="Subject"
+						></ng-select>
+					</div>
+					<div class="col">
+						<input class="form-control" formControlName="PIC" placeholder="PIC" />
+					</div>
+				</div>
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th width="100">Trainee</th>
+								<th width="300">Correct</th>
+								<th width="300">Wrong</th>
+								<th>Note</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let control of logBookDataForm.controls; let i = index">
+								<td>
+									<ng-select
+										[items]="trainees$ | async"
+										[formControl]="control.get('Trainee')"
+										[clearable]="false"
+										bindValue="TraineeCode"
+										bindLabel="TraineeCode"
+									></ng-select>
+								</td>
+								<td>
+									<ng-select
+										[items]="types"
+										[formControl]="control.get('Correct')"
+										[multiple]="true"
+										[closeOnSelect]="false"
+									></ng-select>
+								</td>
+								<td>
+									<ng-select
+										[items]="types"
+										[formControl]="control.get('Wrong')"
+										[multiple]="true"
+										[closeOnSelect]="false"
+									></ng-select>
+								</td>
+								<td>
+									<textarea class="form-control" [formControl]="control.get('Note')"></textarea>
+								</td>
+								<td>
+									<button class="btn btn-danger" (click)="deleteLogRow(i)">
+										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+									</button>
+								</td>
+							</tr>
+							<tr [hidden]="(viewCurrentLogBook$ | async) == null">
+								<td>
+									<ng-select
+										[items]="trainees$ | async"
+										[formControl]="newTraineeRowControl"
+										bindValue="TraineeCode"
+										bindLabel="TraineeCode"
+									></ng-select>
+								</td>
+								<td colspan="4"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

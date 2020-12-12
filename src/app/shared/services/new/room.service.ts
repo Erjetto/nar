@@ -16,7 +16,10 @@ export class RoomService {
 
 	public UpdateBookLogDetail(data: { id: string; data: LogBookPIC }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'UpdateBookLogDetail', data)
+			.post(this.baseUrl + 'UpdateBookLogDetail', {
+        id: data.id,
+        data: data.data.toJson()
+      })
 			.pipe(map((res: any) => res.d === true));
 	}
 
@@ -37,7 +40,7 @@ export class RoomService {
 
 	public SaveBookLog(data: { data: LogBookPIC }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'SaveBookLog', data)
+			.post(this.baseUrl + 'SaveBookLog', {data: data.data.toJson()})
 			.pipe(map((res: any) => res.d === true));
 	}
 

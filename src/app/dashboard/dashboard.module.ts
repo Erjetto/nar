@@ -37,6 +37,7 @@ import { LogRoomComponent } from './log/log-room/log-room.component';
 import { LogBookComponent } from './log/log-book/log-book.component';
 import { TraineeUploadComponent } from './trainee-upload/trainee-upload.component';
 import { MyScheduleComponent } from './my-schedule/my-schedule.component';
+import { CorrectionComponent } from './correction/correction.component';
 
 @NgModule({
 	declarations: [
@@ -44,6 +45,7 @@ import { MyScheduleComponent } from './my-schedule/my-schedule.component';
 		HomeComponent,
 		CandidateQuestionsComponent,
 		AnswerScheduleComponent,
+		FillAnswersComponent,
 
 		ManageCaseComponent,
 		ManageTopBottomVoteComponent,
@@ -69,21 +71,17 @@ import { MyScheduleComponent } from './my-schedule/my-schedule.component';
 		ViewAllPresentationComponent,
     ModifyTraineeScheduleComponent,
     
-		TraineeDataComponent,
-    
+		TraineeDataComponent,    
 		NewPresentationComponent,
-    
 		TopBottomVoteComponent,
-    
-		FillAnswersComponent,
+		TraineeUploadComponent,
+		MyScheduleComponent,
     
 		LogRoomComponent,
-    
 		LogBookComponent,
     
-		TraineeUploadComponent,
+		CorrectionComponent,
     
-		MyScheduleComponent,
 	],
 	imports: [
 		SharedModule,
