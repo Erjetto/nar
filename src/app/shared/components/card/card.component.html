@@ -11,12 +11,12 @@
 <div
 	class="card__body row"
 	[@dropdown]="expanded ? 'expand' : 'collapse'"
-	[ngStyle]="{
-		maxHeight: maxHeight == 0 ? 'unset' : maxHeight + 'px',
+  [ngStyle]="{
+    maxHeight: maxHeight == 0 ? 'unset' : maxHeight + 'px',
     overflowY: maxHeight == 0 ? 'unset' : 'auto',
-    overflowX: 'hidden'
-	}"
->
+    overflowX: maxHeight == 0 ? 'unset' : 'hidden'
+  }"
+  >
 	<!-- <div class="card__body row"> -->
 	<div class="col p-0">
 		<ng-content></ng-content>

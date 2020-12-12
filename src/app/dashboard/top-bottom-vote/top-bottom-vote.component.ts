@@ -163,5 +163,9 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 				topJson: JSON.stringify(top),
 			})
 		);
+  }
+  
+	searchByTraineeCodeAndName(term: string, item: ClientTrainee) {
+		return item.codeAndName.toLowerCase().includes(term.toLowerCase());
 	}
 }

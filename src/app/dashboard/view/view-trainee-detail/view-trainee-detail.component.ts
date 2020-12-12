@@ -1,7 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, select, ActionsSubject } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { ClientTraineeData, ClientNote, EvalTypes } from 'src/app/shared/models';
+import {
+	ClientTraineeData,
+	ClientNote,
+	EvalTypes,
+	ClientTraineeAttendanceDetail,
+} from 'src/app/shared/models';
 import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import {
@@ -14,6 +19,7 @@ import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { DateHelper } from 'src/app/shared/utilities/date-helper';
 // import { MockData } from 'src/app/shared/mock-data-old';
 
 @Component({
@@ -23,9 +29,11 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ViewTraineeDetailComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	viewDateFormat = 'dd MMM yyyy, HH:mm:ss';
+	attendanceDateFormat = DateHelper.WEEKDAY_DATE_FORMAT + ', ' + DateHelper.FULL_TIME_FORMAT;
 
 	traineeId$ = new BehaviorSubject<string>('');
 	traineeDetail$: Observable<ClientTraineeData>;
+	traineeRecord$: Observable<ClientTraineeData>;
 
 	reputations = [
 		{ val: 1, label: '+1 (Positive)' },
@@ -38,7 +46,8 @@ export class ViewTraineeDetailComponent extends DashboardContentBase implements 
 	});
 
 	loadingViewNote$ = new BehaviorSubject<boolean>(false);
-	loadingViewTrainee$ = new BehaviorSubject<boolean>(false);
+	loadingViewTrainee$: Observable<boolean>;
+	loadingViewTraineeRecord$: Observable<boolean>;
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -52,9 +61,13 @@ export class ViewTraineeDetailComponent extends DashboardContentBase implements 
 
 	ngOnInit(): void {
 		this.traineeDetail$ = this.store.pipe(select(fromNoteState.getCurrentTraineeDetail));
-    this.store.pipe(select(fromNoteState.isLoadingCurrentTraineeDetail))
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(this.loadingViewTrainee$);
+    this.loadingViewTrainee$ = this.store.pipe(select(fromNoteState.isLoadingCurrentTraineeDetail));
+		this.traineeRecord$ = this.store.pipe(select(fromNoteState.getTraineeRecord));
+		this.loadingViewTraineeRecord$ = this.store.pipe(select(fromNoteState.isLoadingTraineeRecord));
+    // this.store
+		// 	.pipe(select(fromNoteState.isLoadingCurrentTraineeDetail))
+		// 	.pipe(takeUntil(this.destroyed$))
+		// 	.subscribe(this.loadingViewTrainee$);
 
 		this.activatedRoute.params.subscribe((params) => {
 			const { traineeId } = params;
@@ -63,13 +76,14 @@ export class ViewTraineeDetailComponent extends DashboardContentBase implements 
 
 		this.traineeId$.pipe(takeUntil(this.destroyed$)).subscribe((traineeId) => {
 			this.store.dispatch(NoteStateAction.FetchTraineeDataForTrainer({ traineeId }));
+			this.store.dispatch(NoteStateAction.FetchTraineeData({ traineeId }));
 		});
 
 		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.loadingViewNote$.next(false);
 		});
 
-    // Refresh note
+		// Refresh note
 		merge(this.noteEffects.createTraineeNote$, this.noteEffects.deleteTraineeNote$)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => {

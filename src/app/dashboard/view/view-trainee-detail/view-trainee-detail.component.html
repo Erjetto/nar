@@ -1,6 +1,6 @@
 <div class="container-xl">
 	<div class="row">
-		<div class="col-7">
+		<div class="col-5">
 			<rd-card
 				[cardTitle]="'Trainee ' + (traineeDetail$ | async)?.TraineeCode"
 				[isLoading]="loadingViewTrainee$ | async"
@@ -29,10 +29,7 @@
 					</div>
 				</div>
 			</rd-card>
-		</div>
-		<!-- If veteran -->
-		<div class="col-5" *ngIf="(traineeDetail$ | async)?.IsVeteran">
-			<rd-card [cardTitle]="'Trainee Veteran History'">
+			<rd-card [cardTitle]="'Trainee Veteran History'" *ngIf="(traineeDetail$ | async)?.IsVeteran">
 				<div class="row">
 					<div class="col v-list-m-6 v-list-bordered">
 						<div class="row" *ngFor="let history of (traineeDetail$ | async)?.DeactivateReasons">
@@ -49,10 +46,59 @@
 					</div>
 				</div>
 			</rd-card>
+			<rd-card [cardTitle]="'Attendance History'" [isLoading]="loadingViewTraineeRecord$|async" [maxHeight]="300">
+				<table class="table table-sm table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Time</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="(traineeRecord$ | async)?.Attendances?.length === 0">
+							<td colspan="2">No attendances</td>
+						</tr>
+						<tr
+							*ngFor="let att of (traineeRecord$ | async)?.Attendances"
+							class="cursor-pointer"
+						>
+							<td>{{ att.Status }}</td>
+							<td>{{ att.AttendanceTime | date:attendanceDateFormat }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
 		</div>
-	</div>
-	<div class="row">
+		<!-- If veteran -->
 		<div class="col">
+			<rd-card [cardTitle]="'Scores'" [isLoading]="loadingViewTraineeRecord$|async">
+				<table class="table table-sm table-striped table-hover text-center">
+					<thead>
+						<tr>
+							<th>Phase</th>
+							<th>Schedule</th>
+							<th>Case</th>
+							<th>Score</th>
+							<th>Entry By</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngIf="(traineeRecord$ | async)?.Scores?.length === 0">
+							<td colspan="5">No scores</td>
+						</tr>
+						<tr
+							*ngFor="let score of (traineeRecord$ | async)?.Scores"
+							class="cursor-pointer"
+						>
+							<td>{{ score.PhaseName }}</td>
+							<td>{{ score.ScheduleName }}</td>
+							<td>{{ score.CaseName }}</td>
+							<td>{{ score.Score }}</td>
+							<td>{{ score.EntryBy }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
 			<rd-card
 				[cardTitle]="'Trainee Notes'"
 				[isLoading]="(loadingViewNote$ | async) || (loadingViewTrainee$ | async)"
@@ -179,10 +225,5 @@
 				</div>
 			</rd-card>
 		</div>
-		<!-- <div class="col-4">
-      <rd-card [cardTitle]="'Insert New Notes'">
-
-      </rd-card>
-    </div> -->
 	</div>
 </div>

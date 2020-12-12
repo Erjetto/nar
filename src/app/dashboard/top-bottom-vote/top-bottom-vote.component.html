@@ -69,7 +69,8 @@
 									class="mb-2"
 									placeholder="T000 - Trainee"
 									[items]="trainees$ | async"
-									bindValue="TraineeId"
+                  bindValue="TraineeId"
+                  [searchFn]="searchByTraineeCodeAndName"
 									[formControl]="topArray.controls[i].get('TraineeId')"
 								>
 									<ng-template ng-label-tmp let-item="item">
@@ -99,7 +100,8 @@
 									class="mb-2"
 									placeholder="T000 - Trainee"
 									[items]="trainees$ | async"
-									bindValue="TraineeId"
+                  bindValue="TraineeId"
+                  [searchFn]="searchByTraineeCodeAndName"
 									[formControl]="bottomArray.controls[i].get('TraineeId')"
 								>
 									<ng-template ng-label-tmp let-item="item">

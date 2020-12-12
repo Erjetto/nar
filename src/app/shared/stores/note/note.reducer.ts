@@ -13,8 +13,10 @@ import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 import {
 	FetchEvaluation,
 	FetchEvaluationSuccess,
+  FetchTraineeData,
   FetchTraineeDataForTrainer,
   FetchTraineeDataForTrainerSuccess,
+  FetchTraineeDataSuccess,
 	FetchTraineesReputation,
 	FetchTraineesReputationSuccess,
 	SetEvaluationNoteFilter,
@@ -32,10 +34,13 @@ export interface INoteState {
 
 	loadingEvaluations: boolean;
 
-	//#region View Trainee
+	//#region View Trainee & Trainee Detail
 	traineesReputation: ClientTraineeReputation[];
   loadingViewTrainees: boolean;
   
+  traineeRecord: ClientTraineeData;
+  loadingTraineeRecord: boolean;
+
   currentTraineeDetail: ClientTraineeData;
   loadingCurrentTraineeDetail: boolean;
   //#endregion
@@ -57,6 +62,9 @@ export const initialState: INoteState = {
 	//#region View Trainee
 	traineesReputation: [],
   loadingViewTrainees: false,
+  
+  traineeRecord: null,
+  loadingTraineeRecord: false,
   
   currentTraineeDetail: null,
   loadingCurrentTraineeDetail: false,
@@ -108,6 +116,15 @@ export const NoteStateReducer = createReducer(
 		currentTraineeDetail: payload,
 		loadingCurrentTraineeDetail: false
 	})),
+	on(FetchTraineeData, (state) => ({
+		...state,
+		loadingTraineeRecord: true
+	})),
+	on(FetchTraineeDataSuccess, (state, { payload }) => ({
+		...state,
+		traineeRecord: payload,
+		loadingTraineeRecord: false
+	})),
   //#endregion
 );
 
@@ -123,6 +140,9 @@ export const isEvaluationsLoading = getNoteStateBy((s) => s.loadingEvaluations);
 export const getTraineesReputation = getNoteStateBy((s) => s.traineesReputation);
 export const getCurrentTraineeDetail = getNoteStateBy((s) => s.currentTraineeDetail);
 export const isLoadingCurrentTraineeDetail = getNoteStateBy((s) => s.loadingCurrentTraineeDetail);
+
+export const getTraineeRecord = getNoteStateBy((s) => s.traineeRecord);
+export const isLoadingTraineeRecord = getNoteStateBy((s) => s.loadingTraineeRecord);
 //#endregion
 
 export const getFilteredEvaluationNotes = createSelector(

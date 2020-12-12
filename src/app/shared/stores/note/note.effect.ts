@@ -9,12 +9,17 @@ import * as fromNoteState from './note.reducer';
 import { Observable, of } from 'rxjs';
 import { switchMap, mergeMap, pluck, tap, share } from 'rxjs/operators';
 import { NoteService } from '../../services/new/note.service';
+import { GeneralService } from '../../services/new/general.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class NoteStateEffects {
-	constructor(private actions$: Actions, private noteService: NoteService) {}
+	constructor(
+		private actions$: Actions,
+		private generalService: GeneralService,
+		private noteService: NoteService
+	) {}
 
 	@Effect()
 	getEvaluation$: Observable<Action> = this.actions$.pipe(
@@ -63,6 +68,14 @@ export class NoteStateEffects {
 
 	@Effect()
 	getTraineeData$: Observable<Action> = this.actions$.pipe(
+		ofType(NoteStateAction.FetchTraineeData),
+		switchMap((data) => this.generalService.GetTraineeData(data)),
+		mergeMap((res) => of(NoteStateAction.FetchTraineeDataSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
+	getTraineeDataForTrainer$: Observable<Action> = this.actions$.pipe(
 		ofType(NoteStateAction.FetchTraineeDataForTrainer),
 		switchMap((data) => this.noteService.GetTraineeDataForTrainer(data)),
 		mergeMap((res) => of(NoteStateAction.FetchTraineeDataForTrainerSuccess({ payload: res }))),
@@ -91,8 +104,8 @@ export class NoteStateEffects {
 				: of(MainStateAction.FailMessage('deleting note'))
 		),
 		share()
-  );
-  
+	);
+
 	// @Effect()
 	// getTraineeCommentHistory$: Observable<Action> = this.actions$.pipe(
 	// 	ofType(NoteStateAction.FetchTraineeCommentHistory),
@@ -100,6 +113,4 @@ export class NoteStateEffects {
 	// 	mergeMap((res) => of(NoteStateAction.FetchTraineeCommentHistorySuccess({ payload: res }))),
 	// 	share()
 	// );
-
-
 }

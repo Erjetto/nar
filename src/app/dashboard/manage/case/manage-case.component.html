@@ -11,8 +11,8 @@
 								bindLabel="Description"
 								placeholder="Phase"
 								[searchable]="false"
-								[ngModel]="currentViewPhase$ | async"
-								(change)="currentViewPhase$.next($event)"
+								[ngModel]="viewCurrentPhase$ | async"
+								(change)="viewCurrentPhase$.next($event)"
 							></ng-select>
 						</div>
 					</div>
@@ -24,8 +24,8 @@
 								bindLabel="Name"
 								placeholder="Subject"
 								[searchable]="false"
-								[ngModel]="currentViewSubject$ | async"
-								(change)="currentViewSubject$.next($event)"
+								[ngModel]="viewCurrentSubject$ | async"
+								(change)="viewCurrentSubject$.next($event)"
 							></ng-select>
 						</div>
 					</div>
@@ -37,8 +37,8 @@
 								bindLabel="ScheduleName"
 								placeholder="Schedule"
 								[searchable]="false"
-								[ngModel]="currentViewSchedule$ | async"
-								(change)="currentViewSchedule$.next($event)"
+								[ngModel]="viewCurrentSchedule$ | async"
+								(change)="viewCurrentSchedule$.next($event)"
 							></ng-select>
 						</div>
 					</div>
@@ -121,10 +121,27 @@
 									/>
 								</div>
 							</div>
-              <div class="row form-group">
+							<div class="row form-group">
 								<label class="col-3 col-form-label">File</label>
-                <rd-upload-input [singleFileForm]="caseForm.get('fileForm')"></rd-upload-input>
-              </div>
+								<rd-upload-input
+									[disabled]="caseForm.get('noUpload').valueChanges | async"
+									[singleFileForm]="caseForm.get('fileForm')"
+								></rd-upload-input>
+							</div>
+							<div class="row form-group">
+								<label class="col-3 col-form-label"></label>
+								<div class="col">
+									<div class="custom-control custom-checkbox">
+										<input
+											type="checkbox"
+											id="isQuiz"
+											class="custom-control-input"
+											formControlName="noUpload"
+										/>
+										<label class="custom-control-label" for="isQuiz">Is Quiz</label>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="col">
 							<!-- <div class="row form-group" [hidden]="isEditing">
@@ -144,7 +161,11 @@
 							<div class="row form-group">
 								<label class="col-4 col-form-label">Starts at</label>
 								<div class="col">
-									<input type="datetime-local" class="form-control" formControlName="scheduleDate" />
+									<input
+										type="datetime-local"
+										class="form-control"
+										formControlName="scheduleDate"
+									/>
 								</div>
 							</div>
 							<div class="row form-group">
@@ -192,8 +213,8 @@
 								</button>
 							</rd-confirmable-pop-up>
 						</ng-container>
-          </div>
-          <!-- <div class="row justify-content-end mt-2">
+					</div>
+					<!-- <div class="row justify-content-end mt-2">
               <i>Note: datetime-local input is not supported by Firefox</i>
           </div> -->
 				</form>

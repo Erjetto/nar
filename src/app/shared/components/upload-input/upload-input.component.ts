@@ -38,7 +38,8 @@ export class UploadInputComponent implements OnInit {
 	 */
 	@Input() filesForm: FormArray = this.fb.array([]);
 	@Input() singleFileForm: FormGroup = this.fb.group({ fileId: [''], fileName: [''] });
-	@Input() multiple = false;
+  @Input() multiple = false;
+  @Input() disabled = false;
 	@Output() upload = new EventEmitter<AbstractControl>(); // emit filesForm atau singleFileForm
 
 	constructor(

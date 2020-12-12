@@ -185,5 +185,9 @@ export class ModifyInterviewMaterialComponent
 			})
 		);
 		this.deleteReasonText.reset();
+  }
+  
+	searchByTraineeCodeAndName(term: string, item: ClientTrainee) {
+		return item.codeAndName.toLowerCase().includes(term.toLowerCase());
 	}
 }

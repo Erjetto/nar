@@ -38,7 +38,9 @@ export class ModifyTraineeScheduleComponent
 
 	viewTraineeTrainingSchedule$: Observable<TraineeSchedule[]>;
 
-	loadingViewTraineeTrainingSchedule$: Observable<boolean>;
+  loadingViewTraineeTrainingSchedule$: Observable<boolean>;
+  trainerTeachingDates = [new Date(), new Date()].map(d => DateHelper.dateToFormat(d));
+	currentTeachingDate = new FormControl(this.trainerTeachingDates[0]);
 
 	insertTrainingScheduleText = this.fb.control('', Validators.required);
 	insertTraineeAttendanceText = this.fb.control('', Validators.required);
@@ -78,11 +80,11 @@ export class ModifyTraineeScheduleComponent
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((gen) => {
-				this.store.dispatch(
-					MasterStateAction.FetchTraineeSchedulesBy({
-						generationId: gen.GenerationId,
-					})
-				);
+				// this.store.dispatch(
+				// 	MasterStateAction.FetchTraineeSchedulesBy({
+				// 		generationId: gen.GenerationId,
+				// 	})
+				// );
 			});
 	}
 

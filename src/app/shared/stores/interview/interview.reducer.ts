@@ -136,32 +136,3 @@ export const isInterviewSchedulesLoading = getInterviewStateBy((s) => s.loadingI
 export const isInterviewSchedulesReportLoading = getInterviewStateBy((s) => s.loadingInterviewSchedulesReport);
 
 //#endregion
-
-// export const getSubjectFromEntity = (
-// 	subjectsEntity: Observable<{ [phaseId: string]: ClientSubject[] }>,
-//   phaseObservable: Observable<ClientPhase>,
-//   callbackIfEmpty: () => void
-// ) =>
-// 	combineLatest([subjectsEntity, phaseObservable]).pipe(
-// 		map(([entity, currPhase]) => {
-// 			if (!currPhase) return [];
-// 			if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
-// 			else {
-//         callbackIfEmpty();
-// 				this.store.dispatch(FetchSubjects({ phaseId: currPhase.PhaseId }));
-// 				return [];
-// 			}
-// 		})
-// 	);
-
-// export const getScheduleFromEntity = (phaseObservable: Observable<ClientPhase>) =>
-// 	combineLatest([this.subjectEntity$, phaseObservable]).pipe(
-// 		map(([entity, currPhase]) => {
-// 			if (!currPhase) return [];
-// 			if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
-// 			else {
-// 				this.store.dispatch(FetchSubjects({ phaseId: currPhase.PhaseId }));
-// 				return [];
-// 			}
-// 		})
-// 	);

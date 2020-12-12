@@ -32,7 +32,6 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 	editForm$ = new BehaviorSubject<ClientPhase>(null);
 	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
-	traineeInPhaseEntity$: Observable<{ [phaseId: string]: ClientTrainee[] }>;
 	traineeInPhase$: Observable<ClientTrainee[]>;
 	phases$: Observable<ClientPhase[]>;
 
@@ -51,8 +50,7 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 
 	ngOnInit(): void {
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.traineeInPhaseEntity$ = this.store.pipe(select(fromMasterState.getTraineesInPhaseEntity));
-		this.traineeInPhase$ = this.getTraineeInPhaseFromEntity(this.currentPhase$);
+		this.traineeInPhase$ = fromMasterState.getTraineeInPhaseFromEntity(this.store, this.currentPhase$);
 
 		this.loadingViewPhases$ = this.store.pipe(select(fromMasterState.isPhasesLoading));
 		this.loadingViewTraineeInPhase$ = this.store.pipe(
@@ -158,23 +156,5 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 
 	cancelEdit() {
 		this.editForm$.next(null);
-	}
-
-	getTraineeInPhaseFromEntity(phaseObservable: Observable<ClientPhase>) {
-		return combineLatest([this.traineeInPhaseEntity$, phaseObservable]).pipe(
-			map(([entity, currPhase]) => {
-				// If no curr phase yet, then skip fetch
-				if (!currPhase) return [];
-				// if entity has it, then pass value
-				if (!!entity[currPhase.PhaseId]) return entity[currPhase.PhaseId];
-				else {
-					this.store.dispatch(
-						MasterStateAction.FetchTraineeInPhase({ phaseId: currPhase.PhaseId })
-					);
-					return [];
-				}
-			}),
-			distinctUntilChanged()
-		);
 	}
 }

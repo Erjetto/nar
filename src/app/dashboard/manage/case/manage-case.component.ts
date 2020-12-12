@@ -2,7 +2,13 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { Observable, BehaviorSubject, merge, combineLatest, Subject } from 'rxjs';
-import { ClientPhase, ClientSubject, ClientSchedule, Case } from 'src/app/shared/models';
+import {
+	ClientPhase,
+	ClientSubject,
+	ClientSchedule,
+	Case,
+	EMPTY_GUID,
+} from 'src/app/shared/models';
 
 import {
 	MasterStateAction,
@@ -17,10 +23,10 @@ import {
 
 import { filter, tap, takeUntil, map, distinctUntilChanged } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
-import { adjustControlsInFormArray } from 'src/app/shared/methods';
+import { isEmptyGuid } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-manage-case',
@@ -33,16 +39,13 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	editDateFormat = DateHelper.DATETIME_LOCAL_FORMAT;
 	todayEditDate = DateHelper.dateToFormat(new Date(), this.editDateFormat);
 
-	currentViewPhase$ = new BehaviorSubject<ClientPhase>(null);
-	currentViewSubject$ = new BehaviorSubject<ClientSubject>(null);
-	currentViewSchedule$ = new BehaviorSubject<ClientSchedule>(null);
+	viewCurrentPhase$ = new BehaviorSubject<ClientPhase>(null);
+	viewCurrentSubject$ = new BehaviorSubject<ClientSubject>(null);
+	viewCurrentSchedule$ = new BehaviorSubject<ClientSchedule>(null);
 
-  schedulesEntity$: Observable<{ [subjectId: string]: ClientSchedule[] }>;
-  subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
-  
 	formScheduleList$: Observable<ClientSchedule[]>;
 	viewScheduleList$: Observable<ClientSchedule[]>;
-  subjectList$: Observable<ClientSubject[]>; 
+	subjectList$: Observable<ClientSubject[]>;
 
 	phases$: Observable<ClientPhase[]>;
 	caseList$: Observable<Case[]>;
@@ -54,14 +57,15 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	caseForm = this.fb.group({
 		caseId: [''], // Update
 		changedFile: [false], // Check if 'edit case' uploads new file
-    
-    fileForm: this.fb.group({fileId: [''], fileName: ['']}, Validators.required),
+
+		fileForm: this.fb.group({ fileId: [''], fileName: [''] }, Validators.required),
 
 		caseName: ['', Validators.required],
 		correctorNames: ['', Validators.required],
 		traineeDays: [this.todayEditDate, Validators.required],
 		trainerDays: [this.todayEditDate, Validators.required],
 		scheduleDate: [this.todayEditDate, Validators.required],
+		noUpload: [false],
 	});
 	deleteReasonText = this.fb.control('', Validators.required);
 
@@ -77,33 +81,34 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	ngOnInit(): void {
 		//#region Bind to store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.subjectsEntity$ = this.store.pipe(select(fromMasterState.getSubjectsEntity));
-    this.schedulesEntity$ = this.store.pipe(select(fromMasterState.getSchedulesEntity));
-    
-		this.subjectList$ = this.getSubjectsFromEntity(this.currentViewPhase$);
-		this.viewScheduleList$ = this.getSchedulesFromEntity(this.currentViewSubject$);
-    
+
+		this.subjectList$ = fromMasterState.getSubjectsFromEntity(this.store, this.viewCurrentPhase$);
+		this.viewScheduleList$ = fromMasterState.getSchedulesFromEntity(
+			this.store,
+			this.viewCurrentSubject$
+		);
+
 		this.viewCaseLoading$ = this.store.pipe(
 			select(fromMasterState.getMasterState),
 			map((v) => v.loadingPhases || v.loadingSubjects || v.loadingSchedules)
 		);
 
 		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
-    this.caseListLoading$ = this.store.pipe(select(fromCaseState.getCasesLoading));
-    
+		this.caseListLoading$ = this.store.pipe(select(fromCaseState.isCasesLoading));
+
 		//#endregion
 
 		//#region auto select first in array
 		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-      this.currentViewPhase$.next(res[0]);
+			this.viewCurrentPhase$.next(res[0]);
 		});
 		this.subjectList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.currentViewSubject$.next(res[0]);
+			this.viewCurrentSubject$.next(res[0]);
 		});
 		this.viewScheduleList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.currentViewSchedule$.next(res[0]);
-    });
-    
+			this.viewCurrentSchedule$.next(res[0]);
+		});
+
 		//#endregion
 
 		//#region Subscribe to effects
@@ -115,26 +120,28 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
 
-    // Reload when doing CRUD
+		// Reload cases when doing CRUD
 		merge(
-			this.currentViewSchedule$,
+			this.viewCurrentSchedule$,
 			this.caseEffects.createCase$,
 			this.caseEffects.deleteCase$,
 			this.caseEffects.updateCase$
 		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => {
-        this.cancelEdit(); // Reset form
-				if (this.currentViewSchedule$.value)
+				this.cancelEdit(); // Reset form
+				if (this.viewCurrentSchedule$.value)
 					this.store.dispatch(
-						CaseStateAction.FetchCases({ scheduleId: this.currentViewSchedule$.value.ScheduleId })
+						CaseStateAction.FetchCases({ scheduleId: this.viewCurrentSchedule$.value.ScheduleId })
 					);
 			});
 		//#endregion
-		this.store.dispatch(MainStateAction.DispatchIfEmpty({
-      action: MasterStateAction.FetchPhases(),
-      selectorToBeChecked: fromMasterState.getPhases
-    }));
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
 	}
 
 	get isEditing() {
@@ -145,18 +152,20 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	}
 
 	onSelectCase(row: Case) {
-    this.caseForm.patchValue(
-      {
-        fileForm: {fileId: row.FileId, fileName: row.FileName},
-				changedFile: false,
-				caseId: row.CaseId,
-				fileId: row.FileId,
-				correctorNames: row.correctorList,
-				traineeDays: DateHelper.dateToFormat(row.TraineeDeadline, this.editDateFormat),
-				trainerDays: DateHelper.dateToFormat(row.TrainerDeadline, this.editDateFormat),
-				scheduleDate: DateHelper.dateToFormat(row.ScheduleDate, this.editDateFormat),
-			},
-		);
+		this.caseForm.patchValue({
+			fileForm: isEmptyGuid(row.FileId)
+				? { fileId: '', fileName: '' }
+				: { fileId: row.FileId, fileName: row.FileName },
+			changedFile: false,
+			caseId: row.CaseId,
+			fileId: row.FileId,
+			casName: row.CaseName,
+			correctorNames: row.correctorList,
+			traineeDays: DateHelper.dateToFormat(row.TraineeDeadline, this.editDateFormat),
+			trainerDays: DateHelper.dateToFormat(row.TrainerDeadline, this.editDateFormat),
+			scheduleDate: DateHelper.dateToFormat(row.ScheduleDate, this.editDateFormat),
+			noUpload: row.NoUpload,
+		});
 	}
 
 	cancelEdit() {
@@ -184,10 +193,10 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		const { correctorNames, fileForm } = this.caseForm.value;
 		this.store.dispatch(
 			CaseStateAction.CreateCase({
-        ...this.caseForm.value,
-        fileId: fileForm.fileId,
-        subjectId: this.currentViewSubject$.value.SubjectId,
-        scheduleId: this.currentViewSchedule$.value.ScheduleId,
+				...this.caseForm.value,
+				fileId: fileForm.fileId ?? EMPTY_GUID,
+				subjectId: this.viewCurrentSubject$.value.SubjectId,
+				scheduleId: this.viewCurrentSchedule$.value.ScheduleId,
 				correctorNames: correctorNames.split('\n'),
 			})
 		);
@@ -199,7 +208,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		this.store.dispatch(
 			CaseStateAction.UpdateCase({
 				...this.caseForm.value,
-				fileId: changedFile ? fileId : null,
+				fileId: changedFile ? fileId : EMPTY_GUID,
 				correctorNames: correctorNames.split('\n'),
 			})
 		);
@@ -211,38 +220,6 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			CaseStateAction.DeleteCase({
 				caseId: this.caseForm.value.caseId,
 				reason: this.deleteReasonText.value,
-			})
-		);
-	}
-
-	getSubjectsFromEntity(phaseObservable: Observable<ClientPhase>, loader?: Subject<boolean>) {
-		return combineLatest([this.subjectsEntity$, phaseObservable]).pipe(
-			map(([entity, currPhase]) => {
-				if (!currPhase) return [];
-				if (!!currPhase && !!entity[currPhase.PhaseId]) {
-					loader?.next(false);
-					return entity[currPhase.PhaseId];
-				} else {
-					loader?.next(true);
-					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
-					return [];
-				}
-			})
-		);
-	}
-
-	getSchedulesFromEntity(subjectObservable: Observable<ClientSubject>, loader?: Subject<boolean>) {
-		return combineLatest([this.schedulesEntity$, subjectObservable]).pipe(
-			map(([entity, currSubj]) => {
-				if (!currSubj) return [];
-				if (!!currSubj && !!entity[currSubj.SubjectId]) {
-					loader?.next(false);
-					return entity[currSubj.SubjectId];
-				} else {
-					loader?.next(true);
-					this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: currSubj.SubjectId }));
-					return [];
-				}
 			})
 		);
 	}

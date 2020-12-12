@@ -1,4 +1,11 @@
-import { createFeatureSelector, createReducer, createSelector, on, select } from '@ngrx/store';
+import {
+	createFeatureSelector,
+	createReducer,
+	createSelector,
+	on,
+	select,
+	Store,
+} from '@ngrx/store';
 
 import * as MainStateAction from '../main/main.action';
 import {
@@ -13,7 +20,7 @@ import {
 } from '../../models';
 import { getCurrentGeneration } from '../main/main.reducer';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import {
 	FetchRoles,
 	FetchUserInRoles,
@@ -32,9 +39,10 @@ import {
 	FetchSchedulesSuccess,
 	FetchTraineeInScheduleSuccess,
 	FetchIPListSuccess,
-  FetchTraineeSchedulesBy,
-  FetchTraineeSchedulesSuccess,
+	FetchTraineeSchedulesBy,
+	FetchTraineeSchedulesSuccess,
 } from './master.action';
+import { IAppState } from 'src/app/app.reducer';
 
 export interface IMasterState {
 	roles: Role[];
@@ -221,19 +229,19 @@ export const MasterStateReducer = createReducer(
 	on(FetchIPListSuccess, (state, { payload }) => ({
 		...state,
 		ipList: payload,
-  })),
-  
-  //#region Modify tab
+	})),
+
+	//#region Modify tab
 	on(FetchTraineeSchedulesBy, (state) => ({
 		...state,
 		loadingTraineeTrainingSchedule: true,
 	})),
 	on(FetchTraineeSchedulesSuccess, (state, { payload }) => ({
-    ...state,
-    traineeTrainingSchedule: payload,
+		...state,
+		traineeTrainingSchedule: payload,
 		loadingTraineeTrainingSchedule: false,
-	})),
-  //#endregion
+	}))
+	//#endregion
 );
 
 export const getMasterState = createFeatureSelector<IMasterState>(MASTERSTATE_REDUCER_NAME);
@@ -274,7 +282,6 @@ export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTrain
 //#region  Modify tab
 export const getTraineeTrainingSchedule = getMasterStateBy((s) => s.traineeTrainingSchedule);
 
-
 export const isTraineeTrainingScheduleLoading = getMasterStateBy(
 	(s) => s.loadingTraineeTrainingSchedule
 );
@@ -286,3 +293,66 @@ export const getGenerationOneYearLower = createSelector(
 	(g: ClientGeneration) => parseInt(g?.Description.substr(0, 2), 10) - 1 + g?.Description.substr(2)
 );
 //#endregion
+
+export function getSubjectsFromEntity(
+	store: Store<IAppState>,
+	phaseObservable: Observable<ClientPhase>,
+	loader?: Subject<boolean>
+) {
+	return combineLatest([store.pipe(select(getSubjectsEntity)), phaseObservable]).pipe(
+		map(([entity, currPhase]) => {
+			if (!currPhase) return [];
+			if (!!entity[currPhase.PhaseId]) {
+				loader?.next(false);
+				return entity[currPhase.PhaseId];
+			} else {
+				loader?.next(true);
+				store.dispatch(FetchSubjects({ phaseId: currPhase.PhaseId }));
+				return [];
+			}
+		}),
+		distinctUntilChanged()
+	);
+}
+
+export function getSchedulesFromEntity(
+	store: Store<IAppState>,
+	subjectObservable: Observable<ClientSubject>,
+	loader?: Subject<boolean>
+) {
+	return combineLatest([store.pipe(select(getSchedulesEntity)), subjectObservable]).pipe(
+		map(([entity, currSubj]) => {
+			if (!currSubj) return [];
+			if (!!currSubj && !!entity[currSubj.SubjectId]) {
+				loader?.next(false);
+				return entity[currSubj.SubjectId];
+			} else {
+				loader?.next(true);
+				store.dispatch(FetchSchedules({ subjectId: currSubj.SubjectId }));
+				return [];
+			}
+		}),
+		distinctUntilChanged()
+	);
+}
+
+export function getTraineeInPhaseFromEntity(
+	store: Store<IAppState>,
+	phaseObservable: Observable<ClientPhase>,
+	loader?: Subject<boolean>
+) {
+	return combineLatest([store.pipe(select(getTraineesInPhaseEntity)), phaseObservable]).pipe(
+		map(([entity, currPhase]) => {
+			if (!currPhase) return [];
+			if (!!currPhase && !!entity[currPhase.PhaseId]) {
+				loader?.next(false);
+				return entity[currPhase.PhaseId];
+			} else {
+				loader?.next(true);
+				store.dispatch(FetchTraineeInPhase({ phaseId: currPhase.PhaseId }));
+				return [];
+			}
+		}),
+		distinctUntilChanged()
+	);
+}

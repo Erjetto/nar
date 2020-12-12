@@ -3,7 +3,7 @@
 		<div class="col-4">
 			<rd-card
 				[cardTitle]="
-					isEditing ? 'Edit Schedule' : 'Insert New Schedule - ' + (viewCurrSubject$ | async)?.Name
+					isEditing ? 'Edit Schedule' : 'Insert New Schedule - ' + (viewCurrentSubject$ | async)?.Name
 				"
 			>
 				<div rdCardBadges class="" *ngIf="isEditing">
@@ -247,7 +247,7 @@
 				</form>
 			</rd-card>
 			<rd-card
-				[cardTitle]="'Insert Trainee into Schedule - ' + (viewCurrSchedule$ | async)?.ScheduleName"
+				[cardTitle]="'Insert Trainee into Schedule - ' + (viewCurrentSchedule$ | async)?.ScheduleName"
 			>
 				<form [formGroup]="insertTraineeInScheduleForm">
 					<!-- <div class="row form-group">
@@ -339,8 +339,8 @@
 							[clearable]="false"
 							bindLabel="Description"
 							[searchable]="false"
-							[ngModel]="viewCurrPhase$ | async"
-							(change)="viewCurrPhase$.next($event)"
+							[ngModel]="viewCurrentPhase$ | async"
+							(change)="viewCurrentPhase$.next($event)"
 						></ng-select>
 					</div>
 					<div class="col">
@@ -351,8 +351,8 @@
 							[clearable]="false"
 							bindLabel="Name"
 							[searchable]="false"
-							[ngModel]="viewCurrSubject$ | async"
-							(change)="viewCurrSubject$.next($event)"
+							[ngModel]="viewCurrentSubject$ | async"
+							(change)="viewCurrentSubject$.next($event)"
 						></ng-select>
 					</div>
 				</div>
@@ -401,8 +401,8 @@
 							[clearable]="false"
 							bindLabel="ScheduleName"
 							[searchable]="false"
-							[ngModel]="viewCurrSchedule$ | async"
-							(change)="viewCurrSchedule$.next($event)"
+							[ngModel]="viewCurrentSchedule$ | async"
+							(change)="viewCurrentSchedule$.next($event)"
 						></ng-select>
 					</div>
 				</div>

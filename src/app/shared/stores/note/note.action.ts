@@ -45,6 +45,14 @@ export const FetchTraineesReputationSuccess = createAction(
 	props<{ payload: ClientTraineeReputation[] }>()
 );
 
+export const FetchTraineeData = createAction(
+	'[NoteState] FetchTraineeData',
+	props<{ traineeId: string }>()
+);
+export const FetchTraineeDataSuccess = createAction(
+	'[NoteState] FetchTraineeDataSuccess',
+	props<{ payload: ClientTraineeData }>()
+);
 export const FetchTraineeDataForTrainer = createAction(
 	'[NoteState] FetchTraineeDataForTrainer',
 	props<{ traineeId: string }>()

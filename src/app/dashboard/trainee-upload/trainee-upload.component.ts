@@ -39,7 +39,6 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 	phases$: Observable<ClientPhase[]>;
 	subjectList$: Observable<ClientSubject[]>;
 	caseList$: Observable<ClientCaseTrainee>;
-	subjectsEntity$: Observable<{ [phaseId: string]: ClientSubject[] }>;
 
 	loadingPage$ = new BehaviorSubject<boolean>(false);
 	uploadForms = this.fb.array([]);
@@ -57,26 +56,27 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 		//#region Bind to store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 
-		this.subjectsEntity$ = this.store.pipe(select(fromMasterState.getSubjectsEntity));
-		this.subjectList$ = this.getSubjectsFromEntity(this.currentViewPhase$).pipe(
-			map((subs) => [new ClientSubject('All'), ...subs])
-		);
+		this.subjectList$ = fromMasterState
+			.getSubjectsFromEntity(this.store, this.currentViewPhase$)
+			.pipe(map((subs) => [new ClientSubject('All'), ...subs]));
 
 		this.caseList$ = this.store.pipe(
 			select(fromCaseState.getClientCaseTrainees),
 			tap((cases) => {
 				if (cases == null) return;
-        this.uploadForms.reset();
-				
-        adjustControlsInFormArray(this.uploadForms, cases.Detail.length, fileFormFactory);
-        this.uploadForms.patchValue(cases.Detail.map(d => ({
-          fileId: !isEmptyGuid(d.AnswerId) ? d.AnswerId : null,
-          fileName: `${d.CaseName} answer`,
-        })))
+				this.uploadForms.reset();
+
+				adjustControlsInFormArray(this.uploadForms, cases.Detail.length, fileFormFactory);
+				this.uploadForms.patchValue(
+					cases.Detail.map((d) => ({
+						fileId: !isEmptyGuid(d.AnswerId) ? d.AnswerId : null,
+						fileName: `${d.CaseName} answer`,
+					}))
+				);
 			})
 		);
 		this.store
-			.pipe(select(fromCaseState.getCasesLoading), takeUntil(this.destroyed$))
+			.pipe(select(fromCaseState.isCasesLoading), takeUntil(this.destroyed$))
 			.subscribe(this.loadingPage$);
 
 		//#endregion
@@ -89,7 +89,7 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 			this.currentViewSubject$.next(res[0]);
 		});
 
-    // Reload cases ketika submit atau ubah subject
+		// Reload cases ketika submit atau ubah subject
 		merge(this.currentViewSubject$, this.caseEffects.submitTraineeAnswer$)
 			.pipe(
 				takeUntil(this.destroyed$),
@@ -119,7 +119,7 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 				selectorToBeChecked: fromMasterState.getPhases,
 			})
 		);
-  }
+	}
 
 	uploadAnswer(control: AbstractControl, c: ClientCaseTraineeDetail) {
 		this.loadingPage$.next(true);
@@ -128,23 +128,6 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 				phaseId: this.currentViewPhase$.value.PhaseId,
 				caseId: c.CaseId,
 				fileId: control.get('fileId').value,
-			})
-		);
-  }
-  
-
-	getSubjectsFromEntity(phaseObservable: Observable<ClientPhase>, loader?: Subject<boolean>) {
-		return combineLatest([this.subjectsEntity$, phaseObservable]).pipe(
-			map(([entity, currPhase]) => {
-				if (!currPhase) return [];
-				if (!!currPhase && !!entity[currPhase.PhaseId]) {
-					loader?.next(false);
-					return entity[currPhase.PhaseId];
-				} else {
-					loader?.next(true);
-					this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: currPhase.PhaseId }));
-					return [];
-				}
 			})
 		);
 	}
