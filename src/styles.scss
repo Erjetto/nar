@@ -95,6 +95,10 @@ a {
 }
 
 // Placeholder
+.file-placeholder.disabled {
+  background-color: #e9ecef !important;
+  pointer-events: none;
+}
 *::placeholder {
 	font-size: smaller;
 	font-style: italic;
@@ -163,10 +167,10 @@ a {
 	}
 }
 
-.row-striped{
-  & > .row:nth-child(odd){
-    background-color: rgba(0, 0, 0, 0.05);
-  }
+.row-striped {
+	& > .row:nth-child(odd) {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
 }
 
 // Border
@@ -280,20 +284,32 @@ a {
 		max-width: #{$i * 50}px;
 	}
 }
-.v-scroll{
-  overflow-y: auto;
+.v-scroll {
+	overflow-y: auto;
 }
-.h-scroll{
-  overflow-x: auto;
+.h-scroll {
+	overflow-x: auto;
 }
 
 // font-size
-.font-x-small{font-size: x-small;}
-.font-small{font-size: small;}
-.font-smaller{font-size: smaller;}
-.font-large{font-size: large;}
-.font-x-large{font-size: x-large;}
-.font-xx-large{font-size: xx-large;}
+.font-x-small {
+	font-size: x-small;
+}
+.font-small {
+	font-size: small;
+}
+.font-smaller {
+	font-size: smaller;
+}
+.font-large {
+	font-size: large;
+}
+.font-x-large {
+	font-size: x-large;
+}
+.font-xx-large {
+	font-size: xx-large;
+}
 
 // text-area
 .vertical-text-area {
@@ -315,60 +331,64 @@ a {
 }
 
 .bg-excel {
-  background-color: teal;
-  color: white;
+	background-color: teal;
+	color: white;
 
 	&:hover {
-    background-color: darken($color: teal, $amount: 3%);
-    color: white;
+		background-color: darken($color: teal, $amount: 3%);
+		color: white;
 	}
-	&:active, &.active {
-    background-color: darken($color: teal, $amount: 7%);
+	&:active,
+	&.active {
+		background-color: darken($color: teal, $amount: 7%);
 	}
 }
 
 // Grid styles  (Not used yet)
-.grid-column{
-  display: grid;
-  grid-template-columns: 1fr;
+.grid-column {
+	display: grid;
+	grid-template-columns: 1fr;
 }
-.grid-row{
-  display: grid;
-  grid-template-rows: 1fr;
+.grid-row {
+	display: grid;
+	grid-template-rows: 1fr;
 }
 
-.grid-gap-4{gap: 4px}
-.grid-gap-8{gap: 8px}
+.grid-gap-4 {
+	gap: 4px;
+}
+.grid-gap-8 {
+	gap: 8px;
+}
 
 .v-line {
-  border: 1px solid grey;
-  width: 0;
-  height: 100%;
+	border: 1px solid grey;
+	width: 0;
+	height: 100%;
 }
 .h-line {
-  border: 1px solid grey;
-  height: 0;
-  width: 100%;
+	border: 1px solid grey;
+	height: 0;
+	width: 100%;
 }
 
+.file-input-wrapper {
+	border-radius: 0.25rem;
+	overflow: hidden;
+	position: relative;
 
-.file-input-wrapper{
-  border-radius: 0.25rem;
-  overflow: hidden;
-  position: relative;
-
-  > input[type=file]{
-    opacity: 0;
-  }
+	> input[type='file'] {
+		opacity: 0;
+	}
 }
 
 // Background colors
 .bg-green {
-  background: $color-good;
+	background: $color-good;
 }
 
 .bg-red {
-  background: $color-bad;
+	background: $color-bad;
 }
 
 // tables

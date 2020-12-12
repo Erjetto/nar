@@ -22,9 +22,13 @@
 		color: white !important;
 	}
 
+	.file-placeholder.disabled,
 	.form-control:disabled,
 	.form-control[readonly] {
-		background-color: #999999 !important;
+    background-color: #999999 !important;
+    &::placeholder{
+      background-color: #999999 !important;
+    }
 	}
 
 	.table-hover tbody tr:hover {

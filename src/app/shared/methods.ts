@@ -2,7 +2,7 @@ import { RoleFlags } from './constants/role.constant';
 import { isNumber, map, isEmpty, cloneDeep } from 'lodash';
 import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { ClientPhase } from './models';
 
 //#region Common methods or class unrelated to NAR backen
@@ -38,20 +38,22 @@ export const arrayOfValue = (value: any, count: number) => {
  * Adjust the controls amount in form array
  * @param arr the FormArray
  * @param count the adjusted number
- * @param formgroupFactory the method that is called to create the form group
+ * @param formgroupFactory the method that is called to create the form group {value: [''], ...}
+ * @param validators validator for the control
  */
 export const adjustControlsInFormArray = (
 	arr: FormArray,
 	count: number,
-	formgroupFactory?: () => any
+  formgroupFactory?: () => any,
+  validators?: ValidatorFn
 ) => {
 	while (arr.length > count) {
 		arr.removeAt(arr.length - 1);
   }
   
 	while (arr.length < count) {
-		if (formgroupFactory) arr.push(new FormGroup(formgroupFactory()));
-		else arr.push(new FormControl());
+		if (formgroupFactory) arr.push(new FormGroup(formgroupFactory(), validators));
+		else arr.push(new FormControl(null, validators));
 	}
 };
 
@@ -61,7 +63,7 @@ export const fileFormFactory = () => ({
 });
 
 /**
- * Template for most of downloadable item in NAR
+ * Template for most of downloadable item in NAR that uses FileId
  */
 export const GetDownloadLinkFromFileId = (fileId: string): string =>
   `${environment.apiUrl}File.svc/GetFile/${fileId}`;

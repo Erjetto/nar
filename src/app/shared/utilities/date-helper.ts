@@ -1,9 +1,24 @@
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeID from '@angular/common/locales/id';
 
+// Note: format in angular DatePipe
+// 'Short'	'M/d/yy, h:mm a'
+// 'Medium'	'MMM d, y, h:mm:ss a' 
+// 'long'	'MMMM d, y, h:mm:ss a z' 
+// 'full'	'EEEE, MMMM d, y, h:mm:ss a zzzz' 
+// 'shortDate'	'M/d/yy' 
+// 'mediumDate'	'MMM d, y'
+// 'longDate'	'MMMM d, y'
+// 'fullDate'	'EEEE, MMMM d, y' 
+// 'shortTime'	'h:mm a' 
+// 'mediumTime'	'h:mm:ss a' 
+// 'longTime'	'h:mm:ss a z'
+// 'fullTime'	'h:mm:ss a zzzz'
+
 export class DateHelper {
   // 
 	public static readonly DATETIME_LOCAL_FORMAT = 'yyyy-MM-ddTHH:mm:ss'
+	public static readonly WEEKDAY_DATE_FORMAT = 'EEEE, MMM dd yyyy'
 	public static readonly FULL_DATE_FORMAT = 'yyyy-MM-dd'
   public static readonly FULL_TIME_FORMAT = 'HH:mm:ss'
   
