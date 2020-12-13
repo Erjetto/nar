@@ -138,6 +138,8 @@ export const isEvaluationsLoading = getNoteStateBy((s) => s.loadingEvaluations);
 
 //#region View Trainee
 export const getTraineesReputation = getNoteStateBy((s) => s.traineesReputation);
+export const isLoadingTraineesReputation = getNoteStateBy((s) => s.loadingViewTrainees);
+
 export const getCurrentTraineeDetail = getNoteStateBy((s) => s.currentTraineeDetail);
 export const isLoadingCurrentTraineeDetail = getNoteStateBy((s) => s.loadingCurrentTraineeDetail);
 

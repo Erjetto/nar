@@ -95,7 +95,8 @@ export class LogBookComponent extends DashboardContentBase implements OnInit, On
 		this.viewLogBookForm.valueChanges
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((data) => this.store.dispatch(LogStateAction.FetchLogBooks(data)));
-
+    
+    // Masukkan data ke form kalo klik baris
 		this.viewCurrentLogBook$
 			.pipe(
 				filter((v) => !_isEmpty(v)),
@@ -148,6 +149,7 @@ export class LogBookComponent extends DashboardContentBase implements OnInit, On
 				this.store.dispatch(LogStateAction.FetchLogBooks(this.viewLogBookForm.value))
 			);
 
+    // Ambil Subject di phase Core Training
 		this.store
 			.pipe(
 				select(fromMasterState.getPhases),

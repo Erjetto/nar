@@ -25,6 +25,7 @@ import { PresentationQuestionComponent } from './components/presentation-questio
 import { VarDirective } from './directives/var.directive';
 import { UploadInputComponent } from './components/upload-input/upload-input.component';
 import { TraineeDetailOnHoverComponent } from './components/trainee-detail-on-hover/trainee-detail-on-hover.component';
+import { ExternalUrlDirective } from './directives/external-url.directive';
 
 const SHARED_DECLARATIONS = [
 	// Shared components, pipes, and directives, ex: SearchComponent, 
@@ -42,6 +43,7 @@ const SHARED_DECLARATIONS = [
 	ContrastTextColorDirective, // Not used yet
 	EasyHorizontalSrollDirective, // Not used yet
   VarDirective, // Not used yet
+  ExternalUrlDirective,
 ];
 
 @NgModule({

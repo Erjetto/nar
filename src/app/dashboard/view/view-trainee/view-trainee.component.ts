@@ -38,7 +38,9 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
 	trainees$: Observable<ClientTraineeReputation[]>;
-	filteredTrainees$: Observable<ClientTraineeReputation[]>;
+  filteredTrainees$: Observable<ClientTraineeReputation[]>;
+  
+  loadingTrainee$: Observable<boolean>;
 
 	searchText = '';
 	searchTextControl = new FormControl('');
@@ -50,7 +52,7 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 	ngOnInit(): void {
 		//#region bind to store
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.trainees$ = this.store.pipe(select(fromMasterState.getPhases));
+    this.loadingTrainee$ = this.store.pipe(select(fromNoteState.isLoadingTraineesReputation));
 		//#endregion
 
 		this.trainees$ = this.store.pipe(select(fromNoteState.getTraineesReputation));

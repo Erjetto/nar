@@ -31,14 +31,14 @@
 			</div>
 			<div class="row">
 				<div class="col">
-          <div 
-            class="row p-1" 
-            [ngClass]="{
-              'bg-red':note.Reputation < 0,
-              'bg-green':note.Reputation > 0
-            }"
-            *ngFor="let note of (traineeDetail$ | async)?.Notes"
-          >
+					<div
+						class="row p-1"
+						[ngClass]="{
+							'bg-red': note.Reputation < 0,
+							'bg-green': note.Reputation > 0
+						}"
+						*ngFor="let note of last5Notes$ | async"
+					>
 						<!-- Need extra col-row due to v-list-m-6 styling 
             prevents > 1 child element -->
 						<div class="col">
@@ -73,16 +73,16 @@
 </ng-template>
 
 <div
-  #pop="ngbPopover"
-  [ngbPopover]="popContent"
+	#pop="ngbPopover"
+	[ngbPopover]="popContent"
 	[popoverTitle]="popTitle"
-  [autoClose]="autoClose"
-  [openDelay]="1000"
+	[autoClose]="autoClose"
+	[openDelay]="1000"
 	[triggers]="'mouseenter:mouseleave'"
 	container="body"
 	popoverClass="confirmable-popover"
 >
-	<a [routerLink]="['/view', 'trainee', traineeId , false]">
+	<a [routerLink]="['/view', 'trainee', traineeId, false]">
 		<ng-content></ng-content>
 	</a>
 </div>
