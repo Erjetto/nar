@@ -71,8 +71,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.currentActiveHeader = this.route.snapshot.firstChild.data.name;
     this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
 
-		// Change currentMenu's name for every route change
-		// Assumes every menu has data.name
+		// Ganti nama di tab sesuai route.data.name
 		this.router.events
 			.pipe(
         filter((evt) => evt instanceof NavigationEnd),
@@ -104,7 +103,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.loadingChangeGen$.next(false));
 
-		// Update menu when change role
+		// Ganti menu ketika ganti role
 		this.selectedRole$
 			.pipe(takeUntil(this.destroyed$), distinctUntilChanged())
 			.subscribe((role) => {
@@ -149,6 +148,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	}
 
 	initiateRoleAndGen() {
+    // NOTE: Gen sudah otomatis tersimpan di server side
 		if (!!localStorage.getItem('current-role'))
 			this.store.dispatch(
 				MainStateAction.ChangeRole({
@@ -168,26 +168,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 						})
 					)
 				);
-		// NOTE: Current Generation already saved in server side, this not needed
-		// if (!!localStorage.getItem('current-gen-id'))
-		// 	this.store.dispatch(
-		// 		MainStateAction.ChangeGeneration({
-		// 			genId: localStorage.getItem('current-gen-id'),
-		// 		})
-		// 	);
-		// else
-		// 	this.genList$
-		// 		.pipe(
-		// 			filter((v) => !_isEmpty(v)),
-		// 			first()
-		// 		)
-		// 		.subscribe((genList) =>
-		// 			this.store.dispatch(
-		// 				MainStateAction.ChangeGeneration({
-		// 					genId: genList[0].GenerationId,
-		// 				})
-		// 			)
-		// 		);
 	}
 
 	initiateTheme() {
@@ -216,7 +196,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	//#region Animation for page
+  //#region Animation for page
+  // NOTE: Utk sekarang animasi tidak ada, prioritas terakhir
 	// tslint:disable-next-line: member-ordering
 	currentState = 0;
 	// tslint:disable-next-line: member-ordering

@@ -262,8 +262,8 @@ export const routes: Routes = [
 				],
 			},
 			{
-        path: 'correction',
-        component: CorrectionComponent,
+				path: 'correction',
+				component: CorrectionComponent,
 				data: {
 					roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
 					name: 'Correction',
@@ -374,33 +374,39 @@ export const routes: Routes = [
 					},
 				],
 			},
-			// {
-			// 	path: 'attendance',
-			// 	data: { name: 'Attendance' },
-			// 	children: [
-			// 		{
-			// 			path: 'RoomAttendance.aspx',
-			// 			data: {
-			// 				roles: RoleGroups.SENIOR_ROLES | RoleFlags.Dummy,
-			// 				name: 'Room Attendance',
-			// 			},
-			// 		},
-			// 		{
-			// 			path: 'RestAttendance.aspx',
-			// 			data: {
-			// 				roles: RoleGroups.SENIOR_ROLES | RoleFlags.Dummy,
-			// 				name: 'Rest Attendance',
-			// 			},
-			// 		},
-			// 		{
-			// 			path: 'Permission.aspx',
-			// 			data: {
-			// 				roles: RoleGroups.SENIOR_ROLES | RoleFlags.Dummy,
-			// 				name: 'Permission',
-			// 			},
-			// 		},
-			// 	],
-			// },
+			{
+				path: 'attendance',
+				data: { name: 'Attendance' },
+				children: [
+					{
+						path: 'RoomAttendance.aspx',
+						redirectTo: '/RoomAttendance.aspx',
+						data: {
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Dummy,
+							name: 'Room Attendance',
+							externalUrl: true,
+						},
+					},
+					{
+						path: 'RestAttendance.aspx',
+						redirectTo: '/RestAttendance.aspx',
+						data: {
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Dummy,
+							name: 'Rest Attendance',
+							externalUrl: true,
+						},
+					},
+					{
+						path: 'Permission.aspx',
+						redirectTo: '/Permission.aspx',
+						data: {
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Dummy,
+							name: 'Permission',
+							externalUrl: true,
+						},
+					},
+				],
+			},
 			{
 				path: 'trainee',
 				data: { name: 'Trainee' },
