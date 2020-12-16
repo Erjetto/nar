@@ -90,7 +90,7 @@ export class InterviewService {
 
 	public SaveInterviewResult(data: {
 		interviewScheduleId: string;
-		details: InterviewResultDetail;
+		details: InterviewResultDetail[];
 		note: string;
 		decision: string;
 		attnote: string;

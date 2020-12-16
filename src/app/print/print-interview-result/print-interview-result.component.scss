@@ -1,0 +1,140 @@
+@page {
+  size: A4;
+  margin: 0;
+}
+@media print {
+  html, body {
+    width: 210mm;
+    height: 297mm;
+  }
+  /* ... the rest of the rules ... */
+}
+:host{
+  @media print{
+    body{
+      font-size: 18px;
+    }
+  }
+  .noprint{ display:none !important }
+  .printonlycollapse{ visibility:visible !important; display: table-row !important }
+  .printonly{ display:inline }
+  .printintimes{ font-family: "Times New Roman"}
+  .page { padding-top:75px; }
+  .pagebreak{ page-break-after:always; }
+  #header, #footer, .nav { display:none }
+  
+  body, .container, input, select, textarea, .ui-corner-all
+  {
+      -moz-border-radius: 0px !important;
+      -webkit-border-radius: 0px !important;
+      border-radius: 0px !important;
+      -moz-box-shadow: 0 0 0 #fff !important;
+      -webkit-box-shadow: 0 0 0 #fff !important;
+      box-shadow: 0 0 0 #fff !important;
+      color:Black;
+      background-color:White;
+  }
+  
+  .header {
+      position: fixed;
+      width: 98%;
+      background-color:White;
+      top: 0;
+      left: 0;
+      /*padding-left:30px;*/
+      height: 50px;
+  }
+  
+  .borderinprint
+  {
+      border: 2px solid black;
+      border-collapse: collapse;
+      width: 99.5%;
+      margin-top: -3px !important;
+      margin-bottom: -6px;
+  }
+  
+  .borderinprint textarea
+  {
+      border: none;
+      border-top: 2px solid black;
+      height: 90px !important;
+  }
+  
+  .fixedwidthinprint
+  {
+      width:43px;
+  }
+  
+  .container
+  {
+      visibility:visible;
+      border: none;
+      border-bottom:2px solid gray;
+  }
+  
+  .printintimes input[type=radio]
+  {
+      -webkit-appearance: checkbox;
+      -moz-appearance: checkbox;
+      appearance: checkbox;
+      border: 1px solid black;
+      background: white;
+  }
+  
+  .printintimes textarea
+  {
+      font-family: "Times New Roman";
+      font-size: 14px;
+  }
+  
+  h1,h2,h3
+  {
+      margin:-2px;
+  }
+  
+  table.tbl
+  {
+    > tbody > tr, > thead > tr{
+      
+      > td, > th{
+        padding:3px;
+        border-collapse: collapse;
+        border:2px solid black;
+      }
+    }
+  }
+  
+  thead tr th, tfoot tr th
+  {
+      background:none !important;
+      background-color:#666 !important;
+  }
+  
+  input[type=text], input[type=password], select, textarea
+  {
+      border:2px solid black;
+      border-collapse: collapse;
+      background:none;
+  }
+  
+  input[type=button], button
+  {
+      display:none !important;
+  }
+  
+  .ui-corner-all
+  {
+      border:none !important;
+  }
+  
+  #Interview_Decision
+  {
+      margin-top:6px !important;
+  }
+  
+  // .rowChoice
+  // {
+  //     font-size:11px;
+  // }
+}

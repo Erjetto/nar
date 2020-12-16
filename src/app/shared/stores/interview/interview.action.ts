@@ -5,6 +5,8 @@ import {
 	ClientInterviewReport,
 	InterviewMaterial,
 	ClientInterviewSchedule,
+  ClientInterviewResult,
+  InterviewResultDetail,
 } from '../../models';
 
 //#region Fetch
@@ -66,6 +68,18 @@ export const MassCreateInterviewMaterial = createAction(
 // export const UpdateInterviewSchedule = createAction(
 // 	'[MasterState] UpdateInterviewSchedules'
 // );
+export const UpdateInterviewResult = createAction(
+  '[MasterState] UpdateInterviewResult',
+	props<{
+		interviewScheduleId: string;
+    details: InterviewResultDetail[],
+    note: string;
+    decision: string;
+    attnote: string;
+    devnote: string;
+    summary: string;
+	}>()
+);
 //#endregion
 
 //#region Delete
@@ -102,6 +116,11 @@ export const FetchInterviewSchedules = createAction('[MasterState] FetchIntervie
 export const FetchInterviewSchedulesReport = createAction(
 	'[MasterState] FetchInterviewSchedulesReport'
 );
+export const FetchInterviewResult = createAction(
+  '[MasterState] FetchInterviewResult',
+  props<{interviewScheduleId: string}>()
+);
+
 
 export const FetchInterviewMaterialsSuccess = createAction(
 	'[MasterState] FetchInterviewMaterialsSuccess',
@@ -114,4 +133,8 @@ export const FetchInterviewSchedulesSuccess = createAction(
 export const FetchInterviewSchedulesReportSuccess = createAction(
 	'[MasterState] FetchInterviewSchedulesReportSuccess',
 	props<{ payload: ClientInterviewReport }>()
+);
+export const FetchInterviewResultSuccess = createAction(
+	'[MasterState] FetchInterviewResultSuccess',
+	props<{ payload: ClientInterviewResult }>()
 );

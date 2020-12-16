@@ -93,6 +93,14 @@ export class InterviewStateEffects {
 		mergeMap((res) => of(InterviewStateAction.FetchInterviewMaterialsSuccess({ payload: res }))),
 		share()
 	);
+
+	@Effect()
+	getInterviewResults$: Observable<Action> = this.actions$.pipe(
+		ofType(InterviewStateAction.FetchInterviewResult),
+		switchMap((data) => this.interviewService.GetInterviewResult(data)),
+		mergeMap((res) => of(InterviewStateAction.FetchInterviewResultSuccess({ payload: res }))),
+		share()
+	);
 	//#endregion
 
 	//#region create
@@ -156,6 +164,18 @@ export class InterviewStateEffects {
 	//#endregion
 
 	//#region update
+	@Effect()
+	updateInterviewResult$: Observable<Action> = this.actions$.pipe(
+		ofType(InterviewStateAction.UpdateInterviewResult),
+		switchMap((data) => this.interviewService.SaveInterviewResult(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('updated interview result'))
+				: of(MainStateAction.FailMessage('updating interview result'))
+		),
+		share()
+	);
+
 
 	//#endregion
 

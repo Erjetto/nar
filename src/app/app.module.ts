@@ -18,9 +18,10 @@ import { ToCSharpDateInterceptor } from 'src/app/shared/interceptors/to-csharp-d
 import { LogInterceptor } from 'src/app/shared/interceptors/log-interceptor';
 import { StoreDispatcherInterceptor } from 'src/app/shared/interceptors/store-dispatcher-interceptor';
 import { UserCookieInterceptor } from './shared/interceptors/user-cookie-interceptor';
+import { PrintInterviewResultComponent } from './print/print-interview-result/print-interview-result.component';
 
 @NgModule({
-	declarations: [AppComponent, LoginComponent],
+	declarations: [AppComponent, LoginComponent, PrintInterviewResultComponent],
 	imports: [
 		SharedModule,
 		BrowserModule,

@@ -9,7 +9,20 @@ import {
 	ClientInterviewReport,
 	ClientInterviewResult,
 } from '../../models';
-import { FetchInterviewQuestions, FetchInterviewQuestionDetails, FetchInterviewSchedules, FetchInterviewSchedulesReport, FetchInterviewMaterials, FetchInterviewQuestionsSuccess, FetchInterviewQuestionDetailsSuccess, FetchInterviewSchedulesSuccess, FetchInterviewSchedulesReportSuccess, FetchInterviewMaterialsSuccess } from './interview.action';
+import {
+	FetchInterviewQuestions,
+	FetchInterviewQuestionDetails,
+	FetchInterviewSchedules,
+	FetchInterviewSchedulesReport,
+	FetchInterviewMaterials,
+	FetchInterviewQuestionsSuccess,
+	FetchInterviewQuestionDetailsSuccess,
+	FetchInterviewSchedulesSuccess,
+	FetchInterviewSchedulesReportSuccess,
+	FetchInterviewMaterialsSuccess,
+	FetchInterviewResult,
+	FetchInterviewResultSuccess,
+} from './interview.action';
 
 export interface IInterviewState {
 	interviewQuestions: ClientInterviewQuestion[];
@@ -25,7 +38,8 @@ export interface IInterviewState {
 
 	loadingInterviewMaterials: boolean;
 	loadingInterviewSchedules: boolean;
-  loadingInterviewSchedulesReport: boolean;
+	loadingInterviewSchedulesReport: boolean;
+	loadingInterviewResult: boolean;
 	//#endregion
 }
 
@@ -43,13 +57,14 @@ export const initialState: IInterviewState = {
 	loadingInterviewMaterials: false,
 	loadingInterviewSchedules: false,
 	loadingInterviewSchedulesReport: false,
+	loadingInterviewResult: false,
 };
 
 export const INTERVIEWSTATE_REDUCER_NAME = 'InterviewState';
 
 export const InterviewStateReducer = createReducer(
 	initialState,
-  // Remove all data when generation changed
+	// Remove all data when generation changed
 	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
 		...initialState,
 	})),
@@ -77,6 +92,11 @@ export const InterviewStateReducer = createReducer(
 	on(FetchInterviewMaterials, (state) => ({
 		...state,
 		loadingInterviewMaterials: true,
+	})),
+
+	on(FetchInterviewResult, (state) => ({
+		...state,
+		loadingInterviewResult: true,
 	})),
 
 	on(FetchInterviewQuestionsSuccess, (state, { payload }) => ({
@@ -107,6 +127,12 @@ export const InterviewStateReducer = createReducer(
 		...state,
 		interviewMaterials: payload,
 		loadingInterviewMaterials: false,
+	})),
+
+	on(FetchInterviewResultSuccess, (state, { payload }) => ({
+		...state,
+		interviewResult: payload,
+		loadingInterviewResult: false,
 	}))
 );
 
@@ -130,9 +156,13 @@ export const isInterviewQuestionDetailsLoading = getInterviewStateBy(
 export const getInterviewMaterials = getInterviewStateBy((s) => s.interviewMaterials);
 export const getInterviewSchedules = getInterviewStateBy((s) => s.interviewSchedules);
 export const getInterviewSchedulesReport = getInterviewStateBy((s) => s.interviewSchedulesReport);
+export const getInterviewResult = getInterviewStateBy((s) => s.interviewResult);
 
 export const isInterviewMaterialsLoading = getInterviewStateBy((s) => s.loadingInterviewMaterials);
 export const isInterviewSchedulesLoading = getInterviewStateBy((s) => s.loadingInterviewSchedules);
-export const isInterviewSchedulesReportLoading = getInterviewStateBy((s) => s.loadingInterviewSchedulesReport);
+export const isInterviewSchedulesReportLoading = getInterviewStateBy(
+	(s) => s.loadingInterviewSchedulesReport
+);
+export const isInterviewResultLoading = getInterviewStateBy((s) => s.loadingInterviewResult);
 
 //#endregion

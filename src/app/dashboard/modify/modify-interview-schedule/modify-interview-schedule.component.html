@@ -1,7 +1,7 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Insert/Update Interview Schedule'">
+			<rd-card [cardTitle]="'Insert/Update Interview Schedule'" [expanded]="false">
 				<div class="row">
 					<div class="col">
 						<div class="row form-group">
@@ -65,13 +65,10 @@
 					</button>
 				</div>
 			</rd-card>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
 			<rd-card
 				[cardTitle]="'Interview Schedules'"
 				[isLoading]="loadingViewInterviewSchedules$ | async"
+				[expanded]="(currentInterviewSchedule$ | async) == null"
 			>
 				<div class="row pb-2">
 					<b>Legends: </b>
@@ -84,9 +81,7 @@
 					}})
 				</div>
 				<div class="row justify-content-end">
-					<span class="font-italic"
-						>Note: Utk skrg blum bisa kasih reason waktu delete schedule</span
-					>
+					<i>Note: Utk skrg blum bisa kasih reason waktu delete schedule</i>
 				</div>
 				<div class="row">
 					<table class="table table-sm table-striped table-bordered text-center">
@@ -111,10 +106,11 @@
 							<tr
 								*ngFor="let interview of (interviewScheduleReport$ | async)?.Schedules"
 								class="cursor-pointer"
+								(click)="showInterviewResult(interview)"
 							>
 								<td>{{ interview.TraineeCode }}</td>
 								<td>{{ interview.TraineeName }}</td>
-								<td>{{ interview.InterviewDate | date: 'EEEE, MMM dd' }}</td>
+								<td>{{ interview.InterviewDate | date: interviewDateFormat }}</td>
 								<td>{{ interview.startToEndTime }}</td>
 								<!-- Create a short link if location is link -->
 								<ng-container [ngSwitch]="isLocationLink(interview.Location)">
@@ -131,8 +127,8 @@
 								</td>
 								<td>
 									<rd-confirmable-pop-up
-                    [title]="'Delete interview for ' + interview.TraineeName + '?'"
-                    [description]="deleteReasonTemplate"
+										[title]="'Delete interview for ' + interview.TraineeName + '?'"
+										[description]="deleteReasonTemplate"
 										[canConfirm]="deleteReasonText.valid"
 										(confirm)="deleteSchedule(interview)"
 										(cancel)="deleteReasonText.reset()"
@@ -154,6 +150,387 @@
 							</tr>
 						</tbody>
 					</table>
+				</div>
+			</rd-card>
+			<rd-card
+				[cardTitle]="'Interview Detail'"
+				[isLoading]="loadingFormInterviewResult$ | async"
+				[expanded]="(currentInterviewSchedule$ | async) != null"
+				[formGroup]="interviewResultForm"
+			>
+				<div class="row mb-3">
+					<div class="col" style="flex: 0 0 200px">
+						<img [src]="(currentInterviewResult$ | async)?.thumbnailLink(200)" />
+					</div>
+					<div class="col">
+						<div class="row">
+							<div class="col-4">
+								<div>No. Pendaftaran</div>
+								<small><i>Registration Number</i></small>
+							</div>
+							<div class="col">: {{ (currentInterviewResult$ | async)?.RegistrationCode }}</div>
+						</div>
+						<div class="row">
+							<div class="col-4">
+								<div>NIM</div>
+								<small><i>Binusian ID</i></small>
+							</div>
+							<div class="col">: {{ (currentInterviewResult$ | async)?.TraineeNumber }}</div>
+						</div>
+						<div class="row">
+							<div class="col-4">
+								<div>No. Trainee</div>
+								<small><i>Trainee Number</i></small>
+							</div>
+							<div class="col">: {{ (currentInterviewResult$ | async)?.TraineeCode }}</div>
+						</div>
+						<div class="row">
+							<div class="col-4">
+								<div>Nama Trainee</div>
+								<small><i>Trainee Name</i></small>
+							</div>
+							<div class="col">: {{ (currentInterviewResult$ | async)?.TraineeName }}</div>
+						</div>
+						<div class="row">
+							<div class="col-4">
+								<div>Jurusan</div>
+								<small><i>Major</i></small>
+							</div>
+							<div class="col">: {{ (currentInterviewResult$ | async)?.Major }}</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="row">
+							<div class="col-4">
+								<div>Tanggal Wawancara</div>
+								<small><i>Interview Date</i></small>
+							</div>
+							<div class="col">
+								: {{ (currentInterviewResult$ | async)?.InterviewDate | date: interviewDateFormat }}
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-4">
+								<div>Waktu Mulai</div>
+								<small><i>Start Time</i></small>
+							</div>
+							<div class="col">: {{ (currentInterviewResult$ | async)?.StartTime }}</div>
+						</div>
+						<div class="row">
+							<div class="col-4">
+								<div>Waktu Selesai</div>
+								<small><i>End Time</i></small>
+							</div>
+							<div class="col">: {{ (currentInterviewResult$ | async)?.EndTime }}</div>
+						</div>
+						<div class="row">
+							<div class="col-4">
+								<div>Tempat Wawancara</div>
+								<small><i>Location</i></small>
+							</div>
+							<div
+								class="col"
+								[ngSwitch]="isLocationLink((currentInterviewResult$ | async)?.Location || '')"
+							>
+								<span *ngSwitchCase="true">
+									: <a [href]="(currentInterviewResult$ | async)?.Location">Link here</a>
+								</span>
+								<span *ngSwitchDefault>: {{ (currentInterviewResult$ | async)?.Location }}</span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-4">
+								<div>Pewawancara</div>
+								<small><i>Interviewer</i></small>
+							</div>
+							<div class="col">
+								: {{ (currentInterviewResult$ | async)?.MainInterviewer }} <br />
+								&nbsp;
+								{{ (currentInterviewResult$ | async)?.CoInterviewer }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<table class="table table-striped table-bordered text-center">
+						<thead>
+							<tr>
+								<th rowspan="2" class="text-middle">
+									Nomor <br />
+									<small><i>Number</i></small>
+								</th>
+								<th rowspan="2" class="text-middle">
+									Keterangan <br />
+									<small><i>Information</i></small>
+								</th>
+								<th rowspan="2" class="text-middle">
+									Bobot Nilai <br />
+									<small><i>Score Weight</i></small>
+								</th>
+								<th colspan="5" class="text-middle">
+									Nilai <br />
+									<small><i>Score</i></small>
+								</th>
+								<th rowspan="2" class="text-middle">
+									Total Nilai <br />
+									(bobot x nilai) <br />
+									<small>
+										<i>Total Score <br />(weight x score)</i>
+									</small>
+								</th>
+							</tr>
+							<tr>
+								<th class="text-middle">
+									Sangat Kurang <br />
+									<small><i>Very Poor</i></small>
+								</th>
+								<th class="text-middle">
+									Kurang <br />
+									<small><i>Poor</i></small>
+								</th>
+								<th class="text-middle">
+									Cukup <br />
+									<small><i>Fair</i></small>
+								</th>
+								<th class="text-middle">
+									Baik <br />
+									<small><i>Good</i></small>
+								</th>
+								<th class="text-middle">
+									Sangat Baik <br />
+									<small><i>Very Good</i></small>
+								</th>
+							</tr>
+						</thead>
+						<tbody formArrayName="Questions">
+							<tr *ngFor="let qst of (currentInterviewResult$ | async)?.Questions; let i = index">
+								<td class="text-middle">{{ qst.Number }}</td>
+								<td class="text-left">
+									{{ qst.DescriptionIndonesia }} <br />
+									<i>{{ qst.DescriptionEnglish }}</i>
+								</td>
+								<td>{{ qst.Weight }}</td>
+								<td [class.bg-red]="qst.Value == 0 && qst.Value != QuestionsFormArr.at(i).value">
+									<input type="radio" value="0" [formControlName]="i" />
+								</td>
+								<td [class.bg-red]="qst.Value == 1 && qst.Value != QuestionsFormArr.at(i).value">
+									<input type="radio" value="1" [formControlName]="i" />
+								</td>
+								<td [class.bg-red]="qst.Value == 2 && qst.Value != QuestionsFormArr.at(i).value">
+									<input type="radio" value="2" [formControlName]="i" />
+								</td>
+								<td [class.bg-red]="qst.Value == 3 && qst.Value != QuestionsFormArr.at(i).value">
+									<input type="radio" value="3" [formControlName]="i" />
+								</td>
+								<td [class.bg-red]="qst.Value == 4 && qst.Value != QuestionsFormArr.at(i).value">
+									<input type="radio" value="4" [formControlName]="i" />
+								</td>
+								<td>{{ QuestionsFormArr.at(i).value * qst.Weight }}</td>
+							</tr>
+							<tr>
+								<td colspan="9">&nbsp;</td>
+							</tr>
+							<tr>
+								<td colspan="5" rowspan="2" style="text-align: left; vertical-align: bottom">
+									<span class="mr-3"><b>Keterangan Nilai:</b></span>
+									<span class="mr-3" *ngFor="let g of grades">
+										<b>{{ g.grade }}</b> : {{ g.min }} - {{ g.max }}
+									</span>
+									<br />
+									<span><i>Score Information</i></span>
+								</td>
+								<td colspan="3" class="text-right">
+									Jumlah <br />
+									<i>Total</i>
+								</td>
+								<td class="font-x-large">{{ total$ | async }}</td>
+							</tr>
+							<tr>
+								<td colspan="3" class="text-right">
+									Peringkat <br />
+									<i>Grade</i>
+								</td>
+								<td class="font-x-large">{{ grade$ | async }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row mb-3">
+					<div class="col">
+						<div class="row">
+							<div class="col text-center">
+								<b>Kepribadian positif yang dapat menunjang pekerjaannya</b> <br />
+								<i>Positive attitude that can support his/her job</i>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<textarea class="form-control minh-150px" formControlName="AttitudeNote"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="row">
+							<div class="col text-center">
+								<b>Area yang perlu dikembangkan (Keterampilan / Kepribadian)</b> <br />
+								<i>Development area (skill / personality)</i>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<textarea
+									class="form-control minh-150px"
+									formControlName="DevelopmentNote"
+								></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-4">
+						<div class="row">
+							<div class="col text-center">
+								<b>Komentar Lainnya</b> <br />
+								<i>Other Comments</i>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<textarea class="form-control minh-250px" formControlName="Note"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="row mb-3">
+							<div class="col text-center">
+								<b>Kesimpulan</b> <br />
+								<i>Summary</i>
+							</div>
+						</div>
+						<div class="row mb-2">
+							<div class="col">
+								<div class="row">
+									<div class="col-auto p-1">
+										<input type="radio" value="Very Poor" formControlName="Summary" id="summary_veryPoor"/>
+									</div>
+									<label class="col" for="summary_veryPoor">
+										<b>Sangat Kurang</b> <br />
+										<i>Very Poor</i>
+									</label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="row">
+									<div class="col-auto p-1">
+										<input type="radio" value="Poor" formControlName="Summary" id="summary_poor"/>
+									</div>
+									<label class="col" for="summary_poor">
+										<b>Kurang</b> <br />
+										<i>Poor</i>
+									</label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="row">
+									<div class="col-auto p-1">
+										<input type="radio" value="Fair" formControlName="Summary" id="summary_fair"/>
+									</div>
+									<label class="col" for="summary_fair">
+										<b>Cukup</b> <br />
+										<i>Fair</i>
+									</label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="row">
+									<div class="col-auto p-1">
+										<input type="radio" value="Good" formControlName="Summary" id="summary_good"/>
+									</div>
+									<label class="col" for="summary_good">
+										<b>Baik</b> <br />
+										<i>Good</i>
+									</label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="row">
+									<div class="col-auto p-1">
+										<input type="radio" value="Very Good" formControlName="Summary" id="summary_veryGood"/>
+									</div>
+									<label class="col" for="summary_veryGood">
+										<b>Baik Sekali</b> <br />
+										<i>Very Good</i>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="row mb-2">
+							<label class="col text-center">
+								<b>Hasil Penilaian</b> <br />
+								<i>Scoring Result</i>
+							</label>
+						</div>
+						<div class="row">
+							<div class="col"></div>
+							<div class="col-auto">
+								<div class="row">
+									<div class="col-auto p-1">
+										<input type="radio" value="Accepted" formControlName="Decision" id="decision_Acc" />
+									</div>
+									<label class="col" for="decision_Acc">
+										<b>Baik, proses dilanjutkan ke tahap berikutnya</b> <br />
+										<i>Good, process is continued to next assessment</i>
+									</label>
+								</div>
+								<div class="row">
+									<div class="col-auto p-1">
+										<input type="radio" value="Postponed" formControlName="Decision" id="decision_Pos" />
+									</div>
+									<label class="col" for="decision_Pos">
+										<b>Cadangan</b> <br />
+										<i>Alternative</i>
+									</label>
+								</div>
+								<div class="row">
+									<div class="col-auto p-1">
+										<input type="radio" value="Rejected" formControlName="Decision" id="decision_Rej" />
+									</div>
+									<label class="col" for="decision_Rej">
+										<b>Tidak baik, proses tidak dilanjutkan</b> <br />
+										<i>Not good, process is not continued</i>
+									</label>
+								</div>
+							</div>
+							<div class="col"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col content-bottom">
+						<span>
+							Interview has been saved by <b>{{ (currentInterviewResult$ | async)?.SavedBy }}</b> at
+							<b>{{ (currentInterviewResult$ | async)?.SavedAt | date: savedAtFormat }}</b>
+						</span>
+					</div>
+					<div class="col-auto">
+						<button
+							class="btn btn-primary mr-2"
+							[disabled]="interviewResultForm.pristine"
+							(click)="save()"
+						>
+							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
+						</button>
+						<button class="btn bg-excel mr-2" (click)="print()">
+							<fa-icon [icon]="['fas', 'file-download']"></fa-icon> Print
+						</button>
+						<button
+							class="btn btn-secondary"
+							[disabled]="interviewResultForm.pristine"
+							(click)="cancel()"
+						>
+							<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
+						</button>
+					</div>
 				</div>
 			</rd-card>
 		</div>

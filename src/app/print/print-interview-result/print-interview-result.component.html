@@ -1,0 +1,475 @@
+<div style="font-size: large; padding: 4rem" class="printintimes" size="A4">
+	<div style="width: 100%" class="header printonly">
+		<!--page header-->
+		<div style="float: right; margin-right: 60px"><br />FM-BINUS-AA-FPT-45/R4</div>
+		<!-- <img src="../../../assets/images/slc.jpg" width="450px" alt="Software Laboratory Center" /> -->
+	</div>
+
+	<div class="page">
+		<div class="row mb-3">
+			<table border="2" style="margin: auto; border-collapse: separate">
+				<tbody>
+					<tr>
+						<td>
+							<img
+								src="../../../assets/images/slc-black.jpg"
+								width="200px"
+								alt="Software Laboratory Center"
+							/>
+						</td>
+						<td class="p-4">
+							<h1><strong>Penilaian Kemampuan Calon Asisten Baru</strong></h1>
+							<h2>
+								<i><strong>New Assistant Candidate's Ability Assesment</strong></i>
+							</h2>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="row">
+			<div class="col text-center font-weight-bold">
+				<!-- <h1>Penilaian Kemampuan Calon Asisten Baru</h1>
+				<h2><i>New Assistant Candidate's Ability Assesment</i></h2>
+				<br /> -->
+				<h2><strong>Semester Ganjil Tahun 2018/2019</strong></h2>
+				<h3>
+					<i><strong>Odd Semester Year 2018/2019</strong></i>
+				</h3>
+				<br />
+			</div>
+		</div>
+		<div class="row mb-3">
+			<!-- <div class="col"></div> -->
+			<div class="col">
+				<div class="row">
+					<div class="col mr-4">
+						<div class="row">
+							<div class="col-5">
+								<div>No. Pendaftaran</div>
+								<small><i>Registration Number</i></small>
+							</div>
+							<div class="col">: {{ (interviewResultData$ | async)?.RegistrationCode }}</div>
+						</div>
+						<div class="row">
+							<div class="col-5">
+								<div>NIM</div>
+								<small><i>Binusian ID</i></small>
+							</div>
+							<div class="col">: {{ (interviewResultData$ | async)?.TraineeNumber }}</div>
+						</div>
+						<div class="row">
+							<div class="col-5">
+								<div>Nama</div>
+								<small><i>Name</i></small>
+							</div>
+							<div class="col">: {{ (interviewResultData$ | async)?.TraineeName }}</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="row">
+							<div class="col-5">
+								<div>Tanggal Wawancara</div>
+								<small><i>Interview Date</i></small>
+							</div>
+							<div class="col">
+								: {{ (interviewResultData$ | async)?.InterviewDate | date: interviewDateFormat }}
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-5">
+								<div>Pewawancara</div>
+								<small><i>Interviewer</i></small>
+							</div>
+							<div class="col">
+								: {{ (interviewResultData$ | async)?.MainInterviewer }} <br />
+								&nbsp; {{ (interviewResultData$ | async)?.CoInterviewer }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="col"></div> -->
+		</div>
+		<div class="row mb-3">
+			<table class="tbl table table-striped text-center">
+				<thead>
+					<tr>
+						<th rowspan="2" class="noprint" style="width: 55px">
+							<span>Nomor</span><br /><span class="font-smaller" style="font-style: italic"
+								>Number</span
+							>
+						</th>
+						<th rowspan="2">
+							<span>Keterangan</span><br /><span class="font-smaller" style="font-style: italic"
+								>Information</span
+							>
+						</th>
+						<th rowspan="2" style="width: 50px">
+							<span>Bobot Nilai</span><br /><span class="font-smaller" style="font-style: italic"
+								>Score Weight</span
+							>
+						</th>
+						<th colspan="5">
+							<span>Nilai</span><br /><span class="font-smaller" style="font-style: italic"
+								>Score</span
+							>
+						</th>
+						<th rowspan="2" width="100px">
+							<span>Total Nilai<br />(bobot&nbsp;x&nbsp;nilai)</span><br /><span
+								class="font-smaller"
+								style="font-style: italic"
+								>Total Score<br />(weight x score)</span
+							>
+						</th>
+					</tr>
+					<tr>
+						<th width="105px">
+							<span>Sangat Kurang</span><br /><span class="font-smaller" style="font-style: italic"
+								>Very Poor</span
+							>
+						</th>
+						<th width="75px">
+							<span>Kurang</span><br /><span class="font-smaller" style="font-style: italic"
+								>Poor</span
+							>
+						</th>
+						<th width="75px">
+							<span>Cukup</span><br /><span class="font-smaller" style="font-style: italic"
+								>Fair</span
+							>
+						</th>
+						<th width="75px">
+							<span>Baik</span><br /><span class="font-smaller" style="font-style: italic"
+								>Good</span
+							>
+						</th>
+						<th width="75px">
+							<span>Baik Sekali</span><br /><span class="font-smaller" style="font-style: italic"
+								>Very Good</span
+							>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let qst of (interviewResultData$ | async)?.Questions">
+						<td class="text-left">{{ qst.Number }}. {{ qst.DescriptionIndonesia }}</td>
+						<td class="text-middle">4</td>
+						<td class="text-middle">
+							{{ qst.Value == 0 ? '✓' : '' }}
+						</td>
+						<td class="text-middle">
+							{{ qst.Value == 1 ? '✓' : '' }}
+						</td>
+						<td class="text-middle">
+							{{ qst.Value == 2 ? '✓' : '' }}
+						</td>
+						<td class="text-middle">
+							{{ qst.Value == 3 ? '✓' : '' }}
+						</td>
+						<td class="text-middle">
+							{{ qst.Value == 4 ? '✓' : '' }}
+						</td>
+						<td>{{ qst.Value * qst.Weight }}</td>
+					</tr>
+					<tr class="">
+						<td colspan="7" style="text-align: right"><span>Jumlah</span><br /><i>Total</i></td>
+						<td id="Total_Score2">{{ total$ | async }}</td>
+					</tr>
+					<tr>
+						<td colspan="8">
+							<div class="" style="line-height: 24px">
+								<div style="display: inline-block; text-align: left; float: left; width: 55%">
+									<div style="display: inline-block; padding: 10px; float: left">
+										<div style="padding-bottom: 5px">
+											<span><strong>Keterangan Nilai :</strong></span>
+											<br />
+											<span class="font-smaller" style="font-style: italic">Score Information</span>
+										</div>
+										<table style="width: 100%" border="0">
+											<tbody>
+												<tr>
+													<td class="p-1 bd-t-0 text-right">
+														<span class="indoSpan">Sangat Kurang</span><br /><i>Very Poor </i>
+													</td>
+													<td class="p-1 bd-t-0 text-right">: 0</td>
+													<td class="p-1 bd-t-0 text-right">
+														<span class="indoSpan">Cukup</span><br /><i>Fair </i>
+													</td>
+													<td class="p-1 bd-t-0 text-right">: 2</td>
+													<td class="p-1 bd-t-0 text-right">
+														<span class="indoSpan">Baik Sekali</span><br /><i>Very Good </i>
+													</td>
+													<td class="p-1 bd-t-0 text-right">: 4</td>
+												</tr>
+												<tr>
+													<td class="p-1 bd-t-0 text-right">
+														<span class="indoSpan">Kurang</span><br /><i>Poor </i>
+													</td>
+													<td class="p-1 bd-t-0 text-right">: 1</td>
+													<td class="p-1 bd-t-0 text-right">
+														<span class="indoSpan">Baik</span><br /><i>Good </i>
+													</td>
+													<td class="p-1 bd-t-0 text-right">: 3</td>
+													<td class="p-1 bd-t-0 text-right"></td>
+													<td class="p-1 bd-t-0 text-right"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+
+								<div style="display: inline-block; text-align: left; float: right; width: 40%">
+									<div style="display: inline-block; padding: 10px; float: left">
+										<div style="padding-bottom: 5px">
+											<span><strong>Total Nilai :</strong></span>
+											<br />
+											<span class="font-smaller" style="font-style: italic">Score Total</span>
+										</div>
+										<table style="width: 100%">
+											<tbody>
+												<tr>
+													<td class="p-1 bd-t-0"><span class="indoSpan">A</span></td>
+													<td class="p-1 bd-t-0">: 91 - 112</td>
+													<td class="p-1 bd-t-0"><span class="indoSpan">D</span></td>
+													<td class="p-1 bd-t-0">: 28 - 48</td>
+												</tr>
+												<tr>
+													<td class="p-1 bd-t-0"><span class="indoSpan">B</span></td>
+													<td class="p-1 bd-t-0">: 70 - 90</td>
+													<td class="p-1 bd-t-0"><span class="indoSpan">E</span></td>
+													<td class="p-1 bd-t-0">: 0 - 27</td>
+												</tr>
+												<tr>
+													<td class="p-1 bd-t-0"><span class="indoSpan">C</span></td>
+													<td class="p-1 bd-t-0">: 49 - 69</td>
+													<td class="p-1 bd-t-0"></td>
+													<td class="p-1 bd-t-0"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="clear"></div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="pagebreak"></div>
+
+	<div class="page">
+		<div class="row bd-2 bd-b-0">
+			<div class="col p-2">
+				<div class="row">
+					<div class="col text-center">
+						<b>Kepribadian positif yang dapat menunjang pekerjaannya</b> <br />
+						<i class="font-smaller">Positive attitude that can support his/her job</i>
+					</div>
+				</div>
+				<div class="row pre-wrap">
+					<div class="col">{{ (interviewResultData$ | async)?.AttitudeNote }}</div>
+				</div>
+			</div>
+		</div>
+		<div class="row bd-2 bd-b-0">
+			<div class="col p-2">
+				<div class="row">
+					<div class="col text-center">
+						<b>Area yang perlu dikembangkan (Keterampilan / Kepribadian)</b> <br />
+						<i class="font-smaller">Development area (skill / personality)</i>
+					</div>
+				</div>
+				<div class="row pre-wrap">
+					<div class="col">{{ (interviewResultData$ | async)?.DevelopmentNote }}</div>
+				</div>
+			</div>
+		</div>
+		<div class="row bd-2 mb-3">
+			<div class="col p-2">
+				<div class="row">
+					<div class="col text-center">
+						<b>Komentar Lainnya</b> <br />
+						<i class="font-smaller">Other Comments</i>
+					</div>
+				</div>
+				<div class="row pre-wrap">
+					<div class="col">{{ (interviewResultData$ | async)?.Note }}</div>
+				</div>
+			</div>
+		</div>
+		<div class="ml-4 row mb-2">
+			<div class="col">
+				<span style="font-size: 1.2em"><strong>Kesimpulan :</strong></span
+				><br />
+				<span style="font-style: italic">Summary</span>
+			</div>
+		</div>
+		<div class="ml-4 row mb-4">
+			<div class="col-auto">
+				<div class="row">
+					<div class="col">
+						<div class="row">
+							<div class="col-auto p-1 pl-3">
+								<input
+									type="radio"
+									disabled
+									value="Very Poor"
+									id="summary_veryPoor"
+									[ngModel]="(interviewResultData$ | async)?.Summary"
+								/>
+							</div>
+							<label for="summary_veryPoor" class="col-auto">
+								<div class="row">
+									<div class="col">
+										<span class="font-larger">Sangat Kurang</span><br />
+										<i>Very Poor</i>
+									</div>
+								</div>
+							</label>
+							<div class="col-auto p-1 pl-3">
+								<input
+									type="radio"
+									disabled
+									value="Poor"
+									id="summary_poor"
+									[ngModel]="(interviewResultData$ | async)?.Summary"
+								/>
+							</div>
+							<label for="summary_poor" class="col-auto">
+								<div class="row">
+									<div class="col">
+										<span class="font-larger">Kurang</span><br />
+										<i>Poor</i>
+									</div>
+								</div>
+							</label>
+							<div class="col-auto p-1 pl-3">
+								<input
+									type="radio"
+									disabled
+									value="Fair"
+									id="summary_fair"
+									[ngModel]="(interviewResultData$ | async)?.Summary"
+								/>
+							</div>
+							<label for="summary_fair" class="col-auto">
+								<div class="row">
+									<div class="col">
+										<span class="font-larger">Cukup</span><br />
+										<i>Fair</i>
+									</div>
+								</div>
+							</label>
+							<div class="col-auto p-1 pl-3">
+								<input
+									type="radio"
+									disabled
+									value="Good"
+									id="summary_good"
+									[ngModel]="(interviewResultData$ | async)?.Summary"
+								/>
+							</div>
+							<label for="summary_good" class="col-auto">
+								<div class="row">
+									<div class="col">
+										<span class="font-larger">Baik</span><br />
+										<i>Good</i>
+									</div>
+								</div>
+							</label>
+							<div class="col-auto p-1 pl-3">
+								<input
+									type="radio"
+									disabled
+									value="Very Good"
+									id="summary_veryGood"
+									[ngModel]="(interviewResultData$ | async)?.Summary"
+								/>
+							</div>
+							<label for="summary_veryGood" class="col-auto">
+								<div class="row">
+									<div class="col">
+										<span class="font-larger">Baik Sekali</span><br />
+										<i>Very Good</i>
+									</div>
+								</div>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ml-4 row mb-4">
+			<div class="col-auto pr-4">
+				<strong>Hasil Penilaian :</strong><br />
+				<i>Scoring Result</i>
+			</div>
+			<div class="col-auto">
+				<div class="row">
+					<div class="col-auto">
+						<input
+							type="radio"
+							disabled
+							value="Accepted"
+							[ngModel]="(interviewResultData$ | async)?.Decision"
+						/>
+					</div>
+					<div class="col">
+						Baik, proses dilanjutkan ke tahap berikutnya <br />
+						<i>Good, process is continued to next assessment</i>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-auto">
+						<input
+							type="radio"
+							disabled
+							value="Postponed"
+							[ngModel]="(interviewResultData$ | async)?.Decision"
+						/>
+					</div>
+					<div class="col">
+						Cadangan<br />
+						<i>Alternative</i>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-auto">
+						<input
+							type="radio"
+							disabled
+							value="Rejected"
+							[ngModel]="(interviewResultData$ | async)?.Decision"
+						/>
+					</div>
+					<div class="col">
+						Tidak baik, proses tidak dilanjutkan <br />
+						<i>Not good, process is not continued</i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<b class="col-auto">
+				<div class="row mb-2">Jakarta, {{ today | date: 'dd MMMM yyyy' }}</div>
+				<div class="row mb-4">Approved by:</div>
+				<div class="row">
+					<u>{{ (interviewResultData$ | async)?.MainInterviewer }}</u>
+				</div>
+				<div class="row">
+					<u>{{ (interviewResultData$ | async)?.CoInterviewer }}</u>
+				</div>
+			</b>
+    </div>
+    <div class="row p-3 bd-b-2" style="line-height: 18px;">
+      <div class="col text-center">
+        <small>This document was processed by an application</small> <br>
+        <small>Copyright © 2012 - Research and Development, SLC - Binus University. All rights reserved.</small>
+      </div>
+    </div>
+	</div>
+</div>

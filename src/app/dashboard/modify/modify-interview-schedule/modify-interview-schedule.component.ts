@@ -3,11 +3,12 @@ import {
 	ClientInterviewReport,
 	ClientInterviewSchedule,
 	ClientInterviewQuestion,
+	ClientInterviewResult,
 } from 'src/app/shared/models';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, ActionsSubject, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { FormControl, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable, merge } from 'rxjs';
 import {
 	MainStateEffects,
@@ -16,8 +17,11 @@ import {
 	InterviewStateAction,
 	fromInterviewState,
 } from 'src/app/shared/store-modules';
-import { takeUntil, filter, tap } from 'rxjs/operators';
+import { takeUntil, filter, tap, withLatestFrom } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
+import { adjustControlsInFormArray } from 'src/app/shared/methods';
+import { DateHelper } from 'src/app/shared/utilities/date-helper';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'rd-modify-interview-schedule',
@@ -28,11 +32,35 @@ import { isEmpty as _isEmpty } from 'lodash';
 export class ModifyInterviewScheduleComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
+	interviewDateFormat = DateHelper.WEEKDAY_DATE_FORMAT;
+	savedAtFormat = DateHelper.WEEKDAY_DATE_FORMAT + ', ' + DateHelper.FULL_TIME_FORMAT;
 	statusClass = { Acc: 'acc', Rej: 'reject', Pos: 'pos' };
+	grades = [
+		{ grade: 'A', min: 91, max: 112 },
+		{ grade: 'B', min: 70, max: 90 },
+		{ grade: 'C', min: 49, max: 69 },
+		{ grade: 'D', min: 28, max: 48 },
+		{ grade: 'E', min: 0, max: 27 },
+	];
 
-	titleSelect = new FormControl('', Validators.required);
-	schedulesText = new FormControl('', Validators.required);
-	deleteReasonText = new FormControl('', Validators.required);
+	titleSelect = this.fb.control('', Validators.required);
+	schedulesText = this.fb.control('', Validators.required);
+	deleteReasonText = this.fb.control('', Validators.required);
+
+	interviewResultForm = this.fb.group({
+		Questions: this.fb.array([]),
+		AttitudeNote: [],
+		DevelopmentNote: [],
+		Note: [],
+		Decision: [],
+		Summary: [],
+	});
+	// Perlu currentInterviewSchedule$ biar bisa auto close & expand stlh klik
+	currentInterviewSchedule$ = new BehaviorSubject<ClientInterviewSchedule>(null);
+	currentInterviewResult$ = new BehaviorSubject<ClientInterviewResult>(null);
+	weights = [];
+	total$ = new BehaviorSubject<number>(0);
+	grade$ = new BehaviorSubject<string>('');
 
 	interviewScheduleReport$: Observable<ClientInterviewReport>;
 	interviewQuestions$: Observable<ClientInterviewQuestion[]>;
@@ -40,11 +68,14 @@ export class ModifyInterviewScheduleComponent
 
 	loadingViewInterviewSchedules$ = new BehaviorSubject<boolean>(false);
 	loadingFormInterviewSchedules$ = new BehaviorSubject<boolean>(false);
+	loadingFormInterviewResult$ = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
-		private interviewEffects: InterviewStateEffects
+		private interviewEffects: InterviewStateEffects,
+		private router: Router,
+		private fb: FormBuilder
 	) {
 		super(store);
 	}
@@ -59,11 +90,58 @@ export class ModifyInterviewScheduleComponent
 		);
 		this.interviewQuestions$ = this.store.pipe(select(fromInterviewState.getInterviewQuestions));
 
-		// Enggan pake loadingInterview buat rd-card, jadi pass value aja ke loadingView
+		// Add subscription to subject
+		this.store
+			.pipe(select(fromInterviewState.getInterviewResult), takeUntil(this.destroyed$))
+			.subscribe(this.currentInterviewResult$);
+		this.store
+			.pipe(select(fromInterviewState.isInterviewResultLoading), takeUntil(this.destroyed$))
+			.subscribe(this.loadingFormInterviewResult$);
 		this.loadingInterviewScheduleReport$
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe((b) => this.loadingViewInterviewSchedules$.next(b));
-		//#endregion
+			.subscribe(this.loadingViewInterviewSchedules$);
+
+		// Fetch interview result when selecting a schedule
+		this.currentInterviewSchedule$
+			.pipe(
+				filter((v) => !_isEmpty(v)),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe((schedule) => {
+				this.store.dispatch(
+					InterviewStateAction.FetchInterviewResult({
+						interviewScheduleId: schedule.InterviewScheduleId,
+					})
+				);
+			});
+
+		// Add value into form
+		this.currentInterviewResult$
+			.pipe(
+				filter((v) => !_isEmpty(v)),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe((res) => {
+				this.weights = res.Questions.map((q) => q.Weight);
+				adjustControlsInFormArray(this.QuestionsFormArr, res.Questions.length);
+				this.interviewResultForm.patchValue({
+					...res,
+					Questions: res.Questions.map((q) => q.Value + ''),
+				});
+			});
+
+		// Update total & grade
+		this.QuestionsFormArr.valueChanges
+			.pipe(
+				filter((vals) => vals.every((v) => !_isEmpty(v))),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe((arr) => {
+				const total = arr.reduce((prev, curr, idx) => prev + +curr * this.weights[idx], 0);
+
+				this.total$.next(total);
+				this.grade$.next(this.grades.filter((g) => g.min <= total && total <= g.max)[0]?.grade);
+			});
 
 		//#region Auto select first in array
 		this.interviewQuestions$
@@ -74,7 +152,13 @@ export class ModifyInterviewScheduleComponent
 			.subscribe((q) => this.titleSelect.setValue(q[0]));
 		//#endregion
 
-		//#region Auto reload data when crud or change gen
+		//#region Bind to effects
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+			this.loadingFormInterviewSchedules$.next(false);
+			this.loadingFormInterviewResult$.next(false);
+		});
+
+		// Auto reload data when crud or change gen
 		merge(
 			this.interviewEffects.createInterviewSchedule$,
 			this.interviewEffects.deleteInterviewSchedule$,
@@ -85,6 +169,18 @@ export class ModifyInterviewScheduleComponent
 				takeUntil(this.destroyed$)
 			)
 			.subscribe(() => this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport()));
+
+		// Reload when update result
+		this.interviewEffects.updateInterviewResult$
+			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentInterviewSchedule$))
+			.subscribe(([act, schedule]) => {
+				this.store.dispatch(
+					InterviewStateAction.FetchInterviewResult({
+						interviewScheduleId: schedule.InterviewScheduleId,
+					})
+				);
+			});
+
 		//#endregion
 
 		this.store.dispatch(
@@ -93,12 +189,11 @@ export class ModifyInterviewScheduleComponent
 				selectorToBeChecked: fromInterviewState.getInterviewQuestions,
 			})
 		);
-		this.store.dispatch(
-			MainStateAction.DispatchIfEmpty({
-				action: InterviewStateAction.FetchInterviewSchedulesReport(),
-				selectorToBeChecked: fromInterviewState.getInterviewSchedulesReport,
-			})
-		);
+		this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport());
+	}
+
+	get QuestionsFormArr() {
+		return this.interviewResultForm.get('Questions') as FormArray;
 	}
 
 	isLocationLink(str: string) {
@@ -123,5 +218,47 @@ export class ModifyInterviewScheduleComponent
 			})
 		);
 		this.deleteReasonText.reset();
+	}
+
+	showInterviewResult(schedule: ClientInterviewSchedule) {
+		this.currentInterviewSchedule$.next(schedule);
+	}
+
+	save() {
+		const {
+			Questions,
+			AttitudeNote,
+			DevelopmentNote,
+			Note,
+			Decision,
+			Summary,
+		} = this.interviewResultForm.value;
+		this.store.dispatch(
+			InterviewStateAction.UpdateInterviewResult({
+				interviewScheduleId: this.currentInterviewResult$.value.InterviewScheduleId,
+				details: this.currentInterviewResult$.value.Questions.map((q, idx) => ({
+					Number: q.Number,
+					Value: +Questions[idx],
+				})),
+				note: Note,
+				decision: Decision,
+				attnote: AttitudeNote,
+				devnote: DevelopmentNote,
+				summary: Summary,
+			})
+		);
+		this.loadingFormInterviewResult$.next(true);
+	}
+	print() {
+		this.router.navigate([
+			'print',
+			'interview-result',
+			this.currentInterviewResult$.value.InterviewScheduleId,
+		]);
+	}
+	cancel() {
+		// Reset form value
+		this.currentInterviewResult$.next(this.currentInterviewResult$.value);
+		this.interviewResultForm.markAsPristine();
 	}
 }
