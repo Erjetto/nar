@@ -1,7 +1,11 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col-3">
-			<rd-card [cardTitle]="'Search Presentation'" [isLoading]="false">
+			<rd-card
+				[cardTitle]="'Search Presentation'"
+				[isLoading]="false"
+				[expanded]="(currentUser$ | async)?.Role.is(constant.role.Trainee) == false"
+			>
 				<div class="col v-list-m-12 v-list-bordered px-0">
 					<div class="row">
 						<div class="col">
@@ -55,6 +59,7 @@
 			<rd-card
 				[cardTitle]="'My Presentations'"
 				[isLoading]="false"
+				[expanded]="true"
 				*ngIf="(currentUser$ | async)?.Role.is(constant.role.Trainee)"
 			>
 				<div class="col v-list-m-12 v-list-bordered px-0">
@@ -63,11 +68,11 @@
 							<ng-select
 								[items]="myPresentationList$ | async"
 								[clearable]="false"
-								placeholder="Subject - No."
+								placeholder="Material Name"
 								(change)="currentPresentation$.next($event)"
 							>
 								<ng-template ng-label-tmp let-item="item">
-									{{ getSubjectById(item.SubjectId) }} - {{ item.PresentationNo }}
+									{{ item.Material }}
 								</ng-template>
 								<ng-template
 									ng-option-tmp
@@ -75,7 +80,7 @@
 									let-index="index"
 									let-search="searchTerm"
 								>
-									{{ getSubjectById(item.SubjectId) }} - {{ item.PresentationNo }}
+									{{ item.Material }}
 								</ng-template>
 							</ng-select>
 						</div>

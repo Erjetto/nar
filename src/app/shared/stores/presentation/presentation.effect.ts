@@ -61,7 +61,7 @@ export class PresentationStateEffects {
       if(!_isEmpty(traineeId)) {
         actions.push(PresentationStateAction.FetchPresentationsByTraineeSuccess({payload: res,traineeId}))
         // Kalo fetch punya sendiri
-        if(currTrainee.TraineeId !== traineeId) 
+        if(currTrainee.TraineeId === traineeId) 
           actions.push(PresentationStateAction.FetchMyPresentationsSuccess({ payload: res }))
       }
       else if(!_isEmpty(subjectId)) 

@@ -40,7 +40,7 @@ import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 export class ViewAllPresentationComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
-	subjects: ClientSubject[]; // to find subject name by id
+	// subjects: ClientSubject[] = []; // to find subject name by id
 
 	phases$: Observable<ClientPhase[]>;
 	subjects$: Observable<ClientSubject[]>;
@@ -215,7 +215,8 @@ export class ViewAllPresentationComponent
 					traineeId: res.TraineeId,
 					presentationNo: res.PresentationNo,
 				});
-			});
+      });
+      
 		// Dari dashboard content base
 		combineLatest([this.currentUser$, this.currentGeneration$])
 			.pipe(
@@ -223,6 +224,7 @@ export class ViewAllPresentationComponent
 				filter((values) => values.every((v) => !_isEmpty(v)))
 			)
 			.subscribe(([user, gen]: [User, ClientGeneration]) => {
+        // Fetch My Presentation
 				this.store.dispatch(
 					PresentationStateAction.FetchPresentationsBy({
 						generationId: gen.GenerationId,
@@ -232,6 +234,7 @@ export class ViewAllPresentationComponent
 			});
 		//#endregion
 
+    
 		this.store.dispatch(
       // MasterStateAction.FetchPhases()
 			MainStateAction.DispatchIfEmpty({
@@ -257,9 +260,9 @@ export class ViewAllPresentationComponent
 		return this.scoringForm.get('status').value;
 	}
 
-	getSubjectById(subId) {
-		return this.subjects.find((s) => s.SubjectId === subId);
-	}
+	// getSubjectById(subId) {
+	// 	return this.subjects.find((s) => s.SubjectId === subId);
+	// }
 
 	submitScoringForm() {
 		this.loadingViewPresentation$.next(true);

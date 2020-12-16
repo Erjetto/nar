@@ -1631,9 +1631,9 @@ export class ClientInterviewResult extends BaseModel {
 	) {
 		super();
 	}
-	public get startToEndTime() {
+	get startToEndTime() {
 		return this.StartTime + ' - ' + this.EndTime;
-	}
+  }
 	static fromJson(data: any) {
 		if (isEmpty(data)) return null;
 		return Object.assign(new ClientInterviewResult(), data, {
@@ -1641,7 +1641,11 @@ export class ClientInterviewResult extends BaseModel {
 			InterviewDate: DateHelper.fromCSharpDate(data?.InterviewDate),
 			SavedAt: DateHelper.fromCSharpDate(data?.SavedAt),
 		});
-	}
+  }
+  
+  thumbnailLink(height:number){
+    return `${environment.apiUrl}File.svc/GetThumbnail/${this.PictureId}/${height}`;
+  }
 }
 
 export class ClientInterviewResultDetail extends BaseModel {

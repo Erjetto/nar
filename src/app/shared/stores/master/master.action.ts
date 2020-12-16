@@ -228,6 +228,11 @@ export const DeleteTraineeInSchedule = createAction(
 
 //#region Modify
 /**
+ * The param must be in the exact order
+ * ex: 
+ * `{ genId, traineeId, date}`
+ * date will be omitted because no scheduleType
+ * 
  * date in `dd-MMM-yyyy` format
  */
 export const FetchTraineeSchedulesBy = createAction(
