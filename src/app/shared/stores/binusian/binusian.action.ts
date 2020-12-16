@@ -1,9 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 import {
+	AdditionalTraineeData,
 	ClientTrainee,
 	ClientTraineeDailyAttendance,
 	ClientTraineeData,
 	SimpleTraineeData,
+	TraineeSchedule,
 } from '../../models';
 
 export const FetchTraineesSimpleData = createAction('[BinusianState] FetchTraineesSimpleData');
@@ -63,9 +65,28 @@ export const CreateLectureSchedules = createAction(
 	props<{ schedules: string[] }>()
 );
 
-// Used in home
+// Used in Home
 export const FetchDailyAttendance = createAction('[BinusianState] FetchDailyAttendance');
 export const FetchDailyAttendanceSuccess = createAction(
 	'[BinusianState] FetchDailyAttendanceSuccess',
 	props<{ payload: ClientTraineeDailyAttendance }>()
+);
+
+// Used in My Data
+export const FetchMyData = createAction('[BinusianState] FetchMyData');
+export const FetchMyDataSuccess = createAction(
+	'[BinusianState] FetchMyDataSuccess',
+	props<{ payload: ClientTraineeData }>()
+);
+export const UpdateMyData = createAction(
+	'[BinusianState] UpdateMyData',
+	props<{ traineeData: AdditionalTraineeData }>()
+);
+export const FetchMySchedules = createAction(
+	'[BinusianState] FetchMySchedules',
+	props<{ binusianNumber: string }>()
+);
+export const FetchMySchedulesSuccess = createAction(
+	'[BinusianState] FetchMySchedulesSuccess',
+	props<{ payload: TraineeSchedule[] }>()
 );

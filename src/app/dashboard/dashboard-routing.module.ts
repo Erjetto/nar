@@ -36,6 +36,8 @@ import { LogRoomComponent } from './log/log-room/log-room.component';
 import { LogBookComponent } from './log/log-book/log-book.component';
 import { TraineeUploadComponent } from './trainee-upload/trainee-upload.component';
 import { CorrectionComponent } from './correction/correction.component';
+import { MyScheduleComponent } from './my-schedule/my-schedule.component';
+import { MyDataComponent } from './my-data/my-data.component';
 
 export const routes: Routes = [
 	{
@@ -149,15 +151,13 @@ export const routes: Routes = [
 			},
 			{
 				path: 'my-data',
-				// component: null,
-				redirectTo: '/home',
-				data: { roles: RoleFlags.Trainee, name: 'My Data (-)' },
+				component: MyDataComponent,
+				data: { roles: RoleFlags.Trainee, name: 'My Data' },
 			},
 			{
 				path: 'my-schedule',
-				// component: null,
-				redirectTo: '/home',
-				data: { roles: RoleFlags.Trainee, name: 'My Schedule (-)' },
+				component: MyScheduleComponent,
+				data: { roles: RoleFlags.Trainee, name: 'My Schedule' },
 			},
 			// {
 			// 	path: 'dummy.aspx',
@@ -202,7 +202,6 @@ export const routes: Routes = [
 			// },
 			{
 				path: 'log',
-				data: { roles: RoleFlags.Trainee, name: 'Log' },
 				children: [
 					{
 						path: 'room',

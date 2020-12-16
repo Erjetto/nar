@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action, select, Store } from '@ngrx/store';
 
 import * as BinusianStateAction from './binusian.action';
 import * as MainStateAction from '../main/main.action';
@@ -9,13 +9,15 @@ import * as MainStateAction from '../main/main.action';
 import * as fromMainState from '../main/main.reducer';
 
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, share, tap } from 'rxjs/operators';
-import { isEmpty as _isEmpty} from 'lodash';
+import { switchMap, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { isEmpty as _isEmpty } from 'lodash';
 import { LeaderService } from '../../services/new/leader.service';
 import { TraineeService } from '../../services/new/trainee.service';
 import { GeneralService } from '../../services/new/general.service';
 import { TraineeAttendanceService } from '../../services/new/trainee-attendance.service';
-import { ClientTrainee } from '../../models';
+import { ClientTrainee, User } from '../../models';
+import { IAppState } from 'src/app/app.reducer';
+import { fromBinusianState, fromMasterState } from '../../store-modules';
 
 @Injectable({
 	providedIn: 'root',
@@ -23,6 +25,7 @@ import { ClientTrainee } from '../../models';
 export class BinusianStateEffects {
 	constructor(
 		private actions$: Actions,
+		private store: Store<IAppState>,
 		private leaderService: LeaderService,
 		private generalService: GeneralService,
 		private traineeService: TraineeService,
@@ -35,26 +38,32 @@ export class BinusianStateEffects {
 		switchMap(() => this.generalService.GetTrainees()),
 		mergeMap((results) => of(BinusianStateAction.FetchAllTraineesSuccess({ payload: results }))),
 		share()
-  );
-  
+	);
+
 	@Effect()
 	getTraineesInLatestPhase$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchAllTraineesInLatestPhase),
 		switchMap(() => this.generalService.GetTraineesInLatestPhase()),
-		mergeMap((results) => of(BinusianStateAction.FetchTraineesSuccess({ payload: results.map(v => ClientTrainee.fromJson(v)) }))),
+		mergeMap((results) =>
+			of(
+				BinusianStateAction.FetchTraineesSuccess({
+					payload: results.map((v) => ClientTrainee.fromJson(v)),
+				})
+			)
+		),
 		share()
 	);
 
 	@Effect()
 	getTraineesBy$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchTraineesBy),
-    switchMap((data) => 
-    data.phaseId 
-      ? this.leaderService.GetTraineesByPhase({phaseId: data.phaseId})
-      : data.scheduleId
-      ? this.leaderService.GetTraineesBySchedule({scheduleId: data.scheduleId})
-      : this.generalService.GetTrainees()
-    ),
+		switchMap((data) =>
+			data.phaseId
+				? this.leaderService.GetTraineesByPhase({ phaseId: data.phaseId })
+				: data.scheduleId
+				? this.leaderService.GetTraineesBySchedule({ scheduleId: data.scheduleId })
+				: this.generalService.GetTrainees()
+		),
 		mergeMap((results) => of(BinusianStateAction.FetchTraineesSuccess({ payload: results }))),
 		share()
 	);
@@ -78,6 +87,25 @@ export class BinusianStateEffects {
 	);
 
 	@Effect()
+	getMyData$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.FetchMyData),
+		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentUser))),
+		switchMap(([act, user]: [Action, User]) =>
+			this.traineeService.GetTrainee({ traineeId: user.TraineeId })
+		),
+		mergeMap((result) => of(BinusianStateAction.FetchMyDataSuccess({ payload: result }))),
+		share()
+	);
+
+	@Effect()
+	getMySchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.FetchMySchedules),
+		switchMap((data) => this.traineeService.GetTraineeTrainingSchedule(data)),
+		mergeMap((result) => of(BinusianStateAction.FetchMySchedulesSuccess({ payload: result }))),
+		share()
+	);
+
+	@Effect()
 	createTrainingSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.CreateTrainingSchedules),
 		switchMap((data) => this.traineeAttendanceService.SaveTraineeSchedules(data)),
@@ -87,20 +115,20 @@ export class BinusianStateEffects {
 				: of(MainStateAction.FailMessage('inserting training schedules', res.join('\n')))
 		),
 		share()
-  );
-  
+	);
+
 	@Effect()
 	createTraineeAttendances$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.CreateTraineeAttendances),
 		switchMap((data) => this.traineeAttendanceService.SaveAttendances(data)),
 		mergeMap((res) =>
-    _isEmpty(res)
+			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('inserted attendances'))
 				: of(MainStateAction.FailMessage('inserting attendances', res.join('\n')))
 		),
 		share()
-  );
-  
+	);
+
 	@Effect()
 	createLectureSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.CreateLectureSchedules),
@@ -121,6 +149,18 @@ export class BinusianStateEffects {
 			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created trainee'))
 				: of(MainStateAction.FailMessage('creating trainee', res.join('\n')))
+		),
+		share()
+	);
+
+	@Effect()
+	updateMyData$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.UpdateMyData),
+		switchMap((data) => this.traineeService.SaveAdditionalTraineData(data)),
+		mergeMap((res) =>
+			res
+				? of(MainStateAction.SuccessfullyMessage('updated your data'))
+				: of(MainStateAction.FailMessage('updating your data'))
 		),
 		share()
 	);

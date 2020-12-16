@@ -38,6 +38,7 @@ import { LogBookComponent } from './log/log-book/log-book.component';
 import { TraineeUploadComponent } from './trainee-upload/trainee-upload.component';
 import { MyScheduleComponent } from './my-schedule/my-schedule.component';
 import { CorrectionComponent } from './correction/correction.component';
+import { MyDataComponent } from './my-data/my-data.component';
 
 @NgModule({
 	declarations: [
@@ -81,6 +82,8 @@ import { CorrectionComponent } from './correction/correction.component';
 		LogBookComponent,
     
 		CorrectionComponent,
+    
+		MyDataComponent,
     
 	],
 	imports: [

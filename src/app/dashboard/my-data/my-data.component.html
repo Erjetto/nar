@@ -1,0 +1,121 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col">
+			<rd-card
+				[cardTitle]="'Edit Data'"
+				[isLoading]="loadingMyData$ | async"
+				[formGroup]="myDataForm"
+			>
+				<div rdCardBadges>
+					<!-- Button hanya kalau blum di-score & bukan utk trainee -->
+					<button
+						class="btn btn-sm btn-primary mr-1"
+						(click)="save()"
+						[disabled]="myDataForm.invalid"
+					>
+						<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
+					</button>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="row font-weight-bold">NIM</div>
+						<div class="row mb-3">
+							<input class="form-control" disabled [value]="(myData$ | async)?.TraineeNumber" />
+						</div>
+						<div class="row font-weight-bold">Name</div>
+						<div class="row mb-3">
+							<input class="form-control" disabled [value]="(myData$ | async)?.TraineeName" />
+						</div>
+						<div class="row font-weight-bold">Name based on ID Card</div>
+						<div class="row mb-3">
+							<input class="form-control" formControlName="NameBasedOnIDCard" />
+						</div>
+						<div class="row font-weight-bold">Permanent Address</div>
+						<div class="row mb-3">
+							<textarea
+								class="form-control minh-100px"
+								[placeholder]="permAddressPlaceholder"
+								formControlName="PemanentAddress"
+							></textarea>
+						</div>
+						<div class="row font-weight-bold">Current Address</div>
+						<div class="row mb-3">
+							<textarea
+								class="form-control minh-100px"
+								[placeholder]="permAddressPlaceholder"
+								formControlName="CurrentAddress"
+							></textarea>
+							<!-- <input class="form-control" formControlName="CurrentAddress" /> <br />
+							<i>
+								Please fill your permanent address <br />
+								e.g.: <br />
+								Jl. Pahlawan No. 8 RT. 008/RW. 009 <br />
+								Kelurahan Darat Sekip Kecamatan Samarinda Kota <br />
+								Kota Samarinda Kalimatan Timur
+							</i> -->
+						</div>
+						<div class="row">
+              <div class="col-auto font-weight-bold col-form-label">
+                My Current Address is: 
+              </div>
+							<div class="col-7">
+								<ng-select
+									[items]="currentAddressTypes"
+									[clearable]="false"
+									[searchable]="false"
+									formControlName="CurrentAddressType"
+								></ng-select>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="row font-weight-bold">Semester</div>
+						<div class="row mb-3">
+							<input class="form-control" disabled [value]="(myData$ | async)?.Semester" />
+						</div>
+						<div class="row font-weight-bold">Gender</div>
+						<div class="row mb-3">
+							<input class="form-control" disabled [value]="(myData$ | async)?.Gender" />
+						</div>
+						<div class="row font-weight-bold">KTP/Passport</div>
+						<div class="row mb-3">
+							<input class="col form-control" formControlName="KPTOrPassport" />
+							<div class="col-7">
+								<ng-select
+									[items]="ktpOrPassTypes"
+									[clearable]="false"
+									[searchable]="false"
+									formControlName="KPTOrPassportDescrption"
+								></ng-select>
+							</div>
+						</div>
+						<div class="row font-weight-bold">NPWP</div>
+						<div class="row mb-3">
+							<input class="form-control" formControlName="NPWP" />
+						</div>
+						<div class="row font-weight-bold">Phone Number</div>
+						<div class="row mb-3">
+							<input
+								class="form-control"
+								placeholder="0812xxxxxxxx"
+								formControlName="PhoneNumberList"
+							/>
+						</div>
+						<div class="row font-weight-bold">Bank Account</div>
+						<div class="row mb-3">
+							<input class="form-control" formControlName="BankAccount" />
+						</div>
+						<div class="row font-weight-bold">Bank Branch</div>
+						<div class="row mb-3">
+							<input
+								class="form-control"
+								placeholder="BCA, Mandiri, etc."
+								formControlName="BankBranch"
+							/>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

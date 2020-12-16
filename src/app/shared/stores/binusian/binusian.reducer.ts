@@ -2,11 +2,11 @@ import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/
 import * as MainStateAction from '../main/main.action';
 import {
 	ClientTrainee,
-  ClientTraineeDailyAttendance,
+	ClientTraineeDailyAttendance,
 	ClientTraineeData,
 	ClientUserInRoles,
 	SimpleTraineeData,
-  TraineeSchedule,
+	TraineeSchedule,
 } from '../../models';
 import {
 	FetchAllTraineesInCurrentGen,
@@ -16,15 +16,23 @@ import {
 	FetchTraineesData,
 	FetchTraineesDataSuccess,
 	FetchTraineesBy,
-  FetchAllTraineesSuccess,
+	FetchAllTraineesSuccess,
+	FetchMyData,
+	FetchMyDataSuccess,
+  FetchMySchedules,
+  FetchMySchedulesSuccess,
 } from './binusian.action';
 
 export interface IBinusianState {
-  //#region Current User data here
-  traineeDailyAttendance: ClientTraineeDailyAttendance;
+	//#region Current User data here
+	traineeDailyAttendance: ClientTraineeDailyAttendance;
 
-  traineeSchedule: TraineeSchedule[];
-  //#endregion
+	traineeSchedule: TraineeSchedule[];
+	myData: ClientTraineeData;
+	mySchedules: TraineeSchedule[];
+	loadingMyData: boolean;
+	loadingMySchedules: boolean;
+	//#endregion
 
 	traineesEntity: { [id: string]: ClientTrainee };
 
@@ -40,8 +48,13 @@ export interface IBinusianState {
 }
 
 export const initialState: IBinusianState = {
-  traineeDailyAttendance: null,
-  traineeSchedule: [],
+	traineeDailyAttendance: null,
+	traineeSchedule: [],
+
+	myData: null,
+	mySchedules: [],
+	loadingMyData: false,
+	loadingMySchedules: false,
 
 	traineesEntity: {},
 	allTrainees: [],
@@ -93,7 +106,21 @@ export const BinusianStateReducer = createReducer(
 		...state,
 		loadingTraineesData: false,
 		traineesData: payload,
-	}))
+	})),
+
+	on(FetchMyData, (state) => ({ ...state, loadingMyData: true })),
+	on(FetchMyDataSuccess, (state, { payload }) => ({
+		...state,
+		loadingMyData: false,
+		myData: payload,
+	})),
+
+	on(FetchMySchedules, (state) => ({ ...state, loadingMySchedules: true })),
+	on(FetchMySchedulesSuccess, (state, { payload }) => ({
+		...state,
+		loadingMySchedules: false,
+		mySchedules: payload,
+	})),
 	// on(FetchTraineesByPhaseSuccess, (state, {payload}) => ({...state, traineesByPhase: payload})),
 	// on(FetchTraineesByScheduleSuccess, (state, {payload}) => ({...state, traineesBySchedule: payload})),
 );
@@ -105,9 +132,13 @@ export const getBinusianStateBy = (fn: (_: IBinusianState) => any) =>
 
 export const getDailyAttendance = getBinusianStateBy((s) => s.traineeDailyAttendance);
 export const getTrainees = getBinusianStateBy((s) => s.trainees);
+export const getMyData = getBinusianStateBy((s) => s.myData);
+export const getMySchedules = getBinusianStateBy((s) => s.mySchedules);
 export const getAllTrainees = getBinusianStateBy((s) => s.allTrainees);
 export const getTraineesEntity = getBinusianStateBy((s) => s.traineesEntity);
 export const getTraineesData = getBinusianStateBy((s) => s.traineesData);
 export const getTraineesSimpleData = getBinusianStateBy((s) => s.traineesSimpleData);
 export const isTraineesSimpleDataLoading = getBinusianStateBy((s) => s.loadingTraineesSimpleData);
 export const isTraineesDataLoading = getBinusianStateBy((s) => s.loadingTraineesData);
+export const isMyDataLoading = getBinusianStateBy((s) => s.loadingMyData);
+export const isMySchedulesLoading = getBinusianStateBy((s) => s.loadingMySchedules);

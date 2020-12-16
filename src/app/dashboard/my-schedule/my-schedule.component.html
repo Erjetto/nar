@@ -1,8 +1,37 @@
 <div class="container-xl">
 	<div class="row">
-		<div class="col">
-			<rd-card [cardTitle]="'My Schedule'" [isLoading]="false">
-				<div class="row form-group"></div>
+		<div class="col-6">
+			<rd-card [cardTitle]="'My Schedule'" [isLoading]="loadingSchedules$ | async">
+				<div class="row">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Time</th>
+								<th>Shift</th>
+								<th>Room</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(schedules$ | async)?.length === 0">
+								<td class="p-3" colspan="4">No schedules</td>
+							</tr>
+							<tr *ngFor="let schedule of schedules$ | async">
+								<td>{{ schedule.AttendanceDate | date: dateFormat }}</td>
+								<td>{{ schedule.TimeIn }} - {{ schedule.TimeOut }}</td>
+								<td>{{ schedule.Shift }}</td>
+								<td [ngSwitch]="isRoomLink(schedule.Room)">
+									<ng-container *ngSwitchCase="false">
+										{{ schedule.Room }}
+									</ng-container>
+									<ng-container *ngSwitchDefault>
+										<a [href]="schedule.Room" rdExternalUrl>Link here</a>
+									</ng-container>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</rd-card>
 		</div>
 	</div>
