@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
+import { isEmpty as _isEmpty } from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
 import { AdditionalTraineeData, ClientTraineeData } from 'src/app/shared/models';
 import {
@@ -19,8 +20,6 @@ import { DashboardContentBase } from '../dashboard-content-base.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyDataComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	myData$ = new BehaviorSubject<ClientTraineeData>(null);
-	loadingMyData$ = new BehaviorSubject<boolean>(false);
 	permAddressPlaceholder = `e.g.:
 Jl. Pahlawan No. 8 RT. 008/RW. 009
 Kelurahan Darat Sekip Kecamatan Samarinda Kota
@@ -30,8 +29,8 @@ Kota Samarinda Kalimatan Timur`;
 		'My permanent address',
 		'Boarding house(kos)',
 		'New family house (move to new house)',
-		"Sibling's house",
-		"Relative's house",
+		'Sibling\'s house',
+		'Relative\'s house',
 		'Renting house',
 	];
 	ktpOrPassTypes = [
@@ -41,17 +40,20 @@ Kota Samarinda Kalimatan Timur`;
 		'I fill it with my Identity Card number',
 	];
 
+	myData$ = new BehaviorSubject<ClientTraineeData>(null);
+	loadingMyData$ = new BehaviorSubject<boolean>(false);
+
 	myDataForm = this.fb.group({
-		NameBasedOnIDCard: [],
-		KPTOrPassport: [],
+		NameBasedOnIDCard: [''],
+		KPTOrPassport: [''],
 		KPTOrPassportDescrption: ['I fill it with my Identity Card number'],
-		NPWP: [],
-		PemanentAddress: [],
-		CurrentAddress: [],
+		NPWP: [''],
+		PemanentAddress: [''],
+		CurrentAddress: [''],
 		CurrentAddressType: ['My permanent address'],
-		PhoneNumberList: [],
-		BankAccount: [],
-		BankBranch: [],
+		PhoneNumberList: this.fb.array([this.fb.control(''), this.fb.control('')]),
+		BankAccount: [''],
+		BankBranch: [''],
 	});
 
 	constructor(
@@ -70,13 +72,18 @@ Kota Samarinda Kalimatan Timur`;
 			.pipe(select(fromBinusianState.isMyDataLoading), takeUntil(this.destroyed$))
 			.subscribe(this.loadingMyData$);
 
-		this.myData$.pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-			this.myDataForm.patchValue(data.AdditionalTraineeData);
-		});
+		this.myData$
+			.pipe(
+				takeUntil(this.destroyed$),
+				filter((v) => !_isEmpty(v?.AdditionalTraineeData))
+			)
+			.subscribe((data) => {
+				this.myDataForm.patchValue(data.AdditionalTraineeData);
+			});
 
 		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-      this.loadingMyData$.next(false);
-    });
+			this.loadingMyData$.next(false);
+		});
 
 		this.store.dispatch(BinusianStateAction.FetchMyData());
 	}
@@ -86,8 +93,8 @@ Kota Samarinda Kalimatan Timur`;
 			BinusianStateAction.UpdateMyData({
 				traineeData: this.myDataForm.value,
 			})
-    );
-    this.loadingMyData$.next(true);
+		);
+		this.loadingMyData$.next(true);
 	}
 
 	cancel() {

@@ -1,16 +1,11 @@
 <div class="container-xl">
-	<!-- <div class="row">
-		<div class="col">
-			<rd-card [cardTitle]="'View Training Schedule'">
-        <div class="row">
-          
-        </div>
-			</rd-card>
-		</div>
-	</div> -->
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Trainer Teaching Schedule'" [expanded]="false">
+			<rd-card
+				[cardTitle]="'Trainer Teaching Schedule'"
+				[isLoading]="loadingFormInsertTeachingSchedule$ | async"
+				[expanded]="false"
+			>
 				<div class="row">
 					<div class="col-5">
 						<div>
@@ -84,8 +79,8 @@
 		<div class="col">
 			<rd-card
 				[cardTitle]="'Trainee Training Schedule'"
-        [isLoading]="loadingFormInsertTrainingSchedule$ | async"
-        [expanded]="false"
+				[isLoading]="loadingFormInsertTrainingSchedule$ | async"
+				[expanded]="false"
 			>
 				<div class="row">
 					<div class="col-5">
@@ -161,8 +156,8 @@
 			</rd-card>
 			<rd-card
 				[cardTitle]="'Insert Trainee Attendance'"
-        [isLoading]="loadingFormInsertTraineeAttendance$ | async"
-        [expanded]="false"
+				[isLoading]="loadingFormInsertTraineeAttendance$ | async"
+				[expanded]="false"
 			>
 				<form #insertTraineeAttendanceForm="ngForm">
 					<div class="row">
@@ -203,8 +198,8 @@
 			</rd-card>
 			<rd-card
 				[cardTitle]="'Insert Trainee Lecture Schedule'"
-        [isLoading]="loadingFormInsertLectureSchedule$ | async"
-        [expanded]="false"
+				[isLoading]="loadingFormInsertLectureSchedule$ | async"
+				[expanded]="false"
 			>
 				<form #insertTraineeLectureScheduleForm="ngForm">
 					<div class="row">

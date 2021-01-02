@@ -46,6 +46,7 @@ export class ModifyTraineeScheduleComponent
 	insertTraineeAttendanceText = this.fb.control('', Validators.required);
 	insertLectureScheduleText = this.fb.control('', Validators.required);
 
+	loadingFormInsertTeachingSchedule$ = new BehaviorSubject<boolean>(false);
 	loadingFormInsertTrainingSchedule$ = new BehaviorSubject<boolean>(false);
 	loadingFormInsertTraineeAttendance$ = new BehaviorSubject<boolean>(false);
 	loadingFormInsertLectureSchedule$ = new BehaviorSubject<boolean>(false);

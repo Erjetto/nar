@@ -70,6 +70,11 @@
 				[isLoading]="loadingViewInterviewSchedules$ | async"
 				[expanded]="(currentInterviewSchedule$ | async) == null"
 			>
+        <div rdCardBadges>
+          <button class="btn btn-sm btn-secondary" (click)="refreshInterviewSchedules()">
+            <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Refresh
+          </button>
+        </div>
 				<div class="row pb-2">
 					<b>Legends: </b>
 					<span class="reject legend"></span> Rej ({{
@@ -311,19 +316,19 @@
 								</td>
 								<td>{{ qst.Weight }}</td>
 								<td [class.bg-red]="qst.Value == 0 && qst.Value != QuestionsFormArr.at(i).value">
-									<input type="radio" value="0" [formControlName]="i" />
+									<input type="radio" value="0" [formControlName]="i" class="table-radio" />
 								</td>
 								<td [class.bg-red]="qst.Value == 1 && qst.Value != QuestionsFormArr.at(i).value">
-									<input type="radio" value="1" [formControlName]="i" />
+									<input type="radio" value="1" [formControlName]="i" class="table-radio" />
 								</td>
 								<td [class.bg-red]="qst.Value == 2 && qst.Value != QuestionsFormArr.at(i).value">
-									<input type="radio" value="2" [formControlName]="i" />
+									<input type="radio" value="2" [formControlName]="i" class="table-radio" />
 								</td>
 								<td [class.bg-red]="qst.Value == 3 && qst.Value != QuestionsFormArr.at(i).value">
-									<input type="radio" value="3" [formControlName]="i" />
+									<input type="radio" value="3" [formControlName]="i" class="table-radio" />
 								</td>
 								<td [class.bg-red]="qst.Value == 4 && qst.Value != QuestionsFormArr.at(i).value">
-									<input type="radio" value="4" [formControlName]="i" />
+									<input type="radio" value="4" [formControlName]="i" class="table-radio" />
 								</td>
 								<td>{{ QuestionsFormArr.at(i).value * qst.Weight }}</td>
 							</tr>
@@ -411,7 +416,12 @@
 							<div class="col">
 								<div class="row">
 									<div class="col-auto p-1">
-										<input type="radio" value="Very Poor" formControlName="Summary" id="summary_veryPoor"/>
+										<input
+											type="radio"
+											value="Very Poor"
+											formControlName="Summary"
+											id="summary_veryPoor"
+										/>
 									</div>
 									<label class="col" for="summary_veryPoor">
 										<b>Sangat Kurang</b> <br />
@@ -422,7 +432,7 @@
 							<div class="col">
 								<div class="row">
 									<div class="col-auto p-1">
-										<input type="radio" value="Poor" formControlName="Summary" id="summary_poor"/>
+										<input type="radio" value="Poor" formControlName="Summary" id="summary_poor" />
 									</div>
 									<label class="col" for="summary_poor">
 										<b>Kurang</b> <br />
@@ -433,7 +443,7 @@
 							<div class="col">
 								<div class="row">
 									<div class="col-auto p-1">
-										<input type="radio" value="Fair" formControlName="Summary" id="summary_fair"/>
+										<input type="radio" value="Fair" formControlName="Summary" id="summary_fair" />
 									</div>
 									<label class="col" for="summary_fair">
 										<b>Cukup</b> <br />
@@ -444,7 +454,7 @@
 							<div class="col">
 								<div class="row">
 									<div class="col-auto p-1">
-										<input type="radio" value="Good" formControlName="Summary" id="summary_good"/>
+										<input type="radio" value="Good" formControlName="Summary" id="summary_good" />
 									</div>
 									<label class="col" for="summary_good">
 										<b>Baik</b> <br />
@@ -455,7 +465,12 @@
 							<div class="col">
 								<div class="row">
 									<div class="col-auto p-1">
-										<input type="radio" value="Very Good" formControlName="Summary" id="summary_veryGood"/>
+										<input
+											type="radio"
+											value="Very Good"
+											formControlName="Summary"
+											id="summary_veryGood"
+										/>
 									</div>
 									<label class="col" for="summary_veryGood">
 										<b>Baik Sekali</b> <br />
@@ -475,7 +490,12 @@
 							<div class="col-auto">
 								<div class="row">
 									<div class="col-auto p-1">
-										<input type="radio" value="Accepted" formControlName="Decision" id="decision_Acc" />
+										<input
+											type="radio"
+											value="Accepted"
+											formControlName="Decision"
+											id="decision_Acc"
+										/>
 									</div>
 									<label class="col" for="decision_Acc">
 										<b>Baik, proses dilanjutkan ke tahap berikutnya</b> <br />
@@ -484,7 +504,12 @@
 								</div>
 								<div class="row">
 									<div class="col-auto p-1">
-										<input type="radio" value="Postponed" formControlName="Decision" id="decision_Pos" />
+										<input
+											type="radio"
+											value="Postponed"
+											formControlName="Decision"
+											id="decision_Pos"
+										/>
 									</div>
 									<label class="col" for="decision_Pos">
 										<b>Cadangan</b> <br />
@@ -493,7 +518,12 @@
 								</div>
 								<div class="row">
 									<div class="col-auto p-1">
-										<input type="radio" value="Rejected" formControlName="Decision" id="decision_Rej" />
+										<input
+											type="radio"
+											value="Rejected"
+											formControlName="Decision"
+											id="decision_Rej"
+										/>
 									</div>
 									<label class="col" for="decision_Rej">
 										<b>Tidak baik, proses tidak dilanjutkan</b> <br />

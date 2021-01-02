@@ -45,6 +45,7 @@ import {
 	LogStateReducer,
 } from 'src/app/shared/stores/log/log.reducer';
 
+import * as fromAppState from 'src/app/app.reducer';
 import * as fromAttendanceState from 'src/app/shared/stores/attendance/attendance.reducer';
 import * as fromNoteState from 'src/app/shared/stores/note/note.reducer';
 import * as fromBinusianState from 'src/app/shared/stores/binusian/binusian.reducer';
@@ -71,6 +72,7 @@ import { LogStateEffects } from 'src/app/shared/stores/log/log.effect';
 
 export {
 	// Get all state getter
+	fromAppState,
 	fromAttendanceState,
 	fromNoteState,
 	fromBinusianState,

@@ -10,6 +10,8 @@ import {
 } from '../../models';
 import { environment } from 'src/environments/environment';
 import { map as _map} from 'lodash';
+import { DateHelper } from '../../utilities/date-helper';
+import { STATE_PROVIDERS } from '@ngrx/store/src/state';
 
 @Injectable({
 	providedIn: 'root',
@@ -61,12 +63,16 @@ export class TraineeAttendanceService {
 	}
 
 	public GetPeriodicTraineeAttendances(data: {
-		startDate: string;
-		endDate: string;
-		includeUnfinalized: string;
+		startDate: Date;
+		endDate: Date;
+		includeUnfinalized: boolean;
 	}): Observable<ClientPeriodicTraineeAttendance[]> {
 		return this.httpClient
-			.post(this.baseUrl + 'GetPeriodicTraineeAttendances', data)
+			.post(this.baseUrl + 'GetPeriodicTraineeAttendances', {
+        startDate: DateHelper.dateToFormat(data.startDate),
+        endDate: DateHelper.dateToFormat(data.endDate),
+        includeUnfinalized: data.includeUnfinalized
+      })
 			.pipe(map((res: any) => _map(res.d, ClientPeriodicTraineeAttendance.fromJson)));
 	}
 

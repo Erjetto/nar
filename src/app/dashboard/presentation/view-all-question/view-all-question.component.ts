@@ -21,7 +21,15 @@ import {
 	ClientGeneration,
 	ClientPhase,
 } from 'src/app/shared/models';
-import { filter, withLatestFrom, takeUntil, tap, map, distinctUntilChanged } from 'rxjs/operators';
+import {
+	filter,
+	withLatestFrom,
+	takeUntil,
+	tap,
+	map,
+	distinctUntilChanged,
+	startWith,
+} from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
 import { FormControl, FormBuilder } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
@@ -47,7 +55,9 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 		role: RoleFlags,
 	};
 	presentations$: Observable<CoreTrainingPresentation>;
-	questionsBySubjectEntity$: Observable<{ [subjectId: string]: CoreTrainingPresentation[] }>;
+	questionsBySubjectEntity$: Observable<{
+		[subjectId: string]: CoreTrainingPresentationQuestion[];
+	}>;
 	subjects$: Observable<ClientSubject[]>;
 
 	loadingSubjects$: Observable<boolean>;
@@ -74,7 +84,24 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 		this.questionsBySubjectEntity$ = this.store.pipe(
 			select(fromPresentationState.getQuestionsBySubject)
 		);
-		this.filteredQuestions$ = this.store.pipe(select(fromPresentationState.getFilteredQuestions));
+
+		this.filteredQuestions$ = combineLatest([
+			this.questionsBySubjectEntity$,
+			this.filterForm.valueChanges.pipe(startWith({})),
+		]).pipe(
+			map(([entity, filters]) => {
+				if (_isEmpty(filters.subjectId)) return []; // Must have subjectId filter
+				let arr: CoreTrainingPresentationQuestion[] = entity[filters.subjectId];
+				if (_isEmpty(arr)) return []; // If not exists yet the return []
+
+				if (!_isEmpty(filters.status)) arr = arr.filter((q) => q.Status === filters.status);
+
+				if (!_isEmpty(filters.search))
+					arr = arr.filter((q) => q.Question.Text.includes(filters.search));
+
+				return arr;
+			})
+		);
 
 		// Auto fetch presentations by subject
 		combineLatest([this.filterForm.get('subjectId').valueChanges, this.currentGeneration$])
@@ -130,20 +157,20 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 				selectorToBeChecked: fromMasterState.getPhases,
 			})
 		);
-  }
-  
-  refreshData(){
-    this.store.dispatch(
-      PresentationStateAction.FetchPresentationsBy({
-        generationId: this.currentGeneration$.value.GenerationId,
-        subjectId: this.filterForm.get('subjectId').value,
-      })
-    );
-  }
+	}
 
-  deleteQuestion(qst: CoreTrainingPresentationQuestion) {}
-  
-  trackByQuestionId(idx: number, qst: CoreTrainingPresentationQuestion){
-    return qst.Question.Id
-  }
+	refreshData() {
+		this.store.dispatch(
+			PresentationStateAction.FetchPresentationsBy({
+				generationId: this.currentGeneration$.value.GenerationId,
+				subjectId: this.filterForm.get('subjectId').value,
+			})
+		);
+	}
+
+	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}
+
+	trackByQuestionId(idx: number, qst: CoreTrainingPresentationQuestion) {
+		return qst.Question.Id;
+	}
 }

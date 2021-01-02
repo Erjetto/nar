@@ -49,10 +49,10 @@ export class LogBookComponent extends DashboardContentBase implements OnInit, On
 	// Populate dengan LogBookPIC.Data
 	logBookForm = this.fb.group({
 		Data: this.fb.array([]),
-		Id: [null],
+		Id: [null], // Kalo editing id nya ngga emptyGuid, kalo baru id nya emptyGuid
 		Subject: [null, Validators.required],
 		PIC: [null, Validators.required],
-		SavedDate: [null],
+		SavedDate: [DateHelper.dateToFormat(new Date())],
 	});
 	newTraineeRowControl = this.fb.control(null);
 

@@ -14,7 +14,7 @@ export const dateInRange = (start: Date, end: Date, curr: Date = new Date()) =>
   start.getTime() < curr.getTime() && curr.getTime() < end.getTime()
 
 /**
- * Create array of duplicate value
+ * Clone a value into array to prevent object reference problem
  * @param value value to duplicate, if function: call it, if object, clone it
  * @param count amount
  */

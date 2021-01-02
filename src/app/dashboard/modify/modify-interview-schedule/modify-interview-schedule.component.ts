@@ -222,7 +222,11 @@ export class ModifyInterviewScheduleComponent
 
 	showInterviewResult(schedule: ClientInterviewSchedule) {
 		this.currentInterviewSchedule$.next(schedule);
-	}
+  }
+  
+  refreshInterviewSchedules(){
+    this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport());
+  }
 
 	save() {
 		const {

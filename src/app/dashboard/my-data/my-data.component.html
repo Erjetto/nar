@@ -4,7 +4,8 @@
 			<rd-card
 				[cardTitle]="'Edit Data'"
 				[isLoading]="loadingMyData$ | async"
-				[formGroup]="myDataForm"
+        [formGroup]="myDataForm"
+        [collapsible]="false"
 			>
 				<div rdCardBadges>
 					<!-- Button hanya kalau blum di-score & bukan utk trainee -->
@@ -79,7 +80,9 @@
 						</div>
 						<div class="row font-weight-bold">KTP/Passport</div>
 						<div class="row mb-3">
-							<input class="col form-control" formControlName="KPTOrPassport" />
+              <div class="col">
+                <input class="form-control" formControlName="KPTOrPassport" />
+              </div>
 							<div class="col-7">
 								<ng-select
 									[items]="ktpOrPassTypes"
@@ -92,15 +95,25 @@
 						<div class="row font-weight-bold">NPWP</div>
 						<div class="row mb-3">
 							<input class="form-control" formControlName="NPWP" />
-						</div>
-						<div class="row font-weight-bold">Phone Number</div>
-						<div class="row mb-3">
-							<input
-								class="form-control"
-								placeholder="0812xxxxxxxx"
-								formControlName="PhoneNumberList"
-							/>
-						</div>
+            </div>
+            <ng-container formArrayName="PhoneNumberList">
+              <div class="row font-weight-bold">Phone Number</div>
+              <div class="row mb-3">
+                <input
+                  class="form-control"
+                  placeholder="0812xxxxxxxx"
+                  formControlName="0"
+                />
+              </div>
+              <div class="row font-weight-bold">Secondary Phone Number</div>
+              <div class="row mb-3">
+                <input
+                  class="form-control"
+                  placeholder="0812xxxxxxxx"
+                  formControlName="1"
+                />
+              </div>
+            </ng-container>            
 						<div class="row font-weight-bold">Bank Account</div>
 						<div class="row mb-3">
 							<input class="form-control" formControlName="BankAccount" />
