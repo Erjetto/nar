@@ -1,0 +1,74 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'View Report'" [collapsible]="false" [formGroup]="dateFilterForm">
+				<div class="row">
+					<div class="col-auto col-form-label">From</div>
+					<div class="col">
+						<input type="date" class="form-control" formControlName="start" />
+					</div>
+					<div class="col-auto col-form-label">To</div>
+					<div class="col">
+						<input type="date" class="form-control" formControlName="end" />
+					</div>
+					<div class="col">
+						<input
+							class="form-control"
+							[formControl]="nameFilterForm"
+							placeholder="Filter Trainee"
+						/>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card
+				[cardTitle]="'Trainee Answer Count'"
+				[isLoading]="true"
+				[maxHeight]="600"
+			>
+				<table class="table table-sm table-striped text-center">
+					<thead>
+						<tr>
+							<th>Code</th>
+							<th>Name</th>
+							<th>Answer Count</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							[style.position]="'relative'"
+							[class.bg-red]="!trainee.isActive"
+							*ngFor="let trainee of traineeAnswerCountFiltered$ | async"
+						>
+							<td>{{ trainee.number }}</td>
+							<td>{{ trainee.name }}</td>
+							<td>{{ trainee.count }}</td>
+							<td class="row-bar" [style.width]="trainee.percent + '%'"></td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'Trainer Answer Count'">
+				<table class="table table-sm table-striped text-center">
+					<thead>
+						<tr>
+							<th>Initial</th>
+							<th>Answer Count</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- <tr *ngFor="let trainee of trainerAnswerCount$ | async">
+							<td>{{ trainee.initial }}</td>
+							<td>{{ trainee.count }}</td>
+						</tr> -->
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+</div>

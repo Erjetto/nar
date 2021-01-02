@@ -38,6 +38,11 @@ import { TraineeUploadComponent } from './trainee-upload/trainee-upload.componen
 import { CorrectionComponent } from './correction/correction.component';
 import { MyScheduleComponent } from './my-schedule/my-schedule.component';
 import { MyDataComponent } from './my-data/my-data.component';
+import { IAppState } from '../app.reducer';
+import { Store } from '@ngrx/store';
+import { fromMainState } from '../shared/store-modules';
+import { PresentationReportComponent } from './presentation/presentation-report/presentation-report.component';
+import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-report/trainee-attendance-report.component';
 
 export const routes: Routes = [
 	{
@@ -202,6 +207,7 @@ export const routes: Routes = [
 			// },
 			{
 				path: 'log',
+				data: { name: 'Log' },
 				children: [
 					{
 						path: 'room',
@@ -209,21 +215,9 @@ export const routes: Routes = [
 						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Room' },
 					},
 					{
-						path: 'room/detail/:id',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleGroups.SENIOR_ROLES },
-					},
-					{
 						path: 'book',
 						component: LogBookComponent,
 						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Book' },
-					},
-					{
-						path: 'book/detail/:id',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleGroups.SENIOR_ROLES },
 					},
 				],
 			},
@@ -319,11 +313,6 @@ export const routes: Routes = [
 						component: NewPresentationComponent,
 						data: { roles: RoleFlags.Trainee, name: 'New Presentations' },
 					},
-					// {
-					// 	path: 'my-presentations',
-					// 	component: MyPresentationComponent,
-					// 	data: { roles: RoleFlags.Trainee, name: 'My Presentations' },
-					// },
 					{
 						path: 'question/:generationId/:trainerId/:questionId',
 						redirectTo: '/home',
@@ -334,18 +323,8 @@ export const routes: Routes = [
 					},
 					{
 						path: 'report',
-						redirectTo: '/home',
-						// component: null,
-						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Report (-)' },
-					},
-					{
-						path: 'report-trainer',
-						redirectTo: '/home',
-						// component: null,
-						data: {
-							roles: RoleFlags.AssistantSupervisor,
-							name: 'Report Trainer (-)',
-						},
+						component: PresentationReportComponent,
+						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Report' },
 					},
 				],
 			},
@@ -381,7 +360,7 @@ export const routes: Routes = [
 						path: 'RoomAttendance.aspx',
 						redirectTo: '/RoomAttendance.aspx',
 						data: {
-							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Dummy,
+							roles: RoleFlags.Dummy,
 							name: 'Room Attendance',
 							externalUrl: true,
 						},
@@ -390,7 +369,7 @@ export const routes: Routes = [
 						path: 'RestAttendance.aspx',
 						redirectTo: '/RestAttendance.aspx',
 						data: {
-							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Dummy,
+							roles: RoleFlags.Dummy,
 							name: 'Rest Attendance',
 							externalUrl: true,
 						},
@@ -399,7 +378,7 @@ export const routes: Routes = [
 						path: 'Permission.aspx',
 						redirectTo: '/Permission.aspx',
 						data: {
-							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Dummy,
+							roles: RoleFlags.Dummy,
 							name: 'Permission',
 							externalUrl: true,
 						},
@@ -414,6 +393,11 @@ export const routes: Routes = [
 						path: 'data',
 						component: TraineeDataComponent,
 						data: { roles: RoleFlags.AssistantSupervisor, name: 'Data' },
+					},
+					{
+						path: 'attendance-report',
+						component: TraineeAttendanceReportComponent,
+						data: { roles: RoleFlags.AssistantSupervisor, name: 'Periodical Attendance Report' },
 					},
 					{
 						path: 'schedule',
@@ -446,7 +430,13 @@ export const routes: Routes = [
 			},
 			{
 				path: 'candidate',
-				data: { name: 'Candidate' },
+				data: {
+					name: 'Candidate',
+					validate: (data: IAppState) => {
+						console.log(data);
+						return false;
+					},
+				},
 				children: [
 					{
 						path: 'fill-answer',

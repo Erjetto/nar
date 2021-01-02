@@ -1,20 +1,34 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 
 import * as MainStateAction from '../main/main.action';
-import { TraineePresentation, ClientTraineeAttendanceReport, ClientEvaluation, ClientTraineeData } from '../../models';
-import { FetchAttendanceReportSuccess, FetchAttendanceReport } from './attendance.action';
+import {
+	TraineePresentation,
+	ClientTraineeAttendanceReport,
+	ClientEvaluation,
+	ClientTraineeData,
+	ClientPeriodicTraineeAttendance,
+} from '../../models';
+import {
+	FetchAttendanceReportSuccess,
+	FetchAttendanceReport,
+	FetchPeriodicAttendance,
+  FetchPeriodicAttendanceSuccess,
+} from './attendance.action';
 
 export interface IAttendanceState {
-  attendanceReport: ClientTraineeAttendanceReport;
+	attendanceReport: ClientTraineeAttendanceReport;
+	traineePeriodicAttendance: ClientPeriodicTraineeAttendance[];
 
-
-  loadingAttendanceReport: boolean;
+	loadingAttendanceReport: boolean;
+	loadingPeriodicAttendance: boolean;
 }
 
 export const initialState: IAttendanceState = {
-  attendanceReport: null,
-  
-  loadingAttendanceReport: false,
+	attendanceReport: null,
+	traineePeriodicAttendance: [],
+
+	loadingAttendanceReport: false,
+	loadingPeriodicAttendance: false,
 };
 
 export const ATTENDANCESTATE_REDUCER_NAME = 'AttendanceState';
@@ -24,19 +38,29 @@ export const AttendanceStateReducer = createReducer(
 	// Remove all data when generation changed
 	on(MainStateAction.ChangeGenerationSuccess, () => ({
 		...initialState,
-  })),
-  
-  on(FetchAttendanceReport, (state) => ({
-    ...state,
-    loadingAttendanceReport: true
-  })),
-  
-  on(FetchAttendanceReportSuccess, (state, {payload}) => ({
-    ...state,
-    attendanceReport: payload,
-    loadingAttendanceReport: false
-  })),
+	})),
 
+	on(FetchAttendanceReport, (state) => ({
+		...state,
+		loadingAttendanceReport: true,
+	})),
+
+	on(FetchAttendanceReportSuccess, (state, { payload }) => ({
+		...state,
+		attendanceReport: payload,
+		loadingAttendanceReport: false,
+	})),
+
+	on(FetchPeriodicAttendance, (state) => ({
+		...state,
+		loadingPeriodicAttendance: true,
+	})),
+
+	on(FetchPeriodicAttendanceSuccess, (state, { payload }) => ({
+		...state,
+		traineePeriodicAttendance: payload,
+		loadingPeriodicAttendance: false,
+	}))
 );
 
 export const getAttendanceState = createFeatureSelector<IAttendanceState>(
@@ -48,8 +72,6 @@ export const getAttendanceStateBy = (fn: (_: IAttendanceState) => any) =>
 
 export const getAttendanceReport = getAttendanceStateBy((s) => s.attendanceReport);
 export const isAttendanceReportLoading = getAttendanceStateBy((s) => s.loadingAttendanceReport);
-// export const getAttendanceStatus = getAttendanceStateBy((s) => s.attendanceStatus);
-// export const getAnnouncements = getAttendanceStateBy((s) => s.announcement);
 
-// export const getCurrentGeneration = getAttendanceStateBy((s) => s.currentGeneration);
-// export const getCurrentRole = getAttendanceStateBy((s) => s.currentRole);
+export const getPeriodicAttendance = getAttendanceStateBy((s) => s.traineePeriodicAttendance);
+export const isPeriodicAttendanceLoading = getAttendanceStateBy((s) => s.loadingPeriodicAttendance);

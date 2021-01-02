@@ -16,6 +16,8 @@ export const metaReducers: MetaReducer<IAppState>[] = environment.production
   ? []
   : [];
 
+export const getAppState = (state: IAppState) => state;
+
 export const getRouterState = (state: IAppState) => state.router;
 export const getSegmentRouterState = (state: IAppState) =>
   state.router.state.url.split(/\//).filter(s => s !== '');

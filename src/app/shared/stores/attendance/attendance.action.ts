@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ClientEvaluation, ClientTraineeAttendanceReport, AttendanceType } from '../../models';
+import { ClientEvaluation, ClientTraineeAttendanceReport, AttendanceType, ClientPeriodicTraineeAttendance } from '../../models';
 
 export const FetchAttendanceReport = createAction(
 	'[NoteState] FetchAttendanceReport',
@@ -8,6 +8,15 @@ export const FetchAttendanceReport = createAction(
 export const FetchAttendanceReportSuccess = createAction(
 	'[NoteState] FetchAttendanceReportSuccess',
 	props<{ payload: ClientTraineeAttendanceReport }>()
+);
+
+export const FetchPeriodicAttendance = createAction(
+	'[NoteState] FetchPeriodicAttendance',
+	props<{ startDate: Date, endDate: Date, includeUnfinalized: boolean }>()
+);
+export const FetchPeriodicAttendanceSuccess = createAction(
+	'[NoteState] FetchPeriodicAttendanceSuccess',
+	props<{ payload: ClientPeriodicTraineeAttendance[] }>()
 );
 
 export const SaveTraineeAttendance = createAction(

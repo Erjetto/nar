@@ -21,6 +21,7 @@ import {
 	FetchMyDataSuccess,
   FetchMySchedules,
   FetchMySchedulesSuccess,
+  FetchAllTraineesInLatestPhase,
 } from './binusian.action';
 
 export interface IBinusianState {
@@ -36,7 +37,7 @@ export interface IBinusianState {
 
 	traineesEntity: { [id: string]: ClientTrainee };
 
-	allTrainees: ClientTrainee[];
+	allTrainees: ClientTrainee[]; // All trainee in one gen
 	trainees: ClientTrainee[];
 	traineesData: ClientTraineeData[];
 	traineesSimpleData: SimpleTraineeData[];
@@ -77,7 +78,7 @@ export const BinusianStateReducer = createReducer(
 		...initialState,
 	})),
 
-	on(FetchAllTraineesInCurrentGen, FetchTraineesBy, (state) => ({
+	on(FetchAllTraineesInCurrentGen, FetchTraineesBy, FetchAllTraineesInLatestPhase, (state) => ({
 		...state,
 		loadingTrainees: true,
 	})),
@@ -139,6 +140,7 @@ export const getTraineesEntity = getBinusianStateBy((s) => s.traineesEntity);
 export const getTraineesData = getBinusianStateBy((s) => s.traineesData);
 export const getTraineesSimpleData = getBinusianStateBy((s) => s.traineesSimpleData);
 export const isTraineesSimpleDataLoading = getBinusianStateBy((s) => s.loadingTraineesSimpleData);
+export const isTraineesLoading = getBinusianStateBy((s) => s.loadingTrainees);
 export const isTraineesDataLoading = getBinusianStateBy((s) => s.loadingTraineesData);
 export const isMyDataLoading = getBinusianStateBy((s) => s.loadingMyData);
 export const isMySchedulesLoading = getBinusianStateBy((s) => s.loadingMySchedules);

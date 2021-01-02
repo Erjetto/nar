@@ -1,4 +1,10 @@
-import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import {
+	createFeatureSelector,
+	createReducer,
+	createSelector,
+	MemoizedSelector,
+	on,
+} from '@ngrx/store';
 
 import * as MainStateAction from '../main/main.action';
 import {
@@ -17,8 +23,9 @@ import {
 	FetchPresentationStatusSuccess,
 	FetchPresentationsByDate,
 	FetchPresentationsByDateSuccess,
-  FetchMyPresentationsSuccess,
+	FetchMyPresentationsSuccess,
 } from './presentation.action';
+import { IAppState } from 'src/app/app.reducer';
 
 export interface IPresentationState {
 	// Entity digunakan utk mengakses data yg sudah diambil sebelumnya
@@ -38,6 +45,8 @@ export interface IPresentationState {
 	presentations: CoreTrainingPresentation[];
 	presentationsByDate: TraineePresentation[];
 	myPresentations: CoreTrainingPresentation[];
+	// Utk mencegah ambil presentation lagi kalo udah semua
+	fetchedAllPresentations: boolean;
 
 	questionsFilter: any;
 
@@ -53,6 +62,7 @@ export const initialState: IPresentationState = {
 	presentations: [],
 	presentationsByDate: [],
 	myPresentations: [],
+	fetchedAllPresentations: false,
 
 	questionsFilter: { search: '', status: '', subjectId: '' },
 
@@ -76,6 +86,7 @@ export const PresentationStateReducer = createReducer(
 
 	on(FetchPresentationsByGenerationSuccess, (state, { payload }) => ({
 		...state,
+		fetchedAllPresentations: true,
 		loadingPresentations: false,
 		presentations: payload,
 		presentationsBySubjectEntity: payload.reduce((acc, curr) => {
@@ -126,12 +137,12 @@ export const PresentationStateReducer = createReducer(
 			},
 			{ ...state.questionsByTraineeEntity, [traineeId]: [] }
 		),
-  })),
-  
-  on(FetchMyPresentationsSuccess, (state, { payload }) => ({
-    ...state,
-    myPresentations: payload
-  })),
+	})),
+
+	on(FetchMyPresentationsSuccess, (state, { payload }) => ({
+		...state,
+		myPresentations: payload,
+	})),
 
 	on(SetQuestionsFilter, (state, data) => ({
 		...state,
@@ -178,20 +189,5 @@ export const getQuestionsByTrainee = getPresentationStateBy((s) => s.questionsBy
 export const getPresentationsByDate = getPresentationStateBy((s) => s.presentationsByDate);
 export const getQuestionsFilter = getPresentationStateBy((s) => s.questionsFilter);
 export const isPresentationsLoading = getPresentationStateBy((s) => s.loadingPresentations);
+export const hasFetchedAllPresentations = getPresentationStateBy((s) => s.fetchedAllPresentations);
 
-export const getFilteredQuestions = createSelector(
-	getQuestionsBySubject,
-	getQuestionsFilter,
-	(entity, filters) => {
-		if (_isEmpty(filters.subjectId)) return []; // Must have subjectId filter
-		let arr: CoreTrainingPresentationQuestion[] = entity[filters.subjectId];
-		if (_isEmpty(arr)) return []; // If not exists yet the return []
-
-		if (!_isEmpty(filters.status)) arr = arr.filter((q) => q.Status === filters.status);
-
-		if (!_isEmpty(filters.search))
-			arr = arr.filter((q) => q.Question.Text.includes(filters.search));
-
-		return arr;
-	}
-);

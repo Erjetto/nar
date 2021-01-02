@@ -5,6 +5,7 @@ import { RoleFlags } from '../shared/constants/role.constant';
 import { IAppState } from '../app.reducer';
 import { Store, select } from '@ngrx/store';
 import {
+	fromAppState,
 	MainStateAction,
 	fromMainState,
 	MasterStateAction,
@@ -13,7 +14,16 @@ import {
 } from 'src/app/shared/store-modules';
 import { MenuService } from '../shared/services/menu.service';
 import { Route, Router, ActivatedRoute, NavigationEnd, RouterOutlet } from '@angular/router';
-import { filter, takeUntil, distinctUntilChanged, first, tap, mapTo } from 'rxjs/operators';
+import {
+	filter,
+	takeUntil,
+	distinctUntilChanged,
+	first,
+	tap,
+	mapTo,
+	map,
+	withLatestFrom,
+} from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { query, style, group, animate } from '@angular/animations';
 import { Cookies } from '../shared/constants/cookie.constants';
@@ -33,7 +43,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 	destroyed$ = new Subject<void>();
 
-	menuList: Route[];
+	menuList$ = new BehaviorSubject<Route[]>([]);
+	menuListFiltered$: Observable<Route[]>;
 	currentRoute: Route;
 	currentActiveHeader = '';
 
@@ -56,38 +67,55 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private mainEffects: MainStateEffects,
 		private cookieService: CookieService,
-    private menuService: MenuService,
-    private titleService: Title
-  ) {}
+		private menuService: MenuService,
+		private titleService: Title
+	) {}
 
-  getEndRoute(){
-    let root = this.route.snapshot;
-    while(root.firstChild) root = root.firstChild;
-    return root;
-  }
-  
+	getEndRoute() {
+		let root = this.route.snapshot;
+		while (root.firstChild) root = root.firstChild;
+		return root;
+	}
+
 	ngOnInit(): void {
 		this.initiateTheme();
 		this.currentActiveHeader = this.route.snapshot.firstChild.data.name;
-    this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
+		this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
+		this.menuListFiltered$ = this.menuList$.pipe(
+			// If current role has no current active menu, then redirect
+			tap((menus) => {
+				if (menus.every((r) => r.data.name !== this.currentActiveHeader))
+					this.router.navigateByUrl('/home');
+			}),
+      // Filter menu
+      // Contoh: Candidate hanya utk generasi 1 tahun sebelumnya
+			// withLatestFrom(this.store.pipe(select(fromAppState.getAppState))),
+			// map(([menus, appState]) =>
+			// 	menus.filter((m) => (m.data?.validate == null ? true : m.data.validate(appState)))
+			// )
+		);
 
-		// Ganti nama di tab sesuai route.data.name
 		this.router.events
 			.pipe(
-        filter((evt) => evt instanceof NavigationEnd),
+				filter((evt) => evt instanceof NavigationEnd),
 				takeUntil(this.destroyed$)
 			)
 			.subscribe((e: NavigationEnd) => {
-        const endRoute = this.getEndRoute();
-        // get first level (Master, Modify, Home, etc)
-				this.currentActiveHeader = endRoute.root.firstChild.data.name; 
-        this.history = [...this.history, endRoute.data.name];
-        this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
+				const endRoute = this.getEndRoute();
+				// get first level (Master, Modify, Home, etc)
+				this.currentActiveHeader = endRoute.root.firstChild.data.name;
+
+				// Simpan ke history buat animasi back & front
+				this.history = [...this.history, endRoute.data.name];
+
+				// Ganti nama di tab sesuai route.data.name
+				this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
 			});
 		window.onpopstate = (evt) => (this.isBack = true); // For animation purpose
 
 		// Redirect to login when logout
 		this.mainEffects.logout$.pipe(takeUntil(this.destroyed$)).subscribe((act) => {
+      this.store.dispatch(MainStateAction.InfoMessage('Logging out...'));
 			if (act.type === MainStateAction.LogoutSuccess.type) this.router.navigateByUrl('/login');
 		});
 
@@ -107,10 +135,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.selectedRole$
 			.pipe(takeUntil(this.destroyed$), distinctUntilChanged())
 			.subscribe((role) => {
-				this.menuList = this.menuService.getMenuForRole(role);
-				// If current role has no current active menu, then redirect
-				if (this.menuList.every((r) => r.data.name !== this.currentActiveHeader))
-					this.router.navigateByUrl('/home');
+				this.menuList$.next(this.menuService.getMenuForRole(role));
 			});
 
 		//#region For SPV
@@ -118,11 +143,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			.pipe(filter((u) => u?.Role?.is(RoleFlags.AssistantSupervisor)))
 			.subscribe((u) => {
 				this.initiateRoleAndGen();
-        this.store.dispatch(MasterStateAction.FetchGenerations());
+				this.store.dispatch(MasterStateAction.FetchGenerations());
 			});
-    this.store.dispatch(MainStateAction.FetchCurrentGeneration());
+		this.store.dispatch(MainStateAction.FetchCurrentGeneration());
 		//#endregion
-
 	}
 
 	ngOnDestroy(): void {
@@ -148,7 +172,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	}
 
 	initiateRoleAndGen() {
-    // NOTE: Gen sudah otomatis tersimpan di server side
+		// NOTE: Gen sudah otomatis tersimpan di server side
 		if (!!localStorage.getItem('current-role'))
 			this.store.dispatch(
 				MainStateAction.ChangeRole({
@@ -196,8 +220,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		);
 	}
 
-  //#region Animation for page
-  // NOTE: Utk sekarang animasi tidak ada, prioritas terakhir
+	//#region Animation for page
+	// NOTE: Utk sekarang animasi tidak ada, prioritas terakhir
 	// tslint:disable-next-line: member-ordering
 	currentState = 0;
 	// tslint:disable-next-line: member-ordering

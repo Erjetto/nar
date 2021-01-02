@@ -1,0 +1,92 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'Filter'" [formGroup]="filterForm">
+				<div class="row">
+					<div class="col-auto col-form-label">From</div>
+					<div class="col">
+						<input type="date" class="form-control" formControlName="startDate" />
+					</div>
+					<div class="col-auto col-form-label">To</div>
+					<div class="col">
+						<input type="date" class="form-control" formControlName="endDate" />
+					</div>
+					<div class="col col-form-label">
+						<div class="custom-control custom-checkbox">
+							<input
+								type="checkbox"
+								id="includeUnfinalized"
+								class="custom-control-input"
+								formControlName="includeUnfinalized"
+							/>
+							<label class="custom-control-label" for="includeUnfinalized">
+								Include unfinalized data
+							</label>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+
+			<rd-card [cardTitle]="'Periodial Trainee Attendance Report'" [isLoading]="loadingReport$|async">
+				<div class="row my-2">
+					<div class="col">
+						<span class="font-italic">
+							<b>Legend:</b> &nbsp;&nbsp;
+              <b>L</b> = Late; 
+              <b>NI</b> = Neglects Sign In Att.; 
+              <b>NO</b> = Neglects Sign Out Att.; 
+              <b>Σ(L)</b> = Total Late;
+              <b>Σ(NI+NO)</b> = Total Neglect;
+						</span>
+					</div>
+        </div>
+        
+				<table class="table table-sm table-striped text-center">
+					<thead>
+						<tr>
+							<th rowspan="2">Trainee</th>
+							<th rowspan="2">Present</th>
+							<th rowspan="2">Permiss.</th>
+							<th rowspan="2">Absent</th>
+							<th colspan="3">Secretariat</th>
+							<th colspan="3">Room</th>
+							<th colspan="3">Rest</th>
+							<th rowspan="2">Σ(L)</th>
+							<th rowspan="2">Σ(NI+NO)</th>
+						</tr>
+						<tr>
+							<th>L</th>
+							<th>NI</th>
+							<th>NO</th>
+							<th>L</th>
+							<th>NI</th>
+							<th>NO</th>
+							<th>L</th>
+							<th>NI</th>
+							<th>NO</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let att of report$|async">
+							<td [title]="att.Trainee.TraineeName">{{att.Trainee.TraineeCode}}</td>
+							<td [title]="att.PresentDate">{{att.Present}}</td>
+							<td [title]="att.PermissionDate">{{att.Permission}}</td>
+							<td [title]="att.AbsentDate">{{att.Absent}}</td>
+							<td [title]="att.SecretariatLateDate">{{att.SecretariatLate}}</td>
+							<td [title]="att.SecretariatNeglectInDate">{{att.SecretariatNeglectsIn}}</td>
+							<td [title]="att.SecretariatNeglectOutDate">{{att.SecretariatNeglectsOut}}</td>
+							<td [title]="att.RoomLateDate">{{att.RoomLate}}</td>
+							<td [title]="att.RoomNeglectInDate">{{att.RoomNeglectsIn}}</td>
+							<td [title]="att.RoomNeglectOutDate">{{att.RoomNeglectsOut}}</td>
+							<td [title]="att.RestLateDate">{{att.RestLate}}</td>
+							<td [title]="att.RestNeglectInDate">{{att.RestNeglectsIn}}</td>
+							<td [title]="att.RestNeglectOutDate">{{att.RestNeglectsOut}}</td>
+							<td>{{att.TotalLate}}</td>
+							<td>{{att.TotalNeglects}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+</div>

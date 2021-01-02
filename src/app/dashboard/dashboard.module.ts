@@ -39,6 +39,8 @@ import { TraineeUploadComponent } from './trainee-upload/trainee-upload.componen
 import { MyScheduleComponent } from './my-schedule/my-schedule.component';
 import { CorrectionComponent } from './correction/correction.component';
 import { MyDataComponent } from './my-data/my-data.component';
+import { PresentationReportComponent } from './presentation/presentation-report/presentation-report.component';
+import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-report/trainee-attendance-report.component';
 
 @NgModule({
 	declarations: [
@@ -70,6 +72,8 @@ import { MyDataComponent } from './my-data/my-data.component';
 		ViewQuestionComponent,
 		ViewAllQuestionComponent,
 		ViewAllPresentationComponent,
+    PresentationReportComponent,
+    
     ModifyTraineeScheduleComponent,
     
 		TraineeDataComponent,    
@@ -77,6 +81,7 @@ import { MyDataComponent } from './my-data/my-data.component';
 		TopBottomVoteComponent,
 		TraineeUploadComponent,
 		MyScheduleComponent,
+		TraineeAttendanceReportComponent,
     
 		LogRoomComponent,
 		LogBookComponent,

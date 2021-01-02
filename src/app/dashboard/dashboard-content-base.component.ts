@@ -9,7 +9,7 @@ import { IAppState } from '../app.reducer';
 import { takeUntil } from 'rxjs/operators';
 
 export class DashboardContentBase implements OnDestroy {
-	// TODO: Remove this from derived component, use mainEffects.changeGen$ instead
+	
 	currentUser$ = new BehaviorSubject<User>(null);
 	currentGeneration$ = new BehaviorSubject<ClientGeneration>(null);
 

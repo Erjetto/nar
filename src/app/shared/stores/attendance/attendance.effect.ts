@@ -25,6 +25,14 @@ export class AttendanceStateEffects {
 	);
 
 	@Effect()
+	getPeriodicAttendances$: Observable<Action> = this.actions$.pipe(
+		ofType(AttendanceStateAction.FetchPeriodicAttendance),
+		switchMap((data) => this.attendanceService.GetPeriodicTraineeAttendances(data)),
+		mergeMap((res) => of(AttendanceStateAction.FetchPeriodicAttendanceSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
 	changeAttendanceStatus$: Observable<Action> = this.actions$.pipe(
 		ofType(AttendanceStateAction.ChangeTraineeAttendanceStatus),
 		switchMap((data) => this.attendanceService.ChangeTraineeAttendanceStatus(data)),

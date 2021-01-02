@@ -83,7 +83,7 @@
       </div> -->
 		<div class="menu-list">
 			<!-- TODO: Div with gradient white here -->
-			<ng-container *ngFor="let menu of menuList">
+			<ng-container *ngFor="let menu of menuListFiltered$ | async">
 				<ng-container [ngSwitch]="menu.children == undefined">
 					<!-- No Submenu -->
 					<a
@@ -98,24 +98,26 @@
 					<a *ngSwitchCase="false" class="menu-item" [class.menu-active]="isMenuActive(menu)">
 						{{ menu.data?.name }}
 						<div class="sub-menu">
-							<ng-container *ngFor="let submenu of menu.children" [ngSwitch]="submenu.data?.externalUrl == true">
+							<ng-container
+								*ngFor="let submenu of menu.children"
+								[ngSwitch]="submenu.data?.externalUrl == true"
+							>
 								<a
-                  class="hover-text-blue menu-item sub-menu__item"
-                  *ngSwitchCase="false"
+									class="hover-text-blue menu-item sub-menu__item"
+									*ngSwitchCase="false"
 									[routerLink]="['/', menu.path, submenu.path]"
 								>
 									{{ submenu.data?.name }}
-                </a>
+								</a>
 
 								<a
-                  class="hover-text-blue menu-item sub-menu__item"
-                  *ngSwitchCase="true"
-                  [href]="submenu.redirectTo"
-                  rdExternalUrl
+									class="hover-text-blue menu-item sub-menu__item"
+									*ngSwitchCase="true"
+									[href]="submenu.redirectTo"
+									rdExternalUrl
 								>
 									{{ submenu.data?.name }}
-                </a>
-                
+								</a>
 							</ng-container>
 						</div>
 					</a>

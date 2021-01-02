@@ -9,7 +9,7 @@ import * as fromMainState from '../main/main.reducer';
 import * as fromPresentationState from './presentation.reducer';
 
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, tap, share, map, withLatestFrom } from 'rxjs/operators';
+import { switchMap, mergeMap, pluck, tap, share, map, withLatestFrom, filter } from 'rxjs/operators';
 import { PresentationService } from '../../services/new/presentation.service';
 import { isEmpty as _isEmpty } from 'lodash';
 import { IAppState } from 'src/app/app.reducer';
@@ -36,9 +36,11 @@ export class PresentationStateEffects {
 
 	@Effect()
 	getPresentationsBy$: Observable<Action> = this.actions$.pipe(
-		ofType(PresentationStateAction.FetchPresentationsBy),
+    ofType(PresentationStateAction.FetchPresentationsBy),
+    withLatestFrom(this.store.pipe(select(fromPresentationState.hasFetchedAllPresentations))),
+    filter(([data, hasFetchedAll]) => !hasFetchedAll),
 		mergeMap( // use merge because its possible to have multiple running request
-			({ generationId, traineeId, subjectId }) =>
+			([{ generationId, traineeId, subjectId }]) =>
 				// Gunakan antara ketiga method yg returnnya sama
 				(!_isEmpty(traineeId)
 					? this.presentationService.FindCoreTrainingPresentationByTrainee({
