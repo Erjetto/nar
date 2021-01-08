@@ -13,13 +13,14 @@ import {
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import {
 	TopBottomVoteSchedule,
 	ClientTrainee,
 	ClientPhase,
 	TrainerTopBottomVote,
 	TopBottomVote,
+	User,
 } from 'src/app/shared/models';
 import { takeUntil, filter, map, withLatestFrom } from 'rxjs/operators';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
@@ -62,34 +63,49 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 		super(store);
 	}
 	ngOnInit(): void {
-    // Only get active trainee
+		// Only get active trainee
 		this.trainees$ = this.store.pipe(
 			select(fromBinusianState.getTrainees),
 			withLatestFrom(this.currentUser$),
 			map(([trainees, currUser]) =>
+				// Kecualikan diri sendiri
 				trainees.filter((t) => t.IsActive && t.TraineeId !== currUser.TraineeId)
 			)
 		);
-		this.voteSchedules$ = this.store.pipe(select(fromVoteState.getVoteSchedules));
+		this.voteSchedules$ = combineLatest([
+			this.store.pipe(select(fromVoteState.getVoteSchedules)),
+			this.currentUser$,
+		]).pipe(
+			map(([schedules, user]: [TopBottomVoteSchedule[], User]) =>
+				// isForTrainer berlaku utk role senior lain ex: interviewer, spv, etc
+				schedules.filter((s) => !s.isForTrainer === user.Role.is(RoleFlags.Trainee))
+			)
+		);
 		this.voteInScheduleEntity$ = this.store.pipe(select(fromVoteState.getVoteInScheduleEntity));
+		
 		this.loadingViewVote$ = this.store.pipe(select(fromVoteState.isVoteScheduleLoading));
 		this.store
 			.pipe(select(fromVoteState.isVoteScheduleLoading), takeUntil(this.destroyed$))
 			.subscribe(this.loadingFormVote$);
 
 		this.voteInScheduleEntity$
-			.pipe(filter((v) => !_isEmpty(v), takeUntil(this.destroyed$)), withLatestFrom(this.currentUser$))
+			.pipe(
+				filter((v) => !_isEmpty(v), takeUntil(this.destroyed$)),
+				withLatestFrom(this.currentUser$)
+			)
 			.subscribe(([en, currUser]) => {
 				const voteResult = en[this.voteForm.get('voteScheduleId').value];
-        if (_isEmpty(voteResult)) return;
-        
+				if (_isEmpty(voteResult)) return;
+
+				// Agak ribet nyari vote, karena trainee pake Id & trainer pake Name
 				const currUserKey = currUser?.Role.is(RoleFlags.Trainee)
 					? currUser.TraineeId
 					: currUser.UserName;
 				const currUserVote = voteResult.find(
 					(v: any) => v.TraineeId === currUserKey || v.TrainerName === currUserKey
 				);
-
+				
+				// Kalo udah vote, disable & munculkan data
 				if (!_isEmpty(currUserVote)) {
 					this.voteForm.disable();
 					this.voteForm.patchValue({
@@ -97,27 +113,27 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 						bottom: currUserVote.BottomVotes,
 					});
 				}
-      });
-      
+			});
+
 		this.isVoting$ = this.voteForm
 			.get('voteScheduleId')
 			.valueChanges.pipe(map((v) => !_isEmpty(v)));
 
 		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.loadingFormVote$.next(false);
-    });
-    
-    // Disable setelah vote
-    this.voteEffects.trainerSubmitVote$.pipe(takeUntil(this.destroyed$)).subscribe((act) => {
-      // NOTE: Masih bar-bar, harus bikin tempat khusus utk tahu apakah resultnya success
-      // tslint:disable-next-line: no-string-literal
-      if(act['messageType'].includes('success')){
-			  this.voteForm.disable();
-      }
-    });
+		});
 
-    this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
-    this.store.dispatch(BinusianStateAction.FetchAllTraineesInLatestPhase());
+		// Disable setelah vote
+		this.voteEffects.trainerSubmitVote$.pipe(takeUntil(this.destroyed$)).subscribe((act) => {
+			// NOTE: Masih bar-bar, harus bikin tempat khusus utk tahu apakah resultnya success
+			// tslint:disable-next-line: no-string-literal
+			if (act['messageType'].includes('success')) {
+				this.voteForm.disable();
+			}
+		});
+
+		this.store.dispatch(VoteStateAction.FetchTopBottomVoteSchedules());
+		this.store.dispatch(BinusianStateAction.FetchAllTraineesInLatestPhase());
 	}
 
 	get topArray() {
@@ -163,8 +179,8 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 				topJson: JSON.stringify(top),
 			})
 		);
-  }
-  
+	}
+
 	searchByTraineeCodeAndName(term: string, item: ClientTrainee) {
 		return item.codeAndName.toLowerCase().includes(term.toLowerCase());
 	}

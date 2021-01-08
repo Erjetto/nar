@@ -5,7 +5,7 @@ import {
 	ClientCaseTrainer,
 	ClientUploadAnswer,
 } from 'src/app/shared/models';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, map } from 'rxjs/operators';
 import { DashboardContentBase } from '../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -19,7 +19,7 @@ import {
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { FormBuilder, Validators } from '@angular/forms';
-import { isEmpty as _isEmpty } from 'lodash';
+import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { adjustControlsInFormArray } from 'src/app/shared/methods';
 
@@ -34,9 +34,9 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 
 	phaseId = this.fb.control('');
 	caseId = this.fb.control('');
-	zeroingReason = this.fb.array([]);
-	traineeId = this.fb.array([]);
-	score = this.fb.array([], Validators.required);
+	zeroingReasons = this.fb.array([]);
+	traineeIds = this.fb.array([]);
+	scores = this.fb.array([], Validators.required);
 
 	// Select
 	viewCurrentPhase$ = new BehaviorSubject<ClientPhase>(null);
@@ -72,8 +72,12 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 			.pipe(select(fromCaseState.getClientCaseTrainers), takeUntil(this.destroyed$))
 			.subscribe(this.viewCaseList$);
 		this.store
-			.pipe(select(fromCaseState.getTraineeAnswers), takeUntil(this.destroyed$))
-      .subscribe(this.answerList$);
+			.pipe(
+				select(fromCaseState.getTraineeAnswers),
+				takeUntil(this.destroyed$),
+				map((answers) => _sortBy(answers, 'TraineeCode'))
+			)
+			.subscribe(this.answerList$);
 
 		this.loadingPhases$ = this.store.pipe(select(fromMasterState.isPhasesLoading));
 		this.loadingSubject$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
@@ -121,11 +125,19 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 				filter((v) => !_isEmpty(v))
 			)
 			.subscribe((answers) => {
-        adjustControlsInFormArray(this.zeroingReason, answers.length);
-        adjustControlsInFormArray(this.traineeId, answers.length);
-        adjustControlsInFormArray(this.score, answers.length, undefined, Validators.required);
-        this.traineeId.setValue(answers.map((a) => a.TraineeId))
-      });
+				this.scores.clear();
+				this.zeroingReasons.clear();
+
+				adjustControlsInFormArray(this.zeroingReasons, answers.length);
+				adjustControlsInFormArray(this.traineeIds, answers.length);
+				adjustControlsInFormArray(this.scores, answers.length);
+
+				this.scores.controls.forEach((c, idx) => {
+					this.traineeIds.controls[idx].setValue(answers[idx].TraineeId);
+					this.scores.controls[idx].setValue(answers[idx].Score);
+					this.zeroingReasons.controls[idx].setValue(answers[idx].ZeroingReason);
+				});
+			});
 
 		//#region auto select first in array
 		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
@@ -163,18 +175,28 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 
 	showScoringForCase(c: ClientCaseTrainer) {
 		this.viewCurrentCase$.next(c);
-		this.phaseId.setValue(this.viewCurrentPhase$.value);
+		this.phaseId.setValue(this.viewCurrentPhase$.value.PhaseId);
 		this.caseId.setValue(c.CaseId);
 	}
 
 	saveScore() {
+		// Exclude scoring that is not touched at all 
+		// tslint:disable-next-line: prefer-for-of
+		for (let i = this.scores.controls.length - 1; i >= 0; i--) {
+			if (_isEmpty(this.scores.controls[i].value) || this.scores.controls[i].pristine) {
+				this.traineeIds.removeAt(i);
+				this.zeroingReasons.removeAt(i);
+				this.scores.removeAt(i);
+			}
+		}
+		
 		this.store.dispatch(
 			CaseStateAction.SaveTraineeScores({
 				phaseId: this.phaseId.value,
 				caseId: this.caseId.value,
-				zeroingReason: this.zeroingReason.value,
-				traineeId: this.traineeId.value,
-				score: this.score.value,
+				zeroingReason: this.zeroingReasons.value,
+				traineeId: this.traineeIds.value,
+				score: this.scores.value,
 			})
 		);
 	}
@@ -184,6 +206,17 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 	}
 	downloadAllAnswers() {
 		this.answerList$.value.forEach((a) => window.open(a.answerDownloadLink));
-  }
-  
+	}
+
+	exportIntoExcel() {
+		this.store.dispatch(
+			MainStateAction.TestRequest({
+				link: 'General.svc/ExportScoreBySubject',
+				method: 'post',
+				body: {
+					subjectId: this.viewCurrentSubject$.value.SubjectId,
+				},
+			})
+		);
+	}
 }

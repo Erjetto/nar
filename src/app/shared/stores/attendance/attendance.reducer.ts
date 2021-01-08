@@ -2,10 +2,7 @@ import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/
 
 import * as MainStateAction from '../main/main.action';
 import {
-	TraineePresentation,
 	ClientTraineeAttendanceReport,
-	ClientEvaluation,
-	ClientTraineeData,
 	ClientPeriodicTraineeAttendance,
 } from '../../models';
 import {

@@ -9,7 +9,6 @@
 								<th>Name</th>
 								<th>Date</th>
 								<th># of votes</th>
-								<th>For Trainer</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -27,7 +26,6 @@
 									{{ schedule.EndDate | date: viewDateFormat }}
 								</td>
 								<td>{{ schedule.VoteCount }}</td>
-								<td>{{ schedule.isForTrainer ? '&#x2611;' : '&#x2610;' }}</td>
 							</tr>
 						</tbody>
 					</table>

@@ -140,7 +140,7 @@ export class CaseStateEffects {
 		),
 		mergeMap((results) => {
       const failed = results.filter(r => !r).length;
-      if(failed > 0) return of(MainStateAction.SuccessfullyMessage('saved score'))
+      if(failed === 0) return of(MainStateAction.SuccessfullyMessage('saved score'))
       else return of(MainStateAction.FailMessage('saving score', failed + ' scores failed to be saved'))
     }),
 		share()

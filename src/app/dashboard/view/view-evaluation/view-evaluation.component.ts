@@ -91,7 +91,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	ngOnInit(): void {
 		//#region Bind to store
 		this.todaysPresentation$ = this.store.pipe(
-			select(fromPresentationState.getPresentationsByDate),
+			select(fromPresentationState.getPresentationScorings),
 			map((presentations: TraineePresentation[]) => {
 				// Separate presentations into 2 arr for each sessions
 				const presentationArr = [[], []];
@@ -165,7 +165,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 
 	// Get data by date (yyyy-MM-dd)
 	getAllEvaluationDataByDate(date: string) {
-		this.store.dispatch(PresentationStateAction.FetchPresentationsByDate({ time: date }));
+		this.store.dispatch(PresentationStateAction.FetchPresentationScoringsBy({ time: date }));
 		this.store.dispatch(AttendanceStateAction.FetchAttendanceReport({ date }));
 		this.store.dispatch(NoteStateAction.FetchEvaluation({ sdate: date }));
 	}
