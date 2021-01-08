@@ -41,6 +41,7 @@ import { CorrectionComponent } from './correction/correction.component';
 import { MyDataComponent } from './my-data/my-data.component';
 import { PresentationReportComponent } from './presentation/presentation-report/presentation-report.component';
 import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-report/trainee-attendance-report.component';
+import { PresentationSummaryComponent } from './presentation/presentation-summary/presentation-summary.component';
 
 @NgModule({
 	declarations: [
@@ -73,6 +74,7 @@ import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-r
 		ViewAllQuestionComponent,
 		ViewAllPresentationComponent,
     PresentationReportComponent,
+		PresentationSummaryComponent,
     
     ModifyTraineeScheduleComponent,
     
@@ -89,6 +91,7 @@ import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-r
 		CorrectionComponent,
     
 		MyDataComponent,
+    
     
 	],
 	imports: [

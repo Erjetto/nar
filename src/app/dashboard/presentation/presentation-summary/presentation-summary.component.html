@@ -1,0 +1,178 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col">
+			<rd-card
+				[cardTitle]="'Presentation Summary'"
+				[collapsible]="false"
+				[maxHeight]="700"
+				[isLoading]="loadingPresentationSummary$ | async"
+			>
+				<div class="row mb-3">
+					<div class="col">
+						<ng-select
+							[items]="subjects$ | async"
+							[clearable]="false"
+							bindLabel="Name"
+							[searchable]="false"
+							placeholder="Subject"
+							[appendTo]="'body'"
+							[ngModel]="currentSubject$ | async"
+							(change)="currentSubject$.next($event)"
+						></ng-select>
+					</div>
+					<div class="col">
+						<input
+							class="form-control"
+							[formControl]="filterForm"
+							placeholder="Search by anything"
+						/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<b>Done: {{ (summaryNumbers$ | async)?.done }}</b> &nbsp;&nbsp;
+					<b>Not Yet: {{ (summaryNumbers$ | async)?.notYet }}</b> &nbsp;&nbsp;
+					<b>Not Passed: {{ (summaryNumbers$ | async)?.notPassed }}</b> &nbsp;&nbsp;
+					<b>Passed: {{ (summaryNumbers$ | async)?.passed }}</b> &nbsp;&nbsp;
+				</div>
+				<div class="row">
+					<table class="table table-hover text-center">
+						<thead>
+							<tr>
+								<th>Trainee</th>
+								<th>No.</th>
+								<th>Status</th>
+								<!-- <th width="100px">Actions</th> -->
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(presentationScoringsSummary$ | async)?.length === 0">
+								<td class="p-3" colspan="6">No presentations yet</td>
+							</tr>
+							<tr
+								*ngFor="let presentation of presentationScoringsSummary$ | async"
+								(click)="selectTraineeSummary(presentation)"
+								class="cursor-pointer"
+								[class.bg-green]="presentation.isPassed"
+								[class.bg-red]="!presentation.isPassed"
+							>
+								<td class="text-left">
+									{{ presentation.traineeCode }} - {{ presentation.traineeName }}
+								</td>
+								<td>{{ presentation.presentationNo == 0 ? '-' : presentation.presentationNo }}</td>
+								<td>{{ presentation.status }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card
+				[cardTitle]="'Summary Detail'"
+				[collapsible]="selectedTraineeSummary$ | async"
+				[expanded]="selectedTraineeSummary$ | async"
+			>
+				<div class="row">
+					<table class="table table-hover text-center">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>No.</th>
+								<th>Final Score</th>
+								<th>Status</th>
+								<th>PIC</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(selectedTraineePresentationScorings$ | async)?.length === 0">
+								<td class="p-3" colspan="6">No presentations yet</td>
+							</tr>
+							<tr
+								*ngFor="let presentation of selectedTraineePresentationScorings$ | async"
+								(click)="selectPresentation(presentation)"
+								class="cursor-pointer"
+							>
+								<td>{{ presentation.savedAt | date: viewDateFormat }}</td>
+								<td>{{ presentation.presentationNo }}</td>
+								<td>{{ presentation.score }}</td>
+								<td>{{ presentation.status }}</td>
+								<td class="pre">{{ presentation.savedBy }}</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+			<rd-card
+				[cardTitle]="'Presentation Detail'"
+				[collapsible]="selectedPresentation$ | async"
+				[expanded]="selectedPresentation$ | async"
+			>
+				<div class="row mb-4">
+					<table class="table table-sm table-striped row-header">
+						<thead>
+							<tr>
+								<th colspan="2">Trainee Information</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Trainee</td>
+								<td class="col-8">{{ (selectedPresentation$ | async)?.traineeCode }}</td>
+							</tr>
+							<tr>
+								<td>Trainee Name</td>
+								<td>{{ (selectedPresentation$ | async)?.traineeName }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<table class="table table-sm table-striped row-header">
+						<thead>
+							<tr>
+								<th colspan="2">Presentation Result</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Material</td>
+								<td class="col-8">{{ (selectedPresentation$ | async)?.material }}</td>
+							</tr>
+							<tr>
+								<td>Understanding</td>
+								<td>{{ (selectedPresentation$ | async)?.understanding }}</td>
+							</tr>
+							<tr>
+								<td>Teaching Methodology</td>
+								<td>{{ (selectedPresentation$ | async)?.voice }}</td>
+							</tr>
+							<tr>
+								<td>Class Control</td>
+								<td>{{ (selectedPresentation$ | async)?.classControl }}</td>
+							</tr>
+							<tr>
+								<td>Final Score</td>
+								<td>{{ (selectedPresentation$ | async)?.score }}</td>
+							</tr>
+							<tr>
+								<td>Status</td>
+								<td>{{ (selectedPresentation$ | async)?.status }}</td>
+							</tr>
+							<tr>
+								<td>Notes</td>
+								<td>{{ (selectedPresentation$ | async)?.notes }}</td>
+							</tr>
+							<tr>
+								<td>Comment</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+					<div [innerHTML]="(selectedPresentation$ | async)?.comment"></div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

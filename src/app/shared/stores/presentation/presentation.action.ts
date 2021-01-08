@@ -9,9 +9,13 @@ export const FetchPresentationStatus = createAction(
 	'[PresentationState] FetchPresentationStatus',
 	props<{ filename: string }>()
 );
-export const FetchPresentationsByDate = createAction(
-	'[PresentationState] FetchPresentationsByDate',
-	props<{ time: string }>()
+export const FetchPresentationScoringsBy = createAction(
+	'[PresentationState] FetchPresentationScoringsBy',
+	props<{ time?: string, subjectId?: string }>()
+);
+export const FetchPresentationScoringsSummary = createAction(
+	'[PresentationState] FetchPresentationScoringsSummary',
+	props<{ subjectId: string }>()
 );
 
 export const FetchPresentationsByGenerationSuccess = createAction(
@@ -30,8 +34,12 @@ export const FetchPresentationStatusSuccess = createAction(
 	'[PresentationState] FetchPresentationStatusSuccess',
 	props<{ payload: string }>()
 );
-export const FetchPresentationsByDateSuccess = createAction(
-	'[PresentationState] FetchPresentationsByDateSuccess',
+export const FetchPresentationScoringsSuccess = createAction(
+	'[PresentationState] FetchPresentationScoringsSuccess',
+	props<{ payload: TraineePresentation[] }>()
+);
+export const FetchPresentationScoringsSummarySuccess = createAction(
+	'[PresentationState] FetchPresentationScoringsSummarySuccess',
 	props<{ payload: TraineePresentation[] }>()
 );
 export const FetchMyPresentationsSuccess = createAction(

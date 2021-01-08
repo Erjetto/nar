@@ -9,7 +9,16 @@ import * as fromMainState from '../main/main.reducer';
 import * as fromPresentationState from './presentation.reducer';
 
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, tap, share, map, withLatestFrom, filter } from 'rxjs/operators';
+import {
+	switchMap,
+	mergeMap,
+	pluck,
+	tap,
+	share,
+	map,
+	withLatestFrom,
+	filter,
+} from 'rxjs/operators';
 import { PresentationService } from '../../services/new/presentation.service';
 import { isEmpty as _isEmpty } from 'lodash';
 import { IAppState } from 'src/app/app.reducer';
@@ -25,21 +34,36 @@ export class PresentationStateEffects {
 	) {}
 
 	@Effect()
-	getPresentationsByDate$: Observable<Action> = this.actions$.pipe(
-		ofType(PresentationStateAction.FetchPresentationsByDate),
-		switchMap((data) => this.presentationService.GetPresentationReportDetailByDate(data)),
+	getPresentationScoringsSummary$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.FetchPresentationScoringsSummary),
+		switchMap((data) => this.presentationService.GetPresentationReportSummary(data)),
 		mergeMap((res) =>
-			of(PresentationStateAction.FetchPresentationsByDateSuccess({ payload: res }))
+			of(PresentationStateAction.FetchPresentationScoringsSummarySuccess({ payload: res }))
+		),
+		share()
+	);
+
+	@Effect()
+	getPresentationScoringsByDate$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.FetchPresentationScoringsBy),
+		switchMap((data) =>
+			data.subjectId !== undefined
+				? this.presentationService.GetPresentationReportDetail({ subjectId: data.subjectId })
+				: this.presentationService.GetPresentationReportDetailByDate({ time: data.time })
+		),
+		mergeMap((res) =>
+			of(PresentationStateAction.FetchPresentationScoringsSuccess({ payload: res }))
 		),
 		share()
 	);
 
 	@Effect()
 	getPresentationsBy$: Observable<Action> = this.actions$.pipe(
-    ofType(PresentationStateAction.FetchPresentationsBy),
-    withLatestFrom(this.store.pipe(select(fromPresentationState.hasFetchedAllPresentations))),
-    filter(([data, hasFetchedAll]) => !hasFetchedAll),
-		mergeMap( // use merge because its possible to have multiple running request
+		ofType(PresentationStateAction.FetchPresentationsBy),
+		withLatestFrom(this.store.pipe(select(fromPresentationState.hasFetchedAllPresentations))),
+		filter(([data, hasFetchedAll]) => !hasFetchedAll),
+		mergeMap(
+			// use merge because its possible to have multiple running request
 			([{ generationId, traineeId, subjectId }]) =>
 				// Gunakan antara ketiga method yg returnnya sama
 				(!_isEmpty(traineeId)
@@ -57,22 +81,27 @@ export class PresentationStateEffects {
 			// Di akhirannya dibawa juga 'data' supaya bisa dipisahkan spt ini
 		),
 		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentUser))),
-    mergeMap(([{ traineeId, subjectId, res }, currTrainee]) =>{
-      // Bikin begini karena fetch by trainee punya 2 kemungkinan action
-      const actions = []
-      if(!_isEmpty(traineeId)) {
-        actions.push(PresentationStateAction.FetchPresentationsByTraineeSuccess({payload: res,traineeId}))
-        // Kalo fetch punya sendiri
-        if(currTrainee.TraineeId === traineeId) 
-          actions.push(PresentationStateAction.FetchMyPresentationsSuccess({ payload: res }))
-      }
-      else if(!_isEmpty(subjectId)) 
-        actions.push(PresentationStateAction.FetchPresentationsBySubjectSuccess({ payload: res, subjectId }))
-      else 
-        actions.push(PresentationStateAction.FetchPresentationsByGenerationSuccess({ payload: res }))
+		mergeMap(([{ traineeId, subjectId, res }, currTrainee]) => {
+			// Bikin begini karena fetch by trainee punya 2 kemungkinan action
+			const actions = [];
+			if (!_isEmpty(traineeId)) {
+				actions.push(
+					PresentationStateAction.FetchPresentationsByTraineeSuccess({ payload: res, traineeId })
+				);
+				// Kalo fetch punya sendiri
+				if (currTrainee.TraineeId === traineeId)
+					actions.push(PresentationStateAction.FetchMyPresentationsSuccess({ payload: res }));
+			} else if (!_isEmpty(subjectId))
+				actions.push(
+					PresentationStateAction.FetchPresentationsBySubjectSuccess({ payload: res, subjectId })
+				);
+			else
+				actions.push(
+					PresentationStateAction.FetchPresentationsByGenerationSuccess({ payload: res })
+				);
 
-      return of(...actions)
-    }),
+			return of(...actions);
+		}),
 		share()
 	);
 
@@ -121,14 +150,16 @@ export class PresentationStateEffects {
 		),
 		share()
 	);
-  
-  //#endregion
-  
-  //#region Create
+
+	//#endregion
+
+	//#region Create
 	@Effect()
 	createTraineePresentation$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.SaveCoreTrainingPresentation),
-		switchMap((data) => this.presentationService.SaveCoreTrainingPresentation({presentation: data.data})),
+		switchMap((data) =>
+			this.presentationService.SaveCoreTrainingPresentation({ presentation: data.data })
+		),
 		mergeMap((res) =>
 			res === true
 				? of(MainStateAction.SuccessfullyMessage('created presentation'))
@@ -136,9 +167,8 @@ export class PresentationStateEffects {
 		),
 		share()
 	);
-  
-  //#endregion
-  
+
+	//#endregion
 
 	//#region Update
 	@Effect()

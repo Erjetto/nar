@@ -43,6 +43,7 @@ import { Store } from '@ngrx/store';
 import { fromMainState } from '../shared/store-modules';
 import { PresentationReportComponent } from './presentation/presentation-report/presentation-report.component';
 import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-report/trainee-attendance-report.component';
+import { PresentationSummaryComponent } from './presentation/presentation-summary/presentation-summary.component';
 
 export const routes: Routes = [
 	{
@@ -269,22 +270,14 @@ export const routes: Routes = [
 					name: 'Presentation',
 				},
 				children: [
-					// {
-					// 	path: 'scoring',
-					// 	component: ScoringComponent,
-					// 	data: {
-					// 		roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
-					// 		name: 'Scoring',
-					// 	},
-					// },
-					// {
-					// 	path: 'report-detail-summary',
-					// 	component: null,
-					// 	data: {
-					// 		roles: RoleGroups.SENIOR_ROLES,
-					// 		name: 'Report Detail Summary',
-					// 	},
-					// },
+					{
+						path: 'presentation-summary',
+						component: PresentationSummaryComponent,
+						data: {
+							roles: RoleGroups.SENIOR_ROLES,
+							name: 'Presentation Summary',
+						},
+					},
 					{
 						path: 'view-all-presentations',
 						component: ViewAllPresentationComponent,

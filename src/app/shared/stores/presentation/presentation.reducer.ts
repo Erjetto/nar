@@ -21,9 +21,10 @@ import {
 	SetQuestionsFilter,
 	FetchPresentationStatus,
 	FetchPresentationStatusSuccess,
-	FetchPresentationsByDate,
-	FetchPresentationsByDateSuccess,
+	FetchPresentationScoringsBy,
+	FetchPresentationScoringsSuccess,
 	FetchMyPresentationsSuccess,
+	FetchPresentationScoringsSummarySuccess,
 } from './presentation.action';
 import { IAppState } from 'src/app/app.reducer';
 
@@ -43,7 +44,8 @@ export interface IPresentationState {
 	// Presentations digunakan utk mengakses data yang baru saja di-fetch
 	// Setiap fetch presentation, presentations akan selalu berubah
 	presentations: CoreTrainingPresentation[];
-	presentationsByDate: TraineePresentation[];
+	presentationScoringsSummary: TraineePresentation[];
+	presentationScorings: TraineePresentation[];
 	myPresentations: CoreTrainingPresentation[];
 	// Utk mencegah ambil presentation lagi kalo udah semua
 	fetchedAllPresentations: boolean;
@@ -60,7 +62,8 @@ export const initialState: IPresentationState = {
 	questionsByTraineeEntity: {},
 
 	presentations: [],
-	presentationsByDate: [],
+	presentationScoringsSummary: [],
+	presentationScorings: [],
 	myPresentations: [],
 	fetchedAllPresentations: false,
 
@@ -79,7 +82,7 @@ export const PresentationStateReducer = createReducer(
 		...initialState,
 	})),
 
-	on(FetchPresentationsBy, (state) => ({
+	on(FetchPresentationsBy, FetchPresentationScoringsBy, (state) => ({
 		...state,
 		loadingPresentations: true,
 	})),
@@ -159,16 +162,17 @@ export const PresentationStateReducer = createReducer(
 		presentationStatus: payload,
 	})),
 
-	on(FetchPresentationsByDate, (state) => ({
+	on(FetchPresentationScoringsSuccess, (state, { payload }) => ({
 		...state,
-		loadingPresentations: true,
+		presentationScorings: payload,
+		loadingPresentations: false,
 	})),
 
-	on(FetchPresentationsByDateSuccess, (state, { payload }) => ({
+	on(FetchPresentationScoringsSummarySuccess, (state, { payload }) => ({
 		...state,
-		presentationsByDate: payload,
+		presentationScoringsSummary: payload,
 		loadingPresentations: false,
-	}))
+	})),
 );
 
 export const getPresentationState = createFeatureSelector<IPresentationState>(
@@ -186,7 +190,8 @@ export const getPresentationsBySubjectEntity = getPresentationStateBy(
 );
 export const getQuestionsBySubject = getPresentationStateBy((s) => s.questionsBySubjectEntity);
 export const getQuestionsByTrainee = getPresentationStateBy((s) => s.questionsByTraineeEntity);
-export const getPresentationsByDate = getPresentationStateBy((s) => s.presentationsByDate);
+export const getPresentationScoringsSummary = getPresentationStateBy((s) => s.presentationScoringsSummary);
+export const getPresentationScorings = getPresentationStateBy((s) => s.presentationScorings);
 export const getQuestionsFilter = getPresentationStateBy((s) => s.questionsFilter);
 export const isPresentationsLoading = getPresentationStateBy((s) => s.loadingPresentations);
 export const hasFetchedAllPresentations = getPresentationStateBy((s) => s.fetchedAllPresentations);

@@ -689,6 +689,10 @@ export class TraineePresentation extends BaseModel {
 	) {
 		super();
 	}
+	get isPassed() {
+		return this.status === 'Passed';
+	}
+
 	static fromJson(data?: any): TraineePresentation {
 		if (isEmpty(data)) return null;
 		return Object.assign(new TraineePresentation(), data, {
@@ -1633,7 +1637,7 @@ export class ClientInterviewResult extends BaseModel {
 	}
 	get startToEndTime() {
 		return this.StartTime + ' - ' + this.EndTime;
-  }
+	}
 	static fromJson(data: any) {
 		if (isEmpty(data)) return null;
 		return Object.assign(new ClientInterviewResult(), data, {
@@ -1641,11 +1645,11 @@ export class ClientInterviewResult extends BaseModel {
 			InterviewDate: DateHelper.fromCSharpDate(data?.InterviewDate),
 			SavedAt: DateHelper.fromCSharpDate(data?.SavedAt),
 		});
-  }
-  
-  thumbnailLink(height:number){
-    return `${environment.apiUrl}File.svc/GetThumbnail/${this.PictureId}/${height}`;
-  }
+	}
+
+	thumbnailLink(height: number) {
+		return `${environment.apiUrl}File.svc/GetThumbnail/${this.PictureId}/${height}`;
+	}
 }
 
 export class ClientInterviewResultDetail extends BaseModel {
@@ -1805,7 +1809,8 @@ export class ClientEvaluationNote extends BaseModel {
 	}
 	get evalNoteType() {
 		// [Others] Lorem ips... -> Others
-		const res = /\[(\w+)\]/.exec(this.Notes);
+		// [Case Making] Test -> Case Making
+		const res = /\[([\w ]+)\]/.exec(this.Notes);
 		return res ? res[1] : '';
 	}
 	static fromJson(data?: any): ClientEvaluationNote {
@@ -1874,7 +1879,7 @@ export class LogBookPICData extends BaseModel {
 }
 
 // NOTE: khusus class disini beda dgn model di backend
-// Backend menyimpan stringified Data, jadi harus di-parse dulu disini 
+// Backend menyimpan stringified Data, jadi harus di-parse dulu disini
 // Lalu harus di-stringify lagi kalo mau di-pass ke backend
 export class LogBookPIC extends BaseModel {
 	constructor(
@@ -1903,12 +1908,14 @@ export class LogBookPIC extends BaseModel {
 	toJson() {
 		return {
 			Id: this.Id,
-			Data: JSON.stringify(this.Data.map((d) => ({
-				Note: d.Note,
-				Trainee: d.Trainee,
-				Correct: JSON.stringify(d.Correct),
-				Wrong: JSON.stringify(d.Wrong),
-			}))),
+			Data: JSON.stringify(
+				this.Data.map((d) => ({
+					Note: d.Note,
+					Trainee: d.Trainee,
+					Correct: JSON.stringify(d.Correct),
+					Wrong: JSON.stringify(d.Wrong),
+				}))
+			),
 			Subject: this.Subject,
 			PIC: this.PIC,
 			SavedDate: DateHelper.toCSharpDate(this.SavedDate),
