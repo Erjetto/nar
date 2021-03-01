@@ -168,8 +168,8 @@
 							[disabled]="traineeText.invalid"
 							(click)="submitTraineeForm()"
 						>
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert/Update
-            </button>
+							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert/Update
+						</button>
 						<!-- <rd-confirmable-pop-up *ngIf="(editForm$|async)">
               <button class="btn btn-danger">
                 <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Generation
@@ -191,52 +191,68 @@
 							[formControl]="searchTextControl"
 						/>
 					</div>
-        </div>
-        <div class="row scrollable-table maxh-500px">
-          <table class="table table-sm table-striped table-hover text-center">
-            <thead>
-              <tr>
-                <th>Binusian Number</th>
-                <th>Trainee Code</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody style="max-height: 600px; overflow-y: auto">
-              <tr *ngIf="(currentGenTraineesFiltered$ | async)?.length === 0">
-                <td colspan="5">No trainees....</td>
-              </tr>
-              <tr *ngFor="let trainee of currentGenTraineesFiltered$ | async" class="cursor-pointer">
-                <td>{{ trainee.TraineeNumber }}</td>
-                <td>{{ trainee.TraineeCode }}</td>
-                <td>{{ trainee.TraineeName }}</td>
-                <td>{{ trainee.Status }}</td>
-                <td class="text-left">
-                  <rd-confirmable-pop-up
-                    [description]="'Delete ' + trainee.TraineeName + '?'"
-                    (confirm)="deleteTrainee(trainee)"
-                  >
-                    <button class="btn btn-xs btn-danger">
-                      <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
-                    </button>
-                  </rd-confirmable-pop-up>
-                  <rd-confirmable-pop-up
-                    [description]="'Toggle ' + trainee.TraineeName + '\'s active?'"
-                    (confirm)="toggleTraineeActive(trainee)"
-                  >
-                    <button class="btn btn-xs btn-warning" [hidden]="!trainee.isActive">
-                      <fa-icon [icon]="['fas', 'times']"></fa-icon> Deactivate
-                    </button>
-                    <button class="btn btn-xs btn-success" [hidden]="trainee.isActive">
-                      <fa-icon [icon]="['fas', 'check']"></fa-icon> Activate
-                    </button>
-                  </rd-confirmable-pop-up>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+				</div>
+				<div class="row scrollable-table maxh-500px">
+					<table class="table table-sm table-striped table-hover text-center">
+						<thead>
+							<tr>
+								<th>Binusian Number</th>
+								<th>Trainee Code</th>
+								<th>Name</th>
+								<th>Status</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody style="max-height: 600px; overflow-y: auto">
+							<tr *ngIf="(currentGenTraineesFiltered$ | async)?.length === 0">
+								<td colspan="5">No trainees....</td>
+							</tr>
+							<tr
+								*ngFor="let trainee of currentGenTraineesFiltered$ | async"
+								class="cursor-pointer"
+							>
+								<td>{{ trainee.TraineeNumber }}</td>
+								<td>{{ trainee.TraineeCode }}</td>
+								<td>{{ trainee.TraineeName }}</td>
+								<td>{{ trainee.Status }}</td>
+								<td class="text-left">
+									<!-- Delete -->
+									<rd-confirmable-pop-up
+										[description]="'Delete ' + trainee.TraineeName + '?'"
+										(confirm)="deleteTrainee(trainee)"
+									>
+										<button class="btn btn-xs btn-danger">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+										</button>
+									</rd-confirmable-pop-up>
+									<!-- Change active status -->
+									<rd-confirmable-pop-up
+										[title]="'Change ' + trainee.TraineeCode + '\'s active status?'"
+										[description]="deactivateReasonTemplate"
+										(confirm)="toggleTraineeActive(trainee)"
+										[canConfirm]="trainee.isActive && deactivateReasonControl.valid"
+									>
+										<ng-template #deactivateReasonTemplate>
+											<textarea
+												class="form-control"
+												[formControl]="deactivateReasonControl"
+												placeholder="Input reasons here..."
+												cols="30"
+												rows="4"
+											></textarea>
+										</ng-template>
+										<button class="btn btn-xs btn-warning" [hidden]="!trainee.isActive">
+											<fa-icon [icon]="['fas', 'times']"></fa-icon> Deactivate
+										</button>
+										<button class="btn btn-xs btn-success" [hidden]="trainee.isActive">
+											<fa-icon [icon]="['fas', 'check']"></fa-icon> Activate
+										</button>
+									</rd-confirmable-pop-up>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</rd-card>
 		</div>
 	</div>

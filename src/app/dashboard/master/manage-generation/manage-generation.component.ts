@@ -38,6 +38,7 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 	});
 	traineeText = this.fb.control('', Validators.required);
 	searchTextControl = this.fb.control('');
+	deactivateReasonControl = this.fb.control('');
 
 	loadingFormGen$ = new BehaviorSubject<boolean>(false);
 	loadingFormTrainee$ = new BehaviorSubject<boolean>(false);
@@ -94,7 +95,8 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 		merge(
 			this.mainEffects.changeGen$,
 			this.binusianEffects.createTrainee$,
-			this.binusianEffects.deleteTrainee$
+			this.binusianEffects.deleteTrainee$,
+			this.binusianEffects.updateTraineeActive$
 		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(BinusianStateAction.FetchTraineesSimpleData()));
@@ -155,5 +157,10 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
   
   toggleTraineeActive(trainee: SimpleTraineeData){
 		this.loadingViewTrainee$.next(true);
+		this.store.dispatch(BinusianStateAction.UpdateTraineeActive({
+			isActive: !trainee.isActive,
+			reason: this.deactivateReasonControl.value,
+			traineeId: trainee.TraineeId
+		}));
   }
 }
