@@ -8,6 +8,7 @@ import {
 	HostBinding,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
+	HostListener,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -39,7 +40,8 @@ export class UploadInputComponent implements OnInit {
 	@Input() filesForm: FormArray = this.fb.array([]);
 	@Input() singleFileForm: FormGroup = this.fb.group({ fileId: [''], fileName: [''] });
   @Input() multiple = false;
-  @Input() disabled = false;
+	@Input() disabled = false;
+	@Input() placeholder = '';
 	@Output() upload = new EventEmitter<AbstractControl>(); // emit filesForm atau singleFileForm
 
 	constructor(
@@ -65,6 +67,19 @@ export class UploadInputComponent implements OnInit {
 	get fileNames() {
 		if (this.multiple) return this.filesForm.value.map((v) => v.fileName).join(', ');
 		else return this.singleFileForm.value.fileName;
+	}
+
+	@HostListener('dragover', ['$event']) ondragover(evt: DragEvent){
+		evt.preventDefault();
+	}	
+
+	@HostListener('drop', ['$event']) ondrop(evt: DragEvent){
+		evt.preventDefault();
+		evt.stopPropagation();
+		const files = evt.dataTransfer.files;
+		if(files.length > 0){
+			this.uploadFile(files);
+		}
 	}
 
 	uploadFile(files: FileList) {

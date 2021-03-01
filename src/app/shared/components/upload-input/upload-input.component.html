@@ -1,11 +1,11 @@
 <span
 	class="file-placeholder form-control"
-	[ngClass]="{ 'disabled': disabled }"
+	[ngClass]="{ disabled: disabled }"
 	(click)="fileUploader.click()"
 >
 	<ng-container [ngSwitch]="hasFile">
 		<span *ngSwitchCase="false" class="cursor-pointer">
-			<i>Click here to upload</i>
+			<i>{{ placeholder == '' ? 'Click here to upload' : placeholder }}</i>
 		</span>
 		<span *ngSwitchDefault class="cursor-pointer">
 			<i>{{ fileNames }}</i>
