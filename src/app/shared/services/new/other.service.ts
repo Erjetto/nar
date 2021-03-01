@@ -5,7 +5,7 @@ import { MockData } from '../../mock-data';
 import { Message } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { GetDownloadLinkFromFileId } from '../../methods';
+import { GetDownloadLinkFromFileId, GetMemoryFileLinkFromFileKey } from '../../methods';
 
 @Injectable({
 	providedIn: 'root',
@@ -39,5 +39,8 @@ export class OtherService {
 
 	public DownloadFile(fileId: string): void {
 		window.open(GetDownloadLinkFromFileId(fileId));
+	}
+	public DownloadMemoryFile(fileId: string): void {
+		window.open(GetMemoryFileLinkFromFileKey(fileId));
 	}
 }

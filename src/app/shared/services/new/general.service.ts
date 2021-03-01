@@ -167,4 +167,10 @@ export class GeneralService {
 			.post(this.baseUrl + 'GetSubjects', data)
 			.pipe(map((res: any) => _map(res.d, ClientSubject.fromJson)));
 	}
+
+	public ExportScoreBySubject(data: { subjectId: string }): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'ExportScoreBySubject', data)
+			.pipe(map((res: any) => res.d + ''));
+	}
 }

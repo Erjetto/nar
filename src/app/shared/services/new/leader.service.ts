@@ -148,8 +148,8 @@ export class LeaderService {
 		caseName: string;
 		correctorNames: string[];
 		traineeDays: string;
-		trainerDays: string;
 		scheduleDate: string;
+		noUpload: boolean;
 	}): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveCase', data)

@@ -90,3 +90,12 @@ export const FetchMySchedulesSuccess = createAction(
 	'[BinusianState] FetchMySchedulesSuccess',
 	props<{ payload: TraineeSchedule[] }>()
 );
+
+export const UpdateTraineeActive = createAction(
+	'[BinusianState] UpdateTraineeActive',
+	props<{
+		isActive: boolean;
+		reason: string;
+		traineeId: string;
+	}>()
+);

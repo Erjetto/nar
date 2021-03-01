@@ -166,6 +166,18 @@ export class BinusianStateEffects {
 	);
 
 	@Effect()
+	updateTraineeActive$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.UpdateTraineeActive),
+		switchMap((data) => this.leaderService.UpdateTraineeActive(data)),
+		mergeMap((res) =>
+			res
+				? of(MainStateAction.SuccessfullyMessage('updated trainee status'))
+				: of(MainStateAction.FailMessage('updating trainee status'))
+		),
+		share()
+	);
+
+	@Effect()
 	deleteTrainee$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.DeleteTrainee),
 		switchMap((data) => this.traineeService.Delete(data)),

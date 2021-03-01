@@ -5,7 +5,7 @@ import { MockData } from '../../mock-data';
 import { ClientCaseTrainer, ClientUploadAnswer } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { map as _map} from 'lodash';
+import { map as _map } from 'lodash';
 @Injectable({
 	providedIn: 'root',
 })
@@ -37,10 +37,28 @@ export class TrainerService {
 		caseId: string;
 		score: number;
 		zeroingReason: string;
+		subjectId: string;
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveScore', data)
 			.pipe(map((res: any) => res.d === true));
+	}
+	
+	public GenerateExcelTemplateForScoring(data: { caseId: string }): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'GenerateExcelTemplateForScoring', data)
+			.pipe(map((res: any) => res.d + ''));
+	}
+
+	public ImportScoreFromExcel(data: {
+		phaseId: string;
+		fileId: string;
+		caseId: string;
+		subjectId: string;
+	}): Observable<string[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'ImportScoreFromExcel', data)
+			.pipe(map((res: any) => res.d as string[]));
 	}
 
 	public IsTrainer(): Observable<boolean> {
