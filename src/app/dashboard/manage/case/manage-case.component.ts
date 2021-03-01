@@ -159,10 +159,9 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			changedFile: false,
 			caseId: row.CaseId,
 			fileId: row.FileId,
-			casName: row.CaseName,
+			caseName: row.CaseName,
 			correctorNames: row.correctorList,
 			traineeDays: DateHelper.dateToFormat(row.TraineeDeadline, this.editDateFormat),
-			trainerDays: DateHelper.dateToFormat(row.TrainerDeadline, this.editDateFormat),
 			scheduleDate: DateHelper.dateToFormat(row.ScheduleDate, this.editDateFormat),
 			noUpload: row.NoUpload,
 		});
@@ -173,14 +172,8 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			traineeDays: DateHelper.dateToFormat(new Date(), this.editDateFormat),
 			trainerDays: DateHelper.dateToFormat(new Date(), this.editDateFormat),
 			scheduleDate: DateHelper.dateToFormat(new Date(), this.editDateFormat),
-		});
-	}
-
-	removeFile(element) {
-		element.target.value = '';
-		this.caseForm.patchValue({
-			fileId: null,
-			fileName: null,
+			noUpload: false,
+			changedFile: false
 		});
 	}
 
@@ -198,6 +191,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 				subjectId: this.viewCurrentSubject$.value.SubjectId,
 				scheduleId: this.viewCurrentSchedule$.value.ScheduleId,
 				correctorNames: correctorNames.split('\n'),
+				noUpload:null,
 			})
 		);
 	}

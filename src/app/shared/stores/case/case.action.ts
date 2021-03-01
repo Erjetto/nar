@@ -22,8 +22,8 @@ export const CreateCase = createAction(
 		caseName: string;
 		correctorNames: string[];
 		traineeDays: string;
-		trainerDays: string;
 		scheduleDate: string;
+		noUpload: boolean;
 	}>()
 );
 
@@ -95,6 +95,25 @@ export const SaveTraineeScores = createAction(
 		traineeId: string[];
 		score: number[];
 		zeroingReason: string[];
+		subjectId: string;
+	}>()
+);
+
+export const ExportScoreBySubject = createAction(
+	'[CaseState] ExportScoreBySubject',
+	props<{subjectId: string;}>()
+);
+export const GenerateExcelTemplateForScoring = createAction(
+	'[CaseState] GenerateExcelTemplateForScoring',
+	props<{caseId: string;}>()
+);
+export const ImportScoreFromExcel = createAction(
+	'[CaseState] ImportScoreFromExcel',
+	props<{
+		fileId: string;
+		caseId: string;
+		phaseId: string;
+		subjectId: string;
 	}>()
 );
 //#endregion

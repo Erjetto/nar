@@ -5,7 +5,7 @@ import {
 	ClientCaseTrainer,
 	ClientUploadAnswer,
 } from 'src/app/shared/models';
-import { takeUntil, filter, map } from 'rxjs/operators';
+import { takeUntil, filter, map, withLatestFrom } from 'rxjs/operators';
 import { DashboardContentBase } from '../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -17,8 +17,9 @@ import {
 	fromCaseState,
 	CaseStateAction,
 	MainStateAction,
+	CaseStateEffects,
 } from 'src/app/shared/store-modules';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { adjustControlsInFormArray } from 'src/app/shared/methods';
@@ -36,7 +37,7 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 	caseId = this.fb.control('');
 	zeroingReasons = this.fb.array([]);
 	traineeIds = this.fb.array([]);
-	scores = this.fb.array([], Validators.required);
+	scores = this.fb.array([]);
 
 	// Select
 	viewCurrentPhase$ = new BehaviorSubject<ClientPhase>(null);
@@ -60,6 +61,7 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
+		private caseEffects: CaseStateEffects,
 		private fb: FormBuilder
 	) {
 		super(store);
@@ -158,16 +160,11 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
 
 		// Reload case list when doing CRUD
-		// merge(
-		// 	this.viewCurrentSchedule$,
-		// )
-		// 	.pipe(takeUntil(this.destroyed$))
-		// 	.subscribe(() => {
-		// 		if (this.viewCurrentSchedule$.value)
-		// 			this.store.dispatch(
-		// 				CaseStateAction.FetchCases({ scheduleId: this.viewCurrentSchedule$.value.ScheduleId })
-		// 			);
-		// 	});
+		this.caseEffects.saveTraineeScores$
+			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrentSubject$))
+			.subscribe(([act, sub]) => {
+				this.store.dispatch(CaseStateAction.FetchCorrectionListBy({ subjectId: sub.SubjectId }));
+			});
 		//#endregion
 
 		this.store.dispatch(MasterStateAction.FetchPhases());
@@ -180,23 +177,27 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 	}
 
 	saveScore() {
-		// Exclude scoring that is not touched at all 
+		// Exclude scoring that is not touched at all
+		const zeroingReason: any[] = [...this.zeroingReasons.value];
+		const traineeId: any[] = [...this.traineeIds.value];
+		const score: any[] = [...this.scores.value];
 		// tslint:disable-next-line: prefer-for-of
 		for (let i = this.scores.controls.length - 1; i >= 0; i--) {
-			if (_isEmpty(this.scores.controls[i].value) || this.scores.controls[i].pristine) {
-				this.traineeIds.removeAt(i);
-				this.zeroingReasons.removeAt(i);
-				this.scores.removeAt(i);
+			if (this.scores.controls[i].pristine) {
+				zeroingReason.splice(i, 1);
+				traineeId.splice(i, 1);
+				score.splice(i, 1);
 			}
 		}
-		
+
 		this.store.dispatch(
 			CaseStateAction.SaveTraineeScores({
 				phaseId: this.phaseId.value,
 				caseId: this.caseId.value,
-				zeroingReason: this.zeroingReasons.value,
-				traineeId: this.traineeIds.value,
-				score: this.scores.value,
+				zeroingReason,
+				traineeId,
+				score,
+				subjectId: this.viewCurrentSubject$.value.SubjectId,
 			})
 		);
 	}
@@ -210,12 +211,26 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 
 	exportIntoExcel() {
 		this.store.dispatch(
-			MainStateAction.TestRequest({
-				link: 'General.svc/ExportScoreBySubject',
-				method: 'post',
-				body: {
-					subjectId: this.viewCurrentSubject$.value.SubjectId,
-				},
+			CaseStateAction.ExportScoreBySubject({ subjectId: this.viewCurrentSubject$.value.SubjectId })
+		);
+	}
+
+	getExcelTemplate() {
+		this.store.dispatch(
+			CaseStateAction.GenerateExcelTemplateForScoring({
+				caseId: this.caseId.value,
+			})
+		);
+	}
+
+	uploadScoreFromExcel(scoreForm: AbstractControl) {
+		this.store.dispatch(MainStateAction.InfoMessage('Saving Scores...'));
+		this.store.dispatch(
+			CaseStateAction.ImportScoreFromExcel({
+				fileId: scoreForm.value.fileId,
+				caseId: this.caseId.value,
+				phaseId: this.phaseId.value,
+				subjectId: this.viewCurrentSubject$.value.SubjectId,
 			})
 		);
 	}

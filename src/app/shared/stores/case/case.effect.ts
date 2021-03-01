@@ -14,6 +14,8 @@ import { LeaderService } from '../../services/new/leader.service';
 import { isEmpty as _isEmpty } from 'lodash';
 import { TraineeService } from '../../services/new/trainee.service';
 import { TrainerService } from '../../services/new/trainer.service';
+import { OtherService } from '../../services/new/other.service';
+import { GeneralService } from '../../services/new/general.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -22,8 +24,10 @@ export class CaseStateEffects {
 	constructor(
 		private actions$: Actions,
 		private leaderService: LeaderService,
+		private generalService: GeneralService,
 		private traineeService: TraineeService,
-		private trainerService: TrainerService
+		private trainerService: TrainerService,
+		private otherService: OtherService
 	) {}
 
 	//#region Trainee Case
@@ -120,6 +124,40 @@ export class CaseStateEffects {
 		mergeMap((results) => of(CaseStateAction.FetchCorrectionScoringSuccess({ payload: results }))),
 		share()
 	);
+  
+	@Effect()
+	importScoreFromExcel$: Observable<Action> = this.actions$.pipe(
+		ofType(CaseStateAction.ImportScoreFromExcel),
+		switchMap((data) => this.trainerService.ImportScoreFromExcel(data)),
+		mergeMap((results) => 
+			_isEmpty(results)
+			? of(MainStateAction.SuccessfullyMessage('Saved all scores'))
+			: of(MainStateAction.FailMessage('Saving the following trainees: ', results.join(', ')))
+		),
+		share()
+	);
+  
+	@Effect()
+	exportScoreBySubject$ = this.actions$.pipe(
+		ofType(CaseStateAction.ExportScoreBySubject),
+		switchMap((data) => this.generalService.ExportScoreBySubject(data)),
+		mergeMap((results) => {
+			this.otherService.DownloadMemoryFile(results)
+			return of()
+		}),
+		share()
+	);
+  
+	@Effect()
+	generateExcelTemplateForScoring$ = this.actions$.pipe(
+		ofType(CaseStateAction.GenerateExcelTemplateForScoring),
+		switchMap((data) => this.trainerService.GenerateExcelTemplateForScoring(data)),
+		mergeMap((results) => {
+			this.otherService.DownloadMemoryFile(results)
+			return of()
+		}),
+		share()
+	);
 
 	@Effect()
 	saveTraineeScores$: Observable<Action> = this.actions$.pipe(
@@ -134,6 +172,7 @@ export class CaseStateEffects {
 						traineeId: t,
 						score: data.score[idx],
 						zeroingReason: data.zeroingReason[idx],
+						subjectId: data.subjectId
 					}).pipe(catchError(error => of(false)))
 				)
 			)

@@ -26,8 +26,12 @@
 						></ng-select>
 					</div>
 					<div class="col">
-						<button class="btn bg-excel" (click)="exportIntoExcel()" [hidden]="!(viewCurrentSubject$ | async)">
-							Export {{(viewCurrentSubject$ | async)?.Name}} into Excel
+						<button
+							class="btn bg-excel"
+							(click)="exportIntoExcel()"
+							[hidden]="!(viewCurrentSubject$ | async)"
+						>
+							Export {{ (viewCurrentSubject$ | async)?.Name }} into Excel
 						</button>
 					</div>
 				</div>
@@ -37,7 +41,6 @@
 							<tr>
 								<th>Name</th>
 								<th>Date</th>
-								<th>Correction Date</th>
 								<th>Corrector(s)</th>
 								<th>Case File</th>
 								<th>Completed</th>
@@ -55,9 +58,6 @@
 							>
 								<td>{{ case.CaseName }}</td>
 								<td>{{ case.ScheduleDate | date: scheduleDateFormat }}</td>
-								<td>
-									{{ case.StartDate | date: 'dd MMM' }} - {{ case.Deadline | date: 'dd MMM yyyy' }}
-								</td>
 								<td>{{ case.Corrector.join(', ') }}</td>
 								<td><a [href]="case.downloadLink">Download</a></td>
 								<td>{{ case.Done }} of {{ case.All }}</td>
@@ -94,6 +94,27 @@
 				[expanded]="(viewCurrentCase$ | async) != null"
 				[collapsible]="(viewCurrentCase$ | async) != null"
 			>
+				<div class="row mb-3" [hidden]="(answerList$ | async)?.length == 0">
+					<div class="col">
+						<button class="btn btn-primary mr-3" (click)="saveScore()">
+							<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Updated Scores
+						</button>
+						<button class="btn btn-secondary mr-3" (click)="downloadAllAnswers()">
+							<fa-icon [icon]="['fas', 'download']"></fa-icon> Download All Answers
+						</button>
+					</div>
+					<div class="col-auto">
+						<button class="btn bg-excel" (click)="getExcelTemplate()">
+							<fa-icon [icon]="['fas', 'download']"></fa-icon> Download Scoring Template
+						</button>
+					</div>
+					<div class="col-4">
+						<rd-upload-input
+							placeholder="Click or drop here to upload score with excel"
+							(upload)="uploadScoreFromExcel($event)"
+						></rd-upload-input>
+					</div>
+				</div>
 				<!-- Hanya bisa dibuka tutup kalo ada currentCase -->
 				<div class="row">
 					<table class="table table-striped table-hover text-center">
@@ -108,7 +129,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngFor="let answer of answerList$ | async; let i = index">
+							<tr
+								*ngFor="let answer of answerList$ | async; let i = index"
+								[class.bg-green]="scores.at(i).dirty"
+							>
 								<td>{{ answer.TraineeCode }}</td>
 								<td class="text-left">{{ answer.TraineeName }}</td>
 								<td>{{ answer.UploadDate | date: uploadDateFormat }}</td>
@@ -129,18 +153,6 @@
 							</tr>
 						</tbody>
 					</table>
-				</div>
-				<div class="row" [hidden]="(answerList$ | async)?.length == 0">
-					<button
-						class="btn btn-primary mr-3"
-						[disabled]="scores.invalid"
-						(click)="saveScore()"
-					>
-						<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Scores
-					</button>
-					<button class="btn btn-secondary" (click)="downloadAllAnswers()">
-						<fa-icon [icon]="['fas', 'download']"></fa-icon> Download All Answers
-					</button>
 				</div>
 			</rd-card>
 		</div>
