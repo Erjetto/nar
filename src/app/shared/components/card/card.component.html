@@ -11,18 +11,13 @@
 
 <!-- Sebelumnya di-dalam card__body, skrg harus di-luar 
   biar content tidak scrollable ketika loading -->
-<div
-	class="size-cover card__cover z-index-10"
-  [@faderAnimation]="isLoading ? 'shown' : 'hidden'"
-  [style.top]="'36px'"
-></div>
 
 <div
 	class="card__body row"
 	[@dropdown]="expanded ? 'expand' : 'collapse'"
 	[ngStyle]="{
 		maxHeight: maxHeight == 0 ? 'unset' : maxHeight + 'px',
-		overflowY: maxHeight == 0 ? 'unset' : 'auto',
+		overflowY: maxHeight == 0 || isLoading ? 'unset' : 'auto',
 		overflowX: maxHeight == 0 ? 'unset' : 'hidden'
 	}"
 >
@@ -31,6 +26,11 @@
 		<ng-content></ng-content>
 	</div>
 	<!-- <div class="card__loader"> -->
+
+	<div
+		class="size-cover card__cover z-index-10"
+		[@faderAnimation]="isLoading ? 'shown' : 'hidden'"
+	></div>
 </div>
 
 <div
