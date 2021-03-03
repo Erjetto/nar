@@ -84,3 +84,10 @@ phases.find((p) => p.Description.includes('Core')) ?? phases[0];
 
 export const isEmptyGuid = (str: string): boolean => str === '00000000-0000-0000-0000-000000000000'
 
+/**
+ * Calculate the difference of two generations 
+ * ex: `21-2 with 20-1 => 3 semester`
+ * @returns number in semester
+ */
+export const genDifferenceInSemester = (gen1: string, gen2: string):number => 
+	(+gen1.substr(0,2)) * 2 + (+gen1[3]) - ((+gen2.substr(0,2)) * 2 + (+gen2[3]))
