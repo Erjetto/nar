@@ -1,0 +1,19 @@
+
+:host{
+
+  .rd-data-table {
+    input[type=checkbox]{
+      height: 18px;
+      display: block;
+    }
+
+    .row-active{
+      background-color: #0003;
+    }
+
+    .data-table__no-data{
+      padding: 10px;
+      font-style: italic;
+    }
+  }
+}

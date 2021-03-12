@@ -1,8 +1,19 @@
 @import './variables';
 
 //#region bootstrap
-.table{
-  background-color: white;
+.table {
+	background-color: white;
+
+	thead {
+		background-color: inherit;
+		tr {
+			background-color: inherit;
+		}
+	}
+
+	th {
+		border-top: none;
+	}
 }
 
 .btn-xs {
@@ -50,7 +61,8 @@
 		}
 	}
 }
-.col, .col-auto {
+.col,
+.col-auto {
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
 
@@ -76,21 +88,22 @@
 }
 
 // quill
-// 
-quill-editor[theme=snow], quill-editor:not([theme]){
-  .ql-container{
-    display: block;
-    height: 150px;
-  }
+//
+quill-editor[theme='snow'],
+quill-editor:not([theme]) {
+	.ql-container {
+		display: block;
+		height: 150px;
+	}
 }
-quill-editor[theme=bubble] > .ql-container > .ql-editor{
-  padding: 8px;
+quill-editor[theme='bubble'] > .ql-container > .ql-editor {
+	padding: 8px;
 }
 
-.ql-tooltip{
-  z-index: 10;
+.ql-tooltip {
+	z-index: 10;
 }
 
 .ql-container {
-  font-size: 1rem;
+	font-size: 1rem;
 }

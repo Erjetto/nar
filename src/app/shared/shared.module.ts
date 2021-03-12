@@ -26,9 +26,28 @@ import { VarDirective } from './directives/var.directive';
 import { UploadInputComponent } from './components/upload-input/upload-input.component';
 import { TraineeDetailOnHoverComponent } from './components/trainee-detail-on-hover/trainee-detail-on-hover.component';
 import { ExternalUrlDirective } from './directives/external-url.directive';
+import { DataTableComponent } from './components/data-table/data-table.component';
+import { DataTableModule } from './components/data-table/data-table.module';
+
+const quillModuleSettings = {
+	modules: {
+		toolbar: [
+			['bold', 'italic', 'underline', 'strike'], // toggled buttons
+			['code-block'],
+
+			[{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+
+			[{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+
+			['clean'], // remove formatting button
+
+			['link', 'image', 'video'],
+		],
+	},
+};
 
 const SHARED_DECLARATIONS = [
-	// Shared components, pipes, and directives, ex: SearchComponent, 
+	// Shared components, pipes, and directives, ex: SearchComponent,
 	ClockComponent,
 	CardComponent,
 	ToasterComponent,
@@ -37,17 +56,16 @@ const SHARED_DECLARATIONS = [
 	PresentationQuestionComponent,
 	FilterByInputComponent, // Not used yet
 	UploadInputComponent,
-  TraineeDetailOnHoverComponent,
+	TraineeDetailOnHoverComponent,
 
 	ClickStopPropagationDirective,
 	ContrastTextColorDirective, // Not used yet
 	EasyHorizontalSrollDirective, // Not used yet
-  VarDirective, // Not used yet
-  ExternalUrlDirective,
+	VarDirective, // Not used yet
+	ExternalUrlDirective,
 ];
 
 @NgModule({
-	declarations: [...SHARED_DECLARATIONS],
 	imports: [
 		FontAwesomeModule,
 		CommonModule,
@@ -57,22 +75,8 @@ const SHARED_DECLARATIONS = [
 		RouterModule,
 		NgSelectModule,
 		NgbModule,
-		QuillModule.forRoot({
-			modules: {
-				toolbar: [
-					['bold', 'italic', 'underline', 'strike'], // toggled buttons
-					['code-block'],
-
-					[{ script: 'sub' }, { script: 'super' }], // superscript/subscript
-
-					[{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
-
-					['clean'], // remove formatting button
-
-					['link', 'image', 'video'],
-				],
-			},
-		}),
+		QuillModule.forRoot(quillModuleSettings),
+		DataTableModule,
 	],
 	exports: [
 		FontAwesomeModule,
@@ -84,8 +88,10 @@ const SHARED_DECLARATIONS = [
 		NgSelectModule,
 		NgbModule,
 		QuillModule,
+		DataTableModule,
 		...SHARED_DECLARATIONS,
 	],
+	declarations: [...SHARED_DECLARATIONS],
 })
 export class SharedModule {
 	constructor(library: FaIconLibrary) {

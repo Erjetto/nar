@@ -27,6 +27,16 @@
 			border: 1px solid white;
 		}
 
+		.table-hover tbody tr:hover {
+			color: unset;
+		}
+
+		.rd-data-table {
+			.row-active{
+				background-color: #fff5 !important;
+			}
+		}
+
 		.file-placeholder.disabled,
 		.form-control:disabled,
 		.form-control[readonly] {
@@ -36,9 +46,6 @@
 			}
 		}
 
-		.table-hover tbody tr:hover {
-			color: unset;
-		}
 		rd-card {
 			.card__cover {
 				background-color: rgba(
@@ -76,6 +83,12 @@
 		.text-warning,
 		.text-primary {
 			mix-blend-mode: screen;
+		}
+
+		.lds-ring{
+			div{
+				border-color: #007bff transparent transparent transparent !important;
+			}
 		}
 
 		.ngb-highlight {
