@@ -54,6 +54,7 @@ export interface IPresentationState {
 
 	presentationStatus: string;
 	loadingPresentations: boolean;
+	loadingMyPresentations: boolean;
 }
 
 export const initialState: IPresentationState = {
@@ -71,6 +72,7 @@ export const initialState: IPresentationState = {
 
 	presentationStatus: '',
 	loadingPresentations: false,
+	loadingMyPresentations: false,
 };
 
 export const PRESENTATIONSTATE_REDUCER_NAME = 'PresentationState';
@@ -142,9 +144,14 @@ export const PresentationStateReducer = createReducer(
 		),
 	})),
 
+	on(FetchMyPresentationsSuccess, (state) => ({
+		...state,
+		loadingMyPresentations: true,
+	})),
 	on(FetchMyPresentationsSuccess, (state, { payload }) => ({
 		...state,
 		myPresentations: payload,
+		loadingMyPresentations: false,
 	})),
 
 	on(SetQuestionsFilter, (state, data) => ({
@@ -193,6 +200,8 @@ export const getQuestionsByTrainee = getPresentationStateBy((s) => s.questionsBy
 export const getPresentationScoringsSummary = getPresentationStateBy((s) => s.presentationScoringsSummary);
 export const getPresentationScorings = getPresentationStateBy((s) => s.presentationScorings);
 export const getQuestionsFilter = getPresentationStateBy((s) => s.questionsFilter);
-export const isPresentationsLoading = getPresentationStateBy((s) => s.loadingPresentations);
 export const hasFetchedAllPresentations = getPresentationStateBy((s) => s.fetchedAllPresentations);
+
+export const isPresentationsLoading = getPresentationStateBy((s) => s.loadingPresentations);
+export const isMyPresentationsLoading = getPresentationStateBy((s) => s.loadingMyPresentations);
 

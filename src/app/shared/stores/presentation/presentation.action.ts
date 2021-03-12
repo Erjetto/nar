@@ -11,7 +11,7 @@ export const FetchPresentationStatus = createAction(
 );
 export const FetchPresentationScoringsBy = createAction(
 	'[PresentationState] FetchPresentationScoringsBy',
-	props<{ time?: string, subjectId?: string }>()
+	props<{ time?: string; subjectId?: string }>()
 );
 export const FetchPresentationScoringsSummary = createAction(
 	'[PresentationState] FetchPresentationScoringsSummary',
@@ -42,11 +42,11 @@ export const FetchPresentationScoringsSummarySuccess = createAction(
 	'[PresentationState] FetchPresentationScoringsSummarySuccess',
 	props<{ payload: TraineePresentation[] }>()
 );
+export const FetchMyPresentations = createAction('[PresentationState] FetchMyPresentations');
 export const FetchMyPresentationsSuccess = createAction(
 	'[PresentationState] FetchMyPresentationsSuccess',
 	props<{ payload: CoreTrainingPresentation[] }>()
 );
-
 
 export const SetQuestionsFilter = createAction(
 	'[PresentationState] SetQuestionsFilter',

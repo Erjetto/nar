@@ -8,7 +8,7 @@ import * as PresentationStateAction from './presentation.action';
 import * as fromMainState from '../main/main.reducer';
 import * as fromPresentationState from './presentation.reducer';
 
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import {
 	switchMap,
 	mergeMap,
@@ -18,10 +18,12 @@ import {
 	map,
 	withLatestFrom,
 	filter,
+	first,
 } from 'rxjs/operators';
 import { PresentationService } from '../../services/new/presentation.service';
 import { isEmpty as _isEmpty } from 'lodash';
 import { IAppState } from 'src/app/app.reducer';
+import { ClientGeneration, User } from '../../models';
 
 @Injectable({
 	providedIn: 'root',
@@ -58,11 +60,28 @@ export class PresentationStateEffects {
 	);
 
 	@Effect()
+	getMyPresentations$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.FetchMyPresentations),
+		switchMap(_ => forkJoin([
+			this.store.pipe(select(fromMainState.getCurrentUser), filter(v => !_isEmpty(v)), first()),
+			this.store.pipe(select(fromMainState.getCurrentGeneration), filter(v => !_isEmpty(v)), first()),
+		])),
+		switchMap(([user, gen]: [User, ClientGeneration]) =>
+			this.presentationService.FindCoreTrainingPresentationByTrainee({
+				generationId: gen.GenerationId,
+				traineeId: user.TraineeId,
+			})
+		),
+		mergeMap(res => of(PresentationStateAction.FetchMyPresentationsSuccess({payload: res}))),
+		share()
+	);
+
+	@Effect()
 	getPresentationsBy$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentationsBy),
 		withLatestFrom(this.store.pipe(select(fromPresentationState.hasFetchedAllPresentations))),
 		filter(([data, hasFetchedAll]) => !hasFetchedAll),
-		mergeMap(
+		switchMap(
 			// use merge because its possible to have multiple running request
 			([{ generationId, traineeId, subjectId }]) =>
 				// Gunakan antara ketiga method yg returnnya sama
@@ -80,17 +99,13 @@ export class PresentationStateEffects {
 				).pipe(map((res) => ({ traineeId, subjectId, res })))
 			// Di akhirannya dibawa juga 'data' supaya bisa dipisahkan spt ini
 		),
-		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentUser))),
-		mergeMap(([{ traineeId, subjectId, res }, currTrainee]) => {
+		mergeMap(({ traineeId, subjectId, res }) => {
 			// Bikin begini karena fetch by trainee punya 2 kemungkinan action
 			const actions = [];
 			if (!_isEmpty(traineeId)) {
 				actions.push(
 					PresentationStateAction.FetchPresentationsByTraineeSuccess({ payload: res, traineeId })
 				);
-				// Kalo fetch punya sendiri
-				if (currTrainee.TraineeId === traineeId)
-					actions.push(PresentationStateAction.FetchMyPresentationsSuccess({ payload: res }));
 			} else if (!_isEmpty(subjectId))
 				actions.push(
 					PresentationStateAction.FetchPresentationsBySubjectSuccess({ payload: res, subjectId })

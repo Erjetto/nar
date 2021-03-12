@@ -58,8 +58,7 @@
 			</rd-card>
 			<rd-card
 				[cardTitle]="'My Presentations'"
-				[isLoading]="false"
-				[expanded]="true"
+				[isLoading]="loadingMyPresentations$|async"
 				*ngIf="(currentUser$ | async)?.Role.is(constant.role.Trainee)"
 			>
 				<div class="col v-list-m-12 v-list-bordered px-0">

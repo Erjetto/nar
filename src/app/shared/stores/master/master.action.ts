@@ -8,7 +8,8 @@ import {
 	ClientUserInRoles,
 	ClientTrainee,
 	AttendanceType,
-  TraineeSchedule,
+	TraineeSchedule,
+	TrainerTeachingSchedule,
 } from '../../models';
 
 //#region Fetch
@@ -227,12 +228,30 @@ export const DeleteTraineeInSchedule = createAction(
 //#endregion
 
 //#region Modify
+export const FetchUserTeachingSchedules = createAction('[MasterState] FetchUserTeachingSchedules');
+export const FetchTrainerTeachingSchedules = createAction(
+	'[MasterState] FetchTrainerTeachingSchedules',
+	props<{ startDate: string; endDate: string }>()
+);
+export const FetchTrainerTeachingSchedulesSuccess = createAction(
+	'[MasterState] FetchTrainerTeachingSchedulesSuccess',
+	props<{ payload: TrainerTeachingSchedule[] }>()
+);
+export const DeleteTrainerTeachingSchedule = createAction(
+	'[MasterState] DeleteTrainerTeachingSchedule',
+	props<{ trainerTeachingScheduleId: string }>()
+);
+export const CreateTrainerTeachingSchedules = createAction(
+	'[MasterState] CreateTrainerTeachingSchedules',
+	props<{ schedules: string[] }>()
+);
 /**
+ * Note: Testing REST service here
  * The param must be in the exact order
- * ex: 
+ * ex:
  * `{ genId, traineeId, date}`
  * date will be omitted because no scheduleType
- * 
+ *
  * date in `dd-MMM-yyyy` format
  */
 export const FetchTraineeSchedulesBy = createAction(
@@ -245,8 +264,16 @@ export const FetchTraineeSchedulesBy = createAction(
 		traineeScheduleId?: string;
 	}>()
 );
+export const FetchTraineeSchedulesByDate = createAction(
+	'[MasterState] FetchTraineeSchedulesByDate',
+	props<{ startDate: string; endDate: string }>()
+);
 export const FetchTraineeSchedulesSuccess = createAction(
-  '[MasterState] FetchTraineeSchedulesSuccess',
-  props<{payload: TraineeSchedule[]}>()
+	'[MasterState] FetchTraineeSchedulesSuccess',
+	props<{ payload: TraineeSchedule[] }>()
+);
+export const DeleteTraineeSchedule = createAction(
+	'[MasterState] DeleteTraineeSchedule',
+	props<{ traineeScheduleId: string }>()
 );
 //#endregion

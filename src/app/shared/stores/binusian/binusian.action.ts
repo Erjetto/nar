@@ -50,8 +50,8 @@ export const CreateTrainees = createAction(
 );
 
 // HMM: Move this to Master because this is unrelated to binusian and it's crud?
-export const CreateTrainingSchedules = createAction(
-	'[BinusianState] CreateTrainingSchedules',
+export const CreateTraineeSchedules = createAction(
+	'[BinusianState] CreateTraineeSchedules',
 	props<{ schedules: string[] }>()
 );
 

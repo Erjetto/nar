@@ -39,6 +39,7 @@ import { IAppState } from 'src/app/app.reducer';
 import { ClientTrainee } from 'src/app/shared/models';
 import { isEmpty as _isEmpty } from 'lodash';
 import { RESTService } from '../../services/new/rest.service';
+import { TrainerAttendanceService } from '../../services/new/trainer-attendance.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -54,6 +55,7 @@ export class MasterStateEffects {
 		private noteService: NoteService,
 		private presentationService: PresentationService,
 		private traineeAttendanceService: TraineeAttendanceService,
+		private trainerAttendanceService: TrainerAttendanceService,
 		private traineeService: TraineeService,
 		private voteService: VoteService,
 		private restService: RESTService
@@ -276,7 +278,7 @@ export class MasterStateEffects {
 		mergeMap((res) =>
 			_isEmpty(res)
 				? of(MainStateAction.SuccessfullyMessage('created trainees in schedule'))
-				: of(MainStateAction.FailMessage('Saving trainee to schedule', res.join('\n')))
+				: of(MainStateAction.FailMessage('saving trainee to schedule', res.join('\n')))
 		),
 		share()
 	);
@@ -429,8 +431,28 @@ export class MasterStateEffects {
 	);
 	//#endregion
 
-  //#region Modify tab
-  @Effect()
+	//#region Modify tab
+	@Effect()
+	getTrainerTeachingSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.FetchTrainerTeachingSchedules),
+		switchMap((data) => this.trainerAttendanceService.GetTrainerTeachingSchedules(data)),
+		mergeMap((res) => of(MasterStateAction.FetchTrainerTeachingSchedulesSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
+	deleteTrainerTeachingSchedule$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.DeleteTrainerTeachingSchedule),
+		switchMap((data) => this.trainerAttendanceService.DeleteLecturerTeachingSchedule(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted teaching schedule'))
+				: of(MainStateAction.FailMessage('deleting teaching schedule'))
+		),
+		share()
+	);
+
+	@Effect()
 	getTraineeSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchTraineeSchedulesBy),
 		switchMap((data) =>
@@ -442,10 +464,26 @@ export class MasterStateEffects {
 				data.traineeScheduleId
 			)
 		),
+		mergeMap((res) => of(MasterStateAction.FetchTraineeSchedulesSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
+	getTraineeSchedulesByDate$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.FetchTraineeSchedulesByDate),
+		switchMap((data) => this.traineeAttendanceService.GetTraineeSchedulesByDateRange(data)),
+		mergeMap((res) => of(MasterStateAction.FetchTraineeSchedulesSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
+	deleteTraineeSchedule$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.DeleteTraineeSchedule),
+		switchMap((data) => this.restService.DeleteTraineeSchedule(data.traineeScheduleId)),
 		mergeMap((res) =>
-			!_isEmpty(res)
-				? of(MasterStateAction.FetchTraineeSchedulesSuccess({ payload: res }))
-				: of(MainStateAction.FailMessage('delete user'))
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted trainee schedule'))
+				: of(MainStateAction.FailMessage('deleting trainee schedule'))
 		),
 		share()
 	);

@@ -7,6 +7,7 @@ import {
 	TraineePresentation,
 	ClientPeriodicTraineeAttendance,
 	ClientTraineeDailyAttendance,
+	TraineeSchedule,
 } from '../../models';
 import { environment } from 'src/environments/environment';
 import { map as _map} from 'lodash';
@@ -80,6 +81,12 @@ export class TraineeAttendanceService {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveTraineeSchedules', data)
 			.pipe(map((res: any) => res.d as string[]));
+	}
+
+	public GetTraineeSchedulesByDateRange(data: { startDate, endDate }): Observable<TraineeSchedule[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineeSchedulesByDateRange', data)
+			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
 	}
 
 	public SaveTraineeLectureSchedules(data: { schedules: string[] }): Observable<string[]> {

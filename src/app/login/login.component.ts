@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 		isPersistent: [false],
 	});
 
-	isLoggingIn = new BehaviorSubject<boolean>(false);
+	isLoggingIn$ = new BehaviorSubject<boolean>(false);
 	destroyed$ = new Subject<void>();
 
 	constructor(
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.isLoggingIn.next(false));
+			.subscribe(() => this.isLoggingIn$.next(false));
 
 		this.mainEffects.login$ // Redirect on login success
       .pipe(takeUntil(this.destroyed$))
@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 	}
 
 	tryLogin() {
-		this.isLoggingIn.next(true);
+		this.isLoggingIn$.next(true);
 		const { username, password, isPersistent } = this.loginForm.value;
 		this.store.dispatch(
 			MainStateAction.Login({

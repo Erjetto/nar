@@ -70,7 +70,8 @@ export class ViewAllPresentationComponent
 	deleteQuestionReason = this.fb.control('');
 
 	subjectsLoading$: Observable<boolean>;
-	presentationsLoading$: Observable<boolean>;
+	loadingPresentations$: Observable<boolean>;
+	loadingMyPresentations$: Observable<boolean>;
 	loadingViewPresentation$ = new BehaviorSubject<boolean>(false);
 
 	constant = {
@@ -97,9 +98,9 @@ export class ViewAllPresentationComponent
 
 		this.presentations$ = this.store.pipe(select(fromPresentationState.getPresentations));
 		this.presentationStatus$ = this.store.pipe(select(fromPresentationState.getPresentationStatus));
-		this.presentationsLoading$ = this.store.pipe(
-			select(fromPresentationState.isPresentationsLoading)
-		);
+		
+		this.loadingPresentations$ = this.store.pipe(select(fromPresentationState.isPresentationsLoading));
+		this.loadingMyPresentations$ = this.store.pipe(select(fromPresentationState.isMyPresentationsLoading));
 
 		this.myPresentationList$ = this.store.pipe(
 			select(fromPresentationState.getMyPresentations),
@@ -217,26 +218,11 @@ export class ViewAllPresentationComponent
 				});
       });
       
-		// Dari dashboard content base
-		combineLatest([this.currentUser$, this.currentGeneration$])
-			.pipe(
-				takeUntil(this.destroyed$),
-				filter((values) => values.every((v) => !_isEmpty(v)))
-			)
-			.subscribe(([user, gen]: [User, ClientGeneration]) => {
-        // Fetch My Presentation
-				this.store.dispatch(
-					PresentationStateAction.FetchPresentationsBy({
-						generationId: gen.GenerationId,
-						traineeId: user.TraineeId,
-					})
-				);
-			});
+		this.store.dispatch(PresentationStateAction.FetchMyPresentations());
 		//#endregion
 
     
 		this.store.dispatch(
-      // MasterStateAction.FetchPhases()
 			MainStateAction.DispatchIfEmpty({
 				action: MasterStateAction.FetchPhases(),
 				selectorToBeChecked: fromMasterState.getPhases,

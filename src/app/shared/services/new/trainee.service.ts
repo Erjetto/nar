@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
-import { MockData } from '../../mock-data';
 import {
 	ClientInterviewReport,
 	ClientTraineeData,

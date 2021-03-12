@@ -17,6 +17,7 @@ import {
 	ClientUserInRoles,
 	ClientTrainee,
 	TraineeSchedule,
+	TrainerTeachingSchedule,
 } from '../../models';
 import { getCurrentGeneration } from '../main/main.reducer';
 import { combineLatest, Observable, Subject } from 'rxjs';
@@ -41,6 +42,9 @@ import {
 	FetchIPListSuccess,
 	FetchTraineeSchedulesBy,
 	FetchTraineeSchedulesSuccess,
+	FetchTraineeSchedulesByDate,
+	FetchTrainerTeachingSchedules,
+	FetchUserTeachingSchedules,
 } from './master.action';
 import { IAppState } from 'src/app/app.reducer';
 
@@ -74,9 +78,11 @@ export interface IMasterState {
 	loadingTraineeInSchedule: boolean;
 
 	// Modify section
-	traineeTrainingSchedule: TraineeSchedule[];
+	trainerTeachingSchedules: TrainerTeachingSchedule[];
+	traineeTrainingSchedules: TraineeSchedule[];
 
-	loadingTraineeTrainingSchedule: boolean;
+	loadingTrainerTeachingSchedules: boolean;
+	loadingTraineeTrainingSchedules: boolean;
 }
 
 export const initialState: IMasterState = {
@@ -112,9 +118,11 @@ export const initialState: IMasterState = {
 	loadingTraineeInSchedule: false,
 
 	// Modify section
-	traineeTrainingSchedule: [],
+	trainerTeachingSchedules: [],
+	traineeTrainingSchedules: [],
 
-	loadingTraineeTrainingSchedule: false,
+	loadingTrainerTeachingSchedules: false,
+	loadingTraineeTrainingSchedules: false,
 };
 
 export const MASTERSTATE_REDUCER_NAME = 'MasterState';
@@ -232,14 +240,24 @@ export const MasterStateReducer = createReducer(
 	})),
 
 	//#region Modify tab
-	on(FetchTraineeSchedulesBy, (state) => ({
+	on(FetchUserTeachingSchedules, FetchTrainerTeachingSchedules, (state) => ({
 		...state,
-		loadingTraineeTrainingSchedule: true,
+		loadingTrainerTeachingSchedules: true,
 	})),
 	on(FetchTraineeSchedulesSuccess, (state, { payload }) => ({
 		...state,
-		traineeTrainingSchedule: payload,
-		loadingTraineeTrainingSchedule: false,
+		traineeTrainingSchedules: payload,
+		loadingTrainerTeachingSchedules: false,
+	})),
+	
+	on(FetchTraineeSchedulesBy, FetchTraineeSchedulesByDate, (state) => ({
+		...state,
+		loadingTraineeTrainingSchedules: true,
+	})),
+	on(FetchTraineeSchedulesSuccess, (state, { payload }) => ({
+		...state,
+		traineeTrainingSchedules: payload,
+		loadingTraineeTrainingSchedules: false,
 	}))
 	//#endregion
 );
@@ -280,10 +298,14 @@ export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTrain
 //#endregion
 
 //#region  Modify tab
-export const getTraineeTrainingSchedule = getMasterStateBy((s) => s.traineeTrainingSchedule);
+export const getTrainerTeachingSchedules = getMasterStateBy((s) => s.trainerTeachingSchedules);
+export const getTraineeTrainingSchedules = getMasterStateBy((s) => s.traineeTrainingSchedules);
 
+export const isTrainerTeachingScheduleLoading = getMasterStateBy(
+	(s) => s.loadingTrainerTeachingSchedules
+);
 export const isTraineeTrainingScheduleLoading = getMasterStateBy(
-	(s) => s.loadingTraineeTrainingSchedule
+	(s) => s.loadingTraineeTrainingSchedules
 );
 //#endregion
 
@@ -294,6 +316,7 @@ export const getGenerationOneYearLower = createSelector(
 );
 //#endregion
 
+// tslint:disable-next-line: only-arrow-functions
 export function getSubjectsFromEntity(
 	store: Store<IAppState>,
 	phaseObservable: Observable<ClientPhase>,
@@ -315,6 +338,7 @@ export function getSubjectsFromEntity(
 	);
 }
 
+// tslint:disable-next-line: only-arrow-functions
 export function getSchedulesFromEntity(
 	store: Store<IAppState>,
 	subjectObservable: Observable<ClientSubject>,
@@ -336,6 +360,7 @@ export function getSchedulesFromEntity(
 	);
 }
 
+// tslint:disable-next-line: only-arrow-functions
 export function getTraineeInPhaseFromEntity(
 	store: Store<IAppState>,
 	phaseObservable: Observable<ClientPhase>,

@@ -22,6 +22,8 @@ import {
   FetchMySchedules,
   FetchMySchedulesSuccess,
   FetchAllTraineesInLatestPhase,
+	FetchDailyAttendance,
+	FetchDailyAttendanceSuccess,
 } from './binusian.action';
 
 export interface IBinusianState {
@@ -31,6 +33,7 @@ export interface IBinusianState {
 	traineeSchedule: TraineeSchedule[];
 	myData: ClientTraineeData;
 	mySchedules: TraineeSchedule[];
+	loadingDailyAttendance: boolean;
 	loadingMyData: boolean;
 	loadingMySchedules: boolean;
 	//#endregion
@@ -54,6 +57,7 @@ export const initialState: IBinusianState = {
 
 	myData: null,
 	mySchedules: [],
+	loadingDailyAttendance: false,
 	loadingMyData: false,
 	loadingMySchedules: false,
 
@@ -122,6 +126,13 @@ export const BinusianStateReducer = createReducer(
 		loadingMySchedules: false,
 		mySchedules: payload,
 	})),
+
+	on(FetchDailyAttendance, (state) => ({ ...state, loadingDailyAttendance: true })),
+	on(FetchDailyAttendanceSuccess, (state, { payload }) => ({
+		...state,
+		loadingDailyAttendance: false,
+		traineeDailyAttendance: payload,
+	})),
 	// on(FetchTraineesByPhaseSuccess, (state, {payload}) => ({...state, traineesByPhase: payload})),
 	// on(FetchTraineesByScheduleSuccess, (state, {payload}) => ({...state, traineesBySchedule: payload})),
 );
@@ -139,6 +150,9 @@ export const getAllTrainees = getBinusianStateBy((s) => s.allTrainees);
 export const getTraineesEntity = getBinusianStateBy((s) => s.traineesEntity);
 export const getTraineesData = getBinusianStateBy((s) => s.traineesData);
 export const getTraineesSimpleData = getBinusianStateBy((s) => s.traineesSimpleData);
+
+
+export const isDailyAttendanceLoading = getBinusianStateBy((s) => s.loadingDailyAttendance);
 export const isTraineesSimpleDataLoading = getBinusianStateBy((s) => s.loadingTraineesSimpleData);
 export const isTraineesLoading = getBinusianStateBy((s) => s.loadingTrainees);
 export const isTraineesDataLoading = getBinusianStateBy((s) => s.loadingTraineesData);

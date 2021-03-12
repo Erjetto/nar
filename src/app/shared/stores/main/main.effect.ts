@@ -113,6 +113,7 @@ export class MainStateEffects {
 	@Effect()
 	logout$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.Logout),
+		tap(v => this.store.dispatch(MainStateAction.InfoMessage('Logging out...'))),
 		switchMap(() => this.generalService.LogOut()),
 		mergeMap(() => of(MainStateAction.LogoutSuccess())),
 		share()
