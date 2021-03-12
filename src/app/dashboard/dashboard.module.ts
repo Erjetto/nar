@@ -42,6 +42,8 @@ import { MyDataComponent } from './my-data/my-data.component';
 import { PresentationReportComponent } from './presentation/presentation-report/presentation-report.component';
 import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-report/trainee-attendance-report.component';
 import { PresentationSummaryComponent } from './presentation/presentation-summary/presentation-summary.component';
+import { TraineeHomeComponent } from './home/trainee-home/trainee-home.component';
+import { TrainerHomeComponent } from './home/trainer-home/trainer-home.component';
 
 @NgModule({
 	declarations: [
@@ -91,6 +93,10 @@ import { PresentationSummaryComponent } from './presentation/presentation-summar
 		CorrectionComponent,
     
 		MyDataComponent,
+    
+		TraineeHomeComponent,
+    
+		TrainerHomeComponent,
     
     
 	],

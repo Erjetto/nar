@@ -1,0 +1,139 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col">
+			<div class="row" *ngIf="(currentUser$ | async).Role.is('Trainee') == false">
+				<div class="col">
+					<rd-card [cardTitle]="'Trainee Statistic'" [isLoading]="loadingTraineeStatistic$ | async">
+						<div class="row mb-2">
+							<div class="col-1 col-form-label">
+								<b>Phase</b>
+							</div>
+							<div class="col-3">
+								<ng-select
+									class="col"
+									[items]="phases$ | async"
+									[clearable]="false"
+									bindLabel="Description"
+									[searchable]="false"
+									[formControl]="currentPhase"
+								></ng-select>
+								<!-- NOTE: menggunakan ngModel kadang" akan muncul selected yg kosong
+          karena ngModel ke-trigger duluan sebelum [items] ada -->
+
+								<!-- [ngModel]="currentPhase$ | async"
+          (change)="currentPhase$.next($event)" -->
+							</div>
+						</div>
+						<div class="row px-3">
+							<table class="mr-2" *ngFor="let stat of statistics$ | async">
+								<thead>
+									<tr>
+										<td>{{ stat.Type }}</td>
+										<td class="text-right">#</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngFor="let data of stat.Detail">
+										<td>{{ data.Description }}</td>
+										<td class="text-right">{{ data.Count }}</td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td>Total</td>
+										<td class="text-right">{{ stat.Total }}</td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</rd-card>
+				</div>
+			</div>
+			<!-- Announcement for all -->
+			<div class="row">
+				<div class="col">
+					<rd-card [cardTitle]="'Announcements'" [isLoading]="loadingAnnouncements$ | async">
+						<div class="row v-list-m-6 v-list-bordered">
+							<div class="row" *ngFor="let msg of announcements$ | async">
+								<div class="col">
+									<h4>{{ msg.Title }}</h4>
+									<div [innerHTML]="msg.contentAndAttachmentHTML"></div>
+								</div>
+							</div>
+						</div>
+					</rd-card>
+				</div>
+				<div class="col">
+					<rd-card [cardTitle]="'Your Teaching Schedule'">
+						
+						<rd-data-table
+							[data]="trainerTeachingSchedule$ | async"
+							[noDataMessage]="'No training schedules'"
+						>
+							<rd-table-header> </rd-table-header>
+							<ng-container>
+								<rd-table-column
+									[prop]="'TeachingDate'"
+									[label]="'Teaching Date'"
+									[sortable]="true"
+									[sortState]="'DESC'"
+								>
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										{{ schedule.TeachingDate | date: viewDateFormat }}
+									</ng-template>
+								</rd-table-column>
+
+								<rd-table-column [prop]="'Shift'" [label]="'Shift'"></rd-table-column>
+
+								<rd-table-column [label]="'Room'">
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										<ng-container [ngSwitch]="isRoomLink(schedule.Room)">
+											<ng-container *ngSwitchCase="false">
+												{{ schedule.Room }}
+											</ng-container>
+											<ng-container *ngSwitchDefault>
+												<a [href]="schedule.Room" rdExternalUrl>Link here</a>
+											</ng-container>
+										</ng-container>
+									</ng-template>
+								</rd-table-column>
+
+								<rd-table-column [label]="'Trainer'">
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										<span *ngFor="let trainer of schedule.Trainer">
+											{{ trainer.Username }} ({{ trainer.Type }})
+											<br />
+										</span>
+									</ng-template>
+								</rd-table-column>
+
+							</ng-container>
+						</rd-data-table>
+					</rd-card>
+				</div>
+			</div>
+		</div>
+		<div class="col-3" *ngIf="!(currentUser$ | async).Role.is(constant.roles.JuniorTrainer)">
+			<div class="row">
+				<div class="col">
+					<rd-card [cardTitle]="'Trainee Comment History'" [isLoading]="false" [maxHeight]="500">
+						<div
+							class="row p-1 bd-bottom bd-lightgrey"
+							*ngFor="let comment of commentHistory$ | async"
+						>
+							<div class="col">
+								<div class="row">
+									<rd-trainee-detail-on-hover [traineeId]="comment.TraineeId">
+										<u class="col">{{ comment.TraineeCode }}</u>
+									</rd-trainee-detail-on-hover>
+									<div class="col text-right">by {{ comment.By }}</div>
+								</div>
+								<div class="font-small" [innerHTML]="comment.Comment"></div>
+							</div>
+						</div>
+					</rd-card>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

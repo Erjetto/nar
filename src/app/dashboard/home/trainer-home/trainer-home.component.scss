@@ -1,0 +1,19 @@
+:host {
+	table {
+    // width: 100%;
+		thead,
+		tfoot {
+      font-weight: bold;
+      border-bottom: 1px solid lightgrey;
+		}
+		tbody {
+			tr {
+        padding: 4px;
+        border-bottom: 1px solid lightgrey;
+        td:last-child{
+          width: 50px;
+        }
+			}
+		}
+	}
+}
