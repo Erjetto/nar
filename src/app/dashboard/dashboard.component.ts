@@ -83,16 +83,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
 		this.menuListFiltered$ = this.menuList$.pipe(
 			// If current role has no current active menu, then redirect
+			// Only for user who can change roles
 			tap((menus) => {
 				if (menus.every((r) => r.data.name !== this.currentActiveHeader))
 					this.router.navigateByUrl('/home');
 			}),
       // Filter menu
-      // Contoh: Candidate hanya utk generasi 1 tahun sebelumnya
-			// withLatestFrom(this.store.pipe(select(fromAppState.getAppState))),
-			// map(([menus, appState]) =>
-			// 	menus.filter((m) => (m.data?.validate == null ? true : m.data.validate(appState)))
-			// )
+			map((menus) =>
+				menus.map(m => {
+					// If validation() is true, then show menu
+					// if false then hide the menu
+					if(m.data?.validation !== undefined)
+						m.data.isHidden = m.data?.validation(this.store)
+							.pipe(map(result => !result)) // Reverse the result
+							.pipe(map(_ => false)) // TODO: Remove this menu bypass later
+					return m;
+				})
+			),
 		);
 
 		this.router.events
@@ -115,7 +122,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 		// Redirect to login when logout
 		this.mainEffects.logout$.pipe(takeUntil(this.destroyed$)).subscribe((act) => {
-      this.store.dispatch(MainStateAction.InfoMessage('Logging out...'));
+      // this.store.dispatch(MainStateAction.InfoMessage('Logging out...'));
 			if (act.type === MainStateAction.LogoutSuccess.type) this.router.navigateByUrl('/login');
 		});
 

@@ -36,14 +36,22 @@ import { LogRoomComponent } from './log/log-room/log-room.component';
 import { LogBookComponent } from './log/log-book/log-book.component';
 import { TraineeUploadComponent } from './trainee-upload/trainee-upload.component';
 import { CorrectionComponent } from './correction/correction.component';
-import { MyScheduleComponent } from './my-schedule/my-schedule.component';
 import { MyDataComponent } from './my-data/my-data.component';
 import { IAppState } from '../app.reducer';
-import { Store } from '@ngrx/store';
-import { fromMainState } from '../shared/store-modules';
+import { select, Store } from '@ngrx/store';
+import {
+	fromMainState,
+	fromMasterState,
+	MainStateAction,
+	MasterStateAction,
+} from '../shared/store-modules';
 import { PresentationReportComponent } from './presentation/presentation-report/presentation-report.component';
 import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-report/trainee-attendance-report.component';
 import { PresentationSummaryComponent } from './presentation/presentation-summary/presentation-summary.component';
+import { map, mapTo, tap, withLatestFrom } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { ClientGeneration, ClientPhase, User } from '../shared/models';
+import { genDifferenceInSemester, TryGetCoreTrainingPhase } from '../shared/methods';
 
 export const routes: Routes = [
 	{
@@ -74,11 +82,6 @@ export const routes: Routes = [
 						component: ManageGenerationComponent,
 						data: { roles: RoleFlags.AssistantSupervisor, name: 'Generation' },
 					},
-					// {
-					//   path: 'trainee',
-					//   component: managetr,
-					//   data: { roles: RoleFlags.AssistantSupervisor, name: 'Trainee' },
-					// },
 					{
 						path: 'phase',
 						component: ManagePhaseComponent,
@@ -161,51 +164,41 @@ export const routes: Routes = [
 				data: { roles: RoleFlags.Trainee, name: 'My Data' },
 			},
 			{
-				path: 'my-schedule',
-				component: MyScheduleComponent,
-				data: { roles: RoleFlags.Trainee, name: 'My Schedule' },
-			},
-			// {
-			// 	path: 'dummy.aspx',
-			// 	component: null,
-			// 	data: { roles: RoleFlags.Dummy, name: 'Dummy' },
-			// },
-			// {
-			// 	path: 'AssistantSupervisor.aspx',
-			// 	component: null,
-			// 	data: {
-			// 		roles: RoleFlags.AssistantSupervisor,
-			// 		name: 'View Assistant Supervisor',
-			// 	},
-			// },
-			// {
-			// 	path: 'Interviewer.aspx',
-			// 	component: null,
-			// 	data: { roles: RoleFlags.Interviewer, name: 'Interviewer' },
-			// },
-			// {
-			// 	path: 'Guest.aspx',
-			// 	component: null,
-			// 	data: { roles: RoleFlags.Guest, name: 'Guest' },
-			// },
-			{
 				path: 'top-bottom-vote',
 				component: TopBottomVoteComponent,
 				data: {
 					roles: RoleFlags.Trainee | RoleFlags.Trainer | RoleFlags.Interviewer,
 					name: 'Top Bottom Vote',
+					validation: (store: Store<IAppState>): Observable<boolean> =>
+						store.pipe(
+							select(fromMasterState.getPhases),
+							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+							map(
+								([phases, user]: [ClientPhase[], User]) =>
+									user.Role.is(RoleFlags.AssistantSupervisor) ||
+									phases.find((p) => p.Description.includes('Core')) !== undefined
+							)
+						),
 				},
 			},
 			{
 				path: 'upload',
 				component: TraineeUploadComponent,
-				data: { roles: RoleFlags.Trainee, name: 'Upload' },
+				data: {
+					roles: RoleFlags.Trainee,
+					name: 'Upload',
+					validation: (store: Store<IAppState>): Observable<boolean> =>
+						store.pipe(
+							select(fromMasterState.getPhases),
+							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+							map(
+								([phases, user]: [ClientPhase[], User]) =>
+									user.Role.is(RoleFlags.AssistantSupervisor) ||
+									phases.find((p) => p.Description.includes('Core')) !== undefined
+							)
+						),
+				},
 			},
-			// {
-			// 	path: 'interview',
-			// 	component: null,
-			// 	data: { roles: RoleFlags.Trainee, name: 'Interview' },
-			// },
 			{
 				path: 'log',
 				data: { name: 'Log' },
@@ -268,6 +261,16 @@ export const routes: Routes = [
 				data: {
 					roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
 					name: 'Presentation',
+					validation: (store: Store<IAppState>): Observable<boolean> =>
+						store.pipe(
+							select(fromMasterState.getPhases),
+							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+							map(
+								([phases, user]: [ClientPhase[], User]) =>
+									user.Role.is(RoleFlags.AssistantSupervisor) ||
+									phases.find((p) => p.Description.includes('Core')) !== undefined
+							)
+						),
 				},
 				children: [
 					{
@@ -305,14 +308,6 @@ export const routes: Routes = [
 						path: 'new',
 						component: NewPresentationComponent,
 						data: { roles: RoleFlags.Trainee, name: 'New Presentations' },
-					},
-					{
-						path: 'question/:generationId/:trainerId/:questionId',
-						redirectTo: '/home',
-						// component: null,
-						data: {
-							roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer | RoleFlags.Trainee,
-						},
 					},
 					{
 						path: 'report',
@@ -353,7 +348,7 @@ export const routes: Routes = [
 						path: 'RoomAttendance.aspx',
 						redirectTo: '/RoomAttendance.aspx',
 						data: {
-							roles: RoleFlags.Dummy,
+							roles: RoleFlags.Dummy | RoleFlags.Trainee,
 							name: 'Room Attendance',
 							externalUrl: true,
 						},
@@ -362,7 +357,7 @@ export const routes: Routes = [
 						path: 'RestAttendance.aspx',
 						redirectTo: '/RestAttendance.aspx',
 						data: {
-							roles: RoleFlags.Dummy,
+							roles: RoleFlags.Dummy | RoleFlags.Trainee,
 							name: 'Rest Attendance',
 							externalUrl: true,
 						},
@@ -371,7 +366,7 @@ export const routes: Routes = [
 						path: 'Permission.aspx',
 						redirectTo: '/Permission.aspx',
 						data: {
-							roles: RoleFlags.Dummy,
+							roles: RoleFlags.Dummy | RoleFlags.Trainee,
 							name: 'Permission',
 							externalUrl: true,
 						},
@@ -425,10 +420,18 @@ export const routes: Routes = [
 				path: 'candidate',
 				data: {
 					name: 'Candidate',
-					validate: (data: IAppState) => {
-						console.log(data);
-						return false;
-					},
+					validation: (store: Store<IAppState>): Observable<boolean> => 
+						store.pipe(
+							select(fromMainState.getCurrentGeneration),
+							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+							map(([currGen, currUser]: [ClientGeneration, User]) => {
+								if (!currGen || !currUser) return false;
+								return (
+									currUser.Role.is(RoleFlags.AssistantSupervisor) ||
+									genDifferenceInSemester(currGen.Description, currUser.UserName.substr(2)) === 0
+								);
+							})
+						),
 				},
 				children: [
 					{
@@ -457,6 +460,11 @@ export const routes: Routes = [
 					},
 				],
 			},
+			// {
+			// 	path: 'interview',
+			// 	component: null,
+			// 	data: { roles: RoleFlags.Trainee, name: 'Interview' },
+			// },
 		],
 	},
 	{

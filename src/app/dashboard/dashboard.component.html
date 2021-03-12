@@ -91,11 +91,16 @@
 						class="hover-text-blue menu-item"
 						[class.menu-active]="isMenuActive(menu)"
 						[routerLink]="'/' + menu.path"
+						[hidden]="menu.data?.isHidden | async"
 					>
 						{{ menu.data?.name }}
 					</a>
 					<!-- Has submenu -->
-					<a *ngSwitchCase="false" class="menu-item" [class.menu-active]="isMenuActive(menu)">
+					<a *ngSwitchCase="false" 
+						class="menu-item" 
+						[class.menu-active]="isMenuActive(menu)"
+						[hidden]="menu.data?.isHidden | async"
+					>
 						{{ menu.data?.name }}
 						<div class="sub-menu">
 							<ng-container

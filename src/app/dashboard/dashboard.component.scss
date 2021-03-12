@@ -116,64 +116,9 @@
 			padding: 8px 16px;
 			white-space: nowrap;
 
-			// &:last-child{
-			//   padding-top: 0;
-			// }
+			&:hover{
+				background: #0002;
+			}
 		}
 	}
 }
-
-// :host(.dark-theme){
-
-// 	header,
-// 	nav,
-//   ::ng-deep .form-control,
-//   ::ng-deep .table,
-//   ::ng-deep rd-card,
-//   ::ng-deep .form-control::placeholder  {
-//     background-color: $header-bg-color-dark !important;
-//     color: white !important;
-//   }
-//   ::ng-deep .table-hover tbody tr:hover{
-//     color: unset;
-//   }
-//   ::ng-deep rd-card.card-collapsible {
-//     .card__title:hover{
-//       background-color: lighten($color: $header-bg-color-dark, $amount: 15%);
-//     }
-//     .card__cover{
-//       background-color: rgba($color: lighten($color: $header-bg-color-dark, $amount: 15%), $alpha: 0.8);
-//     }
-//   }
-
-//   .navbar{
-// 		border-top: 1px solid lighten($color: $header-bg-color-dark, $amount: 15%);
-//     border-bottom: 1px solid lighten($color: $header-bg-color-dark, $amount: 15%);
-//     box-shadow: 0px 1px 1px 1px lighten($color: $header-bg-color-dark, $amount: 15%);
-//   }
-
-//   .menu-item{
-//     color: $text-color-dark;
-    
-// 		&.menu-active {
-// 			color: $active-text-color-dark;
-// 		}
-//   }
-
-  
-//   ::ng-deep a{
-//     color: #59a9ff;
-//   } 
-
-//   .sub-menu{
-// 		background-color: $header-bg-color-dark;
-//     border: 1px solid lighten($color: $header-bg-color-dark, $amount: 15%);
-// 		box-shadow: 0px 2px 3px 0px lighten($color: $header-bg-color-dark, $amount: 15%);
-//   }
-
-//   .dashboard__content{
-// 		background-color: $content-bg-color-dark !important;
-// 		color: $text-color-dark !important;
-//   }
-  
-// }
