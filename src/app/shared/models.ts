@@ -6,6 +6,7 @@ import { GetDownloadLinkFromFileId, isEmptyGuid } from './methods';
 
 export const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
 
+export type SortDirection = 'ASC' | 'DESC' | '';
 export type AttendanceType = 'Rest' | 'Room' | 'Secretariat';
 export type QuestionStatus = 'wrong' | 'correct' | 'unchecked';
 export const EvalTypes = [
@@ -1168,6 +1169,103 @@ export class ClientStatistic extends BaseModel {
 		});
 	}
 }
+
+export class ClientTrainerTeachingScheduleDetail extends BaseModel {
+	constructor(public Username = '', public Type = '') {
+		super();
+	}
+
+	static fromJson(data?: any): ClientTrainerTeachingScheduleDetail {
+		if (isEmpty(data)) return null;
+		return Object.assign(new ClientTrainerTeachingScheduleDetail(), data);
+	}
+}
+
+export class Trainer extends BaseModel {
+	constructor(
+		public BinusianId = EMPTY_GUID,
+		public UserId = EMPTY_GUID,
+		public Name = '',
+		public UserName = '',
+		public BinusianNumber = ''
+	) {
+		super();
+	}
+	static fromJson(data?: any): Trainer {
+		if (isEmpty(data)) return null;
+		return Object.assign(new Trainer(), data);
+	}
+}
+
+export class ClientTrainerTeachingSchedule extends BaseModel {
+	constructor(
+		public TeachingDate: Date = null,
+		public isAlreadyPassed = false,
+		public Shift = '',
+		public Room = '',
+		public Topic = '',
+		public Trainer: ClientTrainerTeachingScheduleDetail[] = []
+	) {
+		super();
+	}
+	static fromJson(data?: any): ClientTrainerTeachingSchedule {
+		if (isEmpty(data)) return null;
+		return Object.assign(new ClientTrainerTeachingSchedule(), data, {
+			TeachingDate: DateHelper.fromCSharpDate(data?.TeachingDate),
+			Trainer: data?.Trainer.map(ClientTrainerTeachingScheduleDetail.fromJson),
+		});
+	}
+}
+
+export class TrainerTeachingSchedule extends BaseModel {
+	constructor(
+		public TrainerTeachingScheduleId = EMPTY_GUID,
+		public GenerationId = EMPTY_GUID,
+		public ShiftId = EMPTY_GUID,
+		public TeachingDate: Date = null,
+		public Shift = '',
+		public Room = '',
+		public Lecturer: Trainer = null,
+		public SubtituteLecturers: Trainer = null,
+		public Type = '',
+		public Topic = ''
+	) {
+		super();
+	}
+	static fromJson(data?: any): TrainerTeachingSchedule {
+		if (isEmpty(data)) return null;
+		return Object.assign(new TrainerTeachingSchedule(), data, {
+			TeachingDate: DateHelper.fromCSharpDate(data?.TeachingDate),
+			Lecturer: Trainer.fromJson(data?.Lecturer),
+			SubtituteLecturers: Trainer.fromJson(data?.SubtituteLecturers),
+		});
+	}
+}
+
+export class ClientTrainerTeachingScheduleSaveResult extends BaseModel {
+	constructor(public message: string[] = [], public savedItems: TrainerTeachingSchedule[] = []) {
+		super();
+	}
+	static fromJson(data?: any): ClientTrainerTeachingScheduleSaveResult {
+		if (isEmpty(data)) return null;
+		return Object.assign(new ClientTrainerTeachingScheduleSaveResult(), data, {
+			savedItems: data?.savedItems.map(TrainerTeachingSchedule.fromJson),
+		});
+	}
+}
+
+export class ClientTrainerTeachingScheduleUpdateResult extends BaseModel {
+	constructor(public message = '', public savedItem: TrainerTeachingSchedule = null) {
+		super();
+	}
+	static fromJson(data?: any): ClientTrainerTeachingScheduleUpdateResult {
+		if (isEmpty(data)) return null;
+		return Object.assign(new ClientTrainerTeachingScheduleUpdateResult(), data, {
+			savedItems: TrainerTeachingSchedule.fromJson(data?.savedItem),
+		});
+	}
+}
+
 //#endregion
 
 export class Message extends BaseModel {
@@ -1319,6 +1417,7 @@ export class TraineeSchedule extends BaseModel {
 	) {
 		super();
 	}
+
 	static fromJson(data?: any): TraineeSchedule {
 		if (isEmpty(data)) return null;
 		return Object.assign(new TraineeSchedule(), data, {

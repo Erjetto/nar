@@ -9,18 +9,22 @@
 				<div class="row">
 					<div class="col-5">
 						<div>
-							The input format must be : TeachingDate,Trainer Username,Room,Shift,Type
+							The input format must be :
+							<p class="text-center font-style-italic" style="font-family: monospace;">
+								TeachingDate,Trainer,Room,Shift,Type,Topic
+							</p>
 							<ul style="margin: 0">
-								<li>Teaching date must a general date format</li>
-								<li>Trainer who will be the instructor or co-instructor</li>
-								<li>The room where the training ahead</li>
-								<li>The shift when the training ahead</li>
-								<li>Type of the trainer must be 'instructor' or 'co-instructor'</li>
+								<li>Teaching date => date format</li>
+								<li>Trainer => Trainer's initial</li>
+								<li>Room => 000-999 | link | etc.</li>
+								<li>Shift</li>
+								<li>Type => 'instructor' | 'co-instructor' | etc.</li>
+								<li>Topic => Name of topic</li>
 								<li>
 									For example,
 									<ul>
-										<li>2011-11-30,ac10-2,710,15:20,instructor</li>
-										<li>12/31/2011,ac10-2,710,15:20,co-instructor</li>
+										<li>2011-11-30,ac10-2,710,15:20,instructor,CH1</li>
+										<li>12/31/2011,ac10-2,710,15:20,co-instructor,CH2</li>
 									</ul>
 								</li>
 							</ul>
@@ -28,7 +32,7 @@
 						<div class="row form-group">
 							<div class="col">
 								<textarea
-									[formControl]="insertTrainingScheduleText"
+									[formControl]="insertTeachingScheduleText"
 									class="form-control vertical-text-area minh-150px"
 								></textarea>
 							</div>
@@ -36,40 +40,78 @@
 						<div class="row">
 							<button
 								class="btn btn-primary"
-								[disabled]="insertTrainingScheduleText.invalid"
-								(click)="submitInsertTrainingSchedule()"
+								[disabled]="insertTeachingScheduleText.invalid"
+								(click)="submitInsertTeachingSchedule()"
 							>
 								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
 							</button>
 						</div>
 					</div>
 					<div class="col">
-						<div class="row mb-2">
-							<div class="col-6">
-								<ng-select
-									[items]="trainerTeachingDates"
-									[formControl]="currentTeachingDate"
-									[searchable]="false"
-									[clearable]="false"
-									placeholder="Teaching dates not found"
-								></ng-select>
+						<div class="row mb-2" [formGroup]="viewTrainerTeachingScheduleControl">
+							<div class="col-auto col-form-label">From</div>
+							<div class="col">
+								<input type="date" class="form-control" formControlName="startDate" />
+							</div>
+							<div class="col-auto col-form-label">To</div>
+							<div class="col">
+								<input type="date" class="form-control" formControlName="endDate" />
 							</div>
 						</div>
-						<div class="row scrollable-table maxh-500px">
-							<table class="table table-sm table-striped table-hover text-center">
-								<thead>
-									<tr>
-										<th>Trainer</th>
-										<th>Room</th>
-										<th>Shift</th>
-										<th>Date</th>
-										<th>Type</th>
-										<th>Actions</th>
-									</tr>
-								</thead>
-								<tbody></tbody>
-							</table>
-						</div>
+						<rd-data-table
+							[data]="viewTrainerTeachingSchedule$ | async"
+							[sortable]="true"
+							[fixedHeight]="400"
+							[noDataMessage]="'No training schedules'"
+						>
+							<rd-table-header> </rd-table-header>
+							<ng-container>
+								<rd-table-column
+									[prop]="'TeachingDate'"
+									[label]="'Teaching Date'"
+									[sortable]="true"
+									[sortState]="'DESC'"
+								>
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										{{ schedule.TeachingDate | date: viewDateFormat }}
+									</ng-template>
+								</rd-table-column>
+
+								<rd-table-column [label]="'Trainer'">
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										<span *ngFor="let trainer of schedule.Trainer">
+											{{ trainer.Username }} ({{ trainer.Type }})
+											<br />
+										</span>
+									</ng-template>
+								</rd-table-column>
+
+								<rd-table-column [prop]="'Shift'" [label]="'Shift'"></rd-table-column>
+
+								<rd-table-column [label]="'Room'">
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										<ng-container [ngSwitch]="isRoomLink(schedule.Room)">
+											<ng-container *ngSwitchCase="false">
+												{{ schedule.Room }}
+											</ng-container>
+											<ng-container *ngSwitchDefault>
+												<a [href]="schedule.Room" rdExternalUrl>Link here</a>
+											</ng-container>
+										</ng-container>
+									</ng-template>
+								</rd-table-column>
+
+								<rd-table-column [label]="'Actions'" [cellClass]="'text-left'">
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										<rd-confirmable-pop-up (confirm)="deleteTraineeTrainingSchedule(schedule)">
+											<button class="btn btn-xs btn-danger">
+												<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+											</button>
+										</rd-confirmable-pop-up>
+									</ng-template>
+								</rd-table-column>
+							</ng-container>
+						</rd-data-table>
 					</div>
 				</div>
 			</rd-card>
@@ -87,14 +129,17 @@
 						<form #insertTraineeTrainingScheduleForm="ngForm">
 							<div class="row">
 								<div>
-									The input format must be: Trainee number,Attendance date,Time in,Time out,Type
+									The input format must be: 
+									<p class="text-center font-style-italic" style="font-family: monospace;">
+										TCode,AttendanceDate,TimeIn,TimeOut,Type,Room
+									</p>
 									<ul style="margin: 0">
-										<li>Trainee number, whose trainee training schedule you wish to set</li>
-										<li>Attendance date, in general date format</li>
-										<li>Time in, when the trainee must enter</li>
-										<li>Time out, when the trainee must leave</li>
-										<li>Type of the attendance, must be 'Room', 'Secretariat', or 'Rest'</li>
-										<li>Schedule Room, where the schedule should be held on</li>
+										<li>TCode => T000 - T999</li>
+										<li>AttendanceDate => date format</li>
+										<li>TimeIn => 00:00-23:59 (when schedule starts)</li>
+										<li>TimeOut => 00:00-23:59 (when schedule ends)</li>
+										<li>Type => 'Rest' | 'Room' | 'Secretariat'</li>
+										<li>Room => 000-999 | link | etc.</li>
 										<li>
 											For example,
 											<ul>
@@ -125,32 +170,73 @@
 						</form>
 					</div>
 					<div class="col">
-						<table class="table table-sm table-striped table-hover text-center">
-							<thead>
-								<tr>
-									<th>Date</th>
-									<th>Shift</th>
-									<th>Duration</th>
-									<th>Room</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let schedule of viewTraineeTrainingSchedule$ | async">
-									<td>{{ schedule.AttendanceDate | date: viewDateFormat }}</td>
-									<td>{{ schedule.Shift }}</td>
-									<td>{{ schedule.TimeIn }} - {{ schedule.TimeOut }}</td>
-									<td>{{ schedule.Room }}</td>
-									<td>
+						<div class="row mb-2" [formGroup]="viewTraineeTrainingScheduleControl">
+							<div class="col-auto col-form-label">From</div>
+							<div class="col">
+								<input type="date" class="form-control" formControlName="startDate" />
+							</div>
+							<div class="col-auto col-form-label">To</div>
+							<div class="col">
+								<input type="date" class="form-control" formControlName="endDate" />
+							</div>
+						</div>
+						<rd-data-table
+							[data]="viewTraineeTrainingSchedule$ | async"
+							[sortable]="true"
+							[fixedHeight]="400"
+							[noDataMessage]="'No training schedules'"
+						>
+							<rd-table-header> </rd-table-header>
+							<ng-container>
+								<rd-table-column
+									prop="TraineeCode"
+									[label]="'Trainee'"
+									[sortable]="true"
+								></rd-table-column>
+
+								<rd-table-column
+									[prop]="'AttendanceDate'"
+									[label]="'Date'"
+									[sortable]="true"
+									[sortState]="'DESC'"
+								>
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										{{ schedule.AttendanceDate | date: viewDateFormat }}
+									</ng-template>
+								</rd-table-column>
+
+								<rd-table-column prop="Type" [label]="'Type'"></rd-table-column>
+
+								<rd-table-column [label]="'Time'">
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										{{ schedule.TimeIn }} - {{ schedule.TimeOut }}
+									</ng-template>
+								</rd-table-column>
+
+								<rd-table-column [label]="'Room'" [cellClass]="'text-left'">
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
+										<ng-container [ngSwitch]="isRoomLink(schedule.Room)">
+											<ng-container *ngSwitchCase="false">
+												{{ schedule.Room }}
+											</ng-container>
+											<ng-container *ngSwitchDefault>
+												<a [href]="schedule.Room" rdExternalUrl>Link here</a>
+											</ng-container>
+										</ng-container>
+									</ng-template>
+								</rd-table-column>
+
+								<rd-table-column [label]="'Actions'">
+									<ng-template rdTableTemplate="body" let-schedule="rowData">
 										<rd-confirmable-pop-up (confirm)="deleteTraineeTrainingSchedule(schedule)">
-											<button class="btn btn-danger">
+											<button class="btn btn-xs btn-danger">
 												<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 											</button>
 										</rd-confirmable-pop-up>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+									</ng-template>
+								</rd-table-column>
+							</ng-container>
+						</rd-data-table>
 					</div>
 				</div>
 			</rd-card>

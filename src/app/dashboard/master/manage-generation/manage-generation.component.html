@@ -84,29 +84,23 @@
 				[collapsible]="false"
 				[isLoading]="loadingViewGen$ | async"
 			>
-				<table class="table table-sm table-striped table-hover text-center">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Semester</th>
-							<th>Year</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr *ngIf="(generations$ | async)?.length === 0">
-							<td colspan="3">No generations</td>
-						</tr>
-						<tr
-							*ngFor="let gen of generations$ | async"
-							class="cursor-pointer"
-							(click)="selectGeneration(gen)"
-						>
-							<td>{{ gen.Description }}</td>
-							<td>{{ gen.Semester }}</td>
-							<td>{{ gen.yearRange }}</td>
-						</tr>
-					</tbody>
-				</table>
+				<rd-data-table
+					[data]="generations$ | async"
+					[selectable]="true"
+					[sortable]="true"
+					[noDataMessage]="'No generations found'"
+				>
+					<rd-table-header> </rd-table-header>
+					<ng-container>
+						<rd-table-column
+							prop="Description"
+							[label]="'Name'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column prop="Semester" [label]="'Sem.'" [sortable]="true"></rd-table-column>
+						<rd-table-column prop="yearRange" [label]="'Year'" [sortable]="true"></rd-table-column>
+					</ng-container>
+				</rd-data-table>
 			</rd-card>
 		</div>
 		<div class="col">
@@ -170,11 +164,6 @@
 						>
 							<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert/Update
 						</button>
-						<!-- <rd-confirmable-pop-up *ngIf="(editForm$|async)">
-              <button class="btn btn-danger">
-                <fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete Generation
-              </button>
-						</rd-confirmable-pop-up> -->
 					</div>
 				</form>
 			</rd-card>
@@ -192,7 +181,73 @@
 						/>
 					</div>
 				</div>
-				<div class="row scrollable-table maxh-500px">
+				<rd-data-table
+					[data]="currentGenTraineesFiltered$ | async"
+					[selectable]="true"
+					[multipleSelectable]="true"
+					[sortable]="true"
+					[fixedHeight]="500"
+					[noDataMessage]="'No trainees yet'"
+				>
+					<rd-table-header> </rd-table-header>
+					<ng-container>
+						<rd-table-column
+							prop="TraineeNumber"
+							[label]="'Binusian Number'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="TraineeCode"
+							[label]="'Trainee Code'"
+							[sortable]="true"
+							[sortState]="'ASC'"
+						></rd-table-column>
+						<rd-table-column
+							prop="TraineeName"
+							[label]="'Name'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column prop="Status" [label]="'Status'" [sortable]="true"></rd-table-column>
+
+						<rd-table-column [label]="'Actions'" [cellClass]="'text-left'">
+							<ng-template rdTableTemplate="body" let-trainee="rowData">
+								<!-- Delete -->
+								<rd-confirmable-pop-up
+									[description]="'Delete ' + trainee.TraineeName + '?'"
+									(confirm)="deleteTrainee(trainee)"
+								>
+									<button class="btn btn-xs btn-danger">
+										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+									</button>
+								</rd-confirmable-pop-up>
+								<!-- Change active status -->
+								<rd-confirmable-pop-up
+									[title]="'Change ' + trainee.TraineeCode + '\'s active status?'"
+									[description]="deactivateReasonTemplate"
+									(confirm)="toggleTraineeActive(trainee)"
+									[canConfirm]="deactivateReasonControl.valid"
+								>
+									<ng-template #deactivateReasonTemplate>
+										<textarea
+											class="form-control"
+											[formControl]="deactivateReasonControl"
+											placeholder="Input reasons here..."
+											cols="30"
+											rows="4"
+										></textarea>
+									</ng-template>
+									<button class="btn btn-xs btn-warning" [hidden]="!trainee.isActive">
+										<fa-icon [icon]="['fas', 'times']"></fa-icon> Deactivate
+									</button>
+									<button class="btn btn-xs btn-success" [hidden]="trainee.isActive">
+										<fa-icon [icon]="['fas', 'check']"></fa-icon> Activate
+									</button>
+								</rd-confirmable-pop-up>
+							</ng-template>
+						</rd-table-column>
+					</ng-container>
+				</rd-data-table>
+				<!-- <div class="row scrollable-table maxh-500px">
 					<table class="table table-sm table-striped table-hover text-center">
 						<thead>
 							<tr>
@@ -215,8 +270,7 @@
 								<td>{{ trainee.TraineeCode }}</td>
 								<td>{{ trainee.TraineeName }}</td>
 								<td>{{ trainee.Status }}</td>
-								<td class="text-left">
-									<!-- Delete -->
+								<td>
 									<rd-confirmable-pop-up
 										[description]="'Delete ' + trainee.TraineeName + '?'"
 										(confirm)="deleteTrainee(trainee)"
@@ -225,7 +279,6 @@
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 										</button>
 									</rd-confirmable-pop-up>
-									<!-- Change active status -->
 									<rd-confirmable-pop-up
 										[title]="'Change ' + trainee.TraineeCode + '\'s active status?'"
 										[description]="deactivateReasonTemplate"
@@ -252,7 +305,7 @@
 							</tr>
 						</tbody>
 					</table>
-				</div>
+				</div> -->
 			</rd-card>
 		</div>
 	</div>
