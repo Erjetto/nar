@@ -1,12 +1,4 @@
 :host {
-	.trainee-list .tooltip:after {
-		left: 100px;
-		transform: translateY(30px);
-	}
-	.trainee-list trainee-details {
-		left: 0;
-		right: 0;
-	}
 	.list-thumbnail {
 		display: flex;
 		flex-wrap: wrap;
@@ -31,16 +23,30 @@
       }
     }
 
-    .inactive-trainee {
+    .trainee-inactive {
       background: #a5a5a5;
-      color: black;
-    }
-    .inactive-trainee:hover {
-      color: #333;
+      color: black !important;
+      &:hover {
+        color: #333;
+      }
+
+      img{
+        filter: grayscale(100%);
+      }
     }
   }
   
-	.grayscale {
-		filter: grayscale(100%);
-	}
+}
+
+:host ::ng-deep {
+
+  .trainee-row{
+  
+    &-inactive{
+      background: #dc3545 !important;
+      td{
+        color: white !important;
+      }
+    }
+  }
 }

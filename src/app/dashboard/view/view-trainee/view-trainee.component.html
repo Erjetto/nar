@@ -67,8 +67,8 @@
 							[traineeId]="trainee.TraineeId"
 						>
 							<a
-								class="hoverCell pointer clean-link card"
-								[ngClass]="{ 'inactive-trainee': !trainee.IsActive }"
+								class="card"
+								[ngClass]="traineeThumbnailInactiveClass(trainee)"
 								[routerLink]="[trainee.TraineeId, false]"
 							>
 								<p style="margin: 2px">
@@ -77,7 +77,6 @@
 								<img
 									alt="{{ trainee.TraineeCode }} - {{ trainee.TraineeName }}"
 									[src]="trainee.thumbnailLink"
-									[ngClass]="{ grayscale: !trainee.IsActive }"
 									class="mb-2"
 								/>
 								<!-- [src]="['File.svc/GetThumbnail',trainee.PictureId,'95']" -->
@@ -88,7 +87,7 @@
 									/>
 								</span>
 								<div class="row text-center justify-content-evenly">
-									<span [ngClass]="{ 'text-success': trainee.IsActive }">
+									<span class="text-success">
 										<b>{{ trainee.Plus }}</b>
 									</span>
 									&nbsp;
@@ -96,7 +95,7 @@
 										<b>{{ trainee.Neutral }}</b>
 									</span>
 									&nbsp;
-									<span [ngClass]="{ 'text-danger': trainee.IsActive }">
+									<span class="text-danger">
 										<b>{{ trainee.Minus }}</b>
 									</span>
 									<br />
@@ -109,54 +108,47 @@
 					</div>
 				</div>
 				<div class="row" [hidden]="!(viewMode == 'list')">
-					<!-- *ngSwitchCase="'list'" -->
-					<table class="table table-striped table-hover text-center">
-						<thead>
-							<tr>
-								<th>Trainee Code</th>
-								<th>Binusian Number</th>
-								<th>Name</th>
-								<th>Major</th>
-								<th>Gender</th>
-								<th>Plus</th>
-								<th>Neutral</th>
-								<th>Minus</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr *ngIf="(filteredTrainees$ | async)?.length === 0">
-								<td colspan="8">No trainee...</td>
-							</tr>
-							<!-- TODO: Create animation of entering and exiting when filtering trainee -->
-							<tr
-								*ngFor="let trainee of filteredTrainees$ | async"
-								(click)="onSelectTrainee(trainee)"
-								class="cursor-pointer"
-								[ngClass]="{
-									'bg-danger': !trainee.IsActive,
-									'text-white': !trainee.IsActive
-								}"
-							>
-								<td>{{ trainee.TraineeCode }}</td>
-								<td>{{ trainee.TraineeNumber }}</td>
-								<td>{{ trainee.TraineeName }}</td>
-								<td>{{ trainee.Major }}</td>
-								<td>{{ trainee.Gender }}</td>
-								<td [class.text-success]="trainee.IsActive">+{{ trainee.Plus }}</td>
-								<td>{{ trainee.Neutral }}</td>
-								<td [class.text-danger]="trainee.IsActive">-{{ trainee.Minus }}</td>
-
-								<!-- <td>{{ presentation.traineeName }}</td>
-                  <td>{{ presentation.savedAt | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
-                  <td>{{ presentation.presentationNo }}</td>
-                  <td>{{ presentation.score }}</td>
-                  <td>{{ presentation.status }}</td>
-                  <td>{{ presentation.savedBy }}</td> -->
-							</tr>
-						</tbody>
-					</table>
+					<rd-data-table
+						[data]="filteredTrainees$ | async"
+						[selectable]="true"
+						[sortable]="true"
+						[noDataMessage]="'No trainees...'"
+						[tableClass]="'table-striped table-hover text-center'"
+						[conditionalRowClass]="traineeRowInactiveClass"
+					>
+						<rd-table-header> </rd-table-header>
+						<rd-table-column
+							prop="TraineeCode"
+							[label]="'Trainee Code'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="TraineeNumber"
+							[label]="'Binusian Number'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="TraineeName"
+							[label]="'Name'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column prop="Major" [label]="'Major'" [sortable]="true"></rd-table-column>
+						<rd-table-column prop="Gender" [label]="'Gender'" [sortable]="true"></rd-table-column>
+						<rd-table-column
+							prop="Plus"
+							[label]="'Plus'"
+							[sortable]="true"
+							[cellClass]="'text-success'"
+						></rd-table-column>
+						<rd-table-column prop="Neutral" [label]="'Neutral'" [sortable]="true"></rd-table-column>
+						<rd-table-column
+							prop="Minus"
+							[label]="'Minus'"
+							[sortable]="true"
+							[cellClass]="'text-danger'"
+						></rd-table-column>
+					</rd-data-table>
 				</div>
-				<!-- </div> -->
 			</rd-card>
 		</div>
 	</div>

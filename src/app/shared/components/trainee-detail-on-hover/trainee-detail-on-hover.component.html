@@ -3,7 +3,7 @@
 		<span class="absolute-center"> Loading trainee data... </span>
 	</div>
 	<div
-		class="row minw-250px"
+		class="row minw-250px maxw-400px"
 		[hidden]="loadingViewTrainee$ | async"
 		*ngIf="traineeDetail$ | async as trainee"
 	>
@@ -80,7 +80,7 @@
 	[openDelay]="1000"
 	[triggers]="'mouseenter:mouseleave'"
 	container="body"
-	popoverClass="confirmable-popover"
+	popoverClass="override-default-popover"
 >
 	<a [routerLink]="['/view', 'trainee', traineeId, false]">
 		<ng-content></ng-content>
