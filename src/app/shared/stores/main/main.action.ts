@@ -1,5 +1,5 @@
 import { createAction, props, Action, MemoizedSelector, State } from '@ngrx/store';
-import { Message, User, ClientGeneration, Role, ToastType } from '../../models';
+import { Message, User, ClientGeneration, Role, ToastType, Notification, ClientTrainerTeachingSchedule } from '../../models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { IAppState } from 'src/app/app.reducer';
@@ -43,6 +43,7 @@ export const ToastMessage = createAction(
 );
 export const RemoveMessage = createAction('[MainState] PopMessage', props<{ index: number }>());
 
+//#region Announcements
 export const FetchAnnouncements = createAction('[MainState] FetchAnnouncements');
 export const FetchAnnouncementsSuccess = createAction(
 	'[MainState] FetchAnnouncementsSuccess',
@@ -71,26 +72,50 @@ export const DeleteAnnouncement = createAction(
 	'[MainState] DeleteAnnouncement',
 	props<{ messageId: string }>()
 );
-export const CreateAnnouncementSuccess = createAction('[MainState] CreateAnnouncementSuccess');
-export const UpdateAnnouncementSuccess = createAction('[MainState] UpdateAnnouncementSuccess');
+//#endregion
 
-export const DownloadFile = createAction('[MainState] DownloadFile', props<{ fileId: string}>());
-// export const UploadFile = createAction('[MainState] UploadFile', props<{ uploaderId?:string; files: FileList }>());
-// export const UploadFileSuccess = createAction(
-// 	'[MainState] UploadFileSuccess',
-// 	props<{ uploaderId?: string; fileids: string[]; filenames: string[] }>()
-// );
+//#region Notification
+export const FetchNotifications = createAction('[MainState] FetchNotifications');
+export const FetchNotificationsSuccess = createAction(
+	'[MainState] FetchNotificationsSuccess',
+	props<{ payload: Notification[] }>()
+);
+
+export const MarkAllNotificationsRead = createAction('[MainState] MarkAllNotificationsRead');
+export const DeleteAllNotifications = createAction('[MainState] DeleteAllNotifications');
+export const MarkNotificationRead = createAction(
+	'[MainState] MarkNotificationRead',
+	props<{ notificationId: string }>()
+);
+export const MarkNotificationReadSuccess = createAction(
+	'[MainState] MarkNotificationReadSuccess',
+	props<{ notificationId?: string }>()
+);
+//#endregion
+
+//#region Teaching Schedules
+export const FetchUserTeachingSchedules = createAction('[MasterState] FetchUserTeachingSchedules');
+export const FetchUserTeachingSchedulesSuccess = createAction(
+	'[MasterState] FetchUserTeachingSchedulesSuccess',
+	props<{ payload: ClientTrainerTeachingSchedule[] }>()	
+);
+
+//#endregion
+
+//#region Download & Upload
+export const DownloadFile = createAction('[MainState] DownloadFile', props<{ fileId: string }>());
 export const UploadFileFailed = createAction('[MainState] UploadFileFailed');
 export const RemoveUploadedFiles = createAction('[MainState] RemoveUploadedFiles');
+//#endregion
 
 //#region Global
 export const TestRequest = createAction(
-  '[MainState] TestRequest', 
-  props<{
-    link: string; 
-    method: 'get' | 'post'; 
-    body?: any 
-  }>()
+	'[MainState] TestRequest',
+	props<{
+		link: string;
+		method: 'get' | 'post';
+		body?: any;
+	}>()
 );
 export const AfterRequest = createAction('[MainState] AfterRequest');
 export const RequestFailed = createAction('[MainState] RequestFailed');
@@ -107,7 +132,7 @@ export const SuccessfullyMessage = (doingWhat: string): Action =>
 export const RequestFailedMessage = (error: HttpErrorResponse): Action =>
 	ToastMessage({
 		messageType: 'danger',
-    message: `Request Failed :
+		message: `Request Failed :
 URL: ${error.url.replace(environment.apiUrl, '')}
 Exception Type: ${error.error?.ExceptionType ?? '-'}
 "${error.error?.Message ?? 'No error message'}"`,
@@ -144,7 +169,10 @@ export const NotImplementedMessage = (doingWhat: string): Action =>
 	});
 //#endregion
 
-export const DispatchIfEmpty = createAction('[MainState] FetchIfEmpty', props<{
-  action: Action
-  selectorToBeChecked: MemoizedSelector<IAppState, any>
-}>());
+export const DispatchIfEmpty = createAction(
+	'[MainState] FetchIfEmpty',
+	props<{
+		action: Action;
+		selectorToBeChecked: MemoizedSelector<IAppState, any>;
+	}>()
+);

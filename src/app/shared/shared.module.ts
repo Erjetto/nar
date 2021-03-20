@@ -28,6 +28,7 @@ import { TraineeDetailOnHoverComponent } from './components/trainee-detail-on-ho
 import { ExternalUrlDirective } from './directives/external-url.directive';
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { DataTableModule } from './components/data-table/data-table.module';
+import { NotificationComponent } from './components/notification/notification.component';
 
 const quillModuleSettings = {
 	modules: {
@@ -57,6 +58,7 @@ const SHARED_DECLARATIONS = [
 	FilterByInputComponent, // Not used yet
 	UploadInputComponent,
 	TraineeDetailOnHoverComponent,
+	NotificationComponent,
 
 	ClickStopPropagationDirective,
 	ContrastTextColorDirective, // Not used yet

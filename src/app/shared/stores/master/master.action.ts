@@ -228,7 +228,6 @@ export const DeleteTraineeInSchedule = createAction(
 //#endregion
 
 //#region Modify
-export const FetchUserTeachingSchedules = createAction('[MasterState] FetchUserTeachingSchedules');
 export const FetchTrainerTeachingSchedules = createAction(
 	'[MasterState] FetchTrainerTeachingSchedules',
 	props<{ startDate: string; endDate: string }>()

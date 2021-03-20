@@ -4,6 +4,7 @@ import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
 import { GetDownloadLinkFromFileId, isEmptyGuid } from './methods';
 
+//#region Constants, enums, system class etc
 export const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
 
 export type SortDirection = 'ASC' | 'DESC' | '';
@@ -61,7 +62,6 @@ export class Role {
 		else return roleFlags.some((role) => (role.roleNumber & this.roleNumber) !== 0);
 	}
 }
-//#endregion
 
 export class ClientUserInRoles extends BaseModel {
 	constructor(public Role = '', public UserInRoleId = EMPTY_GUID, public UserName = '') {
@@ -1171,7 +1171,7 @@ export class ClientStatistic extends BaseModel {
 }
 
 export class ClientTrainerTeachingScheduleDetail extends BaseModel {
-	constructor(public Username = '', public Type = '') {
+	constructor(public UserName = '', public Type = '') {
 		super();
 	}
 
@@ -2023,3 +2023,29 @@ export class LogBookPIC extends BaseModel {
 }
 
 //#endregion
+
+export class Notification extends BaseModel {
+	constructor(
+		public Id = EMPTY_GUID,
+		public UserId = EMPTY_GUID,
+		public Title = '',
+		public Tag = '',
+		public Message = '',
+		public Link = '',
+		public IsRead = false,
+		public SavedDate: Date = null
+	) {
+		super();
+	}
+
+	get markedRead() {
+		return Notification.fromJson({...this, IsRead: true})
+	}
+
+	static fromJson(data?: any): Notification {
+		if (isEmpty(data)) return null;
+		return Object.assign(new Notification(), data, {
+			SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
+		});
+	}
+}

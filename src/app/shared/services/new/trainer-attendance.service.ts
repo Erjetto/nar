@@ -15,7 +15,7 @@ import { DateHelper } from '../../utilities/date-helper';
 	providedIn: 'root',
 })
 export class TrainerAttendanceService {
-	private baseUrl = environment.apiUrl + 'Trainee.svc/';
+	private baseUrl = environment.apiUrl + 'TrainerAttendance.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
 	public GetCurrentUserTeachingSchedule(): Observable<ClientTrainerTeachingSchedule[]> {

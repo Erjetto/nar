@@ -109,8 +109,10 @@ export class ModifyTraineeScheduleComponent
 		this.viewTrainerTeachingScheduleControl.valueChanges.pipe(
 			takeUntil(this.destroyed$),
 			filter((form) => !!form.startDate && !!form.endDate)
-		);
-		// .subscribe((form) => this.store.dispatch(MasterStateAction.FetchTraineeSchedulesByDate(form)));
+		)
+			.subscribe((form) => 
+				this.store.dispatch(MasterStateAction.FetchTrainerTeachingSchedules(form))
+			);
 
 		this.viewTraineeTrainingScheduleControl.valueChanges
 			.pipe(
@@ -138,28 +140,30 @@ export class ModifyTraineeScheduleComponent
 			})
 		);
 	}
-
 	submitInsertTeachingSchedule() {
+		// TeachingDate,Trainer,Room,Shift,Type,Topic
 		this.loadingFormInsertTeachingSchedule$.next(true);
 		this.store.dispatch(
 			MasterStateAction.CreateTrainerTeachingSchedules({
-				schedules: this.insertTeachingScheduleText.value.trim().split('\n'),
+				schedules: this.processCSV(this.insertTeachingScheduleText.value)
 			})
 		);
 	}
 	submitInsertTrainingSchedule() {
+		// TCode,AttendanceDate,TimeIn,TimeOut,Type,Room
 		this.loadingFormInsertTrainingSchedule$.next(true);
 		this.store.dispatch(
 			BinusianStateAction.CreateTraineeSchedules({
-				schedules: this.insertTrainingScheduleText.value.trim().split('\n'),
+				schedules: this.processCSV(this.insertTrainingScheduleText.value)
 			})
 		);
 	}
 	submitInsertTraineeAttendance() {
+		// Trainee number,Lecture date,Lecture schedule
 		this.loadingFormInsertTraineeAttendance$.next(true);
 		this.store.dispatch(
 			BinusianStateAction.CreateTraineeAttendances({
-				attendances: this.insertTraineeAttendanceText.value.trim().split('\n'),
+				attendances: this.processCSV(this.insertTraineeAttendanceText.value)
 			})
 		);
 	}
@@ -167,9 +171,14 @@ export class ModifyTraineeScheduleComponent
 		this.loadingFormInsertLectureSchedule$.next(true);
 		this.store.dispatch(
 			BinusianStateAction.CreateLectureSchedules({
-				schedules: this.insertLectureScheduleText.value.trim().split('\n'),
+				schedules: this.processCSV(this.insertLectureScheduleText.value)
 			})
 		);
+	}
+
+	// Split each line, trim & filter empty line
+	processCSV(text){
+		return text.split('\n').map(t => t.trim()).filter(t => t !== '');
 	}
 
 	deleteTrainerTeachingSchedule(s: TrainerTeachingSchedule) {}

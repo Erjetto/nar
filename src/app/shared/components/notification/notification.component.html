@@ -1,0 +1,61 @@
+<span class="col-auto text-right">
+	<div
+		class="notification"
+		#pop="ngbPopover"
+		[ngbPopover]="notificationContent"
+		[popoverTitle]="notificationHeader"
+		popoverClass="override-default-popover"
+		autoClose="outside"
+		container="body"
+	>
+		<fa-icon
+			class="btn btn-lg hover-text-blue"
+			[icon]="(unreadNotifAmount$ | async) == 0 ? ['far', 'bell'] : ['fas', 'bell']"
+		></fa-icon>
+		<span class="notification-badge" [hidden]="(unreadNotifAmount$ | async) === 0">
+			<span class="absolute-center">{{ unreadNotifAmount$ | async }}</span>
+		</span>
+	</div>
+</span>
+
+<ng-template #notificationContent>
+	<div class="notification-body v-scroll maxh-500px">
+		<div
+			class="row notification-row cursor-pointer"
+			*ngFor="let notif of notifications$ | async"
+			[ngClass]="{ 'notification-row-unread': !notif.IsRead }"
+			(click)="pop.close(); clickNotification(notif)"
+		>
+			<div class="col">
+				<div class="row ">
+					<span class="col notification-row__title">{{ notif.Title }}</span>
+					<div class="col-auto">
+						<span class="notification-row__badge">
+							{{ notif.Tag }}
+						</span>
+					</div>
+				</div>
+				<div class="row notification-row__body" [innerHTML]="notif.Message"></div>
+				<div class="row notification-row__footer pt-2">
+					<span class="col text-right">{{ notif.SavedDate | date: viewDateFormat }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+<ng-template #notificationHeader>
+	<div class="row notification-header">
+		<div class="col text-right">
+			<button
+				class="btn btn-primary btn-xs mr-1"
+				(click)="pop.close(); markAllAsRead()"
+				title="Mark all as read"
+			>
+				<fa-icon [icon]="['fas', 'check-circle']"></fa-icon>
+			</button>
+			<button class="btn btn-danger btn-xs" (click)="pop.close(); deleteAll()" title="Delete all">
+				<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+			</button>
+		</div>
+	</div>
+</ng-template>

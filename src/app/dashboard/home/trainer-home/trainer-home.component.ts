@@ -38,13 +38,14 @@ export class TrainerHomeComponent extends DashboardContentBase implements OnInit
 
 	phases$: Observable<ClientPhase[]>;
 	announcements$: Observable<Message[]>;
-	trainerTeachingSchedule$: Observable<TrainerTeachingSchedule[]>;
+	trainerTeachingSchedules$: Observable<TrainerTeachingSchedule[]>;
 	commentHistory$ = new Subject<TraineeCommentHistory[]>();
 
 	currentPhase = new FormControl();
 	statistics$ = new Subject<ClientStatistic[]>();
 	loadingTraineeStatistic$ = new BehaviorSubject<boolean>(false);
 	loadingAnnouncements$: Observable<boolean>;
+	loadingTeachingSchedules$:Observable<boolean>;
 
 	constant = {
 		roles: RoleFlags,
@@ -63,6 +64,8 @@ export class TrainerHomeComponent extends DashboardContentBase implements OnInit
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.announcements$ = this.store.pipe(select(fromMainState.getAnnouncements));
 		this.loadingAnnouncements$ = this.store.pipe(select(fromMainState.isAnnouncementsLoading));
+		this.trainerTeachingSchedules$ = this.store.pipe(select(fromMainState.getUserTeachingSchedules));
+		this.loadingTeachingSchedules$ = this.store.pipe(select(fromMainState.isUserTeachingSchedulesLoading));
 
 		// NOTE: Urutan subscription penting, karena currentPhase akan ambil initial value
 		//       dari phase kalau phases di Master state sudah ada value, jadi
@@ -105,6 +108,7 @@ export class TrainerHomeComponent extends DashboardContentBase implements OnInit
 			})
 		);
 		this.store.dispatch(MainStateAction.FetchAnnouncements());
+		this.store.dispatch(MainStateAction.FetchUserTeachingSchedules());
 	}
 
 	isRoomLink(room: string) {

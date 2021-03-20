@@ -1,0 +1,66 @@
+.notification {
+	position: relative;
+
+	&-badge {
+		border-radius: 50%;
+		width: 16px;
+		height: 16px;
+		position: absolute;
+		top: 0;
+		right: 0;
+		font-size: 10px;
+		margin: 5px;
+		background: red;
+		color: white;
+	}
+
+	&-header {
+		color: black;
+	}
+	&-body {
+		width: 350px;
+	}
+	&-row {
+		color: black;
+		padding: 8px;
+
+		&:not(:last-child) {
+			border-bottom: 1px solid lightgrey;
+		}
+
+		&:hover {
+			background: darken($color: white, $amount: 10%);
+		}
+
+		&__title {
+			font-weight: bold;
+			color: black;
+			font-size: medium;
+			
+			white-space: pre;
+			text-overflow: ellipsis;
+			overflow-x: hidden;
+	
+		}
+		&__badge {
+			color: white;
+			padding: 2px 8px;
+			background: grey;
+			border-radius: 20px;
+		}
+		&__body {
+			color: black;
+		}
+		&__footer {
+			color: black;
+		}
+
+		&-unread {
+			background: #caecff;
+			&:hover {
+				background: darken($color: #caecff, $amount: 10%);
+				// background: #aacee2;
+			}
+		}
+	}
+}

@@ -14,6 +14,9 @@ import {
   faCheck,
   faQuestion,
   faFileDownload,
+  faPaperPlane,
+  faBell,
+  faCheckCircle,
   faSortUp,
   faSortDown,
   faSort
@@ -34,15 +37,18 @@ export const fasIcons = [
   faCheck,
   faQuestion,
   faFileDownload,
+  faPaperPlane,
+  faBell,
+  faCheckCircle,
   faSortUp,
   faSortDown,
   faSort
 ];
 
 import {
-	faBell,
+	faBell as faBellAlt,
 	// faSignOutAlt,
 	// faPencilAlt,
   faTrashAlt,
 } from '@fortawesome/free-regular-svg-icons';
-export const farIcons = [faBell, faTrashAlt];
+export const farIcons = [faBellAlt, faTrashAlt];

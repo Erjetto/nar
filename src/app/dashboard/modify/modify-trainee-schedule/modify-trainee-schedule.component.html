@@ -17,9 +17,9 @@
 								<li>Teaching date => date format</li>
 								<li>Trainer => Trainer's initial</li>
 								<li>Room => 000-999 | link | etc.</li>
-								<li>Shift</li>
-								<li>Type => 'instructor' | 'co-instructor' | etc.</li>
-								<li>Topic => Name of topic</li>
+								<li>Shift => 00:00-00:00</li>
+								<li>Type => anything </li>
+								<li>Topic => anything </li>
 								<li>
 									For example,
 									<ul>
@@ -77,14 +77,14 @@
 									</ng-template>
 								</rd-table-column>
 
-								<rd-table-column [label]="'Trainer'">
-									<ng-template rdTableTemplate="body" let-schedule="rowData">
-										<span *ngFor="let trainer of schedule.Trainer">
-											{{ trainer.Username }} ({{ trainer.Type }})
-											<br />
-										</span>
-									</ng-template>
+								<rd-table-column [prop]="'Lecturer.UserName'" [label]="'Trainer'">
 								</rd-table-column>
+										<!-- <ng-template rdTableTemplate="body" let-schedule="rowData">
+											<span *ngFor="let trainer of schedule.Lecturer">
+												{{ trainer.UserName }} ({{ trainer.Type }})
+												<br />
+											</span>
+										</ng-template> -->
 
 								<rd-table-column [prop]="'Shift'" [label]="'Shift'"></rd-table-column>
 
@@ -101,6 +101,8 @@
 									</ng-template>
 								</rd-table-column>
 
+								<rd-table-column [prop]="'Topic'" [label]="'Topic'"></rd-table-column>
+
 								<rd-table-column [label]="'Actions'" [cellClass]="'text-left'">
 									<ng-template rdTableTemplate="body" let-schedule="rowData">
 										<rd-confirmable-pop-up (confirm)="deleteTraineeTrainingSchedule(schedule)">
@@ -115,10 +117,6 @@
 					</div>
 				</div>
 			</rd-card>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
 			<rd-card
 				[cardTitle]="'Trainee Training Schedule'"
 				[isLoading]="loadingFormInsertTrainingSchedule$ | async"
@@ -248,16 +246,19 @@
 				<form #insertTraineeAttendanceForm="ngForm">
 					<div class="row">
 						<div>
-							The input format must be: Trainee number,Lecture date,Lecture schedule
-							<ul style="margin: 0">
-								<li>Trainee number, whose trainee lecture schedule you wish to set</li>
-								<li>Lecture date, in general date format</li>
-								<li>Lecture schedule, must not contains comma sign (,)</li>
-								<li>
-									For example,
+							The input format must be: 
+							<p class="text-center font-style-italic" style="font-family: monospace;">
+								Trainee number,type,reason,Attendance date
+							</p>
+							<ul style="margin:0">
+								<li>Trainee number, whose trainee attendance you wish to set</li>
+								<li>Attendance date, in general date time format</li>
+								<li>Reason only fill when type is Permission</li>
+								<li>Type of the attendance, must be 'Room', 'Secretariat' , 'Permission' , or 'Rest'</li>
+								<li>For example,
 									<ul>
-										<li>T000,2011-11-30,07:20-11:00 05MZT 521 Sistem Operasi</li>
-										<li>T999,12/31/2011,19:20-21:00 09PXW 814 Pemrograman Bahasa Tingkat Rendah</li>
+										<li>T000,Permission,Izin kuliah,2011-11-30 07:20</li>
+										<li>T000,Secretariat,,2011-11-30 15:20</li>
 									</ul>
 								</li>
 							</ul>

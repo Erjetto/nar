@@ -433,6 +433,18 @@ export class MasterStateEffects {
 
 	//#region Modify tab
 	@Effect()
+	createTrainerTeachingSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.CreateTrainerTeachingSchedules),
+		switchMap((data) => this.trainerAttendanceService.SaveLecturerTeachingSchedules(data)),
+		mergeMap((res) => 
+		res.length === 0 
+			? of(MainStateAction.SuccessfullyMessage('created teaching schedule'))
+			: of(MainStateAction.FailMessage('creating teaching schedule', res.join('\n')))
+		),
+		share()
+	);
+		
+	@Effect()
 	getTrainerTeachingSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchTrainerTeachingSchedules),
 		switchMap((data) => this.trainerAttendanceService.GetTrainerTeachingSchedules(data)),

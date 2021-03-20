@@ -44,7 +44,7 @@ import {
 	FetchTraineeSchedulesSuccess,
 	FetchTraineeSchedulesByDate,
 	FetchTrainerTeachingSchedules,
-	FetchUserTeachingSchedules,
+	FetchTrainerTeachingSchedulesSuccess,
 } from './master.action';
 import { IAppState } from 'src/app/app.reducer';
 
@@ -240,13 +240,13 @@ export const MasterStateReducer = createReducer(
 	})),
 
 	//#region Modify tab
-	on(FetchUserTeachingSchedules, FetchTrainerTeachingSchedules, (state) => ({
+	on(FetchTrainerTeachingSchedules, (state) => ({
 		...state,
 		loadingTrainerTeachingSchedules: true,
 	})),
-	on(FetchTraineeSchedulesSuccess, (state, { payload }) => ({
+	on(FetchTrainerTeachingSchedulesSuccess, (state, { payload }) => ({
 		...state,
-		traineeTrainingSchedules: payload,
+		trainerTeachingSchedules: payload,
 		loadingTrainerTeachingSchedules: false,
 	})),
 	

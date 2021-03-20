@@ -62,9 +62,6 @@
 						<fa-icon [icon]="['fas', 'moon']"></fa-icon> Grey Theme
 					</span>
 
-					<!-- <span>
-            <fa-icon class="btn btn-sm hover-text-blue" [icon]="['far', 'bell']"></fa-icon>
-          </span> -->
 					<span class="btn btn-sm hover-text-blue" (click)="signOut()">
 						<b>Sign Out</b> &nbsp;
 						<fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
@@ -96,8 +93,9 @@
 						{{ menu.data?.name }}
 					</a>
 					<!-- Has submenu -->
-					<a *ngSwitchCase="false" 
-						class="menu-item" 
+					<a
+						*ngSwitchCase="false"
+						class="menu-item"
 						[class.menu-active]="isMenuActive(menu)"
 						[hidden]="menu.data?.isHidden | async"
 					>
@@ -128,6 +126,11 @@
 					</a>
 				</ng-container>
 			</ng-container>
+
+			<!-- Spacing -->
+			<span class="col"></span>
+			<!-- Notification button -->
+			<rd-notification></rd-notification>
 		</div>
 	</div>
 </nav>

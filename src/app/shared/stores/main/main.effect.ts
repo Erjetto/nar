@@ -27,6 +27,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Cookies } from '../../constants/cookie.constants';
 import { IAppState } from 'src/app/app.reducer';
 import { ClientGeneration } from '../../models';
+import { TrainerAttendanceService } from '../../services/new/trainer-attendance.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -37,6 +38,7 @@ export class MainStateEffects {
 		private store: Store<IAppState>,
 		private generalService: GeneralService,
 		private announcementService: AnnouncementService,
+		private trainerAttendanceService: TrainerAttendanceService,
 		private otherService: OtherService
 	) {}
 
@@ -78,7 +80,7 @@ export class MainStateEffects {
 			this.generalService.ChangeRole({ role: act.role.roleName }).pipe(map((res) => ({ act, res })))
 		),
 		mergeMap(({ act }) => {
-			localStorage.setItem(Cookies.CURR_ROLE, act.role.roleName);
+			// localStorage.setItem(Cookies.CURR_ROLE, act.role.roleName);
 			return of(MainStateAction.ChangeRoleSuccess({ role: act.role }));
 		}),
 		share()
@@ -113,7 +115,7 @@ export class MainStateEffects {
 	@Effect()
 	logout$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.Logout),
-		tap(v => this.store.dispatch(MainStateAction.InfoMessage('Logging out...'))),
+		tap((v) => this.store.dispatch(MainStateAction.InfoMessage('Logging out...'))),
 		switchMap(() => this.generalService.LogOut()),
 		mergeMap(() => of(MainStateAction.LogoutSuccess())),
 		share()
@@ -169,6 +171,52 @@ export class MainStateEffects {
 		share()
 	);
 
+	@Effect()
+	getNotifications$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.FetchNotifications),
+		switchMap(() => this.generalService.GetNotifications()),
+		mergeMap((res) => of(MainStateAction.FetchNotificationsSuccess({ payload: res }))),
+		share()
+	);
+
+	@Effect()
+	markNotificationRead$: Observable<any> = this.actions$.pipe(
+		ofType(MainStateAction.MarkNotificationRead),
+		switchMap((data) =>
+			this.generalService.MarkNotificationAsRead(data).pipe(map((res) => ({ res, data })))
+		),
+		mergeMap(({ res, data }) =>
+			res === true
+				? of(MainStateAction.MarkNotificationReadSuccess({ notificationId: data.notificationId }))
+				: of()
+		),
+		share()
+	);
+
+	@Effect()
+	markAllNotificationsRead$: Observable<any> = this.actions$.pipe(
+		ofType(MainStateAction.MarkAllNotificationsRead),
+		switchMap(() => this.generalService.MarkAllNotificationAsRead()),
+		mergeMap((res) => (res === true ? of(MainStateAction.MarkNotificationReadSuccess({})) : of())),
+		share()
+	);
+
+	@Effect()
+	deleteAllNotifications$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.DeleteAllNotifications),
+		switchMap(() => this.generalService.RemoveAllNotification()),
+		mergeMap(() => of(MainStateAction.FetchNotifications())),
+		share()
+	);
+	
+	@Effect()
+	getUserTeachingSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(MainStateAction.FetchUserTeachingSchedules),
+		switchMap(() => this.trainerAttendanceService.GetCurrentUserTeachingSchedule()),
+		mergeMap((res) => of(MainStateAction.FetchUserTeachingSchedulesSuccess({ payload: res }))),
+		share()
+	);
+
 	@Effect({ dispatch: false })
 	downloadFile$ = this.actions$.pipe(
 		ofType(MainStateAction.DownloadFile),
@@ -176,38 +224,12 @@ export class MainStateEffects {
 		share()
 	);
 
-	// @Effect()
-	// uploadFile$: Observable<Action> = this.actions$.pipe(
-	// 	ofType(MainStateAction.UploadFile),
-	// 	pluck('files'),
-	// 	tap(() => this.store.dispatch(MainStateAction.InfoMessage('Uploading files...'))),
-	// 	switchMap((files) => this.otherService.UploadFiles(files)),
-	// 	mergeMap((res) => {
-	// 		if (res != null) {
-	// 			// If files is possibly string or string[], so make an array then flatten it to force string[]
-	// 			// If it's array, then 2D arr be flattened
-	// 			// If it's string, then it becomes arr
-	// 			const fileIdsArr: string[] = _flatten([res.fileid]);
-	// 			const fileNamesArr: string[] = _flatten([res.filename]);
-
-	// 			return of(
-	// 				MainStateAction.SuccessfullyMessage('uploaded file(s) : ' + fileNamesArr.join(', ')),
-	// 				MainStateAction.UploadFileSuccess({
-	// 					fileids: fileIdsArr,
-	// 					filenames: fileNamesArr,
-	// 				})
-	// 			);
-	// 		} else return of(MainStateAction.UploadFileFailed()); // not needed?
-	// 	}),
-	// 	share()
-	// );
-
 	// Langsung subscribe ke effect buat dapatkan result
 	@Effect({ dispatch: false })
 	testRequest$: Observable<any> = this.actions$.pipe(
 		ofType(MainStateAction.TestRequest),
-    switchMap((data) => this.otherService.TestRequest(data)),
-    mergeMap(res => of(res)),
+		switchMap((data) => this.otherService.TestRequest(data)),
+		mergeMap((res) => of(res)),
 		share()
 	);
 	@Effect({ dispatch: false })
@@ -226,7 +248,7 @@ export class MainStateEffects {
 		share()
 	);
 
-  // IMPORTANT -- Checks if the selector returns null or empty, if so then fetch
+	// IMPORTANT -- Checks if the selector returns null or empty, if so then fetch
 	@Effect()
 	dispatchIfEmpty$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.DispatchIfEmpty),

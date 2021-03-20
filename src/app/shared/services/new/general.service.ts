@@ -15,6 +15,7 @@ import {
 	ClientTraineeData,
 	ClientTrainee,
   ClientGeneration,
+	Notification,
 } from '../../models';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -119,23 +120,31 @@ export class GeneralService {
 	}
 
 	// Notification
-	public GetNotifications(): Observable<any> {
-		return throwError('Not implemented yet');
+	public GetNotifications(): Observable<Notification[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetNotifications', {})
+			.pipe(map((res: any) => _map(res.d, Notification.fromJson)));
 	}
 
 	// Notification
 	public MarkNotificationAsRead(data: { notificationId: string }): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'MarkNotificationAsRead', data)
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	// Notification
 	public MarkAllNotificationAsRead(): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'MarkAllNotificationAsRead', {})
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	// Notification
 	public RemoveAllNotification(): Observable<boolean> {
-		return throwError('Not implemented yet');
+		return this.httpClient
+			.post(this.baseUrl + 'RemoveAllNotification', {})
+			.pipe(map((res: any) => res.d === true));
 	}
 
 	public GetPhasesCurrentGeneration(): Observable<ClientPhase[]> {

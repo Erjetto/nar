@@ -5,10 +5,10 @@
 				<div class="col">
 					<rd-card [cardTitle]="'Trainee Statistic'" [isLoading]="loadingTraineeStatistic$ | async">
 						<div class="row mb-2">
-							<div class="col-1 col-form-label">
+							<div class="col-2 col-form-label text-right">
 								<b>Phase</b>
 							</div>
-							<div class="col-3">
+							<div class="col-5">
 								<ng-select
 									class="col"
 									[items]="phases$ | async"
@@ -25,49 +25,36 @@
 							</div>
 						</div>
 						<div class="row px-3">
-							<table class="mr-2" *ngFor="let stat of statistics$ | async">
-								<thead>
-									<tr>
-										<td>{{ stat.Type }}</td>
-										<td class="text-right">#</td>
-									</tr>
-								</thead>
-								<tbody>
-									<tr *ngFor="let data of stat.Detail">
-										<td>{{ data.Description }}</td>
-										<td class="text-right">{{ data.Count }}</td>
-									</tr>
-								</tbody>
-								<tfoot>
-									<tr>
-										<td>Total</td>
-										<td class="text-right">{{ stat.Total }}</td>
-									</tr>
-								</tfoot>
-							</table>
-						</div>
-					</rd-card>
-				</div>
-			</div>
-			<!-- Announcement for all -->
-			<div class="row">
-				<div class="col">
-					<rd-card [cardTitle]="'Announcements'" [isLoading]="loadingAnnouncements$ | async">
-						<div class="row v-list-m-6 v-list-bordered">
-							<div class="row" *ngFor="let msg of announcements$ | async">
-								<div class="col">
-									<h4>{{ msg.Title }}</h4>
-									<div [innerHTML]="msg.contentAndAttachmentHTML"></div>
-								</div>
+							<div class="col-4 p-2" *ngFor="let stat of statistics$ | async">
+								<table class="w-100">
+									<thead>
+										<tr>
+											<td>{{ stat.Type }}</td>
+											<td class="text-right">#</td>
+										</tr>
+									</thead>
+									<tbody>
+										<tr *ngFor="let data of stat.Detail">
+											<td>{{ data.Description }}</td>
+											<td class="text-right">{{ data.Count }}</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td>Total</td>
+											<td class="text-right">{{ stat.Total }}</td>
+										</tr>
+									</tfoot>
+								</table>
 							</div>
 						</div>
 					</rd-card>
-				</div>
-				<div class="col">
-					<rd-card [cardTitle]="'Your Teaching Schedule'">
-						
+					<rd-card
+						[cardTitle]="'Your Teaching Schedule'"
+						[isLoading]="loadingTeachingSchedules$ | async"
+					>
 						<rd-data-table
-							[data]="trainerTeachingSchedule$ | async"
+							[data]="trainerTeachingSchedules$ | async"
 							[noDataMessage]="'No training schedules'"
 						>
 							<rd-table-header> </rd-table-header>
@@ -101,11 +88,16 @@
 								<rd-table-column [label]="'Trainer'">
 									<ng-template rdTableTemplate="body" let-schedule="rowData">
 										<span *ngFor="let trainer of schedule.Trainer">
-											{{ trainer.Username }} ({{ trainer.Type }})
+											{{ trainer.UserName }} ({{ trainer.Type }})
 											<br />
 										</span>
 									</ng-template>
 								</rd-table-column>
+
+								<rd-table-column 
+									[label]="'Topic'"
+									[prop]="'Topic'"
+								></rd-table-column>
 
 							</ng-container>
 						</rd-data-table>
@@ -113,10 +105,20 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-3" *ngIf="!(currentUser$ | async).Role.is(constant.roles.JuniorTrainer)">
+		<div class="col-4" *ngIf="!(currentUser$ | async).Role.is(constant.roles.JuniorTrainer)">
 			<div class="row">
 				<div class="col">
-					<rd-card [cardTitle]="'Trainee Comment History'" [isLoading]="false" [maxHeight]="500">
+					<rd-card [cardTitle]="'Announcements'" [isLoading]="loadingAnnouncements$ | async">
+						<div class="row v-list-m-6 v-list-bordered">
+							<div class="row" *ngFor="let msg of announcements$ | async">
+								<div class="col">
+									<h4>{{ msg.Title }}</h4>
+									<div [innerHTML]="msg.contentAndAttachmentHTML"></div>
+								</div>
+							</div>
+						</div>
+					</rd-card>
+					<rd-card [cardTitle]="'Trainee Comment History'" [isLoading]="false" [maxHeight]="400">
 						<div
 							class="row p-1 bd-bottom bd-lightgrey"
 							*ngFor="let comment of commentHistory$ | async"

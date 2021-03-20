@@ -1,6 +1,20 @@
-import { createFeatureSelector, createReducer, createSelector, MemoizedSelector, on } from '@ngrx/store';
+import {
+	createFeatureSelector,
+	createReducer,
+	createSelector,
+	MemoizedSelector,
+	on,
+} from '@ngrx/store';
 
-import { Toast, Message, User, ClientGeneration, Role } from '../../models';
+import {
+	Toast,
+	Message,
+	User,
+	ClientGeneration,
+	Role,
+	Notification,
+	ClientTrainerTeachingSchedule,
+} from '../../models';
 import {
 	isEmpty as _isEmpty,
 	drop as _drop,
@@ -19,9 +33,12 @@ import {
 	ChangeRoleSuccess,
 	FetchAnnouncements,
 	FetchAnnouncementsSuccess,
-	// UploadFile,
-	// UploadFileSuccess,
 	RemoveUploadedFiles,
+	FetchNotifications,
+	FetchNotificationsSuccess,
+	MarkNotificationReadSuccess,
+	FetchUserTeachingSchedules,
+	FetchUserTeachingSchedulesSuccess,
 } from './main.action';
 import { RoleFlags } from '../../constants/role.constant';
 
@@ -33,33 +50,36 @@ export interface IMainState {
 
 	announcements: Message[]; // Home Message
 	isLoadingAnnouncements: boolean;
-	// uploadedFiles: { fileid: string; filename: string }[];
-	// isUploadingFiles: boolean;
+
+	notifications: Notification[];
+	isLoadingNotifications: boolean;
 
 	currentRole: Role;
 	currentGeneration: ClientGeneration;
 	currentGenerationId: string;
+
+	teachingSchedules: ClientTrainerTeachingSchedule[];
+	loadingTeachingSchedules: boolean;
 }
 
 export const initialState: IMainState = {
 	currentUser: null,
 
 	messagesMax: 5,
-	messages: [
-		// new Toast('info', 'Lorem ipsum dolor sit amet'),
-		// new Toast('success', 'Fetch data success 2'),
-		// new Toast('warning', 'Fetch data failed 3'),
-		// new Toast('danger', 'Fetch data failed 4'),
-	],
-	// uploadedFiles: [],
-	// isUploadingFiles: false,
+	messages: [],
 
 	announcements: [],
 	isLoadingAnnouncements: false,
 
+	notifications: [],
+	isLoadingNotifications: false,
+
 	currentGeneration: null,
 	currentGenerationId: '',
 	currentRole: null,
+
+	teachingSchedules: [],
+	loadingTeachingSchedules: false,
 };
 
 export const MAINSTATE_REDUCER_NAME = 'MainState';
@@ -115,13 +135,34 @@ export const MainStateReducer = createReducer(
 		isLoadingAnnouncements: false,
 	})),
 
-	// on(UploadFile, (state) => ({ ...state, isUploadingFiles: true })),
+	on(FetchNotifications, (state) => ({
+		...state,
+		isLoadingNotifications: true,
+	})),
 
-	// on(UploadFileSuccess, (state, { fileids, filenames }) => ({
-	// 	...state,
-	// 	uploadedFiles: _zip(fileids, filenames).map((v) => ({ fileid: v[0], filename: v[1] })),
-	// 	isUploadingFiles: false,
-	// })),
+	on(FetchNotificationsSuccess, (state, { payload }) => ({
+		...state,
+		notifications: payload,
+		isLoadingNotifications: false,
+	})),
+
+	on(MarkNotificationReadSuccess, (state, { notificationId }) => ({
+		...state,
+		notifications: state.notifications.map((n) =>
+			!notificationId || notificationId === n.Id ? n.markedRead : n
+		),
+		isLoadingNotifications: false,
+	})),
+
+	on(FetchUserTeachingSchedules, (state) => ({
+		...state,
+		loadingTeachingSchedules: true,
+	})),
+	on(FetchUserTeachingSchedulesSuccess, (state, { payload }) => ({
+		...state,
+		loadingTeachingSchedules: false,
+		teachingSchedules: payload,
+	})),
 
 	on(RemoveUploadedFiles, (state) => ({
 		...state,
@@ -133,15 +174,16 @@ export const getMainState = createFeatureSelector<IMainState>(MAINSTATE_REDUCER_
 
 export const getMainStateBy = (fn: (_: IMainState) => any) => createSelector(getMainState, fn);
 
-export const getCurrentUser= getMainStateBy((s) => s.currentUser);
+export const getCurrentUser = getMainStateBy((s) => s.currentUser);
 
 export const getToastMessages = getMainStateBy((s) => s.messages);
 export const getAnnouncements = getMainStateBy((s) => s.announcements);
 export const isAnnouncementsLoading = getMainStateBy((s) => s.isLoadingAnnouncements);
+export const getNotifications = getMainStateBy((s) => s.notifications);
+export const isNotificationsLoading = getMainStateBy((s) => s.isLoadingNotifications);
+export const getUserTeachingSchedules = getMainStateBy((s) => s.teachingSchedules);
+export const isUserTeachingSchedulesLoading = getMainStateBy((s) => s.loadingTeachingSchedules);
 
 export const getCurrentGeneration = getMainStateBy((s) => s.currentGeneration);
 export const getCurrentGenerationId = getMainStateBy((s) => s.currentGenerationId);
-export const getCurrentRole= getMainStateBy((s) => s.currentRole);
-
-// export const getUploadedFiles = getMainStateBy((s) => s.uploadedFiles);
-// export const isUploadingFiles = getMainStateBy((s) => s.isUploadingFiles);
+export const getCurrentRole = getMainStateBy((s) => s.currentRole);

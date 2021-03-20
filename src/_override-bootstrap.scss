@@ -1,6 +1,21 @@
 @import './variables';
 
 //#region bootstrap
+.override-default-popover {
+	max-width: unset;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	overflow: hidden;
+  box-shadow: 0px 0px 20px 0px #aaa;
+
+	> .popover-header {
+		color: black;
+	}
+	> .popover-body {
+		padding: 0;
+	}
+}
+
 .table {
 	background-color: white;
 
