@@ -1,5 +1,5 @@
 import { Component, OnInit, HostBinding, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { User, Role, ClientGeneration } from '../shared/models';
+import { User, Role, ClientGeneration, Notification } from '../shared/models';
 import { Subject, Observable, of, interval, merge, BehaviorSubject } from 'rxjs';
 import { RoleFlags } from '../shared/constants/role.constant';
 import { IAppState } from '../app.reducer';
@@ -88,18 +88,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				if (menus.every((r) => r.data.name !== this.currentActiveHeader))
 					this.router.navigateByUrl('/home');
 			}),
-      // Filter menu
+			// Filter menu
 			map((menus) =>
-				menus.map(m => {
+				menus.map((m) => {
 					// If validation() is true, then show menu
 					// if false then hide the menu
-					if(m.data?.validation !== undefined)
-						m.data.isHidden = m.data?.validation(this.store)
-							.pipe(map(result => !result)) // Reverse the result
-							.pipe(map(_ => false)) // TODO: Remove this menu bypass later
+					if (m.data?.validation !== undefined)
+						m.data.isHidden = m.data
+							?.validation(this.store)
+							.pipe(map((result) => !result)) // Reverse the result
+							// .pipe(map((_) => false)); // TODO: Remove this menu bypass later
 					return m;
 				})
-			),
+			)
 		);
 
 		this.router.events
@@ -122,10 +123,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 		// Redirect to login when logout
 		this.mainEffects.logout$.pipe(takeUntil(this.destroyed$)).subscribe((act) => {
-      // this.store.dispatch(MainStateAction.InfoMessage('Logging out...'));
+			// this.store.dispatch(MainStateAction.InfoMessage('Logging out...'));
 			if (act.type === MainStateAction.LogoutSuccess.type) this.router.navigateByUrl('/login');
 		});
 
+		//#region For SPV
 		// Get data from MainState
 		this.currentUser$ = this.store.pipe(select(fromMainState.getCurrentUser));
 		this.genList$ = this.store.pipe(select(fromMasterState.getGenerations));
@@ -145,7 +147,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				this.menuList$.next(this.menuService.getMenuForRole(role));
 			});
 
-		//#region For SPV
 		this.currentUser$
 			.pipe(filter((u) => u?.Role?.is(RoleFlags.AssistantSupervisor)))
 			.subscribe((u) => {
@@ -154,6 +155,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			});
 		this.store.dispatch(MainStateAction.FetchCurrentGeneration());
 		//#endregion
+
 	}
 
 	ngOnDestroy(): void {

@@ -47,7 +47,10 @@
 				#rowElement
 				*ngFor="let row of data; let rowIdx = index"
 				[class.cursor-pointer]="selectable"
-				[ngClass]="combineClass({ 'row-active': isRowSelected(row) }, conditionalRowClass)"
+				[ngClass]="combineClass(
+					{ 'row-active': isRowSelected(row) }, 
+					!!conditionalRowClass && conditionalRowClass(row))
+				"
 				(click)="onClickRow(row)"
 			>
 				<!-- Add check box here -->
@@ -79,7 +82,7 @@
 									{{column.formulaFunction(data[rowIdx])}}
 								</ng-container>
 								<ng-container *ngSwitchDefault>
-									{{ data[rowIdx][column.prop] }}
+									{{ getDataWithProp(data[rowIdx], column.prop) }}
 								</ng-container>
 							</ng-container>
 						</ng-container>

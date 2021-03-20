@@ -38,7 +38,7 @@ export class DataTableComponent implements AfterContentInit, OnDestroy, OnChange
 
 	@Input() data: any[] = [];
 	@Input() selectedValues: any[] = [];
-	@Input() conditionalRowClass: any = {};
+	@Input() conditionalRowClass: (_) => any;
 
 	@Input() selectable = false;
 	@Input() multipleSelectable = false;
@@ -122,6 +122,16 @@ export class DataTableComponent implements AfterContentInit, OnDestroy, OnChange
 
 	get tableColSpan(): number {
 		return this.columns.reduce((a, b) => a + b.colspan, 0) + (this.sortable ? 1 : 0);
+	}
+
+	/**
+	 * Enables nested attribute (ex: `{a:{b:{c:{d:10}}}}`) => `b.c.d == 10`
+	 * @param data row data
+	 * @param prop ex: `attr.nestedAttr` => `data['attr']['nestedAttr']
+	 */
+	getDataWithProp(data: any, prop: string){
+		if(prop.indexOf('.') === -1) return data[prop];
+		return prop.split('.').reduce((prev, curr) => prev[curr], data);
 	}
 
 	onCheckAllChanged(event) {

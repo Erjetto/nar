@@ -5,6 +5,10 @@
 
 @media screen {
 	.dark-theme {
+		
+		body::-webkit-scrollbar-thumb {
+			background: grey;
+		}
 		// .dashboard__content {
 		background-color: $content-bg-color-dark !important;
 		color: $text-color-dark !important;
