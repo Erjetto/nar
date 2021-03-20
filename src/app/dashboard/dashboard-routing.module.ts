@@ -298,7 +298,7 @@ export const routes: Routes = [
 						},
 					},
 					{
-						path: 'view-question/:generationId/:traineeId/:questionId',
+						path: 'question/:generationId/:traineeId/:questionId',
 						component: ViewQuestionComponent,
 						data: {
 							roles: RoleGroups.ALL,

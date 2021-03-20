@@ -155,16 +155,12 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 					};
 					// Create form controls for all answer & comments so we can put
 					// control for every question & answers including unowned ones
-					// Why? Because it's easier to create them all at once then loop them
-					// NOTE: FOR NOW COMMENT CAN'T BE EDITED DAMMIT
 					this.answersForm = this.fb.array(
 						qst.Answers.map((a) =>
 							// this.answersForm.push(
 							this.fb.group({
 								isEditing: [false],
-								// answer: ['', Validators.required],
-								// newComments: ['', Validators.required],
-								// isEditingComments: this.fb.array(a.Comments.map((c) => this.fb.control(false))),
+								isEditingComments: this.fb.array(a.Comments.map((c) => this.fb.control(false))),
 							})
 						)
 						// );
@@ -178,9 +174,9 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 		return this.answersForm.value[answerIdx]['isEditing'];
 	}
 
-	// isCommentEditing(answerIdx, commentIdx) {
-	// 	return this.answersForm.value[answerIdx]['isEditingComments'][commentIdx];
-	// }
+	isCommentEditing(answerIdx, commentIdx) {
+		return this.answersForm.value[answerIdx]['isEditingComments'][commentIdx];
+	}
 
 	toggleEdit(answerIdx, commentIdx?) {
 		console.log(answerIdx, commentIdx);
@@ -242,27 +238,27 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 
 	// NOTE: Comment can't be edited and deleted yet
 
-	// updateComment(form: NgForm) {
-	// 	const { itemId, comment } = form.value;
-	// 	this.store.dispatch(
-	// 		PresentationStateAction.UpdateCoreTrainingPresentationComment({
-	// 			filename: this.currQuestionData.filename,
-	// 			itemId,
-	// 			comment,
-	// 			commentId: '',
-	// 		})
-	// 	);
-	// 	this.loadingViewQuestion$.next(true);
-	// }
+	updateComment(form: NgForm) {
+		const { itemId, commentId, comment } = form.value;
+		this.store.dispatch(
+			PresentationStateAction.UpdateCoreTrainingPresentationComment({
+				filename: this.currQuestionData.filename,
+				itemId,
+				comment,
+				commentId,
+			})
+		);
+		this.loadingViewQuestion$.next(true);
+	}
 
-	// deleteComment(answerId: string, commentId: string) {
-	// 	this.store.dispatch(
-	// 		PresentationStateAction.DeleteCoreTrainingPresentationComment({
-	// 			filename: this.currQuestionData.filename,
-	// 			itemId: answerId,
-	// 			commentId,
-	// 		})
-	// 	);
-	// 	this.loadingViewQuestion$.next(true);
-	// }
+	deleteComment(answerId: string, commentId: string) {
+		this.store.dispatch(
+			PresentationStateAction.DeleteCoreTrainingPresentationComment({
+				filename: this.currQuestionData.filename,
+				itemId: answerId,
+				commentId,
+			})
+		);
+		this.loadingViewQuestion$.next(true);
+	}
 }

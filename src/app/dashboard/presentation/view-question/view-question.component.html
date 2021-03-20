@@ -6,10 +6,10 @@
 					<b>Material: </b> &nbsp;&nbsp; {{ (presentation$ | async)?.Material }}
 				</div>
 				<div class="row">
-          <div class="col pl-4">
-          <!-- [innerHTML]="(question$ | async)?.Question.Text" -->
-            <quill-view-html [content]="(question$ | async)?.Question.Text"></quill-view-html>
-          </div>
+					<div class="col pl-4">
+						<!-- [innerHTML]="(question$ | async)?.Question.Text" -->
+						<quill-view-html [content]="(question$ | async)?.Question.Text"></quill-view-html>
+					</div>
 					<div class="d-flex flex-column maxw-200px">
 						<div class="row justify-content-end text-right">
 							Asked By {{ (question$ | async)?.Question.UserName }}
@@ -37,35 +37,38 @@
 				>
 					<div class="col">
 						<div class="row answer__head">
-							<span class="text-primary">{{ answer.UserName }}</span>
-              &nbsp; - &nbsp; 
-              {{answer.Histories[answer.Histories.length - 1].SavedDate | date: 'dd MMM yyyy hh:mm a'}}
-            </div>
-            
+							<span class="text-primary">{{ answer.RespondenUserName }}</span>
+							&nbsp; - &nbsp;
+							{{
+								answer.Histories[answer.Histories.length - 1].SavedDate
+									| date: 'dd MMM yyyy hh:mm a'
+							}}
+						</div>
+
 						<div class="row answer__body">
-              <!-- Answer -->
-              <div class="col">
-                <quill-view-html [content]="answer.Text"></quill-view-html>
-              </div>
-              <!-- <div class="col" [hidden]="isAnswerEditing(i)" [innerHTML]="answer.Text"></div> -->
-              <!-- or Edit Answer -->
+							<!-- Answer -->
+							<div class="col" [hidden]="isAnswerEditing(i)">
+								<quill-view-html [content]="answer.Text"></quill-view-html>
+							</div>
+							<!-- <div class="col" [hidden]="isAnswerEditing(i)" [innerHTML]="answer.Text"></div> -->
+							<!-- or Edit Answer -->
 							<div class="col" [hidden]="!isAnswerEditing(i)">
-                <form 
-                  #answerEditForm="ngForm" 
-                  (submit)="updateAnswer(answer.Id, null, answerEditForm.value['answerEdit'])"
-                >
-                  <quill-editor
-                    name="answerEdit"
-                    [styles]="{ display: 'block', height: '100px' }"
-                    [ngModel]="answer.Text"
-                  ></quill-editor>
-                  <button class="btn btn-sm btn-primary" type="submit">
-                    <fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
-                  </button>
-                </form>
-              </div>
-              
-              <!-- Action buttons -->
+								<form
+									#answerEditForm="ngForm"
+									(submit)="updateAnswer(answer.Id, null, answerEditForm.value['answerEdit'])"
+								>
+									<quill-editor
+										name="answerEdit"
+										[styles]="{ display: 'block', height: '100px' }"
+										[ngModel]="answer.Text"
+									></quill-editor>
+									<button class="btn btn-sm btn-primary" type="submit">
+										<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
+									</button>
+								</form>
+							</div>
+
+							<!-- Action buttons -->
 							<div>
 								<!-- Set Answer status -->
 								<div
@@ -100,7 +103,7 @@
 								<!-- Edit comments or delete -->
 								<div
 									class="row justify-content-end"
-									*ngIf="(currentUser$ | async)?.Name === answer.UserName"
+									*ngIf="(currentUser$ | async)?.Name === answer.RespondenUserName"
 								>
 									<button class="btn btn-primary" title="Edit" (click)="toggleEdit(i)">
 										<fa-icon [icon]="['fas', 'pen']"></fa-icon>
@@ -123,25 +126,70 @@
 										class="row comment pre-wrap"
 										*ngFor="let comment of answer.Comments; let j = index"
 									>
-										<div class="col">{{ comment.Comment }} - by {{ comment.UserName }}</div>
-										<!-- <div class="p-1" *ngIf="(currentUser$ | async)?.Name === answer.UserName">
-											<button class="btn btn-sm btn-primary" title="Edit" (click)="toggleEdit(i, j)">
-												<fa-icon [icon]="['fas', 'pen']"></fa-icon>
-											</button>
-                      <rd-confirmable-pop-up
-                        (confirm)="deleteComment(answer.Id, comment.Id)"
-                      >
-												<button class="btn btn-sm btn-danger" title="Delete">
-													<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
-												</button>
-											</rd-confirmable-pop-up>
-										</div> -->
+										<ng-container >
+											<form
+												#editCommentForm="ngForm"
+												class="row py-3"
+												(submit)="updateComment(editCommentForm)"
+												[hidden]="!isCommentEditing(i, j)"
+											>
+												<input type="hidden" name="itemId" [ngModel]="answer.Id" />
+												<input type="hidden" name="commentId" [ngModel]="comment.Id" />
+												<div class="col">
+													<textarea
+														class="form-control vertical-text-area bd-bottom"
+														placeholder="Add comment here"
+														rows="1"
+														name="comment"
+														[ngModel]="comment.Comment"
+														required
+													>
+													</textarea>
+												</div>
+												<div class="col-auto">
+													<button
+														type="submit"
+														class="btn btn-sm btn-primary"
+														[disabled]="editCommentForm.invalid"
+													>
+													<fa-icon [icon]="['fas', 'paper-plane']"></fa-icon>
+													</button>
+													&nbsp;
+													<button	
+														class="btn btn-sm btn-danger"
+														title="Cancel"
+														(click)="toggleEdit(i, j)"
+													>
+														<fa-icon [icon]="['fas', 'times']"></fa-icon>
+													</button>
+												</div>
+											</form>
+											<ng-container >
+												<div class="col" [hidden]="isCommentEditing(i, j)">{{ comment.Comment }} - by {{ comment.UserName }}</div>
+
+												<div class="p-1" *ngIf="(currentUser$ | async)?.Name === comment.UserName" [hidden]="isCommentEditing(i, j)">
+													<button
+														class="btn btn-sm btn-primary"
+														title="Edit"
+														(click)="toggleEdit(i, j)"
+													>
+														<fa-icon [icon]="['fas', 'pen']"></fa-icon>
+													</button>
+													&nbsp;
+													<rd-confirmable-pop-up (confirm)="deleteComment(answer.Id, comment.Id)">
+														<button class="btn btn-sm btn-danger" title="Delete">
+															<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+														</button>
+													</rd-confirmable-pop-up>
+												</div>
+											</ng-container>
+										</ng-container>
 									</div>
 								</div>
-              </div>
-              <!-- New comment form -->
+							</div>
+							<!-- New comment form -->
 							<form #commentForm="ngForm" class="row pl-4" (submit)="addComment(commentForm)">
-								<input type="hidden" name="itemId" [ngModel]="answer.Id"/>
+								<input type="hidden" name="itemId" [ngModel]="answer.Id" />
 								<div class="col">
 									<textarea
 										class="form-control vertical-text-area bd-bottom"
@@ -149,18 +197,19 @@
 										rows="1"
 										name="comment"
 										ngModel
+										required
 									></textarea>
 								</div>
 								<div>
-									<button type="submit" class="btn btn-primary">
+									<button type="submit" class="btn btn-primary" [disabled]="commentForm.invalid">
 										<fa-icon [icon]="['fas', 'plus']"></fa-icon> Insert
 									</button>
 								</div>
 							</form>
 						</div>
 					</div>
-        </div>
-        <!-- New Answer -->
+				</div>
+				<!-- New Answer -->
 				<div class="row my-3">
 					<b>New Answers</b>
 				</div>

@@ -96,7 +96,7 @@ export const DeleteCoreTrainingPresentationItem = createAction(
 	props<{ filename: string; itemId: string; note: string }>()
 );
 export const DeleteCoreTrainingPresentationComment = createAction(
-	'[PresentationState] DeleteCoreTrainingPresentationItem',
+	'[PresentationState] DeleteCoreTrainingPresentationComment',
 	props<{ filename: string; itemId: string; commentId: string }>()
 );
 //#endregion
