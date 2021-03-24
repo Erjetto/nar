@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Role, ClientUserInRoles } from 'src/app/shared/models';
-import { takeUntil, tap, map, startWith } from 'rxjs/operators';
+import { takeUntil, map, startWith } from 'rxjs/operators';
 import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';

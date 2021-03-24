@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import {
@@ -11,7 +11,7 @@ import {
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { takeUntil, filter, tap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
 
 @Component({
@@ -30,9 +30,7 @@ export class ManageAttendanceIpListComponent
 
 	constructor(
 		protected store: Store<IAppState>,
-		private mainEffects: MainStateEffects,
-		private masterEffects: MasterStateEffects
-	) {
+		private mainEffects: MainStateEffects	) {
 		super(store);
 	}
 

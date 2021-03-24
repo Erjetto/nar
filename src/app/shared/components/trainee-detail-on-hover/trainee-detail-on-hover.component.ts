@@ -1,27 +1,20 @@
 import {
 	Component,
 	OnInit,
-	Output,
-	EventEmitter,
 	Input,
-	HostBinding,
-	ElementRef,
-	HostListener,
 	ViewChild,
-	TemplateRef,
 	OnDestroy,
 	AfterViewInit,
 	ChangeDetectionStrategy,
 } from '@angular/core';
-import { ColorHelper } from '../../utilities/color-helper';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { isString as _isString } from 'lodash';
-import { ClientNote, ClientTrainee, ClientTraineeData } from '../../models';
+import { ClientNote, ClientTraineeData } from '../../models';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
 import { select, Store } from '@ngrx/store';
-import { fromBinusianState, fromNoteState, NoteStateAction } from '../../store-modules';
+import { fromNoteState, NoteStateAction } from '../../store-modules';
 
 @Component({
 	selector: 'rd-trainee-detail-on-hover',

@@ -1,16 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { combineLatest, Observable } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
-import { Binusian, ClientTrainee, TraineeSchedule } from 'src/app/shared/models';
+import { ClientTrainee, TraineeSchedule } from 'src/app/shared/models';
 import {
 	BinusianStateAction,
 	fromBinusianState,
-	MainStateEffects,
 } from 'src/app/shared/store-modules';
-import { DispatchIfEmpty } from 'src/app/shared/stores/main/main.action';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { DashboardContentBase } from '../dashboard-content-base.component';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';

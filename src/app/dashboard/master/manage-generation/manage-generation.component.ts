@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { ClientGeneration, SimpleTraineeData, Binusian } from 'src/app/shared/models';
+import { ClientGeneration, SimpleTraineeData } from 'src/app/shared/models';
 import { Observable, BehaviorSubject, merge, combineLatest } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -14,8 +14,8 @@ import {
   MainStateAction,
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { NgForm, FormBuilder, Validators } from '@angular/forms';
-import { takeUntil, tap, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { FormBuilder, Validators } from '@angular/forms';
+import { takeUntil, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { isEmpty as _isEmpty} from 'lodash';
 
 @Component({
@@ -77,7 +77,7 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 			)
 		);
 
-		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.loadingFormGen$.next(false);
 			this.loadingViewTrainee$.next(false);
 			this.loadingFormTrainee$.next(false);

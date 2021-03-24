@@ -11,23 +11,20 @@ import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
 	MainStateEffects,
-	MasterStateEffects,
 	MasterStateAction,
 	BinusianStateAction,
-	BinusianStateEffects,
 	MainStateAction,
 	fromMasterState,
 	fromBinusianState,
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import {
 	ClientTrainee,
 	ClientTrainerTeachingSchedule,
 	TraineeSchedule,
 	TrainerTeachingSchedule,
 } from 'src/app/shared/models';
-import { HttpClient } from '@angular/common/http';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { isEmpty as _isEmpty } from 'lodash';
 
@@ -128,7 +125,7 @@ export class ModifyTraineeScheduleComponent
 				filter((v) => !_isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe((gen) => {
+			.subscribe(() => {
 				this.store.dispatch(BinusianStateAction.FetchAllTraineesInCurrentGen());
 				this.viewTraineeTrainingScheduleControl.reset();
 			});
@@ -181,11 +178,11 @@ export class ModifyTraineeScheduleComponent
 		return text.split('\n').map(t => t.trim()).filter(t => t !== '');
 	}
 
-	deleteTrainerTeachingSchedule(s: TrainerTeachingSchedule) {}
-	deleteTraineeTrainingSchedule(s: TraineeSchedule) {}
+	deleteTrainerTeachingSchedule() {}
+	deleteTraineeTrainingSchedule() {}
 
 	// OPTIONAL: Add regex here to learn more about regex hehehe
-	trainingScheduleFormat({ value }: AbstractControl): ValidationErrors {
+	trainingScheduleFormat({ }: AbstractControl): ValidationErrors {
 		if (false) return { regexError: true };
 		else return {};
 	}

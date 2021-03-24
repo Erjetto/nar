@@ -1,17 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
-import { MockData } from '../../mock-data';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import {
-	TopBottomVote,
-	TrainerTopBottomVote,
-	ClientTraineeReputationPaging,
 	ClientTraineeData,
 	EvaluationNote,
 	ClientEvaluation,
-	TraineeComment,
-  ClientTraineeReputation,
+	ClientTraineeReputation,
   TraineeCommentHistory,
 } from '../../models';
 import { environment } from 'src/environments/environment';

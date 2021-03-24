@@ -3,14 +3,9 @@ import {
 	OnInit,
 	HostBinding,
 	Input,
-	ViewChild,
-	ElementRef,
-	OnChanges,
-	SimpleChanges,
 	Output,
 	EventEmitter,
 	ChangeDetectorRef,
-	ChangeDetectionStrategy,
 } from '@angular/core';
 import {
 	trigger,
@@ -20,8 +15,6 @@ import {
 	state,
 	keyframes,
 } from '@angular/animations';
-import { interval } from 'rxjs';
-import { first, take } from 'rxjs/operators';
 import { swipeAnimation, faderAnimation } from '../../angular-animations';
 
 @Component({
@@ -101,7 +94,7 @@ export class CardComponent implements OnInit {
   @Input() isLoading = false;
   @Input() maxHeight = 0;
 
-	constructor(private cdr: ChangeDetectorRef) {}
+	constructor() {}
 
 	ngOnInit(): void {
 

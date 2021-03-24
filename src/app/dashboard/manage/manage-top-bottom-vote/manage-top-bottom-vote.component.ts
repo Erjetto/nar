@@ -20,7 +20,7 @@ import {
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { NgForm, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 
 @Component({

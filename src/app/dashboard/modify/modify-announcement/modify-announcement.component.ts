@@ -3,8 +3,6 @@ import {
 	OnInit,
 	ChangeDetectionStrategy,
 	OnDestroy,
-	ViewChild,
-	ElementRef,
 } from '@angular/core';
 import { Message } from 'src/app/shared/models';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -17,10 +15,10 @@ import {
 	fromMasterState,
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
-import { FormArray, FormBuilder, Validators } from '@angular/forms';
-import { takeUntil, filter, map } from 'rxjs/operators';
+import { FormBuilder, Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
-import { adjustControlsInFormArray, isEmptyGuid } from 'src/app/shared/methods';
+import { isEmptyGuid } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-modify-announcement',

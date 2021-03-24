@@ -3,7 +3,6 @@ import {
 	OnInit,
 	OnDestroy,
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 } from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
@@ -16,7 +15,7 @@ import {
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { FormBuilder } from '@angular/forms';
-import { Observable, merge, BehaviorSubject, Subject } from 'rxjs';
+import { Observable, merge, BehaviorSubject } from 'rxjs';
 import { SubcoCandidateQuestionModel, SubcoCandidateAnswerModel } from 'src/app/shared/models';
 import { takeUntil, filter, withLatestFrom } from 'rxjs/operators';
 import { isEmpty } from 'lodash';

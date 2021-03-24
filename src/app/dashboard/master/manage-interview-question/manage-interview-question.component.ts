@@ -1,19 +1,18 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ClientInterviewQuestion, InterviewQuestionDetail } from 'src/app/shared/models';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
 	MainStateEffects,
 	fromInterviewState,
 	InterviewStateAction,
-	MasterStateEffects,
 	InterviewStateEffects,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { Observable, BehaviorSubject, Subject, combineLatest } from 'rxjs';
-import { takeUntil, map, withLatestFrom, tap } from 'rxjs/operators';
-import { NgForm, FormBuilder, Validators } from '@angular/forms';
+import { takeUntil, map } from 'rxjs/operators';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'rd-manage-interview-question',
@@ -89,7 +88,7 @@ export class ManageInterviewQuestionComponent
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(InterviewStateAction.FetchInterviewQuestions()));
 
-		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe((action) => {
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.loadingFormInterviewQuestions$.next(false);
 		});
 		//#endregion

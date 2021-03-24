@@ -2,32 +2,26 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/
 import { ClientPhase, ClientSubject, ClientSchedule, ClientTrainee } from 'src/app/shared/models';
 import {
 	takeUntil,
-	map,
 	withLatestFrom,
-	tap,
 	filter,
 	distinctUntilChanged,
-	debounceTime,
 } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, BehaviorSubject, combineLatest, merge, Subject } from 'rxjs';
+import { Observable, BehaviorSubject, merge } from 'rxjs';
 import {
 	fromMasterState,
 	MasterStateAction,
 	MasterStateEffects,
 	MainStateEffects,
 	MainStateAction,
-	fromMainState,
 } from 'src/app/shared/store-modules';
 import {
-	NgForm,
 	FormBuilder,
 	Validators,
 	FormArray,
 	FormControl,
-	AbstractControl,
 } from '@angular/forms';
 import { isEmpty as _isEmpty } from 'lodash';
 
@@ -237,7 +231,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			this.masterEffects.deleteAllSchedule$
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrentSubject$))
-			.subscribe(([act, sub]) => {
+			.subscribe(([, sub]) => {
 				// Reset except phase & subject ng-select
 				const { phaseId, subjectId } = this.scheduleForm.value;
 				this.scheduleForm.reset({ phaseId, subjectId });
@@ -248,7 +242,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		// Auto reload trainees in schedule
 		merge(this.masterEffects.createTraineeInSchedule$, this.masterEffects.deleteTraineeInSchedule$)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrentSchedule$))
-			.subscribe(([act, sch]) => {
+			.subscribe(([, sch]) => {
 				if (!!sch)
 					this.store.dispatch(
 						MasterStateAction.FetchTraineeInSchedule({ scheduleId: sch.ScheduleId })

@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { Observable, timer, of } from 'rxjs';
+import { Component } from '@angular/core';
+import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 })
 export class ClockComponent {
 	public dateFormat = 'EEE MMM dd yyyy - hh:mm:ss';
-	public timer$: Observable<Date> = timer(0, 1000).pipe(map((o) => new Date()));
+	public timer$: Observable<Date> = timer(0, 1000).pipe(map(() => new Date()));
 
 	constructor() {}
 }

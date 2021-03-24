@@ -4,13 +4,9 @@ import {
 	Output,
 	EventEmitter,
 	Input,
-	HostBinding,
-	ElementRef,
-	HostListener,
 	ViewChild,
 	TemplateRef,
 } from '@angular/core';
-import { ColorHelper } from '../../utilities/color-helper';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { isString as _isString } from 'lodash';
 
@@ -28,7 +24,7 @@ export class ConfirmablePopUpComponent implements OnInit {
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 
-	constructor(private el: ElementRef) {}
+	constructor() {}
 
 	get titleIsString() {
 		return _isString(this.title);

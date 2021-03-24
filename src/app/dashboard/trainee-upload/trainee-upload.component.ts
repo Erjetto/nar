@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl } from '@angular/forms';
+import { AbstractControl, FormBuilder } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, Observable, Subject, merge } from 'rxjs';
+import { BehaviorSubject, Observable, merge } from 'rxjs';
 import { filter, map, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
 import {
 	ClientSubject,
 	ClientPhase,
-	Case,
 	ClientCaseTrainee,
 	ClientCaseTraineeDetail,
 } from 'src/app/shared/models';
@@ -15,7 +14,6 @@ import {
 	CaseStateAction,
 	CaseStateEffects,
 	fromCaseState,
-	fromMainState,
 	fromMasterState,
 	MainStateAction,
 	MainStateEffects,
@@ -45,7 +43,6 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 
 	constructor(
 		protected store: Store<IAppState>,
-		private mainEffects: MainStateEffects,
 		private caseEffects: CaseStateEffects,
 		private fb: FormBuilder
 	) {
@@ -94,7 +91,7 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 			.pipe(
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.currentViewSubject$, this.currentViewPhase$),
-				filter(([_, sub, phs]) => !_isEmpty(phs))
+				filter(([_,, phs]) => !_isEmpty(phs))
 			)
 			.subscribe(([_, sub, phs]) => {
 				this.store.dispatch(

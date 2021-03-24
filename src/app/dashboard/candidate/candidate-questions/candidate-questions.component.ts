@@ -7,17 +7,15 @@ import {
 	fromCandidateState,
 	MainStateEffects,
 	CandidateStateEffects,
-	fromMainState,
 	fromMasterState,
   MainStateAction,
 } from 'src/app/shared/store-modules';
 import { isEmpty as _isEmpty} from 'lodash';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { takeUntil, filter, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable, merge } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Observable, merge } from 'rxjs';
 import { SubcoCandidateQuestionModel } from 'src/app/shared/models';
-import { FormBuilder, FormControl, FormArray, Validators, NgForm } from '@angular/forms';
-import { FetchQuestionsForCurrentGen } from 'src/app/shared/stores/candidate/candidate.action';
+import { FormBuilder, FormArray, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'rd-candidate-questions',

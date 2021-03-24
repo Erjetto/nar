@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { FormBuilder } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { isEmpty as _isEmpty } from 'lodash';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
-import { AdditionalTraineeData, ClientTraineeData } from 'src/app/shared/models';
+import { ClientTraineeData } from 'src/app/shared/models';
 import {
 	BinusianStateAction,
 	fromBinusianState,
@@ -81,7 +81,7 @@ Kota Samarinda Kalimatan Timur`;
 				this.myDataForm.patchValue(data.AdditionalTraineeData);
 			});
 
-		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.loadingMyData$.next(false);
 		});
 

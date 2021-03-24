@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store, select, ActionsSubject } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
 	TraineePresentation,
@@ -11,10 +11,9 @@ import {
 	EvalTypes,
 	AttendanceStatus,
 } from 'src/app/shared/models';
-import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Observable, BehaviorSubject, merge, combineLatest } from 'rxjs';
-import { FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Observable, BehaviorSubject, merge } from 'rxjs';
+import { FormBuilder, Validators } from '@angular/forms';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import {
 	PresentationStateAction,
@@ -27,7 +26,7 @@ import {
 	NoteStateEffects,
 	AttendanceStateEffects,
 } from 'src/app/shared/store-modules';
-import { takeUntil, tap, withLatestFrom, map, filter } from 'rxjs/operators';
+import { takeUntil, map, filter } from 'rxjs/operators';
 import { isEmpty as _isEmpty, sortBy as _sortBy} from 'lodash';
 
 @Component({

@@ -2,34 +2,19 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
-	PresentationStateAction,
-	MasterStateAction,
-	fromPresentationState,
-	fromBinusianState,
-	BinusianStateAction,
-  fromAttendanceState,
+	fromAttendanceState,
   AttendanceStateAction,
 } from 'src/app/shared/store-modules';
 import { FormBuilder } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import {
-	CoreTrainingPresentation,
-	CoreTrainingPresentationItem,
-	ClientTraineeView,
-	ClientUserInRoles,
-  ClientPeriodicTraineeAttendance,
+	ClientPeriodicTraineeAttendance,
 } from 'src/app/shared/models';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
-	map,
 	takeUntil,
-	filter,
-	startWith,
-	distinctUntilChanged,
-	debounceTime,
 } from 'rxjs/operators';
 import { isEmpty as _isEmpty, flatten as _flatten, sortBy as _sortBy } from 'lodash';
-import { dateInRange } from 'src/app/shared/methods';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 
 @Component({

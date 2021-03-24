@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
-import { Observable, interval, timer, Subject, Subscription } from 'rxjs';
-import { tap, takeUntil, repeatWhen, map } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
 import { Toast } from '../../models';
 import { swipeAnimation } from '../../angular-animations';
-import { Store, select, ActionsSubject } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { MainStateAction, fromMainState } from 'src/app/shared/store-modules';
 

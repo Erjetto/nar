@@ -1,13 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store, select, ActionsSubject } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
 	ClientTraineeData,
 	ClientNote,
-	EvalTypes,
-	ClientTraineeAttendanceDetail,
 } from 'src/app/shared/models';
-import { MockData } from 'src/app/shared/mock-data';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import {
 	fromNoteState,
@@ -20,7 +17,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
-// import { MockData } from 'src/app/shared/mock-data-old';
 
 @Component({
 	selector: 'rd-view-trainee-detail',

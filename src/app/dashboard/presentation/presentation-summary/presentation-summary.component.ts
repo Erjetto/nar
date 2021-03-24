@@ -9,18 +9,14 @@ import {
 	map,
 	startWith,
 	takeUntil,
-	tap,
 } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
 import { ClientSubject, TraineePresentation } from 'src/app/shared/models';
 import {
 	fromMasterState,
-	fromNoteState,
 	fromPresentationState,
-	MainStateEffects,
 	MasterStateAction,
 	PresentationStateAction,
-	PresentationStateEffects,
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
@@ -52,7 +48,6 @@ export class PresentationSummaryComponent
 
 	constructor(
 		protected store: Store<IAppState>,
-		private presentationEffects: PresentationStateEffects,
 		private fb: FormBuilder
 	) {
 		super(store);
@@ -91,7 +86,7 @@ export class PresentationSummaryComponent
 			this.presentationScorings$,
 			this.selectedTraineeSummary$,
 		]).pipe(
-			filter(([scorings, selectedTrainee]) => !_isEmpty(selectedTrainee?.traineeCode)),
+			filter(([, selectedTrainee]) => !_isEmpty(selectedTrainee?.traineeCode)),
 			map(([scorings, selectedTrainee]) =>
 				scorings.filter((p) => p.traineeCode === selectedTrainee.traineeCode)
 			)

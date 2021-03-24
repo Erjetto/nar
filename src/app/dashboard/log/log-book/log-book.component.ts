@@ -85,7 +85,7 @@ export class LogBookComponent extends DashboardContentBase implements OnInit, On
 			map(([res, traineeCode]: [LogBookPIC[], string]) =>
 				_isEmpty(traineeCode)
 					? res
-					: res.filter((l) => l.Data.some((d) => d.Trainee == traineeCode))
+					: res.filter((l) => l.Data.some((d) => d.Trainee === traineeCode))
 			)
 		);
 

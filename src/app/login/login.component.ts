@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '../app.reducer';
 import { MainStateAction, MainStateEffects } from '../shared/store-modules';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({

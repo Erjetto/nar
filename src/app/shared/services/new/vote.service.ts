@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
-import { MockData } from '../../mock-data';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
-	ClientInterviewReport,
 	TopBottomVote,
 	TrainerTopBottomVote,
 	ClientVoteBestTrainerSchedule,
@@ -105,7 +103,7 @@ export class VoteService {
 	}
 
 	// ClientVoteOption[]
-	public GetGeneralVote(data: { generalVoteScheduleId: string }): Observable<any> {
+	public GetGeneralVote(): Observable<any> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetGeneralVote', {})
 			.pipe(map((res: any) => res.d));

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map as _map } from 'lodash';
-import { delay, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { ClientRoom, LogBookPIC, LogRoomPIC } from '../../models';
 import { DateHelper } from '../../utilities/date-helper';

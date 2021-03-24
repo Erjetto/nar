@@ -1,13 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
+import { Observable, BehaviorSubject, merge } from 'rxjs';
 import {
 	ClientPhase,
 	InterviewMaterial,
 	ClientTrainee,
-	Binusian,
 	InterviewMaterialDetail,
 } from 'src/app/shared/models';
 import {
@@ -17,14 +16,12 @@ import {
 	InterviewStateAction,
 	fromBinusianState,
 	BinusianStateAction,
-	fromVoteState,
 	fromInterviewState,
 	InterviewStateEffects,
-	fromMainState,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
-import { takeUntil, withLatestFrom, filter, map, tap } from 'rxjs/operators';
-import { NgForm, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { takeUntil, withLatestFrom, filter, map } from 'rxjs/operators';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { isEmpty as _isEmpty, map as _map } from 'lodash';
 
 @Component({
@@ -112,7 +109,7 @@ export class ModifyInterviewMaterialComponent
       this.interviewEffects.deleteInterviewMaterial$
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
-			.subscribe(([action, currPhase]) => {
+			.subscribe(([, currPhase]) => {
 				this.store.dispatch(
 					InterviewStateAction.FetchInterviewMaterials({ phaseId: currPhase.PhaseId })
 				);

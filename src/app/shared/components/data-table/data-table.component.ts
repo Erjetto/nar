@@ -1,28 +1,22 @@
-import { NullTemplateVisitor } from '@angular/compiler';
 import {
 	AfterContentInit,
-	AfterViewInit,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
 	ContentChild,
 	ContentChildren,
-	ElementRef,
 	EventEmitter,
 	Input,
 	OnChanges,
 	OnDestroy,
-	OnInit,
 	Output,
 	QueryList,
 	SimpleChange,
 	SimpleChanges,
-	ViewChild,
 } from '@angular/core';
 import { isString as _isString, sortBy as _sortBy } from 'lodash';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SortDirection } from '../../models';
 import { TableColumnComponent } from './table-column.component';
 import { TableHeaderComponent } from './table-header.component';
 
@@ -145,7 +139,7 @@ export class DataTableComponent implements AfterContentInit, OnDestroy, OnChange
 		this.clickRow.emit(row);
 	}
 
-	onCheckRow(evt, row){
+	onCheckRow(row){
 		const target = this.selectedValues.indexOf(row);
 		if(target === -1) this.selectedValues.push(row);
 		else this.selectedValues.splice(target, 1);

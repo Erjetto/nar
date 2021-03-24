@@ -6,9 +6,9 @@ import {
 	ClientInterviewResult,
 } from 'src/app/shared/models';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Store, ActionsSubject, select } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable, merge } from 'rxjs';
 import {
 	MainStateEffects,
@@ -17,7 +17,7 @@ import {
 	InterviewStateAction,
 	fromInterviewState,
 } from 'src/app/shared/store-modules';
-import { takeUntil, filter, tap, withLatestFrom } from 'rxjs/operators';
+import { takeUntil, filter, withLatestFrom } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
 import { adjustControlsInFormArray } from 'src/app/shared/methods';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
@@ -173,7 +173,7 @@ export class ModifyInterviewScheduleComponent
 		// Reload when update result
 		this.interviewEffects.updateInterviewResult$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentInterviewSchedule$))
-			.subscribe(([act, schedule]) => {
+			.subscribe(([, schedule]) => {
 				this.store.dispatch(
 					InterviewStateAction.FetchInterviewResult({
 						interviewScheduleId: schedule.InterviewScheduleId,

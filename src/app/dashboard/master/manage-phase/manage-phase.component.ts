@@ -4,7 +4,7 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { NgForm } from '@angular/forms';
-import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
+import { Observable, BehaviorSubject, merge } from 'rxjs';
 
 import {
 	MasterStateAction,
@@ -13,7 +13,7 @@ import {
 	MainStateEffects,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
-import { map, takeUntil, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntil, withLatestFrom } from 'rxjs/operators';
 
 @Component({
 	selector: 'rd-manage-phase',

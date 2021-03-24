@@ -2,25 +2,23 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/
 import {
 	CoreTrainingPresentation,
 	CoreTrainingPresentationQuestion,
-	CoreTrainingPresentationItem,
 	QuestionStatus,
 } from 'src/app/shared/models';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, Subject, BehaviorSubject, combineLatest, merge } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
 import {
 	fromPresentationState,
 	PresentationStateAction,
 	PresentationStateEffects,
 	MainStateEffects,
 } from 'src/app/shared/store-modules';
-import { map, takeUntil, tap, startWith, filter, first, withLatestFrom } from 'rxjs/operators';
+import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 import {
 	NgForm,
-	FormControl,
 	Validators,
 	FormBuilder,
 	FormArray,
@@ -127,7 +125,7 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 			this.presentationEffects.deleteCoreTrainingPresentationItem$
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.traineeId$, this.generationId$))
-			.subscribe(([action, trId, genId]) =>{
+			.subscribe(([, trId, genId]) =>{
 				this.store.dispatch(
 					PresentationStateAction.FetchPresentationsBy({
 						generationId: genId,
@@ -160,7 +158,7 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 							// this.answersForm.push(
 							this.fb.group({
 								isEditing: [false],
-								isEditingComments: this.fb.array(a.Comments.map((c) => this.fb.control(false))),
+								isEditingComments: this.fb.array(a.Comments.map(() => this.fb.control(false))),
 							})
 						)
 						// );

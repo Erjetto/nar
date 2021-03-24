@@ -5,19 +5,16 @@ import { IAppState } from 'src/app/app.reducer';
 import {
 	MainStateEffects,
 	VoteStateEffects,
-	fromMasterState,
 	BinusianStateAction,
 	fromBinusianState,
 	VoteStateAction,
 	fromVoteState,
-	MainStateAction,
 } from 'src/app/shared/store-modules';
-import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import {
 	TopBottomVoteSchedule,
 	ClientTrainee,
-	ClientPhase,
 	TrainerTopBottomVote,
 	TopBottomVote,
 	User,
@@ -25,8 +22,7 @@ import {
 import { takeUntil, filter, map, withLatestFrom } from 'rxjs/operators';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 import { isEmpty as _isEmpty } from 'lodash';
-import { adjustControlsInFormArray, arrayOfValue } from 'src/app/shared/methods';
-import { UserService } from 'src/app/shared/services/user.service';
+import { adjustControlsInFormArray } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-top-bottom-vote',
@@ -169,7 +165,7 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 	}
 
 	saveVote() {
-		const { voteScheduleId, voteScheduleName, top, bottom } = this.voteForm.value;
+		const { voteScheduleId, top, bottom } = this.voteForm.value;
 
 		this.loadingFormVote$.next(true);
 		this.store.dispatch(

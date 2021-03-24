@@ -71,6 +71,7 @@ export class TrainerHomeComponent extends DashboardContentBase implements OnInit
 		//       dari phase kalau phases di Master state sudah ada value, jadi
 		//       kalau phases$ di-subscribe duluan nanti sub dari currentPhase$ ngga ke-trigger
 		//       ketika currentPhase ambil initial value
+		// Kesimpulan: currentPhase harus subscribe sebelum phases$
 		this.currentPhase.valueChanges
 			.pipe(
 				filter((res) => !_isEmpty(res)),

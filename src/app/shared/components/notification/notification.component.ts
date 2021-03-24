@@ -1,16 +1,12 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
-	Input,
-	OnChanges,
 	OnInit,
-	SimpleChange,
-	SimpleChanges,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
 import { Notification } from '../../models';
 import { fromMainState, MainStateAction } from '../../store-modules';

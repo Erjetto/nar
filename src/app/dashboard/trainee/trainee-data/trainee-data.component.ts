@@ -5,7 +5,6 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
 	MainStateEffects,
-	MasterStateEffects,
 	fromBinusianState,
 	BinusianStateAction,
   MainStateAction,

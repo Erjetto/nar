@@ -2,13 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, Subject, combineLatest, BehaviorSubject, merge } from 'rxjs';
+import { Observable, combineLatest, merge } from 'rxjs';
 
 import {
 	MasterStateAction,
 	fromMasterState,
 	MainStateAction,
-	fromMainState,
 	PresentationStateAction,
 	fromPresentationState,
 	MainStateEffects,
@@ -18,20 +17,17 @@ import {
 	CoreTrainingPresentation,
 	CoreTrainingPresentationQuestion,
 	ClientSubject,
-	ClientGeneration,
 	ClientPhase,
 } from 'src/app/shared/models';
 import {
 	filter,
 	withLatestFrom,
 	takeUntil,
-	tap,
 	map,
-	distinctUntilChanged,
 	startWith,
 } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
-import { FormControl, FormBuilder } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 
@@ -108,7 +104,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 			.pipe(
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.questionsBySubjectEntity$),
-				filter(([[subId, gen], entity]) => gen != null)
+				filter(([[, gen]]) => gen != null)
 			)
 			.subscribe(([[subId, gen], entity]) => {
 				if (!subId) return [];
@@ -168,9 +164,9 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 		);
 	}
 
-	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}
+	deleteQuestion() {}
 
-	trackByQuestionId(idx: number, qst: CoreTrainingPresentationQuestion) {
+	trackByQuestionId(qst: CoreTrainingPresentationQuestion) {
 		return qst.Question.Id;
 	}
 }

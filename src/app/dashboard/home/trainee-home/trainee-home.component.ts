@@ -20,7 +20,7 @@ import {
 	PresentationStateAction,
 } from 'src/app/shared/store-modules';
 
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';

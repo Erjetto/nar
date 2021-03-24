@@ -1,12 +1,9 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IAppState } from 'src/app/app.reducer';
-import { Store, ActionsSubject, select } from '@ngrx/store';
-import { Actions, ofType } from '@ngrx/effects';
+import { Store, select } from '@ngrx/store';
 
 import {
 	ClientPhase,
-	ClientStatistic,
-	ClientTrainee,
 	ClientTraineeReputation,
 } from 'src/app/shared/models';
 import {
@@ -17,11 +14,10 @@ import {
 	MainStateAction,
 	fromNoteState,
 } from 'src/app/shared/store-modules';
-import { Observable, of, Subject, interval, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { MockData } from 'src/app/shared/mock-data';
-import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, startWith, takeUntil } from 'rxjs/operators';
 import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 import { FormControl } from '@angular/forms';
 import { isEmpty as _isEmpty } from 'lodash';
@@ -96,9 +92,9 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 		);
 	}
 
-	onSelectTrainee(trainee) {}
+	onSelectTrainee() {}
 
-	onChangePhase(phase) {}
+	onChangePhase() {}
 
 	traineeRowInactiveClass = (row:any) => ({'trainee-row-inactive': !row.IsActive})
 	traineeThumbnailInactiveClass = (data:any) => ({'trainee-inactive': !data.IsActive})

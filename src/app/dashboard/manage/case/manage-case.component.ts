@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, BehaviorSubject, merge, combineLatest, Subject } from 'rxjs';
+import { Observable, BehaviorSubject, merge } from 'rxjs';
 import {
 	ClientPhase,
 	ClientSubject,
@@ -18,10 +18,9 @@ import {
 	MainStateEffects,
 	CaseStateEffects,
 	MainStateAction,
-	fromMainState,
 } from 'src/app/shared/store-modules';
 
-import { filter, tap, takeUntil, map, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { isEmpty as _isEmpty } from 'lodash';
 import { FormBuilder, Validators } from '@angular/forms';

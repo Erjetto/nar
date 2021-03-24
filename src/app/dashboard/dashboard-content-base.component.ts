@@ -1,4 +1,4 @@
-import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 
 import { fromMainState } from 'src/app/shared/store-modules';

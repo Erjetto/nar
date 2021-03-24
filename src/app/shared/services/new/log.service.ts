@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LogBookPICData } from '../../models';
 import { map as _map} from 'lodash';
 import { map } from 'rxjs/operators';

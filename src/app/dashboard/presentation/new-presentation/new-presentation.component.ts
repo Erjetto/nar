@@ -12,7 +12,6 @@ import {
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import {
-	TraineePresentation,
 	CoreTrainingPresentation,
 	ClientPhase,
 	ClientSubject,

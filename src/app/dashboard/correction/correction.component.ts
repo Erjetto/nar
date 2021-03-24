@@ -19,7 +19,7 @@ import {
 	MainStateAction,
 	CaseStateEffects,
 } from 'src/app/shared/store-modules';
-import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder } from '@angular/forms';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { adjustControlsInFormArray } from 'src/app/shared/methods';
@@ -162,7 +162,7 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 		// Reload case list when doing CRUD
 		this.caseEffects.saveTraineeScores$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrentSubject$))
-			.subscribe(([act, sub]) => {
+			.subscribe(([, sub]) => {
 				this.store.dispatch(CaseStateAction.FetchCorrectionListBy({ subjectId: sub.SubjectId }));
 			});
 		//#endregion

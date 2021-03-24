@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, HostBinding, ChangeDetectionStrategy } from '@angular/core';
-import { CoreTrainingPresentationQuestion, CoreTrainingPresentation, ClientGeneration } from '../../models';
+import { CoreTrainingPresentationQuestion, CoreTrainingPresentation } from '../../models';
 import { Observable } from 'rxjs';
 import { IAppState } from 'src/app/app.reducer';
 import { Store, select } from '@ngrx/store';

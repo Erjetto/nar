@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { isEmpty as _isEmpty, map as _map } from 'lodash';
 import { environment } from 'src/environments/environment';
 import { TraineeSchedule } from '../../models';
-import { delay, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { DateHelper } from '../../utilities/date-helper';
 import { Observable } from 'rxjs';
 
@@ -50,7 +50,7 @@ export class RESTService {
 			.pipe(map((res: any) => res === true));
 	}
 
-	public DeleteTraineeSchedule(traineeScheduleId: string) : Observable<boolean> {
+	public DeleteTraineeSchedule() : Observable<boolean> {
 		return this.httpClient
 			.delete(`${this.baseUrl}TraineeSchedule/`)
 			.pipe(map((res: any) => res === true));

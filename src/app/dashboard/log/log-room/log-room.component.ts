@@ -1,6 +1,5 @@
 import {
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 	Component,
 	OnDestroy,
 	OnInit,
@@ -9,12 +8,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { isEmpty as _isEmpty } from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { delay, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
 import { adjustControlsInFormArray } from 'src/app/shared/methods';
-import { ClientTrainee, LogBookPIC, LogRoomPIC } from 'src/app/shared/models';
+import { ClientTrainee, LogRoomPIC } from 'src/app/shared/models';
 import {
-	MainStateEffects,
 	LogStateAction,
 	fromLogState,
 	fromBinusianState,
@@ -50,7 +48,6 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 
 	constructor(
 		protected store: Store<IAppState>,
-		private mainEffects: MainStateEffects,
 		private logEffects: LogStateEffects,
 		private fb: FormBuilder
 	) {

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
-import { MockData } from '../../mock-data';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import {
 	ClientPhase,
@@ -255,10 +254,9 @@ export class PresentationService {
   }
 
 	public GetCurrentPhaseWithPresentation(): Observable<ClientPhase> {
-		return of(MockData.GetCurrentPhaseWithPresentation).pipe(
-			delay(500),
-			map((r) => ClientPhase.fromJson(r))
-		);
+		return this.httpClient
+			.post(this.baseUrl + 'GetCurrentPhaseWithPresentation', {})
+			.pipe(map((res: any) => ClientPhase.fromJson(res.d)));
 	}
 
 	public GetPresentationTrainee(): Observable<ClientTrainee[]> {
@@ -268,7 +266,9 @@ export class PresentationService {
 	}
 
 	public GetTraineePresentationNo(): Observable<number> {
-		return of(MockData.GetTraineePresentationNo).pipe(delay(500));
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineePresentationNo', {})
+			.pipe(map((res: any) => Number(res.d)));
 	}
 
 	public GetPhaseWithPresentation(): Observable<ClientPhase[]> {

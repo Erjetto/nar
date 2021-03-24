@@ -10,7 +10,6 @@ import {
 	fromPresentationState,
 	MainStateEffects,
 	PresentationStateEffects,
-	fromMainState,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 
@@ -20,16 +19,12 @@ import {
 	CoreTrainingPresentation,
 	ClientPhase,
 	TraineePresentation,
-	CoreTrainingPresentationItem,
 	CoreTrainingPresentationQuestion,
-	User,
-	ClientGeneration,
 } from 'src/app/shared/models';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
-import { takeUntil, filter, withLatestFrom, map, tap, delay } from 'rxjs/operators';
+import { takeUntil, filter, withLatestFrom, map, delay } from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
-import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-view-all-presentation',

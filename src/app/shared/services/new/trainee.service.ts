@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
-	ClientInterviewReport,
 	ClientTraineeData,
 	TraineeSchedule,
 	AdditionalTraineeData,
 	ClientPhaseSimple,
-	ClientCaseTrainer,
 	SchedulePerWeek,
 	ClientSpecificSchedule,
   ClientCaseTrainee,

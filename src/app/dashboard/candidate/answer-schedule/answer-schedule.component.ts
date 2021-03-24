@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { IAppState } from 'src/app/app.reducer';
-import { Store, select, ActionsSubject } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable, merge, BehaviorSubject } from 'rxjs';
 
 import { SubcoCandidateAnswerModel, SubcoCandidateQuestionModel } from 'src/app/shared/models';
@@ -10,15 +10,13 @@ import {
 	MainStateAction,
 	MainStateEffects,
 	CandidateStateEffects,
-	MasterStateEffects,
 	fromMasterState,
 } from 'src/app/shared/store-modules';
-import { take, takeUntil, map, tap } from 'rxjs/operators';
+import { takeUntil, map, tap } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { sortBy as _sortBy} from 'lodash';
-import { STATE_PROVIDERS } from '@ngrx/store/src/state';
 
 @Component({
 	selector: 'rd-answer-schedule',
@@ -163,7 +161,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		this.store.dispatch(CandidateStateAction.ExportAnswersToExcel());
   }
   
-  trackScheduleById(idx: number, s: SubcoCandidateAnswerModel){
+  trackScheduleById(s: SubcoCandidateAnswerModel){
     return s.Id
   }
 }

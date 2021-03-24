@@ -5,7 +5,6 @@ import { AuthGuard } from '../shared/guards/auth.guard';
 import { RoleGuard } from '../shared/guards/role.guard';
 import { RoleFlags, RoleGroups } from '../shared/constants/role.constant';
 import { HomeComponent } from './home/home.component';
-import { Endpoints, PathMatchings } from '../shared/constants/endpoint.constant';
 import { CandidateQuestionsComponent } from './candidate/candidate-questions/candidate-questions.component';
 import { AnswerScheduleComponent } from './candidate/answer-schedule/answer-schedule.component';
 import { ManageCaseComponent } from './manage/case/manage-case.component';
@@ -65,16 +64,16 @@ export const routes: Routes = [
 		children: [
 			{
 				path: '',
-				pathMatch: PathMatchings.FULL,
-				redirectTo: Endpoints.HOME,
+				pathMatch: 'full',
+				redirectTo: 'home',
 			},
 			{
-				path: Endpoints.HOME,
+				path: 'home',
 				component: HomeComponent,
 				data: { roles: RoleGroups.ALL, name: 'Home' },
 			},
 			{
-				path: Endpoints.MASTER,
+				path: 'master',
 				data: { name: 'Master' },
 				children: [
 					{
@@ -121,7 +120,7 @@ export const routes: Routes = [
 				],
 			},
 			{
-				path: Endpoints.MODIFY,
+				path: 'modify',
 				data: { name: 'Modify' },
 				children: [
 					{
@@ -169,6 +168,7 @@ export const routes: Routes = [
 				data: {
 					roles: RoleFlags.Trainee | RoleFlags.Trainer | RoleFlags.Interviewer,
 					name: 'Top Bottom Vote',
+					// Hanya muncul kalo SPV dan sudah ada Phase 'Core'
 					validation: (store: Store<IAppState>): Observable<boolean> =>
 						store.pipe(
 							select(fromMasterState.getPhases),
@@ -187,6 +187,7 @@ export const routes: Routes = [
 				data: {
 					roles: RoleFlags.Trainee,
 					name: 'Upload',
+					// Hanya muncul kalo SPV dan sudah ada Phase 'Core'
 					validation: (store: Store<IAppState>): Observable<boolean> =>
 						store.pipe(
 							select(fromMasterState.getPhases),
@@ -261,6 +262,7 @@ export const routes: Routes = [
 				data: {
 					roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
 					name: 'Presentation',
+					// Hanya muncul kalo SPV dan sudah ada Phase 'Core'
 					validation: (store: Store<IAppState>): Observable<boolean> =>
 						store.pipe(
 							select(fromMasterState.getPhases),
@@ -420,6 +422,7 @@ export const routes: Routes = [
 				path: 'candidate',
 				data: {
 					name: 'Candidate',
+					// Hanya muncul kalo SPV dan trainer generasi yg jadi calon subco
 					validation: (store: Store<IAppState>): Observable<boolean> => 
 						store.pipe(
 							select(fromMainState.getCurrentGeneration),
