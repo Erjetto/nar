@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 
 import * as MainStateAction from '../main/main.action';
 import * as AttendanceStateAction from './attendance.action';
-import * as fromAttendanceState from './attendance.reducer';
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, tap, share, map } from 'rxjs/operators';
+import { switchMap, mergeMap, share } from 'rxjs/operators';
 import { TraineeAttendanceService } from '../../services/new/trainee-attendance.service';
 
 @Injectable({

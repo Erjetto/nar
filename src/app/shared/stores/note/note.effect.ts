@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 
 import * as MainStateAction from '../main/main.action';
 import * as NoteStateAction from './note.action';
-import * as fromNoteState from './note.reducer';
 import { Observable, of } from 'rxjs';
-import { switchMap, mergeMap, pluck, tap, share } from 'rxjs/operators';
+import { switchMap, mergeMap, share } from 'rxjs/operators';
 import { NoteService } from '../../services/new/note.service';
 import { GeneralService } from '../../services/new/general.service';
 

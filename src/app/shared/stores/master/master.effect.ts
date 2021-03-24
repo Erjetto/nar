@@ -2,28 +2,20 @@ import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
-import { Observable, from, of, forkJoin } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import {
 	switchMap,
 	withLatestFrom,
 	mergeMap,
 	share,
-	tap,
 	pluck,
-	delay,
 	map,
 	switchMapTo,
-	catchError,
-	exhaustMap,
-	defaultIfEmpty,
 } from 'rxjs/operators';
 
 import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
 import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
 import * as MainStateAction from 'src/app/shared/stores/main/main.action';
-import * as fromMainState from 'src/app/shared/stores/main/main.reducer';
-import * as BinusianStateAction from 'src/app/shared/stores/binusian/binusian.action';
-import * as fromBinusianState from 'src/app/shared/stores/binusian/binusian.reducer';
 
 import { GeneralService } from 'src/app/shared/services/new/general.service';
 import { AnnouncementService } from 'src/app/shared/services/new/announcement.service';
@@ -36,7 +28,6 @@ import { TraineeService } from 'src/app/shared/services/new/trainee.service';
 import { VoteService } from 'src/app/shared/services/new/vote.service';
 import { IAppState } from 'src/app/app.reducer';
 
-import { ClientTrainee } from 'src/app/shared/models';
 import { isEmpty as _isEmpty } from 'lodash';
 import { RESTService } from '../../services/new/rest.service';
 import { TrainerAttendanceService } from '../../services/new/trainer-attendance.service';
@@ -49,15 +40,9 @@ export class MasterStateEffects {
 		private actions$: Actions,
 		private store: Store<IAppState>,
 		private generalService: GeneralService,
-		private announcementService: AnnouncementService,
-		private interviewService: InterviewService,
 		private leaderService: LeaderService,
-		private noteService: NoteService,
-		private presentationService: PresentationService,
 		private traineeAttendanceService: TraineeAttendanceService,
 		private trainerAttendanceService: TrainerAttendanceService,
-		private traineeService: TraineeService,
-		private voteService: VoteService,
 		private restService: RESTService
 	) {}
 
@@ -248,7 +233,7 @@ export class MasterStateEffects {
 	createSubject$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.CreateSubject),
 		switchMap((data) => this.leaderService.SaveSubject(data).pipe(map((res) => ({ res, data })))),
-		mergeMap(({ res, data }) =>
+		mergeMap(({ res }) =>
 			res
 				? of(MainStateAction.SuccessfullyMessage('created subject'))
 				: of(MainStateAction.FailMessage('creating subject'))
@@ -288,7 +273,7 @@ export class MasterStateEffects {
 	@Effect()
 	updateGeneration$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.UpdateGeneration),
-		switchMap((data) =>
+		switchMap(() =>
 			// this.leaderService.UpdateGeneration(data)
 			of(true)
 		),

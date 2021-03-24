@@ -17,7 +17,6 @@ import { GeneralService } from '../../services/new/general.service';
 import { TraineeAttendanceService } from '../../services/new/trainee-attendance.service';
 import { ClientTrainee, User } from '../../models';
 import { IAppState } from 'src/app/app.reducer';
-import { fromBinusianState, fromMasterState } from '../../store-modules';
 
 @Injectable({
 	providedIn: 'root',

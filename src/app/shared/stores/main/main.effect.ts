@@ -10,7 +10,6 @@ import { Observable, of } from 'rxjs';
 import {
 	switchMap,
 	mergeMap,
-	pluck,
 	share,
 	map,
 	tap,
@@ -23,8 +22,6 @@ import { OtherService } from '../../services/new/other.service';
 import { AnnouncementService } from '../../services/new/announcement.service';
 import { flatten as _flatten, isEmpty as _isEmpty } from 'lodash';
 import { GeneralService } from '../../services/new/general.service';
-import { CookieService } from 'ngx-cookie-service';
-import { Cookies } from '../../constants/cookie.constants';
 import { IAppState } from 'src/app/app.reducer';
 import { ClientGeneration } from '../../models';
 import { TrainerAttendanceService } from '../../services/new/trainer-attendance.service';
@@ -115,7 +112,7 @@ export class MainStateEffects {
 	@Effect()
 	logout$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.Logout),
-		tap((v) => this.store.dispatch(MainStateAction.InfoMessage('Logging out...'))),
+		tap(() => this.store.dispatch(MainStateAction.InfoMessage('Logging out...'))),
 		switchMap(() => this.generalService.LogOut()),
 		mergeMap(() => of(MainStateAction.LogoutSuccess())),
 		share()
@@ -255,8 +252,8 @@ export class MainStateEffects {
 		concatMap((action) =>
 			of(action).pipe(withLatestFrom(this.store.pipe(select(action.selectorToBeChecked))))
 		),
-		filter(([action, data]) => _isEmpty(data)),
-		map(([action, data]) => action.action),
+		filter(([, data]) => _isEmpty(data)),
+		map(([action]) => action.action),
 		share()
 	);
 }

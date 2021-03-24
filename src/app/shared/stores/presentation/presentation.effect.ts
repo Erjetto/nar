@@ -12,8 +12,6 @@ import { forkJoin, Observable, of } from 'rxjs';
 import {
 	switchMap,
 	mergeMap,
-	pluck,
-	tap,
 	share,
 	map,
 	withLatestFrom,
@@ -80,7 +78,7 @@ export class PresentationStateEffects {
 	getPresentationsBy$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentationsBy),
 		withLatestFrom(this.store.pipe(select(fromPresentationState.hasFetchedAllPresentations))),
-		filter(([data, hasFetchedAll]) => !hasFetchedAll),
+		filter(([, hasFetchedAll]) => !hasFetchedAll),
 		switchMap(
 			// use merge because its possible to have multiple running request
 			([{ generationId, traineeId, subjectId }]) =>

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 
 import * as CaseStateAction from './case.action';
 import * as MainStateAction from '../main/main.action';
 
-import * as fromMainState from '../main/main.reducer';
 
 import { forkJoin, Observable, of } from 'rxjs';
-import { switchMap, mergeMap, share, pluck, map, catchError } from 'rxjs/operators';
+import { switchMap, mergeMap, share, catchError } from 'rxjs/operators';
 import { LeaderService } from '../../services/new/leader.service';
 import { isEmpty as _isEmpty } from 'lodash';
 import { TraineeService } from '../../services/new/trainee.service';
@@ -173,7 +172,7 @@ export class CaseStateEffects {
 						score: data.score[idx],
 						zeroingReason: data.zeroingReason[idx],
 						subjectId: data.subjectId
-					}).pipe(catchError(error => of(false)))
+					}).pipe(catchError(() => of(false)))
 				)
 			)
 		),

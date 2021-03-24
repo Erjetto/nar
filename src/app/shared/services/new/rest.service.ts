@@ -50,9 +50,9 @@ export class RESTService {
 			.pipe(map((res: any) => res === true));
 	}
 
-	public DeleteTraineeSchedule() : Observable<boolean> {
+	public DeleteTraineeSchedule(traineeScheduleId: string) : Observable<boolean> {
 		return this.httpClient
-			.delete(`${this.baseUrl}TraineeSchedule/`)
+			.delete(`${this.baseUrl}TraineeSchedule/` + traineeScheduleId)
 			.pipe(map((res: any) => res === true));
 	}
 	
