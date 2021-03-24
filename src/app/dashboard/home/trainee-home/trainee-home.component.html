@@ -96,13 +96,19 @@
 					</rd-card>
 				</div>
 			</div>
-			<div class="row" [hidden]="">
+			<div class="row" [hidden]="(incorrectPresentationQuestions$ | async)?.length === 0">
 				<div class="col">
-					<rd-card
-						[cardTitle]="'Unanswered/Wrong Questions'"
-						[isLoading]="false"
-					>
-						
+					<rd-card [cardTitle]="'Unanswered/Wrong Questions'" [maxHeight]="500">
+						<div class="row">
+							<div class="col">
+								<ng-container *ngFor="let question of incorrectPresentationQuestions$ | async">
+									<rd-presentation-question
+										[presentation]="question.parent"
+										[question]="question"
+									></rd-presentation-question>
+								</ng-container>
+							</div>
+						</div>
 					</rd-card>
 				</div>
 			</div>

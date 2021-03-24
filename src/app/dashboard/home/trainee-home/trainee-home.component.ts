@@ -4,7 +4,13 @@ import { Store, select } from '@ngrx/store';
 
 import { map } from 'rxjs/operators';
 
-import { ClientTraineeDailyAttendance, CoreTrainingPresentationQuestion, Message, TraineeSchedule } from 'src/app/shared/models';
+import {
+	ClientTraineeDailyAttendance,
+	CoreTrainingPresentation,
+	CoreTrainingPresentationQuestion,
+	Message,
+	TraineeSchedule,
+} from 'src/app/shared/models';
 import {
 	fromMainState,
 	MainStateAction,
@@ -38,8 +44,6 @@ export class TraineeHomeComponent extends DashboardContentBase implements OnInit
 	loadingAnnouncements$: Observable<boolean>;
 	loadingSchedules$: Observable<boolean>;
 
-	destroyed$: Subject<any> = new Subject();
-
 	constructor(protected store: Store<IAppState>) {
 		super(store);
 	}
@@ -51,11 +55,16 @@ export class TraineeHomeComponent extends DashboardContentBase implements OnInit
 			select(fromBinusianState.getMySchedules),
 			map((schedules: TraineeSchedule[]) => _sortBy(schedules, 'AttendanceDate').reverse())
 		);
+		
+		// Ambil semua pertanyaan dari semua presentasi
 		this.incorrectPresentationQuestions$ = this.store.pipe(
 			select(fromPresentationState.getMyPresentations),
-			map((presentations) => presentations.map())
+			map((presentations: CoreTrainingPresentation[]) =>
+				presentations
+					.reduce((prev, curr) => [...prev, ...curr.Questions], [])
+					.filter((q:CoreTrainingPresentationQuestion) => q.Status !== 'correct')
+			)
 		);
-		
 
 		this.loadingDailyAttendance$ = this.store.pipe(
 			select(fromBinusianState.isDailyAttendanceLoading)
@@ -63,7 +72,6 @@ export class TraineeHomeComponent extends DashboardContentBase implements OnInit
 		this.loadingAnnouncements$ = this.store.pipe(select(fromMainState.isAnnouncementsLoading));
 		this.loadingSchedules$ = this.store.pipe(select(fromBinusianState.isMySchedulesLoading));
 		this.loadingSchedules$ = this.store.pipe(select(fromPresentationState.isPresentationsLoading));
-		
 
 		this.store.dispatch(BinusianStateAction.FetchDailyAttendance());
 		this.store.dispatch(
