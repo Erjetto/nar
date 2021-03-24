@@ -109,7 +109,7 @@ export class ModifyInterviewMaterialComponent
       this.interviewEffects.deleteInterviewMaterial$
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentPhase$))
-			.subscribe(([, currPhase]) => {
+			.subscribe(([action, currPhase]) => {
 				this.store.dispatch(
 					InterviewStateAction.FetchInterviewMaterials({ phaseId: currPhase.PhaseId })
 				);

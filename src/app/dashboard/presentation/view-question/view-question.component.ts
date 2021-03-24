@@ -125,7 +125,7 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 			this.presentationEffects.deleteCoreTrainingPresentationItem$
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.traineeId$, this.generationId$))
-			.subscribe(([, trId, genId]) =>{
+			.subscribe(([action, trId, genId]) =>{
 				this.store.dispatch(
 					PresentationStateAction.FetchPresentationsBy({
 						generationId: genId,

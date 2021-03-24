@@ -29,6 +29,7 @@ import { query, style, group, animate } from '@angular/animations';
 import { Cookies } from '../shared/constants/cookie.constants';
 import { Title } from '@angular/platform-browser';
 import { isEmpty as _isEmpty } from 'lodash';
+import { fetchRouteValidatorsData } from './dashboard-routing.module';
 
 @Component({
 	selector: 'rd-dashboard',
@@ -156,6 +157,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.store.dispatch(MainStateAction.FetchCurrentGeneration());
 		//#endregion
 
+		fetchRouteValidatorsData(this.store);
 	}
 
 	ngOnDestroy(): void {

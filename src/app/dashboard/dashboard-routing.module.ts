@@ -188,16 +188,16 @@ export const routes: Routes = [
 					roles: RoleFlags.Trainee,
 					name: 'Upload',
 					// Hanya muncul kalo SPV dan sudah ada Phase 'Core'
-					validation: (store: Store<IAppState>): Observable<boolean> =>
-						store.pipe(
-							select(fromMasterState.getPhases),
-							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
-							map(
-								([phases, user]: [ClientPhase[], User]) =>
-									user.Role.is(RoleFlags.AssistantSupervisor) ||
-									phases.find((p) => p.Description.includes('Core')) !== undefined
-							)
-						),
+					// validation: (store: Store<IAppState>): Observable<boolean> =>
+					// 	store.pipe(
+					// 		select(fromMasterState.getPhases),
+					// 		withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+					// 		map(
+					// 			([phases, user]: [ClientPhase[], User]) =>
+					// 				user.Role.is(RoleFlags.AssistantSupervisor) ||
+					// 				phases.find((p) => p.Description.includes('Core')) !== undefined
+					// 		)
+					// 	),
 				},
 			},
 			{
@@ -475,6 +475,14 @@ export const routes: Routes = [
 		redirectTo: '',
 	},
 ];
+
+/**
+ * Covers the need to fetch necessary data for menu validations
+ * Ex: Presentations menu needs to check Phases
+ */
+export const fetchRouteValidatorsData = (store: Store<IAppState>) => {
+	store.dispatch(MasterStateAction.FetchPhases());
+}
 
 @NgModule({
 	imports: [RouterModule.forChild(routes)],

@@ -162,7 +162,7 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 		// Reload case list when doing CRUD
 		this.caseEffects.saveTraineeScores$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrentSubject$))
-			.subscribe(([, sub]) => {
+			.subscribe(([act, sub]) => {
 				this.store.dispatch(CaseStateAction.FetchCorrectionListBy({ subjectId: sub.SubjectId }));
 			});
 		//#endregion

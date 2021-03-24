@@ -104,7 +104,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 			.pipe(
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.questionsBySubjectEntity$),
-				filter(([[, gen]]) => gen != null)
+				filter(([[subId, gen], entity]) => gen != null)
 			)
 			.subscribe(([[subId, gen], entity]) => {
 				if (!subId) return [];
@@ -164,9 +164,9 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 		);
 	}
 
-	deleteQuestion() {}
+	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}
 
-	trackByQuestionId(qst: CoreTrainingPresentationQuestion) {
+	trackByQuestionId(idx: number, qst: CoreTrainingPresentationQuestion) {
 		return qst.Question.Id;
 	}
 }

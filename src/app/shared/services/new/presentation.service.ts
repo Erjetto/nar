@@ -79,6 +79,7 @@ export class PresentationService {
 	public GetPresentationReportDetailByShift(): Observable<any> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationReportDetailByShift', {})
+			.pipe(map((res: any) => res.d));
   }
 
 	public GetPresentationReportSummaryWithPhase(data: {

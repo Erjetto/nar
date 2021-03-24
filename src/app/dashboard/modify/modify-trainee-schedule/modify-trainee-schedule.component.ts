@@ -178,11 +178,11 @@ export class ModifyTraineeScheduleComponent
 		return text.split('\n').map(t => t.trim()).filter(t => t !== '');
 	}
 
-	deleteTrainerTeachingSchedule() {}
-	deleteTraineeTrainingSchedule() {}
+	deleteTrainerTeachingSchedule(schedule : ClientTrainerTeachingSchedule) {}
+	deleteTraineeTrainingSchedule(schedule : TraineeSchedule) {}
 
 	// OPTIONAL: Add regex here to learn more about regex hehehe
-	trainingScheduleFormat({ }: AbstractControl): ValidationErrors {
+	trainingScheduleFormat({ value }: AbstractControl): ValidationErrors {
 		if (false) return { regexError: true };
 		else return {};
 	}

@@ -252,8 +252,8 @@ export class MainStateEffects {
 		concatMap((action) =>
 			of(action).pipe(withLatestFrom(this.store.pipe(select(action.selectorToBeChecked))))
 		),
-		filter(([, data]) => _isEmpty(data)),
-		map(([action]) => action.action),
+		filter(([action, data]) => _isEmpty(data)),
+		map(([action, data]) => action.action),
 		share()
 	);
 }

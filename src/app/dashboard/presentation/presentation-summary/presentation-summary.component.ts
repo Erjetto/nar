@@ -86,7 +86,7 @@ export class PresentationSummaryComponent
 			this.presentationScorings$,
 			this.selectedTraineeSummary$,
 		]).pipe(
-			filter(([, selectedTrainee]) => !_isEmpty(selectedTrainee?.traineeCode)),
+			filter(([scorings, selectedTrainee]) => !_isEmpty(selectedTrainee?.traineeCode)),
 			map(([scorings, selectedTrainee]) =>
 				scorings.filter((p) => p.traineeCode === selectedTrainee.traineeCode)
 			)

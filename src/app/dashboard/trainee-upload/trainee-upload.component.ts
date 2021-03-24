@@ -91,9 +91,9 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 			.pipe(
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.currentViewSubject$, this.currentViewPhase$),
-				filter(([_,, phs]) => !_isEmpty(phs))
+				filter(([act, sub, phs]) => !_isEmpty(phs))
 			)
-			.subscribe(([_, sub, phs]) => {
+			.subscribe(([act, sub, phs]) => {
 				this.store.dispatch(
 					CaseStateAction.FetchTraineeCasesBy({
 						phaseId: phs.PhaseId,

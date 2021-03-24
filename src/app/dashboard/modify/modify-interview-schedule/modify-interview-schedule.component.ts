@@ -173,7 +173,7 @@ export class ModifyInterviewScheduleComponent
 		// Reload when update result
 		this.interviewEffects.updateInterviewResult$
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentInterviewSchedule$))
-			.subscribe(([, schedule]) => {
+			.subscribe(([act, schedule]) => {
 				this.store.dispatch(
 					InterviewStateAction.FetchInterviewResult({
 						interviewScheduleId: schedule.InterviewScheduleId,

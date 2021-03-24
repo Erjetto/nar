@@ -135,7 +135,7 @@ export class DataTableComponent implements AfterContentInit, OnDestroy, OnChange
 		this.checkMultipleData.emit([...this.selectedValues]);
 	}
 
-	onClickRow(row: any) {
+	onClickRow(evt, row: any) {
 		this.clickRow.emit(row);
 	}
 

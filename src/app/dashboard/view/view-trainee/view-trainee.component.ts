@@ -92,9 +92,9 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 		);
 	}
 
-	onSelectTrainee() {}
+	onSelectTrainee(trainee) {}
 
-	onChangePhase() {}
+	onChangePhase(phase) {}
 
 	traineeRowInactiveClass = (row:any) => ({'trainee-row-inactive': !row.IsActive})
 	traineeThumbnailInactiveClass = (data:any) => ({'trainee-inactive': !data.IsActive})

@@ -231,7 +231,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			this.masterEffects.deleteAllSchedule$
 		)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrentSubject$))
-			.subscribe(([, sub]) => {
+			.subscribe(([act, sub]) => {
 				// Reset except phase & subject ng-select
 				const { phaseId, subjectId } = this.scheduleForm.value;
 				this.scheduleForm.reset({ phaseId, subjectId });
@@ -242,7 +242,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		// Auto reload trainees in schedule
 		merge(this.masterEffects.createTraineeInSchedule$, this.masterEffects.deleteTraineeInSchedule$)
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrentSchedule$))
-			.subscribe(([, sch]) => {
+			.subscribe(([act, sch]) => {
 				if (!!sch)
 					this.store.dispatch(
 						MasterStateAction.FetchTraineeInSchedule({ scheduleId: sch.ScheduleId })

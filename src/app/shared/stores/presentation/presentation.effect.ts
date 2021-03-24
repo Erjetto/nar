@@ -78,7 +78,7 @@ export class PresentationStateEffects {
 	getPresentationsBy$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentationsBy),
 		withLatestFrom(this.store.pipe(select(fromPresentationState.hasFetchedAllPresentations))),
-		filter(([, hasFetchedAll]) => !hasFetchedAll),
+		filter(([data, hasFetchedAll]) => !hasFetchedAll),
 		switchMap(
 			// use merge because its possible to have multiple running request
 			([{ generationId, traineeId, subjectId }]) =>

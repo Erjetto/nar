@@ -161,7 +161,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		this.store.dispatch(CandidateStateAction.ExportAnswersToExcel());
   }
   
-  trackScheduleById(s: SubcoCandidateAnswerModel){
+  trackScheduleById(idx: number, s: SubcoCandidateAnswerModel){
     return s.Id
   }
 }
