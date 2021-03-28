@@ -11,6 +11,7 @@ import * as VoteStateAction from 'src/app/shared/stores/vote/vote.action';
 import * as AttendanceStateAction from 'src/app/shared/stores/attendance/attendance.action';
 import * as NoteStateAction from 'src/app/shared/stores/note/note.action';
 import * as LogStateAction from 'src/app/shared/stores/log/log.action';
+import * as RoomStateAction from 'src/app/shared/stores/room/room.action';
 
 import {
 	BINUSIANSTATE_REDUCER_NAME,
@@ -44,6 +45,10 @@ import {
 	LOGSTATE_REDUCER_NAME,
 	LogStateReducer,
 } from 'src/app/shared/stores/log/log.reducer';
+import {
+	ROOMSTATE_REDUCER_NAME,
+	RoomStateReducer,
+} from 'src/app/shared/stores/room/room.reducer';
 
 import * as fromAppState from 'src/app/app.reducer';
 import * as fromAttendanceState from 'src/app/shared/stores/attendance/attendance.reducer';
@@ -57,6 +62,7 @@ import * as fromMasterState from 'src/app/shared/stores/master/master.reducer';
 import * as fromPresentationState from 'src/app/shared/stores/presentation/presentation.reducer';
 import * as fromVoteState from 'src/app/shared/stores/vote/vote.reducer';
 import * as fromLogState from 'src/app/shared/stores/log/log.reducer';
+import * as fromRoomState from 'src/app/shared/stores/room/room.reducer';
 
 import { AttendanceStateEffects } from 'src/app/shared/stores/attendance/attendance.effect';
 import { NoteStateEffects } from 'src/app/shared/stores/note/note.effect';
@@ -69,6 +75,7 @@ import { MasterStateEffects } from 'src/app/shared/stores/master/master.effect';
 import { PresentationStateEffects } from 'src/app/shared/stores/presentation/presentation.effect';
 import { VoteStateEffects } from 'src/app/shared/stores/vote/vote.effect';
 import { LogStateEffects } from 'src/app/shared/stores/log/log.effect';
+import { RoomStateEffects } from 'src/app/shared/stores/room/room.effect';
 
 export {
 	// Get all state getter
@@ -84,6 +91,7 @@ export {
 	fromPresentationState,
 	fromVoteState,
 	fromLogState,
+	fromRoomState,
   // Get all action
   AttendanceStateAction,
   NoteStateAction,
@@ -96,7 +104,8 @@ export {
 	PresentationStateAction,
 	VoteStateAction,
 	LogStateAction,
-  // Get all reducer (doubt I'll need it)
+	RoomStateAction,
+  // Get all reducer?
   AttendanceStateReducer,
   NoteStateReducer,
 	MainStateReducer,
@@ -108,7 +117,8 @@ export {
 	BinusianStateReducer,
 	VoteStateReducer,
 	LogStateReducer,
-  // Get all effects (only if you want to observe/subscribe the effect)
+	RoomStateReducer,
+  // Get all effects (to observe/subscribe the effect)
   AttendanceStateEffects,
   NoteStateEffects,
 	MainStateEffects,
@@ -120,6 +130,7 @@ export {
 	BinusianStateEffects,
 	VoteStateEffects,
 	LogStateEffects,
+	RoomStateEffects,
 };
 
 export const ALL_STORES = [
@@ -134,6 +145,7 @@ export const ALL_STORES = [
 	StoreModule.forFeature(BINUSIANSTATE_REDUCER_NAME, BinusianStateReducer),
 	StoreModule.forFeature(VOTESTATE_REDUCER_NAME, VoteStateReducer),
 	StoreModule.forFeature(LOGSTATE_REDUCER_NAME, LogStateReducer),
+	StoreModule.forFeature(ROOMSTATE_REDUCER_NAME, RoomStateReducer),
 ];
 
 export const ALL_EFFECTS = [
@@ -148,4 +160,5 @@ export const ALL_EFFECTS = [
 	BinusianStateEffects,
 	VoteStateEffects,
 	LogStateEffects,
+	RoomStateEffects,
 ];

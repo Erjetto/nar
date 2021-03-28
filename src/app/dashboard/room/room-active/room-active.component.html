@@ -1,0 +1,117 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col-3">
+			<rd-card
+				[cardTitle]="'Insert New Room Transaction'"
+				[formGroup]="insertRoomForm"
+				[isLoading]="loadingForm$ | async"
+			>
+				<div class="row">
+					<div class="col">
+						<div class="row mb-2">
+							<div class="col">
+								<input type="date" class="form-control" formControlName="Date" />
+							</div>
+						</div>
+						<div class="row mb-2">
+							<div class="col">
+								<ng-select
+									[items]="[1, 2, 3, 4, 5, 6]"
+									placeholder="Shift"
+									[clearable]="false"
+									formControlName="Shift"
+								></ng-select>
+							</div>
+						</div>
+						<div class="row mb-2">
+							<div class="col">
+								<input type="text" class="form-control" formControlName="PIC" placeholder="PIC" />
+							</div>
+						</div>
+						<div class="row mb-2">
+							<div class="col">
+								<ng-select
+									[items]="rooms$ | async"
+									placeholder="Room (optional)"
+									bindLabel="RoomName"
+									bindValue="RoomId"
+								></ng-select>
+							</div>
+						</div>
+						<div class="row mb-2">
+							<div class="col">
+								<input
+									type="text"
+									class="form-control"
+									formControlName="Zoom"
+									placeholder="Link (optional)"
+								/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col"></div>
+							<div class="col-auto">
+								<button
+									class="btn btn-primary"
+									[disabled]="insertRoomForm.disabled"
+									(click)="createNewRoomTransaction()"
+								>
+									<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card [cardTitle]="'View Room Transaction'" [isLoading]="loadingView$ | async">
+				<div rdCardBadges class="row">
+					<div>
+						<button class="btn btn-secondary" (click)="refreshRoomTransactionView()">
+							<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Refresh
+						</button>
+					</div>
+					<div class="col-auto">
+						<input type="date" class="form-control" [formControl]="roomTransactionViewControl" />
+					</div>
+				</div>
+				<div
+					class="row mb-2"
+					*ngFor="let shiftTransactions of roomTransactionsByShift$ | async | keyvalue"
+				>
+					<div class="col">
+						<div class="row mb-2 bd-b-2 bd-lightgrey">
+							<div class="col room-transaction-header">Shift {{ shiftTransactions.key }}</div>
+						</div>
+						<div class="row">
+							<div class="room-transaction-item" *ngFor="let item of shiftTransactions.value">
+								<div class="item__badge">
+									<span class="badge badge-secondary">{{ item.Type }}</span>
+								</div>
+								<ng-container [ngSwitch]="item.Zoom !== ''">
+									<a *ngSwitchCase="true" [href]="item.Zoom" class="item__title absolute-center">
+										{{ item.Room === '' ? 'Link here' : item.Room }}
+									</a>
+									<span *ngSwitchDefault class="item__title absolute-center">
+										{{ item.Room }}
+									</span>
+								</ng-container>
+								<div class="item__actions" *ngIf="(currentUser$ | async)?.Role.isAstSpv">
+									<rd-confirmable-pop-up (confirm)="deleteRoomTransaction(item)">
+										<button class="btn btn-xs btn-danger">
+											<fa-icon [icon]="['fas', 'trash']"></fa-icon>
+										</button>
+									</rd-confirmable-pop-up>
+								</div>
+								<div class="item__pic">
+									{{ item.PIC }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

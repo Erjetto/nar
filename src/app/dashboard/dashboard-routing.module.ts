@@ -51,6 +51,7 @@ import { map, mapTo, tap, withLatestFrom } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ClientGeneration, ClientPhase, User } from '../shared/models';
 import { genDifferenceInSemester, TryGetCoreTrainingPhase } from '../shared/methods';
+import { RoomActiveComponent } from './room/room-active/room-active.component';
 
 export const routes: Routes = [
 	{
@@ -175,7 +176,7 @@ export const routes: Routes = [
 							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
 							map(
 								([phases, user]: [ClientPhase[], User]) =>
-									user.Role.is(RoleFlags.AssistantSupervisor) ||
+									user.Role.isAstSpv ||
 									phases.find((p) => p.Description.includes('Core')) !== undefined
 							)
 						),
@@ -194,7 +195,7 @@ export const routes: Routes = [
 					// 		withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
 					// 		map(
 					// 			([phases, user]: [ClientPhase[], User]) =>
-					// 				user.Role.is(RoleFlags.AssistantSupervisor) ||
+					// 				user.Role.isAstSpv ||
 					// 				phases.find((p) => p.Description.includes('Core')) !== undefined
 					// 		)
 					// 	),
@@ -222,10 +223,10 @@ export const routes: Routes = [
 				children: [
 					{
 						path: 'room-active',
-						redirectTo: '/home',
+						component: RoomActiveComponent,
 						data: {
 							roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
-							name: 'Room Active (-)',
+							name: 'Room Active',
 						},
 					},
 				],
@@ -237,7 +238,7 @@ export const routes: Routes = [
 					{
 						path: 'case',
 						component: ManageCaseComponent,
-						data: { roles: RoleGroups.SENIOR_ROLES, name: 'Case' },
+						data: { roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer, name: 'Case' },
 					},
 					{
 						path: 'top-bottom-vote',
@@ -269,7 +270,7 @@ export const routes: Routes = [
 							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
 							map(
 								([phases, user]: [ClientPhase[], User]) =>
-									user.Role.is(RoleFlags.AssistantSupervisor) ||
+									user.Role.isAstSpv ||
 									phases.find((p) => p.Description.includes('Core')) !== undefined
 							)
 						),
@@ -279,7 +280,7 @@ export const routes: Routes = [
 						path: 'presentation-summary',
 						component: PresentationSummaryComponent,
 						data: {
-							roles: RoleGroups.SENIOR_ROLES,
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
 							name: 'Presentation Summary',
 						},
 					},
@@ -287,7 +288,7 @@ export const routes: Routes = [
 						path: 'view-all-presentations',
 						component: ViewAllPresentationComponent,
 						data: {
-							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Trainee,
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Trainee | RoleFlags.JuniorTrainer,
 							name: 'View All Presentations',
 						},
 					},
@@ -295,7 +296,7 @@ export const routes: Routes = [
 						path: 'view-all-questions',
 						component: ViewAllQuestionComponent,
 						data: {
-							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Trainee,
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Trainee | RoleFlags.JuniorTrainer,
 							name: 'View All Questions',
 						},
 					},
@@ -399,15 +400,6 @@ export const routes: Routes = [
 						},
 					},
 					{
-						path: 'schedule-header',
-						redirectTo: '/home',
-						// component: null,
-						data: {
-							roles: RoleFlags.AssistantSupervisor | RoleFlags.SubjectCoordinator,
-							name: 'Schedule Header (-)',
-						},
-					},
-					{
 						path: 'binusian-data',
 						redirectTo: '/home',
 						// component: null,
@@ -423,18 +415,18 @@ export const routes: Routes = [
 				data: {
 					name: 'Candidate',
 					// Hanya muncul kalo SPV dan trainer generasi yg jadi calon subco
-					validation: (store: Store<IAppState>): Observable<boolean> => 
-						store.pipe(
-							select(fromMainState.getCurrentGeneration),
-							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
-							map(([currGen, currUser]: [ClientGeneration, User]) => {
-								if (!currGen || !currUser) return false;
-								return (
-									currUser.Role.is(RoleFlags.AssistantSupervisor) ||
-									genDifferenceInSemester(currGen.Description, currUser.UserName.substr(2)) === 0
-								);
-							})
-						),
+					// validation: (store: Store<IAppState>): Observable<boolean> => 
+					// 	store.pipe(
+					// 		select(fromMainState.getCurrentGeneration),
+					// 		withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+					// 		map(([currGen, currUser]: [ClientGeneration, User]) => {
+					// 			if (!currGen || !currUser) return false;
+					// 			return (
+					// 				currUser.Role.isAstSpv ||
+					// 				genDifferenceInSemester(currGen.Description, currUser.UserName.substr(2)) === 2
+					// 			);
+					// 		})
+					// 	),
 				},
 				children: [
 					{
@@ -463,11 +455,11 @@ export const routes: Routes = [
 					},
 				],
 			},
-			// {
-			// 	path: 'interview',
-			// 	component: null,
-			// 	data: { roles: RoleFlags.Trainee, name: 'Interview' },
-			// },
+			{
+				path: 'interview',
+				component: ModifyInterviewScheduleComponent,
+				data: { roles: RoleFlags.Interviewer, name: 'Interview' },
+			},
 		],
 	},
 	{
@@ -475,14 +467,6 @@ export const routes: Routes = [
 		redirectTo: '',
 	},
 ];
-
-/**
- * Covers the need to fetch necessary data for menu validations
- * Ex: Presentations menu needs to check Phases
- */
-export const fetchRouteValidatorsData = (store: Store<IAppState>) => {
-	store.dispatch(MasterStateAction.FetchPhases());
-}
 
 @NgModule({
 	imports: [RouterModule.forChild(routes)],

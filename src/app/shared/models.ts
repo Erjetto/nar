@@ -61,6 +61,8 @@ export class Role {
 		else if (isString(roleFlags[0])) return roleFlags.some((str) => str === this.roleName);
 		else return roleFlags.some((role) => (role.roleNumber & this.roleNumber) !== 0);
 	}
+
+	get isAstSpv() { return this.is(RoleFlags.AssistantSupervisor)}
 }
 
 export class ClientUserInRoles extends BaseModel {
@@ -1129,6 +1131,7 @@ export class SubcoCandidateAnswerModel extends BaseModel {
 	constructor(
 		public Id = EMPTY_GUID,
 		public SubcoCandidateQuestionId = EMPTY_GUID,
+		public GenerationName = '',
 		public TrainerName = '',
 		public Answers: string[] = [],
 		public StartDate: Date = null,
@@ -2019,6 +2022,31 @@ export class LogBookPIC extends BaseModel {
 			PIC: this.PIC,
 			SavedDate: DateHelper.toCSharpDate(this.SavedDate),
 		};
+	}
+}
+
+//#endregion
+
+//#region Room
+
+export class ClientRoomTransaction extends BaseModel {
+	constructor(
+		public RoomTransactionId = EMPTY_GUID, 
+		public RoomId = EMPTY_GUID,
+		public Date: Date = null,
+		public Shift = 0,
+		public PIC = '',
+		public Type = '',
+		public Room = '',
+		public Zoom = ''
+		) {
+		super();
+	}
+	static fromJson(data?: any): ClientRoom {
+		if (isEmpty(data)) return null;
+		return Object.assign(new ClientRoom(), data, {
+			Date: DateHelper.fromCSharpDate(data.Date)
+		});
 	}
 }
 

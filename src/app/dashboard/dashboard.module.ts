@@ -44,6 +44,7 @@ import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-r
 import { PresentationSummaryComponent } from './presentation/presentation-summary/presentation-summary.component';
 import { TraineeHomeComponent } from './home/trainee-home/trainee-home.component';
 import { TrainerHomeComponent } from './home/trainer-home/trainer-home.component';
+import { RoomActiveComponent } from './room/room-active/room-active.component';
 
 @NgModule({
 	declarations: [
@@ -97,6 +98,8 @@ import { TrainerHomeComponent } from './home/trainer-home/trainer-home.component
 		TraineeHomeComponent,
     
 		TrainerHomeComponent,
+    
+		RoomActiveComponent,
     
     
 	],
