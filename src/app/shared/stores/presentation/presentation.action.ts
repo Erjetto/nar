@@ -9,6 +9,16 @@ export const FetchPresentationStatus = createAction(
 	'[PresentationState] FetchPresentationStatus',
 	props<{ filename: string }>()
 );
+export const FetchPresentationScorings = createAction(
+	'[PresentationState] FetchPresentationScorings',
+	props<{ 
+		generationId: string;
+		phaseId?: string;
+		subjectId?: string;
+		traineeId?: string;
+		presentationNo?: number;
+	 }>()
+);
 export const FetchPresentationScoringsBy = createAction(
 	'[PresentationState] FetchPresentationScoringsBy',
 	props<{ time?: string; subjectId?: string }>()

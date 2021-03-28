@@ -73,7 +73,7 @@
 								<!-- Set Answer status -->
 								<div
 									class="row justify-content-end btn-group mb-2"
-									*ngIf="(currentUser$ | async)?.Role.is(constant.role.AssistantSupervisor)"
+									*ngIf="(currentUser$ | async)?.Role.isAstSpv"
 								>
 									<button
 										class="btn btn-success"
@@ -105,9 +105,9 @@
 									class="row justify-content-end"
 									*ngIf="(currentUser$ | async)?.Name === answer.RespondenUserName"
 								>
-									<button class="btn btn-primary" title="Edit" (click)="toggleEdit(i)">
+									<!-- <button class="btn btn-primary" title="Edit" (click)="toggleEdit(i)">
 										<fa-icon [icon]="['fas', 'pen']"></fa-icon>
-									</button>
+									</button> -->
 									&nbsp;
 									<rd-confirmable-pop-up
 										popoverTitle="Delete this answer?"

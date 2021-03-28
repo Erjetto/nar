@@ -14,7 +14,7 @@ import { LogService } from '../../services/new/log.service';
 import { RoomService } from '../../services/new/room.service';
 import { DateHelper } from '../../utilities/date-helper';
 
-import { User } from '../../models';
+import { EMPTY_GUID, User } from '../../models';
 import { IAppState } from 'src/app/app.reducer';
 import { isEmptyGuid } from '../../methods';
 
@@ -50,20 +50,30 @@ export class LogStateEffects {
 		ofType(LogStateAction.SaveLogRooms),
 		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentUser))),
 		switchMap(([data, user]: [any, User]) =>
-			this.roomService.UpdateLogRoom({
-				data: {
-					ComputerSeat: JSON.stringify(data.computerSeat),
-					Log: JSON.stringify(data.note),
-					Presentation: JSON.stringify(data.presentation),
-					Room: data.room,
-					UserId: user.UserId,
-				},
-				id: data.id,
-				time: DateHelper.dateToFormat(new Date(), 'dd-MM-yyyy'),
-			})
+			data.id === EMPTY_GUID
+				? this.roomService.SaveLogPICRoomNote({
+						data: {
+							ComputerSeat: JSON.stringify(data.computerSeat),
+							Log: JSON.stringify(data.note),
+							Presentation: JSON.stringify(data.presentation),
+							Room: data.room,
+							UserId: user.UserId,
+						},
+				  })
+				: this.roomService.UpdateLogRoom({
+						data: {
+							ComputerSeat: JSON.stringify(data.computerSeat),
+							Log: JSON.stringify(data.note),
+							Presentation: JSON.stringify(data.presentation),
+							Room: data.room,
+							UserId: user.UserId,
+						},
+						id: data.id,
+						time: DateHelper.dateToFormat(new Date(), 'dd-MM-yyyy'),
+				  })
 		),
 		mergeMap((res) =>
-			res === true
+			res !== EMPTY_GUID
 				? of(MainStateAction.SuccessfullyMessage('saved the log'))
 				: of(MainStateAction.FailMessage('saving log'))
 		),
@@ -87,11 +97,17 @@ export class LogStateEffects {
 		share()
 	);
 
+	//#region Delete
 	@Effect()
-	getRooms$: Observable<Action> = this.actions$.pipe(
-		ofType(LogStateAction.FetchRooms),
-		switchMap((data) => this.roomService.GetAllRooms()),
-		mergeMap((res) => of(LogStateAction.FetchRoomsSuccess({ payload: res }))),
+	deleteLogBooks$: Observable<Action> = this.actions$.pipe(
+		ofType(LogStateAction.DeleteLogBook),
+		switchMap((data) => this.logService.DeleteLogBookRecap(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted the log'))
+				: of(MainStateAction.FailMessage('deleting log'))
+		),
 		share()
 	);
+	//#endregion
 }

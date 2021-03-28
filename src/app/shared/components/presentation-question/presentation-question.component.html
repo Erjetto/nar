@@ -5,17 +5,9 @@
 	</div>
 	<div class="col pl-4">
 		<div class="row question">
-			<a
-				class="col"
-				[innerHTML]="question.Question.Text"
-				[routerLink]="[
-					'/presentation',
-					'question',
-					currentGenId$ | async,
-					presentation.TraineeId,
-					question.Question.Id
-				]"
-			></a>
+			<a class="col" [routerLink]="questionLink">
+				<quill-view-html [content]="question.Question.Text"></quill-view-html>
+			</a>
 
 			<!-- Add details to top right of question component -->
 			<div class="d-flex flex-column question-side-detail maxw-200px">
@@ -26,7 +18,7 @@
 					class="row justify-content-end text-right"
 					[ngClass]="{ 'text-danger': question.DeadlinePassed }"
 				>
-					{{ presentation.Deadline | date: 'dd MMM yyyy hh:mm' }}
+					{{ presentation.Deadline | date: dateFormat }}
 				</div>
 				<div class="row justify-content-end">
 					<ng-content select=".actions"></ng-content>

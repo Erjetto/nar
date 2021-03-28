@@ -8,6 +8,7 @@ import {
 	ClientSchedule,
 	Case,
 	EMPTY_GUID,
+	User,
 } from 'src/app/shared/models';
 
 import {
@@ -20,7 +21,7 @@ import {
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, take } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { isEmpty as _isEmpty } from 'lodash';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -95,6 +96,10 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
 		this.caseListLoading$ = this.store.pipe(select(fromCaseState.isCasesLoading));
 
+		this.currentUser$.pipe(take(1)).subscribe((u:User) => {
+			if(u.Role.isAstSpv === false) this.caseForm.disable();
+		})
+
 		//#endregion
 
 		//#region auto select first in array
@@ -150,6 +155,10 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		return !_isEmpty(this.caseForm.value.fileId);
 	}
 
+	onUpload(){
+		this.caseForm.get('changedFile').setValue(true);
+	}
+
 	onSelectCase(row: Case) {
 		this.caseForm.patchValue({
 			fileForm: isEmptyGuid(row.FileId)
@@ -172,7 +181,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			trainerDays: DateHelper.dateToFormat(new Date(), this.editDateFormat),
 			scheduleDate: DateHelper.dateToFormat(new Date(), this.editDateFormat),
 			noUpload: false,
-			changedFile: false
+			changedFile: false,
 		});
 	}
 
@@ -189,8 +198,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 				fileId: fileForm.fileId ?? EMPTY_GUID,
 				subjectId: this.viewCurrentSubject$.value.SubjectId,
 				scheduleId: this.viewCurrentSchedule$.value.ScheduleId,
-				correctorNames: correctorNames.split('\n'),
-				noUpload:null,
+				correctorNames: correctorNames.split(',').map((c: string) => c.trim()),
 			})
 		);
 	}
@@ -201,8 +209,8 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		this.store.dispatch(
 			CaseStateAction.UpdateCase({
 				...this.caseForm.value,
-				fileId: changedFile ? fileId : EMPTY_GUID,
-				correctorNames: correctorNames.split('\n'),
+				fileId: changedFile ? fileId : null,
+				correctorNames: correctorNames.split(',').map((c: string) => c.trim()),
 			})
 		);
 	}

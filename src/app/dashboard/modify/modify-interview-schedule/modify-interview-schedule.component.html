@@ -1,7 +1,11 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Insert/Update Interview Schedule'" [expanded]="false">
+			<rd-card 
+				[cardTitle]="'Insert/Update Interview Schedule'" 
+				[expanded]="false"
+				*ngIf="(currentUser$|async)?.Role.isAstSpv"
+			>
 				<div class="row">
 					<div class="col">
 						<div class="row form-group">
@@ -84,9 +88,6 @@
 					}}) <span class="acc legend"></span> Acc ({{
 						(interviewScheduleReport$ | async)?.StatusTotal.Acc
 					}})
-				</div>
-				<div class="row justify-content-end">
-					<i>Note: Utk skrg blum bisa kasih reason waktu delete schedule</i>
 				</div>
 				<div class="row">
 					<table class="table table-sm table-striped table-bordered text-center">

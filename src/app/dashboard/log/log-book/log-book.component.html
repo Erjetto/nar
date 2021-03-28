@@ -51,10 +51,7 @@
 								<td>{{ log.Subject }}</td>
 								<td>{{ log.SavedDate | date: logDateFormat }}</td>
 								<td>
-									<rd-confirmable-pop-up
-										[description]="'Delete this log?'"
-										(confirm)="deleteLog(log)"
-									>
+									<rd-confirmable-pop-up (confirm)="deleteLog(log)">
 										<button class="btn btn-xs btn-danger">
 											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
 										</button>
@@ -170,6 +167,173 @@
 							</tr>
 						</tbody>
 					</table>
+				</div>
+				<div class="row p-2 pt-4 bd-b-1 bd-lightgrey">
+					<div class="col">
+						<b>Legends</b>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<table class="table table-sm table-striped">
+							<thead>
+								<tr>
+									<th>No</th>
+									<th>Book Category</th>
+									<th>Checklist</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1</td>
+									<td>Personal Identity</td>
+									<td>
+										<ul>
+											<li>Interviewer's Full Name</li>
+											<li>Completeness</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>Softskill I</td>
+									<td>
+										<ul>
+											<li>Training Name</li>
+											<li>Initial</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td>Softskill II</td>
+									<td>
+										<ul>
+											<li>Training Name</li>
+											<li>Initial</li>
+										</ul>
+									</td>
+								</tr>
+								<!-- <tr>
+									<td>4</td>
+									<td>Subject Trainer</td>
+									<td>
+										<ul>
+											<li>Subject Name</li>
+											<li>Initial</li>
+											<li>Generation</li>
+											<li>Full Name</li>
+											<li>Total Trainer</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>5</td>
+									<td>Case Table</td>
+									<td>
+										<ul>
+											<li>Subject Name</li>
+											<li>Case List</li>
+											<li>Description</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>6</td>
+									<td>Presentation</td>
+									<td>
+										<ul>
+											<li>Day & Date</li>
+											<li>Material</li>
+											<li>PIC Initial & Name</li>
+											<li>Question</li>
+											<li>Answer</li>
+										</ul>
+									</td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
+					<div class="col">
+						<table class="table table-sm table-striped">
+							<thead>
+								<tr>
+									<th>No</th>
+									<th>Book Category</th>
+									<th>Checklist</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- <tr>
+									<td>1</td>
+									<td>Personal Identity</td>
+									<td>
+										<ul>
+											<li>Interviewer's Full Name</li>
+											<li>Completeness</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>Softskill I</td>
+									<td>
+										<ul>
+											<li>Training Name</li>
+											<li>Initial</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td>Softskill II</td>
+									<td>
+										<ul>
+											<li>Training Name</li>
+											<li>Initial</li>
+										</ul>
+									</td>
+								</tr> -->
+								<tr>
+									<td>4</td>
+									<td>Subject Trainer</td>
+									<td>
+										<ul>
+											<li>Subject Name</li>
+											<li>Initial</li>
+											<li>Generation</li>
+											<li>Full Name</li>
+											<li>Total Trainer</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>5</td>
+									<td>Case Table</td>
+									<td>
+										<ul>
+											<li>Subject Name</li>
+											<li>Case List</li>
+											<li>Description</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>6</td>
+									<td>Presentation</td>
+									<td>
+										<ul>
+											<li>Day & Date</li>
+											<li>Material</li>
+											<li>PIC Initial & Name</li>
+											<li>Question</li>
+											<li>Answer</li>
+										</ul>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</rd-card>
 		</div>

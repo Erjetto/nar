@@ -132,10 +132,10 @@ export const SuccessfullyMessage = (doingWhat: string): Action =>
 export const RequestFailedMessage = (error: HttpErrorResponse): Action =>
 	ToastMessage({
 		messageType: 'danger',
-		message: `Request Failed :
-URL: ${error.url.replace(environment.apiUrl, '')}
-Exception Type: ${error.error?.ExceptionType ?? '-'}
-"${error.error?.Message ?? 'No error message'}"`,
+		message: `Request Failed : (${error.status} ${error.statusText})` +
+				`\nURL: ${error.url.replace(environment.apiUrl, '')}` +  
+				`${!!error.error?.ExceptionType ? '\nException Type: ' + error.error?.ExceptionType : ''}` + 
+				`${!!error.error?.Message ? '\n\"' + error.error?.Message + '\"' : ''}`,
 	});
 
 export const UnexpectedResultMessage = (doingWhat: string, result: any): Action =>

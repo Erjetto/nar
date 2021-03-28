@@ -66,6 +66,14 @@ export class InterviewService {
 			.pipe(map((res: any) => _map(res.d, (v) => v + '')));
 	}
 
+	public DeleteInterviewQuestion(data: {
+		interviewQuestionId: string;
+	}): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteInterviewQuestion', data)
+			.pipe(map((res: any) => res.d === true));
+	}
+
 	public GetInterviewSchedulesForCurrentUser(): Observable<ClientInterviewSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetInterviewSchedulesForCurrentUser', {})

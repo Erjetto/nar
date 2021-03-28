@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://nar.slc.net/'
+  // apiUrl: 'http://nar.slc.net/'
+  apiUrl: '/'
 };

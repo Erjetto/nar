@@ -107,6 +107,9 @@ export class DataTableComponent implements AfterContentInit, OnDestroy, OnChange
 			this.data = _sortBy(this.data, this.sortColumn.prop);
 			if (this.sortColumn.sortState === 'DESC') this.data = [...this.data.reverse()];
 			this.changeDetector.markForCheck();
+			// TODO: add trackBy to prevent losing selection in data change
+			this.selectedValues = [];
+			this.checkMultipleData.emit([]);
 		}
 	}
 

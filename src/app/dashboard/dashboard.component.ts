@@ -5,7 +5,6 @@ import { RoleFlags } from '../shared/constants/role.constant';
 import { IAppState } from '../app.reducer';
 import { Store, select } from '@ngrx/store';
 import {
-	fromAppState,
 	MainStateAction,
 	fromMainState,
 	MasterStateAction,
@@ -20,16 +19,13 @@ import {
 	distinctUntilChanged,
 	first,
 	tap,
-	mapTo,
 	map,
-	withLatestFrom,
 } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { query, style, group, animate } from '@angular/animations';
 import { Cookies } from '../shared/constants/cookie.constants';
 import { Title } from '@angular/platform-browser';
 import { isEmpty as _isEmpty } from 'lodash';
-import { fetchRouteValidatorsData } from './dashboard-routing.module';
 
 @Component({
 	selector: 'rd-dashboard',
@@ -78,53 +74,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		return root;
 	}
 
+	click(){
+		this.store.dispatch(MainStateAction.ToastMessage({
+			message:'Test',
+			messageType: 'info'
+		}))
+	}
+
 	ngOnInit(): void {
 		this.initiateTheme();
 		this.currentActiveHeader = this.route.snapshot.firstChild.data.name;
 		this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
-		this.menuListFiltered$ = this.menuList$.pipe(
-			// If current role has no current active menu, then redirect
-			// Only for user who can change roles
-			tap((menus) => {
-				if (menus.every((r) => r.data.name !== this.currentActiveHeader))
-					this.router.navigateByUrl('/home');
-			}),
-			// Filter menu
-			map((menus) =>
-				menus.map((m) => {
-					// If validation() is true, then show menu
-					// if false then hide the menu
-					if (m.data?.validation !== undefined)
-						m.data.isHidden = m.data
-							?.validation(this.store)
-							.pipe(map((result) => !result)) // Reverse the result
-							// .pipe(map((_) => false)); // TODO: Remove this menu bypass later
-					return m;
-				})
-			)
-		);
+		this.menuListFiltered$ = this.filterMenu(this.menuList$);
 
-		this.router.events
-			.pipe(
-				filter((evt) => evt instanceof NavigationEnd),
-				takeUntil(this.destroyed$)
-			)
-			.subscribe((e: NavigationEnd) => {
-				const endRoute = this.getEndRoute();
-				// get first level (Master, Modify, Home, etc)
-				this.currentActiveHeader = endRoute.root.firstChild.data.name;
-
-				// Simpan ke history buat animasi back & front
-				this.history = [...this.history, endRoute.data.name];
-
-				// Ganti nama di tab sesuai route.data.name
-				this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
-			});
-		window.onpopstate = (evt) => (this.isBack = true); // For animation purpose
+		this.prepareForPageAnimations();
 
 		// Redirect to login when logout
 		this.mainEffects.logout$.pipe(takeUntil(this.destroyed$)).subscribe((act) => {
-			// this.store.dispatch(MainStateAction.InfoMessage('Logging out...'));
 			if (act.type === MainStateAction.LogoutSuccess.type) this.router.navigateByUrl('/login');
 		});
 
@@ -149,7 +115,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			});
 
 		this.currentUser$
-			.pipe(filter((u) => u?.Role?.is(RoleFlags.AssistantSupervisor)))
+			.pipe(filter((u) => u?.Role?.isAstSpv))
 			.subscribe((u) => {
 				this.initiateRoleAndGen();
 				this.store.dispatch(MasterStateAction.FetchGenerations());
@@ -157,12 +123,62 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.store.dispatch(MainStateAction.FetchCurrentGeneration());
 		//#endregion
 
-		fetchRouteValidatorsData(this.store);
+		this.fetchRouteValidatorsData(this.store);
 	}
 
 	ngOnDestroy(): void {
 		this.destroyed$.next();
 		this.destroyed$.complete();
+	}
+	/**
+	 * Covers the need to fetch necessary data for menu validations
+	 * Ex: Presentations menu needs to check Phases
+	 */
+	fetchRouteValidatorsData = (store: Store<IAppState>) => {
+		store.dispatch(MasterStateAction.FetchPhases());
+	}
+	
+	filterMenu = (menuList: Observable<Route[]>) => 
+		menuList.pipe(
+			// If current role has no current active menu, then redirect
+			// Only for user who can change roles
+			tap((menus) => {
+				if (menus.every((r) => r.data.name !== this.currentActiveHeader))
+					this.router.navigateByUrl('/home');
+			}),
+			// Filter menu
+			map((menus) =>
+				menus.map((m) => {
+					// If validation() is true, then show menu
+					// if false then hide the menu
+					if (m.data?.validation !== undefined)
+						m.data.isHidden = m.data
+							?.validation(this.store)
+							.pipe(map((result) => !result)) // Reverse the result
+							// .pipe(map((_) => false)); // TODO: Remove this menu bypass later
+					return m;
+				})
+			)
+		);
+
+	prepareForPageAnimations(){
+		this.router.events
+			.pipe(
+				filter((evt) => evt instanceof NavigationEnd),
+				takeUntil(this.destroyed$)
+			)
+			.subscribe((e: NavigationEnd) => {
+				const endRoute = this.getEndRoute();
+				// get first level (Master, Modify, Home, etc)
+				this.currentActiveHeader = endRoute.root.firstChild.data.name;
+
+				// Simpan ke history buat animasi back & front
+				this.history = [...this.history, endRoute.data.name];
+
+				// Ganti nama di tab sesuai route.data.name
+				this.titleService.setTitle('NAR - ' + this.getEndRoute().data.name);
+			});
+		window.onpopstate = (evt) => (this.isBack = true); // For animation purpose
 	}
 
 	isMenuActive(menu: Route) {

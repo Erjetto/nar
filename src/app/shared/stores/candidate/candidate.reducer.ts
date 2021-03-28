@@ -16,7 +16,7 @@ export interface ICandidateState {
 	questionModel: SubcoCandidateQuestionModel;
 	answerModels: SubcoCandidateAnswerModel[];
 	selectedAnswer: SubcoCandidateAnswerModel;
-	currentUserAnswer: SubcoCandidateAnswerModel;
+	currentUserAnswers: SubcoCandidateAnswerModel[];
 
 	loadingQuestionsModel: boolean;
 	loadingAnswersModel: boolean;
@@ -26,7 +26,7 @@ export const initialState: ICandidateState = {
 	questionModel: null,
 	answerModels: [],
 	selectedAnswer: null,
-	currentUserAnswer: null,
+	currentUserAnswers: null,
 
 	loadingQuestionsModel: false,
 	loadingAnswersModel: false,
@@ -52,7 +52,7 @@ export const CandidateStateReducer = createReducer(
 
 	on(FetchTrainerAnswerSuccess, (state, { payload }) => ({
 		...state,
-		currentUserAnswer: payload,
+		currentUserAnswers: payload,
 		loadingAnswersModel: false,
 	})),
 
@@ -75,7 +75,7 @@ export const getCandidateStateBy = (fn: (_: ICandidateState) => any) =>
 
 export const getQuestionModel = getCandidateStateBy((s) => s.questionModel);
 export const getAnswerModels = getCandidateStateBy((s) => s.answerModels);
-export const getCurrentUserAnswer = getCandidateStateBy((s) => s.currentUserAnswer);
+export const getCurrentUserAnswer = getCandidateStateBy((s) => s.currentUserAnswers);
 export const getSelectedAnswer = getCandidateStateBy((s) => s.selectedAnswer);
 export const isLoadingQuestionsModel = getCandidateStateBy((s) => s.loadingQuestionsModel);
 export const isLoadingAnswersModel = getCandidateStateBy((s) => s.loadingAnswersModel);

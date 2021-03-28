@@ -10,9 +10,10 @@ import {
 	InterviewStateEffects,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
-import { Observable, BehaviorSubject, Subject, combineLatest } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, combineLatest, merge } from 'rxjs';
+import { takeUntil, map, filter } from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
+import { isEmpty as _isEmpty } from 'lodash';
 
 @Component({
 	selector: 'rd-manage-interview-question',
@@ -33,9 +34,9 @@ export class ManageInterviewQuestionComponent
 	interviewQuestionsLoading$: Observable<boolean>;
 	interviewQuestionDetailsLoading$: Observable<boolean>;
 
-	currInterviewQuestion$ = new Subject<ClientInterviewQuestion>();
+	currInterviewQuestion$ = new BehaviorSubject<ClientInterviewQuestion>(null);
 
-	loadingViewInterviewQuestions$: Observable<boolean>;
+	loadingViewInterviewQuestions$ = new BehaviorSubject<boolean>(false);
 	loadingFormInterviewQuestions$ = new BehaviorSubject<boolean>(false);
 
 	constructor(
@@ -59,10 +60,15 @@ export class ManageInterviewQuestionComponent
 		this.interviewQuestionDetailsLoading$ = this.store.pipe(
 			select(fromInterviewState.isInterviewQuestionDetailsLoading)
 		);
-		this.loadingViewInterviewQuestions$ = combineLatest([
+		
+		combineLatest([
 			this.interviewQuestionDetailsLoading$,
 			this.interviewQuestionsLoading$,
-		]).pipe(map(([a, b]) => a || b));
+		]).pipe(
+			takeUntil(this.destroyed$),
+			map(([a, b]) => a || b)
+		).subscribe(this.loadingViewInterviewQuestions$);
+
 		//#endregion
 
 		//#region Auto select first in array
@@ -73,7 +79,7 @@ export class ManageInterviewQuestionComponent
 
 		//#region Auto fetch
 		this.currInterviewQuestion$ // Fetch interview question details
-			.pipe(takeUntil(this.destroyed$))
+			.pipe(takeUntil(this.destroyed$), filter(v => !_isEmpty(v)))
 			.subscribe((currGen) =>
 				this.store.dispatch(
 					InterviewStateAction.FetchInterviewQuestionDetails({
@@ -84,7 +90,10 @@ export class ManageInterviewQuestionComponent
 		//#endregion
 
 		//#region Subscribe to effects
-		this.interviewEffects.createInterviewQuestion$
+		merge(
+			this.interviewEffects.createInterviewQuestion$,
+			this.interviewEffects.deleteInterviewQuestion$
+		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.store.dispatch(InterviewStateAction.FetchInterviewQuestions()));
 
@@ -103,8 +112,21 @@ export class ManageInterviewQuestionComponent
 
 	submitInterviewQuestionForm() {
 		this.loadingFormInterviewQuestions$.next(true);
+		const {questionName, questions} = this.formInterviewQuestion.value;
 		this.store.dispatch(
-			InterviewStateAction.CreateInterviewQuestion(this.formInterviewQuestion.value)
+			InterviewStateAction.CreateInterviewQuestion({
+				questionName,
+				questions: questions.split('\n').map(s => s.trim())
+			})
+		);
+	}
+
+	deleteInterviewQuestion(){
+		this.loadingViewInterviewQuestions$.next(true);
+		this.store.dispatch(
+			InterviewStateAction.DeleteInterviewQuestion({
+				interviewQuestionId: this.currInterviewQuestion$.value.InterviewQuestionId
+			})
 		);
 	}
 }

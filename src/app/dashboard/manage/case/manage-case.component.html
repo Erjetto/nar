@@ -92,19 +92,6 @@
 				<form [formGroup]="caseForm">
 					<div class="row">
 						<div class="col">
-							<!-- <div class="row form-group" [hidden]="isEditing">
-								<label class="col-3 col-form-label">Subject</label>
-								<div class="col">
-									<ng-select
-										[items]="subjectList$ | async"
-										[clearable]="false"
-										[searchable]="false"
-										bindLabel="Name"
-										placeholder="Subject"
-										formControlName="subject"
-									></ng-select>
-								</div>
-							</div> -->
 							<div class="row form-group">
 								<label class="col-3 col-form-label">Case Name</label>
 								<div class="col">
@@ -126,6 +113,7 @@
 								<rd-upload-input
 									[disabled]="caseForm.get('noUpload').valueChanges | async"
 									[singleFileForm]="caseForm.get('fileForm')"
+									(upload)="onUpload()"
 								></rd-upload-input>
 							</div>
 							<div class="row form-group">
@@ -144,20 +132,6 @@
 							</div>
 						</div>
 						<div class="col">
-							<!-- <div class="row form-group" [hidden]="isEditing">
-								<label class="col-4 col-form-label">Schedule</label>
-								<div class="col">
-									<ng-select
-										[items]="formScheduleList$ | async"
-										[clearable]="false"
-										[searchable]="false"
-										bindLabel="ScheduleName"
-										bindValue="ScheduleId"
-										placeholder="Schedule"
-										formControlName="scheduleId"
-									></ng-select>
-								</div>
-							</div> -->
 							<div class="row form-group">
 								<label class="col-4 col-form-label">Starts at</label>
 								<div class="col">
@@ -174,9 +148,19 @@
 									<input type="datetime-local" class="form-control" formControlName="traineeDays" />
 								</div>
 							</div>
+							<div class="row form-group">
+								<label class="col-4 col-form-label">Trainer Deadline</label>
+								<div class="col">
+									<input type="datetime-local" class="form-control" formControlName="trainerDays" />
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="row justify-content-around mt-2" [ngSwitch]="isEditing">
+					<div 
+						class="row justify-content-around mt-2" 
+						[ngSwitch]="isEditing"
+						*ngIf="(currentUser$|async)?.Role?.isAstSpv"
+					>
 						<ng-container *ngSwitchCase="false">
 							<button class="btn btn-primary" [disabled]="caseForm.invalid" (click)="createCase()">
 								<fa-icon [icon]="['fas', 'plus']"></fa-icon> Create

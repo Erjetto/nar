@@ -17,6 +17,7 @@ import { GeneralService } from '../../services/new/general.service';
 import { TraineeAttendanceService } from '../../services/new/trainee-attendance.service';
 import { ClientTrainee, User } from '../../models';
 import { IAppState } from 'src/app/app.reducer';
+import { InterviewService } from '../../services/new/interview.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -28,14 +29,23 @@ export class BinusianStateEffects {
 		private leaderService: LeaderService,
 		private generalService: GeneralService,
 		private traineeService: TraineeService,
+		private interviewService: InterviewService,
 		private traineeAttendanceService: TraineeAttendanceService
 	) {}
 
 	@Effect()
-	getDailyAttendance$: Observable<Action> = this.actions$.pipe(
+	getMyDailyAttendance$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchDailyAttendance),
 		switchMap(() => this.traineeAttendanceService.GetTraineeAttendanceForTrainee()),
 		mergeMap((results) => of(BinusianStateAction.FetchDailyAttendanceSuccess({payload: results}))),
+		share()
+	);
+
+	@Effect()
+	getMyInterviewSchedule$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.FetchMyInterviewSchedule),
+		switchMap(() => this.interviewService.GetInterviewSchedulesForTrainee()),
+		mergeMap((results) => of(BinusianStateAction.FetchMyInterviewScheduleSuccess({payload: results}))),
 		share()
 	);
 
@@ -109,42 +119,6 @@ export class BinusianStateEffects {
 		ofType(BinusianStateAction.FetchMySchedules),
 		switchMap((data) => this.traineeService.GetTraineeTrainingSchedule(data)),
 		mergeMap((result) => of(BinusianStateAction.FetchMySchedulesSuccess({ payload: result }))),
-		share()
-	);
-
-	@Effect()
-	createTrainingSchedules$: Observable<Action> = this.actions$.pipe(
-		ofType(BinusianStateAction.CreateTraineeSchedules),
-		switchMap((data) => this.traineeAttendanceService.SaveTraineeSchedules(data)),
-		mergeMap((res) =>
-			_isEmpty(res)
-				? of(MainStateAction.SuccessfullyMessage('inserted training schedules'))
-				: of(MainStateAction.FailMessage('inserting training schedules', res.join('\n')))
-		),
-		share()
-	);
-
-	@Effect()
-	createTraineeAttendances$: Observable<Action> = this.actions$.pipe(
-		ofType(BinusianStateAction.CreateTraineeAttendances),
-		switchMap((data) => this.traineeAttendanceService.SaveAttendances(data)),
-		mergeMap((res) =>
-			_isEmpty(res)
-				? of(MainStateAction.SuccessfullyMessage('inserted attendances'))
-				: of(MainStateAction.FailMessage('inserting attendances', res.join('\n')))
-		),
-		share()
-	);
-
-	@Effect()
-	createLectureSchedules$: Observable<Action> = this.actions$.pipe(
-		ofType(BinusianStateAction.CreateLectureSchedules),
-		switchMap((data) => this.traineeAttendanceService.SaveTraineeLectureSchedules(data)),
-		mergeMap((res) =>
-			_isEmpty(res)
-				? of(MainStateAction.SuccessfullyMessage('inserted lecture schedules'))
-				: of(MainStateAction.FailMessage('inserting lecture schedules', res.join('\n')))
-		),
 		share()
 	);
 

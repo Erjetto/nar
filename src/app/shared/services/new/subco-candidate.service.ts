@@ -39,10 +39,10 @@ export class SubcoCandidateService {
 			.pipe(map((res: any) => _map(res.d, SubcoCandidateAnswerModel.fromJson)));
 	}
 
-	public GetAnswersFromTrainer(): Observable<SubcoCandidateAnswerModel> {
+	public GetAnswersFromTrainer(): Observable<SubcoCandidateAnswerModel[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAnswersFromTrainer', {})
-			.pipe(map((res: any) => SubcoCandidateAnswerModel.fromJson(res.d)));
+			.pipe(map((res: any) => _map(res.d, SubcoCandidateAnswerModel.fromJson)));
 	}
 
 	public SaveAnswers(data: { answerId: string; answers: string[] }): Observable<boolean> {
@@ -51,7 +51,7 @@ export class SubcoCandidateService {
 			.pipe(map((res: any) => res.d === true));
 	}
 
-	public CreateSchedules(data: { schedules: SubcoCandidateAnswerModel[] }): Observable<boolean> {
+	public CreateSchedules(data: { schedules: SubcoCandidateAnswerModel[] }): Observable<boolean[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'CreateSchedules', {
         schedules: data.schedules.map(d => ({
@@ -60,7 +60,7 @@ export class SubcoCandidateService {
           EndDate: DateHelper.toCSharpDate(d.EndDate),
         }))
       })
-			.pipe(map((res: any) => res.d === true));
+			.pipe(map((res: any) => res.d as boolean[]));
 	}
 
 	public UpdateSchedule(data: {

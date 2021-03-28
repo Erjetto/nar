@@ -59,6 +59,7 @@
 										<td *ngSwitchCase="true"><a [href]="case.answerLink">Download</a></td>
 										<td *ngSwitchDefault>
 											<rd-upload-input
+												placeholder="Click or drop here to upload"
 												[singleFileForm]="uploadForms.controls[idx]"
 												(upload)="uploadAnswer($event, case)"
 											></rd-upload-input>
@@ -73,7 +74,7 @@
 				<i class="row">
 					Notes:
 					<ul>
-						<li>Please compressed your answer before upload (.zip)</li>
+						<li>Please compress your answer before upload (.zip)</li>
 						<li *ngIf="(currentViewSubject$ | async)?.Name != 'All'">
 							Maximum file size for {{ (currentViewSubject$ | async).Name }}:
 							{{ (currentViewSubject$ | async).MaxFileSize / 1024 }} KB

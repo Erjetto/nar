@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import {
 	AdditionalTraineeData,
+	ClientInterviewSchedule,
 	ClientTrainee,
 	ClientTraineeDailyAttendance,
 	ClientTraineeData,
@@ -49,22 +50,6 @@ export const CreateTrainees = createAction(
 	props<{ datas: string[] }>()
 );
 
-// HMM: Move this to Master because this is unrelated to binusian and it's crud?
-export const CreateTraineeSchedules = createAction(
-	'[BinusianState] CreateTraineeSchedules',
-	props<{ schedules: string[] }>()
-);
-
-export const CreateTraineeAttendances = createAction(
-	'[BinusianState] CreateTraineeAttendances',
-	props<{ attendances: string[] }>()
-);
-
-export const CreateLectureSchedules = createAction(
-	'[BinusianState] CreateLectureSchedules',
-	props<{ schedules: string[] }>()
-);
-
 // Used in Home
 export const FetchDailyAttendance = createAction('[BinusianState] FetchDailyAttendance');
 export const FetchDailyAttendanceSuccess = createAction(
@@ -98,4 +83,13 @@ export const UpdateTraineeActive = createAction(
 		reason: string;
 		traineeId: string;
 	}>()
+);
+
+export const FetchMyInterviewSchedule = createAction(
+	'[BinusianState] FetchMyInterviewSchedule'
+);
+
+export const FetchMyInterviewScheduleSuccess = createAction(
+	'[BinusianState] FetchMyInterviewScheduleSuccess',
+	props<{ payload: ClientInterviewSchedule[] }>()
 );

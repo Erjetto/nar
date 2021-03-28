@@ -240,10 +240,26 @@ export const DeleteTrainerTeachingSchedule = createAction(
 	'[MasterState] DeleteTrainerTeachingSchedule',
 	props<{ trainerTeachingScheduleId: string }>()
 );
+//#region Create
 export const CreateTrainerTeachingSchedules = createAction(
 	'[MasterState] CreateTrainerTeachingSchedules',
 	props<{ schedules: string[] }>()
 );
+export const CreateTraineeSchedules = createAction(
+	'[BinusianState] CreateTraineeSchedules',
+	props<{ schedules: string[] }>()
+);
+
+export const CreateTraineeAttendances = createAction(
+	'[BinusianState] CreateTraineeAttendances',
+	props<{ attendances: string[] }>()
+);
+
+export const CreateLectureSchedules = createAction(
+	'[BinusianState] CreateLectureSchedules',
+	props<{ schedules: string[] }>()
+);
+//#endregion
 /**
  * Note: Testing REST service here
  * The param must be in the exact order
@@ -271,8 +287,8 @@ export const FetchTraineeSchedulesSuccess = createAction(
 	'[MasterState] FetchTraineeSchedulesSuccess',
 	props<{ payload: TraineeSchedule[] }>()
 );
-export const DeleteTraineeSchedule = createAction(
-	'[MasterState] DeleteTraineeSchedule',
-	props<{ traineeScheduleId: string }>()
+export const DeleteTraineeSchedules = createAction(
+	'[MasterState] DeleteTraineeSchedules',
+	props<{ traineeScheduleIds: string[], note: string }>()
 );
 //#endregion

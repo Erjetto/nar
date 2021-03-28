@@ -83,6 +83,12 @@ export class TraineeAttendanceService {
 			.pipe(map((res: any) => res.d as string[]));
 	}
 
+	public DeleteTraineeSchedules(data: { traineeScheduleIds: string[], note: string }): Observable<string[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'DeleteTraineeSchedules', data)
+			.pipe(map((res: any) => res.d as string[]));
+	}
+
 	public GetTraineeSchedulesByDateRange(data: { startDate, endDate }): Observable<TraineeSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeSchedulesByDateRange', data)

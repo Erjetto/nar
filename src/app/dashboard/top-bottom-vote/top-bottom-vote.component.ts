@@ -10,7 +10,13 @@ import {
 	VoteStateAction,
 	fromVoteState,
 } from 'src/app/shared/store-modules';
-import { FormBuilder, Validators, FormArray } from '@angular/forms';
+import {
+	FormBuilder,
+	Validators,
+	FormArray,
+	AbstractControl,
+	ValidationErrors,
+} from '@angular/forms';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import {
 	TopBottomVoteSchedule,
@@ -21,7 +27,7 @@ import {
 } from 'src/app/shared/models';
 import { takeUntil, filter, map, withLatestFrom } from 'rxjs/operators';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
-import { isEmpty as _isEmpty } from 'lodash';
+import { isEmpty as _isEmpty, uniq as _uniq } from 'lodash';
 import { adjustControlsInFormArray } from 'src/app/shared/methods';
 
 @Component({
@@ -43,11 +49,21 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 
 	trainees$: Observable<ClientTrainee>;
 
-	voteForm = this.fb.group({
-		voteScheduleId: [''],
-		voteScheduleName: [''],
-		top: this.fb.array([]),
-		bottom: this.fb.array([]),
+	voteForm = this.fb.group(
+		{
+			voteScheduleId: [''],
+			voteScheduleName: [''],
+			top: this.fb.array([]), // voteGroupFactory[]
+			bottom: this.fb.array([]),
+		},
+		{
+			validators: this.noDuplicateVote,
+		}
+	);
+
+	voteGroupFactory = () => ({
+		TraineeId: this.fb.control(null, Validators.required),
+		Reason: this.fb.control(null, Validators.required),
 	});
 
 	constructor(
@@ -78,7 +94,7 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 			)
 		);
 		this.voteInScheduleEntity$ = this.store.pipe(select(fromVoteState.getVoteInScheduleEntity));
-		
+
 		this.loadingViewVote$ = this.store.pipe(select(fromVoteState.isVoteScheduleLoading));
 		this.store
 			.pipe(select(fromVoteState.isVoteScheduleLoading), takeUntil(this.destroyed$))
@@ -100,7 +116,7 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 				const currUserVote = voteResult.find(
 					(v: any) => v.TraineeId === currUserKey || v.TrainerName === currUserKey
 				);
-				
+
 				// Kalo udah vote, disable & munculkan data
 				if (!_isEmpty(currUserVote)) {
 					this.voteForm.disable();
@@ -140,12 +156,8 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 	}
 
 	selectVoteSchedule(s: TopBottomVoteSchedule) {
-		const voteGroupFactory = () => ({
-			TraineeId: this.fb.control(null, Validators.required),
-			Reason: this.fb.control(null, Validators.required),
-		});
-		adjustControlsInFormArray(this.topArray, s.VoteCount, voteGroupFactory);
-		adjustControlsInFormArray(this.bottomArray, s.VoteCount, voteGroupFactory);
+		adjustControlsInFormArray(this.topArray, s.VoteCount, this.voteGroupFactory);
+		adjustControlsInFormArray(this.bottomArray, s.VoteCount, this.voteGroupFactory);
 
 		this.voteForm.enable();
 		this.voteForm.reset();
@@ -179,5 +191,17 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 
 	searchByTraineeCodeAndName(term: string, item: ClientTrainee) {
 		return item.codeAndName.toLowerCase().includes(term.toLowerCase());
+	}
+
+	noDuplicateVote({ value }: AbstractControl): ValidationErrors {
+		const { top, bottom } = value;
+		const ids = [
+			...top.map(v => v.TraineeId), 
+			...bottom.map(v => v.TraineeId)
+		].filter(v => !_isEmpty(v))
+
+		if (_uniq(ids).length !== ids.length)
+			return { duplicate: true };
+		else return {};
 	}
 }

@@ -22,6 +22,7 @@ export const CreateCase = createAction(
 		caseName: string;
 		correctorNames: string[];
 		traineeDays: string;
+		trainerDays: string;
 		scheduleDate: string;
 		noUpload: boolean;
 	}>()

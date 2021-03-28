@@ -47,7 +47,6 @@
 				<div class="row mb-3">
 					<div class="col-4">
 						<ng-select
-							name="selectRole"
 							[items]="interviewQuestions$ | async"
 							[searchable]="false"
 							[clearable]="false"
@@ -55,6 +54,16 @@
 							[ngModel]="currInterviewQuestion$ | async"
 							(change)="currInterviewQuestion$.next($event)"
 						></ng-select>
+					</div>
+					<div class="col"></div>
+					<div class="col-auto">
+						<rd-confirmable-pop-up
+							(confirm)="deleteInterviewQuestion()"
+						>
+							<button class="btn btn-danger">
+								<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+							</button>
+						</rd-confirmable-pop-up>
 					</div>
 				</div>
 				<table class="table table-sm table-striped">

@@ -177,12 +177,21 @@
 							<div class="col">
 								<input type="date" class="form-control" formControlName="endDate" />
 							</div>
+							<div class="col-auto" [hidden]="selectedTraineeSchedules?.length === 0">
+								<rd-confirmable-pop-up (confirm)="massDeleteTraineeTrainingSchedule()">
+									<button class="btn btn-danger">
+										<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+									</button>
+								</rd-confirmable-pop-up>
+							</div>
 						</div>
 						<rd-data-table
 							[data]="viewTraineeTrainingSchedule$ | async"
 							[sortable]="true"
 							[fixedHeight]="400"
 							[noDataMessage]="'No training schedules'"
+							[multipleSelectable]="true"
+							(checkMultipleData)="onSelectMultipleTraineeSchedule($event)"
 						>
 							<rd-table-header> </rd-table-header>
 							<ng-container>

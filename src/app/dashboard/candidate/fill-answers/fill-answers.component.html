@@ -5,8 +5,21 @@
 				[cardTitle]="'Fill Answers'"
 				[isLoading]="loadingViewQuestions$ | async"
 				[collapsible]="false"
-      >
-      <!-- Render stlh dapat question, tanpa ini view harus di-update manual dgn ChangeDetectorRef -->
+			>
+				<div class="row">
+					<div class="col"></div>
+					<div class="col-auto minw-200px">
+						<ng-select 
+						[items]="userAnswers$ | async"
+						[clearable]="false"
+						[searchable]="false"
+						bindLabel="GenerationName"
+						[ngModel]="currentUserAnswer$|async"
+						(change)="currentUserAnswer$.next($event)"
+						></ng-select>
+					</div>
+				</div>
+				<!-- Render stlh dapat question, tanpa ini view harus di-update manual dgn ChangeDetectorRef -->
 				<ng-container *ngIf="questionModel$ | async">
 					<div class="row p-3" [hidden]="!(answersForm.controls.length == 0)">
 						<div class="col text-center">

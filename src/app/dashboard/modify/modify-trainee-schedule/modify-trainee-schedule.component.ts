@@ -55,7 +55,7 @@ export class ModifyTraineeScheduleComponent
 	loadingFormInsertLectureSchedule$ = new BehaviorSubject<boolean>(false);
 
 	//#region TraineeSchedule Data
-	viewTrainerTeachingSchedule$: Observable<ClientTrainerTeachingSchedule[]>;
+	viewTrainerTeachingSchedule$: Observable<TrainerTeachingSchedule[]>;
 	loadingViewTrainerTeachingSchedule$: Observable<boolean>; // Not used yet, for table?
 	viewTrainerTeachingScheduleControl = this.fb.group({
 		startDate: [null, Validators.required],
@@ -70,6 +70,7 @@ export class ModifyTraineeScheduleComponent
 		startDate: [null, Validators.required],
 		endDate: [null, Validators.required],
 	});
+	selectedTraineeSchedules = []
 	//#endregion
 
 	constructor(
@@ -103,11 +104,12 @@ export class ModifyTraineeScheduleComponent
 			this.loadingFormInsertLectureSchedule$.next(false);
 		});
 
-		this.viewTrainerTeachingScheduleControl.valueChanges.pipe(
-			takeUntil(this.destroyed$),
-			filter((form) => !!form.startDate && !!form.endDate)
-		)
-			.subscribe((form) => 
+		this.viewTrainerTeachingScheduleControl.valueChanges
+			.pipe(
+				takeUntil(this.destroyed$),
+				filter((form) => !!form.startDate && !!form.endDate)
+			)
+			.subscribe((form) =>
 				this.store.dispatch(MasterStateAction.FetchTrainerTeachingSchedules(form))
 			);
 
@@ -142,7 +144,7 @@ export class ModifyTraineeScheduleComponent
 		this.loadingFormInsertTeachingSchedule$.next(true);
 		this.store.dispatch(
 			MasterStateAction.CreateTrainerTeachingSchedules({
-				schedules: this.processCSV(this.insertTeachingScheduleText.value)
+				schedules: this.processCSV(this.insertTeachingScheduleText.value),
 			})
 		);
 	}
@@ -150,8 +152,8 @@ export class ModifyTraineeScheduleComponent
 		// TCode,AttendanceDate,TimeIn,TimeOut,Type,Room
 		this.loadingFormInsertTrainingSchedule$.next(true);
 		this.store.dispatch(
-			BinusianStateAction.CreateTraineeSchedules({
-				schedules: this.processCSV(this.insertTrainingScheduleText.value)
+			MasterStateAction.CreateTraineeSchedules({
+				schedules: this.processCSV(this.insertTrainingScheduleText.value),
 			})
 		);
 	}
@@ -159,27 +161,56 @@ export class ModifyTraineeScheduleComponent
 		// Trainee number,Lecture date,Lecture schedule
 		this.loadingFormInsertTraineeAttendance$.next(true);
 		this.store.dispatch(
-			BinusianStateAction.CreateTraineeAttendances({
-				attendances: this.processCSV(this.insertTraineeAttendanceText.value)
+			MasterStateAction.CreateTraineeAttendances({
+				attendances: this.processCSV(this.insertTraineeAttendanceText.value),
 			})
 		);
 	}
 	submitInsertLectureSchedule() {
 		this.loadingFormInsertLectureSchedule$.next(true);
 		this.store.dispatch(
-			BinusianStateAction.CreateLectureSchedules({
-				schedules: this.processCSV(this.insertLectureScheduleText.value)
+			MasterStateAction.CreateLectureSchedules({
+				schedules: this.processCSV(this.insertLectureScheduleText.value),
 			})
 		);
 	}
 
 	// Split each line, trim & filter empty line
-	processCSV(text){
-		return text.split('\n').map(t => t.trim()).filter(t => t !== '');
+	processCSV(text) {
+		return text
+			.split('\n')
+			.map((t) => t.trim())
+			.filter((t) => t !== '');
 	}
 
-	deleteTrainerTeachingSchedule(schedule : ClientTrainerTeachingSchedule) {}
-	deleteTraineeTrainingSchedule(schedule : TraineeSchedule) {}
+	onSelectMultipleTraineeSchedule(schedules:any[]){
+		this.selectedTraineeSchedules = schedules;
+		console.log(schedules);
+	}
+
+	deleteTrainerTeachingSchedule(schedule: TrainerTeachingSchedule) {
+		this.store.dispatch(
+			MasterStateAction.DeleteTrainerTeachingSchedule({
+				trainerTeachingScheduleId: schedule.TrainerTeachingScheduleId
+			})
+		)
+	}
+	deleteTraineeTrainingSchedule(schedule: TraineeSchedule) {
+		this.store.dispatch(
+			MasterStateAction.DeleteTraineeSchedules({ 
+				traineeScheduleIds: [schedule.TraineeScheduleId],
+				note: ''
+			})
+		);
+	}
+	massDeleteTraineeTrainingSchedule() {
+		this.store.dispatch(
+			MasterStateAction.DeleteTraineeSchedules({ 
+				traineeScheduleIds: this.selectedTraineeSchedules.map(s => s.TraineeScheduleId),
+				note: ''
+			})
+		);
+	}
 
 	// OPTIONAL: Add regex here to learn more about regex hehehe
 	trainingScheduleFormat({ value }: AbstractControl): ValidationErrors {

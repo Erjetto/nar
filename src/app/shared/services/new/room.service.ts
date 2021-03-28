@@ -17,9 +17,9 @@ export class RoomService {
 	public UpdateBookLogDetail(data: { id: string; data: LogBookPIC }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdateBookLogDetail', {
-        id: data.id,
-        data: data.data.toJson()
-      })
+				id: data.id,
+				data: data.data.toJson(),
+			})
 			.pipe(map((res: any) => res.d === true));
 	}
 
@@ -40,7 +40,7 @@ export class RoomService {
 
 	public SaveBookLog(data: { data: LogBookPIC }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'SaveBookLog', {data: data.data.toJson()})
+			.post(this.baseUrl + 'SaveBookLog', { data: data.data.toJson() })
 			.pipe(map((res: any) => res.d === true));
 	}
 
@@ -84,7 +84,9 @@ export class RoomService {
 			.pipe(map((res: any) => _map(res.d, LogRoomPIC.fromJson)));
 	}
 
-	public SaveLogPICRoomNote(data: { data: LogRoomPIC }): Observable<string> {
+	public SaveLogPICRoomNote(data: {
+		data: { ComputerSeat; Log; Presentation; Room; UserId };
+	}): Observable<string> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveLogPICRoomNote', data)
 			.pipe(map((res: any) => res.d + ''));

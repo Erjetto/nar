@@ -36,7 +36,8 @@
 	[popoverTitle]="popTitle"
 	[autoClose]="autoClose"
   container="body"
-  popoverClass="override-default-popover"
+	popoverClass="override-default-popover"
+	(click)="$event.stopPropagation();$event.preventDefault();"
 >
 	<ng-content></ng-content>
 </div>

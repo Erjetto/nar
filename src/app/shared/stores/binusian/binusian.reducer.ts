@@ -1,6 +1,7 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import * as MainStateAction from '../main/main.action';
 import {
+	ClientInterviewSchedule,
 	ClientTrainee,
 	ClientTraineeDailyAttendance,
 	ClientTraineeData,
@@ -19,20 +20,22 @@ import {
 	FetchAllTraineesSuccess,
 	FetchMyData,
 	FetchMyDataSuccess,
-  FetchMySchedules,
-  FetchMySchedulesSuccess,
-  FetchAllTraineesInLatestPhase,
+	FetchMySchedules,
+	FetchMySchedulesSuccess,
+	FetchAllTraineesInLatestPhase,
 	FetchDailyAttendance,
 	FetchDailyAttendanceSuccess,
+	FetchMyInterviewSchedule,
+	FetchMyInterviewScheduleSuccess,
 } from './binusian.action';
 
 export interface IBinusianState {
 	//#region Current User data here
-	traineeDailyAttendance: ClientTraineeDailyAttendance;
-
-	traineeSchedule: TraineeSchedule[];
-	myData: ClientTraineeData;
+	myDailyAttendance: ClientTraineeDailyAttendance;
 	mySchedules: TraineeSchedule[];
+	myInterviewSchedule: ClientInterviewSchedule[];
+	myData: ClientTraineeData;
+
 	loadingDailyAttendance: boolean;
 	loadingMyData: boolean;
 	loadingMySchedules: boolean;
@@ -52,11 +55,12 @@ export interface IBinusianState {
 }
 
 export const initialState: IBinusianState = {
-	traineeDailyAttendance: null,
-	traineeSchedule: [],
+	myDailyAttendance: null,
+	myInterviewSchedule: [],
 
 	myData: null,
 	mySchedules: [],
+
 	loadingDailyAttendance: false,
 	loadingMyData: false,
 	loadingMySchedules: false,
@@ -131,10 +135,13 @@ export const BinusianStateReducer = createReducer(
 	on(FetchDailyAttendanceSuccess, (state, { payload }) => ({
 		...state,
 		loadingDailyAttendance: false,
-		traineeDailyAttendance: payload,
+		myDailyAttendance: payload,
 	})),
-	// on(FetchTraineesByPhaseSuccess, (state, {payload}) => ({...state, traineesByPhase: payload})),
-	// on(FetchTraineesByScheduleSuccess, (state, {payload}) => ({...state, traineesBySchedule: payload})),
+
+	on(FetchMyInterviewScheduleSuccess, (state, { payload }) => ({
+		...state,
+		myInterviewSchedule: payload,
+	}))
 );
 
 export const getBinusianState = createFeatureSelector<IBinusianState>(BINUSIANSTATE_REDUCER_NAME);
@@ -142,15 +149,19 @@ export const getBinusianState = createFeatureSelector<IBinusianState>(BINUSIANST
 export const getBinusianStateBy = (fn: (_: IBinusianState) => any) =>
 	createSelector(getBinusianState, fn);
 
-export const getDailyAttendance = getBinusianStateBy((s) => s.traineeDailyAttendance);
-export const getTrainees = getBinusianStateBy((s) => s.trainees);
+export const getMyDailyAttendance = getBinusianStateBy((s) => s.myDailyAttendance);
 export const getMyData = getBinusianStateBy((s) => s.myData);
 export const getMySchedules = getBinusianStateBy((s) => s.mySchedules);
+
+export const getTrainees = getBinusianStateBy((s) => s.trainees);
 export const getAllTrainees = getBinusianStateBy((s) => s.allTrainees);
 export const getTraineesEntity = getBinusianStateBy((s) => s.traineesEntity);
 export const getTraineesData = getBinusianStateBy((s) => s.traineesData);
 export const getTraineesSimpleData = getBinusianStateBy((s) => s.traineesSimpleData);
 
+export const getmyInterviewSchedule = getBinusianStateBy(
+	(s) => s.myInterviewSchedule
+);
 
 export const isDailyAttendanceLoading = getBinusianStateBy((s) => s.loadingDailyAttendance);
 export const isTraineesSimpleDataLoading = getBinusianStateBy((s) => s.loadingTraineesSimpleData);

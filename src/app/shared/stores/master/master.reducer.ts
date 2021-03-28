@@ -130,6 +130,10 @@ export const MASTERSTATE_REDUCER_NAME = 'MasterState';
 export const MasterStateReducer = createReducer(
 	initialState,
 
+	// Remove all data when log out
+	on(MainStateAction.LogoutSuccess, (state) => ({
+		...initialState,
+	})),
 	// Remove all data when generation changed
 	on(MainStateAction.ChangeGenerationSuccess, (state) => ({
 		...initialState,

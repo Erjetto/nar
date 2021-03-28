@@ -25,22 +25,10 @@
 										class="cursor-pointer"
 									>
 										<td>{{ schedule.TrainerName }}</td>
-										<!-- Hilangkan tahun jika di tahun ini -->
-										<ng-container
-											[ngSwitch]="
-												schedule.StartDate.getFullYear() !== currentYear ||
-												schedule.EndDate.getFullYear() !== currentYear
-											"
-										>
-											<td *ngSwitchCase="true">
-												{{ schedule.StartDate | date: viewDateFormat }} -
-												{{ schedule.EndDate | date: viewDateFormat }}
-											</td>
-											<td *ngSwitchCase="false">
-												{{ schedule.StartDate | date: viewDateFormatWithoutYear }} -
-												{{ schedule.EndDate | date: viewDateFormatWithoutYear }}
-											</td>
-										</ng-container>
+										<td>
+											{{ schedule.StartDate | date: formatForStartDate(schedule)}} - 
+											{{ schedule.EndDate | date: formatForEndDate(schedule)}}
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -101,7 +89,7 @@
 								type="datetime-local"
 								class="form-control col"
 								name="startTime"
-								[ngModel]="(selectedSchedule$ | async)?.StartDate | date: dateFormat"
+								[ngModel]="(selectedSchedule$ | async)?.StartDate | date: scheduleDetailDateFormat"
 							/>
 						</div>
 						<div class="form-group row">
@@ -110,7 +98,7 @@
 								type="datetime-local"
 								class="form-control col"
 								name="endTime"
-								[ngModel]="(selectedSchedule$ | async)?.EndDate | date: dateFormat"
+								[ngModel]="(selectedSchedule$ | async)?.EndDate | date: scheduleDetailDateFormat"
 							/>
 						</div>
 						<div class="row justify-content-around">

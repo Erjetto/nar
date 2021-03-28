@@ -7,4 +7,13 @@
   right: 0;
   z-index: $toaster-z-index;
   pointer-events: none;
+
+  .notif-timer{
+    height: 2px;
+    background: orange;
+    width: 50%;
+    position: absolute;
+    top: 0px;
+    transition: all 0.2s;
+  }
 }

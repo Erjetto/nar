@@ -421,6 +421,42 @@ export class MasterStateEffects {
 	);
 
 	@Effect()
+	createTrainingSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.CreateTraineeSchedules),
+		switchMap((data) => this.traineeAttendanceService.SaveTraineeSchedules(data)),
+		mergeMap((res) =>
+			_isEmpty(res)
+				? of(MainStateAction.SuccessfullyMessage('inserted training schedules'))
+				: of(MainStateAction.FailMessage('inserting training schedules', res.join('\n')))
+		),
+		share()
+	);
+
+	@Effect()
+	createTraineeAttendances$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.CreateTraineeAttendances),
+		switchMap((data) => this.traineeAttendanceService.SaveAttendances(data)),
+		mergeMap((res) =>
+			_isEmpty(res)
+				? of(MainStateAction.SuccessfullyMessage('inserted attendances'))
+				: of(MainStateAction.FailMessage('inserting attendances', res.join('\n')))
+		),
+		share()
+	);
+
+	@Effect()
+	createLectureSchedules$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.CreateLectureSchedules),
+		switchMap((data) => this.traineeAttendanceService.SaveTraineeLectureSchedules(data)),
+		mergeMap((res) =>
+			_isEmpty(res)
+				? of(MainStateAction.SuccessfullyMessage('inserted lecture schedules'))
+				: of(MainStateAction.FailMessage('inserting lecture schedules', res.join('\n')))
+		),
+		share()
+	);
+
+	@Effect()
 	getTrainerTeachingSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.FetchTrainerTeachingSchedules),
 		switchMap((data) => this.trainerAttendanceService.GetTrainerTeachingSchedules(data)),
@@ -430,6 +466,18 @@ export class MasterStateEffects {
 
 	@Effect()
 	deleteTrainerTeachingSchedule$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.DeleteTrainerTeachingSchedule),
+		switchMap((data) => this.trainerAttendanceService.DeleteLecturerTeachingSchedule(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted teaching schedule'))
+				: of(MainStateAction.FailMessage('deleting teaching schedule'))
+		),
+		share()
+	);
+
+	@Effect()
+	deleteTraineeTrainingSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.DeleteTrainerTeachingSchedule),
 		switchMap((data) => this.trainerAttendanceService.DeleteLecturerTeachingSchedule(data)),
 		mergeMap((res) =>
@@ -466,12 +514,12 @@ export class MasterStateEffects {
 
 	@Effect()
 	deleteTraineeSchedule$: Observable<Action> = this.actions$.pipe(
-		ofType(MasterStateAction.DeleteTraineeSchedule),
-		switchMap((data) => this.restService.DeleteTraineeSchedule(data.traineeScheduleId)),
-		mergeMap((res) =>
-			res === true
+		ofType(MasterStateAction.DeleteTraineeSchedules),
+		switchMap((data) => this.traineeAttendanceService.DeleteTraineeSchedules(data).pipe(map(res => ({res, data})))),
+		mergeMap(({res, data}) =>
+			res.length === data.traineeScheduleIds.length
 				? of(MainStateAction.SuccessfullyMessage('deleted trainee schedule'))
-				: of(MainStateAction.FailMessage('deleting trainee schedule'))
+				: of(MainStateAction.FailMessage(`deleting ${data.traineeScheduleIds.length - res.length} trainee schedule`))
 		),
 		share()
 	);

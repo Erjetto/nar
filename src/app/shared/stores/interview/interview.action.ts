@@ -106,6 +106,10 @@ export const DeleteInterviewMaterial = createAction(
 		reason: string;
 	}>()
 );
+export const DeleteInterviewQuestion = createAction(
+	'[MasterState] DeleteInterviewQuestion',
+	props<{ interviewQuestionId: string}>()
+);
 //#endregion
 
 export const FetchInterviewMaterials = createAction(

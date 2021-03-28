@@ -19,6 +19,8 @@ import {
 	MainStateAction,
 	BinusianStateAction,
 	LogStateEffects,
+	fromRoomState,
+	RoomStateAction
 } from 'src/app/shared/store-modules';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -56,7 +58,7 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 
 	ngOnInit(): void {
 		this.logRooms$ = this.store.pipe(select(fromLogState.getLogRooms));
-		this.rooms$ = this.store.pipe(select(fromLogState.getRooms));
+		this.rooms$ = this.store.pipe(select(fromRoomState.getRooms));
 		this.store
 			.pipe(select(fromBinusianState.getAllTrainees), takeUntil(this.destroyed$))
 			.subscribe(this.trainees$);
@@ -76,7 +78,7 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((date) => this.store.dispatch(LogStateAction.FetchLogRooms({ date })));
 
-		this.store.dispatch(LogStateAction.FetchRooms());
+		this.store.dispatch(RoomStateAction.FetchRooms());
 		this.store.dispatch(LogStateAction.FetchLogRooms({ date: this.dateControl.value }));
 		this.store.dispatch(
 			MainStateAction.DispatchIfEmpty({
@@ -108,8 +110,8 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 
 		this.logRoom.setValue(log.Room);
 		this.logRoomComputerSeat.patchValue(
-			log.ComputerSeat.map((s, idx) => ({
-				seat: idx + 1,
+			log.ComputerSeat.map((s) => ({
+				seat: s.seat,
 				trainee: this.getTrainee(s.trainee),
 			}))
 		);
@@ -138,7 +140,8 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 		const note = this.logRoomNote.value;
 		const today = new Date();
 		// convert time input into Date()
-		computerSeat.forEach((el) => {
+		computerSeat.forEach((el, idx) => {
+			el.seat = idx+1
 			if (el.trainee != null) el.trainee = el.trainee.TraineeCode;
 		});
 		presentation.forEach((el) => {

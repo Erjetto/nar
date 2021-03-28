@@ -214,7 +214,7 @@ export class ModifyInterviewScheduleComponent
 		this.store.dispatch(
 			InterviewStateAction.DeleteInterviewSchedule({
 				interviewScheduleId: s.InterviewScheduleId,
-				note: '',
+				note: this.deleteReasonText.value,
 			})
 		);
 		this.deleteReasonText.reset();

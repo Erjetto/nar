@@ -13,28 +13,74 @@
 								<b>Secretariat</b>
 								<ul>
 									<li [class]="att.Secretariat?.StatusAbsentIn">
-										In: {{ att.Secretariat?.TimeIn }}
+										In: {{ att.Secretariat?.TraineeIn | date: attendanceDateFormat }}
 									</li>
 									<li [class]="att.Secretariat?.StatusAbsentOut">
-										Out: {{ att.Secretariat?.TimeOut }}
+										Out: {{ att.Secretariat?.TraineeOut | date: attendanceDateFormat }}
 									</li>
 								</ul>
 								<b>Room</b>
 								<ul>
-									<li [class]="att.Room?.StatusAbsentIn">In: {{ att.Room?.TimeIn }}</li>
-									<li [class]="att.Room?.StatusAbsentOut">Out: {{ att.Room?.TimeOut }}</li>
+									<li [class]="att.Room?.StatusAbsentIn">
+										In: {{ att.Room?.TraineeIn | date: attendanceDateFormat }}
+									</li>
+									<li [class]="att.Room?.StatusAbsentOut">
+										Out: {{ att.Room?.TraineeOut | date: attendanceDateFormat }}
+									</li>
 								</ul>
 								<b>Rest</b>
 								<ul>
-									<li [class]="att.Rest?.StatusAbsentIn">In: {{ att.Rest?.TimeIn }}</li>
-									<li [class]="att.Rest?.StatusAbsentOut">Out: {{ att.Rest?.TimeOut }}</li>
+									<li [class]="att.Rest?.StatusAbsentIn">
+										In: {{ att.Rest?.TraineeIn | date: attendanceDateFormat }}
+									</li>
+									<li [class]="att.Rest?.StatusAbsentOut">
+										Out: {{ att.Rest?.TraineeOut | date: attendanceDateFormat }}
+									</li>
 								</ul>
 							</div>
 						</div>
 					</rd-card>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row" [hidden]="(interviewSchedule$ | async)?.length === 0">
+				<div class="col">
+					<rd-card [cardTitle]="'Interview Schedule'">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Date</th>
+									<th>Time</th>
+									<th>Location</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let sch of interviewSchedule$ | async">
+									<td>{{ sch.InterviewDate | date: scheduleDateFormat }}</td>
+									<td>{{ sch.startToEndTime }}</td>
+									<td [ngSwitch]="isRoomLink(sch.Location)">
+										<a *ngSwitchCase="true" [href]="sch.Location">Link here</a>
+										<span *ngSwitchDefault>{{ sch.Location }}</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="row">
+							<div class="col font-small">
+								Note
+								<ul>
+									<li>
+										Each trainee has to attend the interview as a prerequisite to continue the next
+										training (Professional Training)
+									</li>
+									<li>Come earlier than the time set</li>
+									<li>Neatly dressed and polite (recommended to wear semi formal dress code)</li>
+								</ul>
+							</div>
+						</div>
+					</rd-card>
+				</div>
+			</div>
+			<!-- <div class="row">
 				<div class="col">
 					<rd-card [cardTitle]="'Announcements'" [isLoading]="loadingAnnouncements$ | async">
 						<div class="row v-list-m-6 v-list-bordered">
@@ -47,9 +93,9 @@
 						</div>
 					</rd-card>
 				</div>
-			</div>
+			</div> -->
 		</div>
-		<div class="col">
+		<div class="col-7">
 			<div class="row">
 				<div class="col">
 					<rd-card [cardTitle]="'Schedule'" [isLoading]="loadingSchedules$ | async">
@@ -69,7 +115,7 @@
 									[sortState]="'DESC'"
 								>
 									<ng-template rdTableTemplate="body" let-schedule="rowData">
-										{{ schedule.AttendanceDate | date: dateFormat }}
+										{{ schedule.AttendanceDate | date: scheduleDateFormat }}
 									</ng-template>
 								</rd-table-column>
 
@@ -79,7 +125,7 @@
 									</ng-template>
 								</rd-table-column>
 
-								<rd-table-column [label]="'Room'" [cellClass]="'text-left'">
+								<rd-table-column [label]="'Room'">
 									<ng-template rdTableTemplate="body" let-schedule="rowData">
 										<ng-container [ngSwitch]="isRoomLink(schedule.Room)">
 											<ng-container *ngSwitchCase="false">

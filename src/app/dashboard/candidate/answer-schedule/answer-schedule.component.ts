@@ -3,7 +3,11 @@ import { IAppState } from 'src/app/app.reducer';
 import { Store, select } from '@ngrx/store';
 import { Observable, merge, BehaviorSubject } from 'rxjs';
 
-import { SubcoCandidateAnswerModel, SubcoCandidateQuestionModel } from 'src/app/shared/models';
+import {
+	EMPTY_GUID,
+	SubcoCandidateAnswerModel,
+	SubcoCandidateQuestionModel,
+} from 'src/app/shared/models';
 import {
 	CandidateStateAction,
 	fromCandidateState,
@@ -16,7 +20,7 @@ import { takeUntil, map, tap } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
-import { sortBy as _sortBy} from 'lodash';
+import { sortBy as _sortBy } from 'lodash';
 
 @Component({
 	selector: 'rd-answer-schedule',
@@ -26,11 +30,10 @@ import { sortBy as _sortBy} from 'lodash';
 })
 export class AnswerScheduleComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	currentYear = new Date().getFullYear();
-	viewDateFormat = 'yyyy MMM dd, HH:mm';
-	viewDateFormatWithoutYear = 'MMM dd, HH:mm'; // Hilangkan tahun jika di tahun ini
 
 	addSchedulePlaceholder = '';
-	dateFormat = DateHelper.DATETIME_LOCAL_FORMAT;
+	addScheduleDateFormat = DateHelper.FULL_DATE_FORMAT + ' ' + DateHelper.NORMAL_TIME_FORMAT;
+	scheduleDetailDateFormat = DateHelper.DATETIME_LOCAL_FORMAT;
 
 	questions: SubcoCandidateQuestionModel;
 
@@ -49,14 +52,13 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		private candidateEffects: CandidateStateEffects
 	) {
 		super(store);
-		const today = DateHelper.dateToFormat(Date.now(), this.dateFormat);
+		const today = DateHelper.dateToFormat(Date.now(), this.addScheduleDateFormat);
 		this.addSchedulePlaceholder = `${today}, ${today}, XX99-9`;
 	}
 
 	ngOnInit(): void {
 		this.trainerSchedule$ = this.store.pipe(
-      select(fromCandidateState.getAnswerModels),
-      tap(console.log),
+			select(fromCandidateState.getAnswerModels),
 			map((schedules) => _sortBy(schedules, 'TrainerName')) // Temporary until table have sort feature
 		);
 		this.selectedSchedule$ = this.store.pipe(select(fromCandidateState.getSelectedAnswer));
@@ -88,16 +90,18 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 				this.store.dispatch(CandidateStateAction.FetchAnswers());
 			});
 
-    
-      
-		this.store.dispatch(MainStateAction.DispatchIfEmpty({
-      action: CandidateStateAction.FetchQuestionsForCurrentGen(),
-      selectorToBeChecked: fromCandidateState.getQuestionModel
-    }));
-		this.store.dispatch(MainStateAction.DispatchIfEmpty({
-      action: CandidateStateAction.FetchAnswers(),
-      selectorToBeChecked: fromCandidateState.getAnswerModels
-    }));
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: CandidateStateAction.FetchQuestionsForCurrentGen(),
+				selectorToBeChecked: fromCandidateState.getQuestionModel,
+			})
+		);
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: CandidateStateAction.FetchAnswers(),
+				selectorToBeChecked: fromCandidateState.getAnswerModels,
+			})
+		);
 	}
 
 	selectSchedule(row: SubcoCandidateAnswerModel) {
@@ -114,7 +118,7 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	saveSchedule(form: NgForm) {
-		this.loadingFormSchedule$.next(true);
+		this.loadingViewScheduleDetail$.next(true);
 		const { answerId, startTime, endTime } = form.value;
 		this.store.dispatch(
 			CandidateStateAction.UpdateSchedule({
@@ -133,8 +137,9 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 			const arr = regex.exec(line); // if fails regex returns null
 			if (!!arr)
 				return new SubcoCandidateAnswerModel(
-					'00000000-0000-0000-0000-000000000000',
-					'00000000-0000-0000-0000-000000000000',
+					EMPTY_GUID,
+					EMPTY_GUID,
+					'',
 					arr[5],
 					[],
 					new Date(arr[1] + ' ' + arr[2]),
@@ -159,9 +164,20 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 
 	exportToExcel() {
 		this.store.dispatch(CandidateStateAction.ExportAnswersToExcel());
-  }
-  
-  trackScheduleById(idx: number, s: SubcoCandidateAnswerModel){
-    return s.Id
-  }
+	}
+
+	trackScheduleById(idx: number, s: SubcoCandidateAnswerModel) {
+		return s.Id;
+	}
+
+	formatForStartDate(s: SubcoCandidateAnswerModel) {
+		return s.StartDate.getFullYear() !== this.currentYear ? 'yyyy MMM dd, HH:mm' : 'MMM dd, HH:mm';
+	}
+
+	formatForEndDate(s: SubcoCandidateAnswerModel) {
+		const sameYear = s.StartDate.getFullYear() === s.EndDate.getFullYear();
+		const sameMonth = s.StartDate.getMonth() === s.EndDate.getMonth();
+		const sameDay =  s.StartDate.getDate() === s.EndDate.getDate();
+		return `${!sameYear ? 'yyyy ' : ''}${!sameMonth ? 'MMM ' : ''}${!sameDay ? 'dd, ' : ''} HH:mm`;
+	}
 }

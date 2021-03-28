@@ -1,7 +1,11 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col-4">
-			<rd-card [cardTitle]="'View Log Room'" [isLoading]="loadingLogRooms$ | async" [expanded]="!isEditing">
+			<rd-card
+				[cardTitle]="'View Log Room'"
+				[isLoading]="loadingLogRooms$ | async"
+				[expanded]="!isEditing"
+			>
 				<div rdCardBadges *ngIf="isEditing">
 					<button class="btn btn-sm btn-primary mr-1" (click)="updateLogRoom()">
 						<fa-icon [icon]="['fas', 'pen']"></fa-icon> Update
@@ -35,12 +39,12 @@
 							</tr>
 						</tbody>
 					</table>
-        </div>
-        <div class="row">
+				</div>
+				<div class="row">
 					<button class="btn btn-primary" (click)="addNewLog()">
 						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add New
 					</button>
-        </div>
+				</div>
 			</rd-card>
 		</div>
 	</div>
@@ -48,21 +52,19 @@
 		<div class="col">
 			<rd-card [cardTitle]="'Computer Seat'" [expanded]="isEditing" [collapsible]="isEditing">
 				<div class="row mb-2">
-          <div class="col">
-
-          </div>
-          <div class="col-auto col-form-label">
-            <b>Room: </b>
-          </div>
-          <div class="col-auto minw-150px">
-            <ng-select
-              [items]="rooms$ | async"
-              bindLabel="RoomName"
-              bindValue="RoomName"
-              [formControl]="logRoom"
-            ></ng-select>
-          </div>
-        </div>
+					<div class="col"></div>
+					<div class="col-auto col-form-label">
+						<b>Room: </b>
+					</div>
+					<div class="col-auto minw-150px">
+						<ng-select
+							[items]="rooms$ | async"
+							bindLabel="RoomName"
+							bindValue="RoomName"
+							[formControl]="logRoom"
+						></ng-select>
+					</div>
+				</div>
 				<div class="row">
 					<div class="col seat-map">
 						<div
@@ -79,7 +81,7 @@
 								<div class="col">
 									<ng-select
 										[items]="trainees$ | async"
-                    bindLabel="TraineeCode"
+										bindLabel="TraineeCode"
 										formControlName="trainee"
 									></ng-select>
 								</div>
@@ -92,7 +94,17 @@
 	</div>
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Log Room'" [expanded]="isEditing" [collapsible]="isEditing">
+			<rd-card
+				[cardTitle]="'Log Room'"
+				[expanded]="isEditing"
+				[collapsible]="isEditing"
+				[maxHeight]="350"
+			>
+			<div rdCardBadges [hidden]="!isEditing">
+				<button class="btn btn-sm btn-primary" (click)="addLogRoomNote()">
+					<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
+				</button>
+			</div>
 				<div class="row">
 					<table class="table table-sm table-striped table-hover text-center">
 						<thead>
@@ -114,9 +126,8 @@
 								<td class="text-left">
 									<ng-select
 										[items]="trainees$ | async"
-										bindLabel="TraineeCode"
-                    formControlName="trainee"
-                    [searchFn]="searchByTraineeCodeAndName"
+										formControlName="trainee"
+										[searchFn]="searchByTraineeCodeAndName"
 									>
 										<ng-template ng-label-tmp let-item="item">
 											<span>{{ item.codeAndName }}</span>
@@ -146,16 +157,23 @@
 							</tr>
 						</tbody>
 					</table>
-					<button class="btn btn-primary" (click)="addLogRoomNote()">
-						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
-					</button>
 				</div>
 			</rd-card>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Log Presentation'" [expanded]="isEditing" [collapsible]="isEditing">
+			<rd-card
+				[cardTitle]="'Log Presentation'"
+				[expanded]="isEditing"
+				[collapsible]="isEditing"
+				[maxHeight]="350"
+			>
+			<div rdCardBadges [hidden]="!isEditing">
+				<button class="btn btn-sm btn-primary" (click)="addLogRoomPresentation()">
+					<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
+				</button>
+			</div>
 				<div class="row">
 					<table class="table table-sm table-striped table-hover text-center">
 						<thead>
@@ -214,9 +232,6 @@
 							</tr>
 						</tbody>
 					</table>
-					<button class="btn btn-primary" (click)="addLogRoomPresentation()">
-						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
-					</button>
 				</div>
 			</rd-card>
 		</div>

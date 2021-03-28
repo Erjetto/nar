@@ -2,9 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IAppState } from 'src/app/app.reducer';
 import { Store, select } from '@ngrx/store';
 
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import {
+	ClientInterviewSchedule,
 	ClientTraineeDailyAttendance,
 	CoreTrainingPresentation,
 	CoreTrainingPresentationQuestion,
@@ -31,10 +32,12 @@ import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 	styleUrls: ['./trainee-home.component.scss'],
 })
 export class TraineeHomeComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	dateFormat = DateHelper.WEEKDAY_DATE_FORMAT;
+	attendanceDateFormat = DateHelper.FULL_TIME_FORMAT;
+	scheduleDateFormat = DateHelper.WEEKDAY_DATE_FORMAT;
 
 	traineeDailyAttendance$: Observable<ClientTraineeDailyAttendance>;
 	announcements$: Observable<Message[]>;
+	interviewSchedule$: Observable<ClientInterviewSchedule[]>;
 
 	schedules$: Observable<TraineeSchedule[]>;
 	incorrectPresentationQuestions$: Observable<CoreTrainingPresentationQuestion[]>;
@@ -49,20 +52,21 @@ export class TraineeHomeComponent extends DashboardContentBase implements OnInit
 	}
 
 	ngOnInit(): void {
-		this.traineeDailyAttendance$ = this.store.pipe(select(fromBinusianState.getDailyAttendance));
+		this.traineeDailyAttendance$ = this.store.pipe(select(fromBinusianState.getMyDailyAttendance));
 		this.announcements$ = this.store.pipe(select(fromMainState.getAnnouncements));
+		this.interviewSchedule$ = this.store.pipe(select(fromBinusianState.getmyInterviewSchedule));
 		this.schedules$ = this.store.pipe(
 			select(fromBinusianState.getMySchedules),
 			map((schedules: TraineeSchedule[]) => _sortBy(schedules, 'AttendanceDate').reverse())
 		);
-		
+
 		// Ambil semua pertanyaan dari semua presentasi
 		this.incorrectPresentationQuestions$ = this.store.pipe(
 			select(fromPresentationState.getMyPresentations),
 			map((presentations: CoreTrainingPresentation[]) =>
-				presentations
+				presentations	
 					.reduce((prev, curr) => [...prev, ...curr.Questions], [])
-					.filter((q:CoreTrainingPresentationQuestion) => q.Status !== 'correct')
+					.filter((q: CoreTrainingPresentationQuestion) => q.Status !== 'correct')
 			)
 		);
 
@@ -77,10 +81,11 @@ export class TraineeHomeComponent extends DashboardContentBase implements OnInit
 		this.store.dispatch(
 			BinusianStateAction.FetchMySchedules({
 				binusianNumber: this.currentUser$.value.UserName,
-			})
+			})	
 		);
 		this.store.dispatch(MainStateAction.FetchAnnouncements());
 		this.store.dispatch(PresentationStateAction.FetchMyPresentations());
+		this.store.dispatch(BinusianStateAction.FetchMyInterviewSchedule());
 	}
 
 	isRoomLink(room: string) {

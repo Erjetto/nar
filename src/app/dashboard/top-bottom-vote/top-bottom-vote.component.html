@@ -55,6 +55,11 @@
 						<button class="btn btn-sm btn-secondary" (click)="cancelVote()">Cancel</button>
 					</div>
 				</div>
+				<div class="row" *ngIf="voteForm.errors?.duplicate">
+					<div class="col text-right text-danger font-italic font-weight-bold">
+						Error: Duplicate trainee detected, only unique option is allowed.
+					</div>
+				</div>
 				<div class="row">
 					<!-- Top Vote -->
 					<div class="col">

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ClientEvaluation, ClientRoom, ClientTraineeReputation, LogBookPIC, LogRoomPIC } from '../../models';
+import { LogBookPIC, LogRoomPIC } from '../../models';
 
 export const FetchLogRooms = createAction('[LogState] FetchLogRooms', props<{ date: Date }>());
 export const FetchLogBooks = createAction(
@@ -32,11 +32,4 @@ export const DeleteLogRoom = createAction(
 export const DeleteLogBook = createAction(
 	'[LogState] DeleteLogBook',
 	props<{ id:string }>()
-);
-
-export const FetchRooms = createAction('[LogState] FetchRooms');
-
-export const FetchRoomsSuccess = createAction(
-	'[LogState] FetchRoomsSuccess',
-	props<{ payload: ClientRoom[] }>()
 );

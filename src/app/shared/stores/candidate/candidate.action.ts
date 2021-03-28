@@ -21,7 +21,7 @@ export const FetchAnswersSuccess = createAction(
 );
 export const FetchTrainerAnswerSuccess = createAction(
 	'[CandidateState] FetchTrainerAnswerSuccess',
-	props<{ payload: SubcoCandidateAnswerModel }>()
+	props<{ payload: SubcoCandidateAnswerModel[] }>()
 );
 
 export const SaveAnswers = createAction(

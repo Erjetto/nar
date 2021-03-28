@@ -20,6 +20,9 @@
 
 <ng-template #notificationContent>
 	<div class="notification-body v-scroll maxh-500px">
+		<div class="no-notification p-4 text-center" [hidden]="(notifications$ | async)?.length > 0">
+			<i>No Notifications...</i>
+		</div>
 		<div
 			class="row notification-row cursor-pointer"
 			*ngFor="let notif of notifications$ | async"

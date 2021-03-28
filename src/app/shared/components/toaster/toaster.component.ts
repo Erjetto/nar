@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { interval, Observable, Subject } from 'rxjs';
+import { takeUntil, map, repeatWhen, delay, windowToggle, mapTo, filter } from 'rxjs/operators';
 import { Toast } from '../../models';
 import { swipeAnimation } from '../../angular-animations';
 import { Store, select } from '@ngrx/store';
@@ -20,8 +20,12 @@ export class ToasterComponent implements OnInit, OnDestroy {
 	private stop$ = new Subject<void>();
 	private start$ = new Subject<void>();
 	private destroyed$ = new Subject<void>();
+	counter = 100;
+	decayTime = 5; // Auto remove in 5 seconds
 
-	constructor(private store: Store<IAppState>) {
+	constructor(private store: Store<IAppState>) {}
+
+	ngOnInit(): void {
 		this.messages$ = this.store.pipe(select(fromMainState.getToastMessages));
 		// Trigger decayTimer when messages[] changes
 		this.messages$
@@ -39,31 +43,34 @@ export class ToasterComponent implements OnInit, OnDestroy {
 				}
 			});
 
-		// interval(7000)
-		// 	.pipe(
-		// 		takeUntil(this.stop$),
-		// 		repeatWhen(() => this.start$)
-		// 	)
-		// 	.subscribe((v) => this.store.dispatch(MainStateAction.RemoveMessage({ index: 0 })));
-		// this.decayTimer$.subscribe((val) => {
-		//   this.messages.pop();
-		//   if (this.messages.length === 0) this.stop$.next();
-		// })
-  }
-  
-  toggleRemoveNotifTimer(shouldContinue:boolean){
-    if(shouldContinue) this.start$.next();
-    else this.stop$.next();
-  }
+		interval(1000 / 10) // 10 TPS
+			.pipe(
+				takeUntil(this.stop$),
+				repeatWhen(() => this.start$),
+				mapTo(100 / (this.decayTime * 10)), // Reduce counter according to decayTime
+				filter(() => this.timerOn) // Only when timer is On
+			)
+			.subscribe((val) => {
+				this.counter -= val;
+				if (this.counter <= 0) {
+					this.removeToast(0);
+				}
+			});
 
-	ngOnInit(): void {}
+		this.stop$.next();
+	}
 
 	ngOnDestroy() {
 		this.stop$.next();
 		this.destroyed$.next();
 	}
 
+	togglePauseTimer(shouldContinue: boolean) {
+		this.timerOn = shouldContinue;
+	}
+
 	removeToast(index: number) {
 		this.store.dispatch(MainStateAction.RemoveMessage({ index }));
+		this.counter = 100;
 	}
 }

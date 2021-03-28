@@ -20,7 +20,7 @@
 						<div></div>
 					</div>
 					&nbsp;&nbsp;
-					<ng-container *ngIf="(currentUser$ | async)?.Role.is(constant.role.AssistantSupervisor)">
+					<ng-container *ngIf="(currentUser$ | async)?.Role.isAstSpv">
 						<ng-select
 							[items]="roleList$ | async"
 							[clearable]="false"
@@ -45,7 +45,7 @@
 					</ng-container>
 				</div>
 
-				<div class="row justify-content-end pt-1">
+				<div class="row justify-content-end pt-1" (click)="click()">
 					<b>
 						<span class="cursor" random-salutation>Hi, </span>
 						<span class="text-primary">{{ (currentUser$ | async)?.Name }}</span>

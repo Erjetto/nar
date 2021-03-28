@@ -8,7 +8,6 @@ import {
 	FetchLogBooksSuccess,
 	FetchLogRooms,
 	FetchLogRoomsSuccess,
-  FetchRoomsSuccess,
 } from './log.action';
 
 export interface ILogState {
@@ -52,18 +51,12 @@ export const LogStateReducer = createReducer(
 		loadingLogBooks: false,
   })),
   
-  
-  on(FetchRoomsSuccess, (state, { payload }) => ({
-    ...state,
-    rooms: payload,
-  })),
 );
 
 export const getLogState = createFeatureSelector<ILogState>(LOGSTATE_REDUCER_NAME);
 
 export const getLogStateBy = (fn: (_: ILogState) => any) => createSelector(getLogState, fn);
 
-export const getRooms = getLogStateBy((s) => s.rooms);
 export const getLogBooks = getLogStateBy((s) => s.logBooks);
 export const getLogRooms = getLogStateBy((s) => s.logRooms);
 export const isLogBooksLoading = getLogStateBy((s) => s.loadingLogBooks);

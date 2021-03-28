@@ -21,8 +21,8 @@ import {
 	TraineePresentation,
 	CoreTrainingPresentationQuestion,
 } from 'src/app/shared/models';
-import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
-import { takeUntil, filter, withLatestFrom, map, delay } from 'rxjs/operators';
+import { curryRight, isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
+import { takeUntil, filter, withLatestFrom, map, delay, tap } from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 
@@ -43,9 +43,10 @@ export class ViewAllPresentationComponent
 	traineesInSubject$: Observable<string[]>;
 	presentationsForTrainee$: Observable<CoreTrainingPresentation[]>;
 	myPresentationList$: Observable<CoreTrainingPresentation[]>;
-	presentationStatus$: Observable<string>;
+	// presentationStatus$: Observable<string>;
 
-	currentPresentation$: BehaviorSubject<CoreTrainingPresentation> = new BehaviorSubject(null);
+	currentPresentation$ = new BehaviorSubject<CoreTrainingPresentation>(null);
+	currentPresentationScoring$: Observable<TraineePresentation>;
 	currentTraineeCode$: Subject<string> = new Subject();
 	currentSubject$: Subject<ClientSubject> = new Subject();
 	currentPhase$: Subject<ClientPhase> = new Subject();
@@ -76,7 +77,6 @@ export class ViewAllPresentationComponent
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
-		private presentationEffects: PresentationStateEffects,
 		private fb: FormBuilder
 	) {
 		super(store);
@@ -92,10 +92,33 @@ export class ViewAllPresentationComponent
 		this.subjectsLoading$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
 
 		this.presentations$ = this.store.pipe(select(fromPresentationState.getPresentations));
-		this.presentationStatus$ = this.store.pipe(select(fromPresentationState.getPresentationStatus));
-		
-		this.loadingPresentations$ = this.store.pipe(select(fromPresentationState.isPresentationsLoading));
-		this.loadingMyPresentations$ = this.store.pipe(select(fromPresentationState.isMyPresentationsLoading));
+		// this.presentationStatus$ = this.store.pipe(select(fromPresentationState.getPresentationStatus));
+
+		// Get scoring from presentationScorings
+		// Expectation: presentationScorings fetched only one from latest dispatch
+		// (see 'FetchPresentationScorings' below)
+		this.currentPresentationScoring$ = this.store.pipe(
+			select(fromPresentationState.getPresentationScorings),
+			withLatestFrom(this.currentPresentation$),
+			map(([scorings, curr]) =>
+				scorings.find(
+					(s: TraineePresentation) =>
+						s.subjectId === curr.SubjectId &&
+						s.traineeId === curr.TraineeId &&
+						s.presentationNo === curr.PresentationNo
+				)
+			),
+			tap((s: TraineePresentation) =>
+				_isEmpty(s) ? this.scoringForm.reset() : this.scoringForm.patchValue(s)
+			)
+		);
+
+		this.loadingPresentations$ = this.store.pipe(
+			select(fromPresentationState.isPresentationsLoading)
+		);
+		this.loadingMyPresentations$ = this.store.pipe(
+			select(fromPresentationState.isMyPresentationsLoading)
+		);
 
 		this.myPresentationList$ = this.store.pipe(
 			select(fromPresentationState.getMyPresentations),
@@ -129,7 +152,7 @@ export class ViewAllPresentationComponent
 		);
 
 		//#region Auto get first value in array
-		this.phases$.pipe(delay(100),takeUntil(this.destroyed$)).subscribe((res) => {
+		this.phases$.pipe(delay(100), takeUntil(this.destroyed$)).subscribe((res) => {
 			this.currentPhase$.next(res[0]);
 		});
 
@@ -153,20 +176,6 @@ export class ViewAllPresentationComponent
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());
 		});
-		this.presentationEffects.updateTraineePresentation$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((act) => {
-				// NOTE: Masih bar-bar, harus bikin tempat khusus utk tahu apakah resultnya success
-				// tslint:disable-next-line: no-string-literal
-				if (act['messageType'].includes('success')) {
-					this.showScoringForm$.next(false);
-					this.store.dispatch(
-						PresentationStateAction.FetchPresentationStatus({
-							filename: this.currentPresentation$.value.presentationFileName,
-						})
-					);
-				}
-			});
 		//#endregion
 
 		//#region Auto fetch
@@ -197,12 +206,22 @@ export class ViewAllPresentationComponent
 		this.currentPresentation$ // Auto fetch Presentation Status
 			.pipe(
 				filter((res) => !_isEmpty(res)),
-        takeUntil(this.destroyed$),
+				takeUntil(this.destroyed$),
+				withLatestFrom(this.currentGeneration$)
 			)
-			.subscribe((res) => {
+			.subscribe(([res, gen]) => {
+				// this.store.dispatch(
+				// 	PresentationStateAction.FetchPresentationStatus({
+				// 		filename: res.presentationFileName,
+				// 	})
+				// );
 				this.store.dispatch(
-					PresentationStateAction.FetchPresentationStatus({
-						filename: res.presentationFileName,
+					PresentationStateAction.FetchPresentationScorings({
+						generationId: gen.GenerationId,
+						phaseId: res.PhaseId,
+						subjectId: res.SubjectId,
+						traineeId: res.TraineeId,
+						presentationNo: res.PresentationNo,
 					})
 				);
 				this.scoringForm.patchValue({
@@ -211,12 +230,11 @@ export class ViewAllPresentationComponent
 					traineeId: res.TraineeId,
 					presentationNo: res.PresentationNo,
 				});
-      });
-      
+			});
+
 		this.store.dispatch(PresentationStateAction.FetchMyPresentations());
 		//#endregion
 
-    
 		this.store.dispatch(
 			MainStateAction.DispatchIfEmpty({
 				action: MasterStateAction.FetchPhases(),

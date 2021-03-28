@@ -16,11 +16,8 @@ import { environment } from 'src/environments/environment';
 	providedIn: 'root',
 })
 export class CandidateStateEffects {
-  excelDownloadLink = `${environment.apiUrl}File.svc/GetMemoryFile/`
-	constructor(
-		private actions$: Actions,
-		private candidateService: SubcoCandidateService
-	) {}
+	excelDownloadLink = `${environment.apiUrl}File.svc/GetMemoryFile/`;
+	constructor(private actions$: Actions, private candidateService: SubcoCandidateService) {}
 
 	@Effect()
 	getQuestionsForCurrentGen$: Observable<Action> = this.actions$.pipe(
@@ -28,8 +25,8 @@ export class CandidateStateEffects {
 		switchMap(() => this.candidateService.GetQuestionsForTrainerGeneration()),
 		mergeMap((res) => of(CandidateStateAction.FetchQuestionsSuccess({ payload: res }))),
 		share()
-  );
-  
+	);
+
 	@Effect()
 	getQuestionsById$: Observable<Action> = this.actions$.pipe(
 		ofType(CandidateStateAction.FetchQuestionsById),
@@ -64,7 +61,7 @@ export class CandidateStateEffects {
 				: of(MainStateAction.FailMessage('updating answers'))
 		),
 		share()
-  );
+	);
 
 	@Effect()
 	updateQuestions$: Observable<Action> = this.actions$.pipe(
@@ -76,22 +73,27 @@ export class CandidateStateEffects {
 				: of(MainStateAction.FailMessage('updating questions'))
 		),
 		share()
-  );
+	);
 
 	@Effect()
 	createAnswerSchedule$: Observable<Action> = this.actions$.pipe(
-    ofType(CandidateStateAction.CreateSchedule),
+		ofType(CandidateStateAction.CreateSchedule),
 		switchMap((data) => this.candidateService.CreateSchedules(data)),
 		mergeMap((res) =>
 			res
 				? of(MainStateAction.SuccessfullyMessage('created schedule'))
-				: of(MainStateAction.FailMessage('creating schedule'))
+				: of(
+						MainStateAction.FailMessage(
+							'creating schedule for row:',
+							res.map((v, i) => i + 1).join(', ')
+						)
+				  )
 		),
 		share()
-  );
+	);
 	@Effect()
 	updateAnswerSchedule$: Observable<Action> = this.actions$.pipe(
-    ofType(CandidateStateAction.UpdateSchedule),
+		ofType(CandidateStateAction.UpdateSchedule),
 		switchMap((data) => this.candidateService.UpdateSchedule(data)),
 		mergeMap((res) =>
 			res
@@ -99,7 +101,7 @@ export class CandidateStateEffects {
 				: of(MainStateAction.FailMessage('updating schedule'))
 		),
 		share()
-  );
+	);
 
 	@Effect()
 	deleteAnswerSchedule$: Observable<Action> = this.actions$.pipe(
@@ -111,19 +113,18 @@ export class CandidateStateEffects {
 				: of(MainStateAction.FailMessage('deleting schedule'))
 		),
 		share()
-  );
+	);
 
 	@Effect()
 	exportToExcel$: Observable<Action> = this.actions$.pipe(
-    ofType(CandidateStateAction.ExportAnswersToExcel),
+		ofType(CandidateStateAction.ExportAnswersToExcel),
 		switchMap(() => this.candidateService.ExportCurrentGenAnswersToExcel()),
-		mergeMap((res) =>{
-      if(res !== '') window.open(`${this.excelDownloadLink}${res}`)
+		mergeMap((res) => {
+			if (res !== '') window.open(`${this.excelDownloadLink}${res}`);
 			return res !== ''
 				? of(MainStateAction.SuccessfullyMessage('exported the answers'))
-				: of(MainStateAction.FailMessage('exporting the answers'))
+				: of(MainStateAction.FailMessage('exporting the answers'));
 		}),
 		share()
-  );
-  
+	);
 }

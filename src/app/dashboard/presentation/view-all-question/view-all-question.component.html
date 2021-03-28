@@ -68,7 +68,7 @@
 							<rd-presentation-question [presentation]="question.parent" [question]="question">
 								<div
 									class="actions"
-									*ngIf="(currentUser$ | async).Role.is(constant.role.AssistantSupervisor)"
+									*ngIf="(currentUser$ | async).Role.isAstSpv"
 								>
 									<rd-confirmable-pop-up
 										title="Delete this question?"
@@ -95,7 +95,7 @@
 							<div
 								class="col d-flex flex-column justify-content-end text-right question-side-detail"
 							>
-								<div *ngIf="(currentUser$ | async).Role.is(constant.role.AssistantSupervisor)">
+								<div *ngIf="(currentUser$ | async).Role.isAstSpv">
 									<rd-confirmable-pop-up
 										title="Delete this question?"
 										(confirm)="deleteQuestion(question)"

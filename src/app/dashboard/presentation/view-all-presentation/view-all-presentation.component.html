@@ -99,10 +99,6 @@
 					<!-- Button hanya kalau blum di-score & bukan utk trainee -->
 					<button
 						class="btn btn-sm btn-primary mr-1"
-						[hidden]="
-							(presentationStatus$ | async) !== 'Not Yet Input' ||
-							(currentUser$ | async)?.Role.is(constant.role.Trainee)
-						"
 						(click)="showScoringForm$.next(!showScoringForm$.value)"
 					>
 						{{ (showScoringForm$ | async) ? 'Hide Scoring Form' : 'Show Scoring Form' }}
@@ -114,16 +110,16 @@
 						{{ (currentPresentation$ | async)?.Material }}
 					</div>
 				</div>
-				<div class="row mb-3" *ngIf="presentationStatus$ | async as status">
+				<div class="row mb-3" *ngIf="currentPresentationScoring$ | async as scoring">
 					<div class="col-3"><b>Status</b></div>
 					<div
 						class="col"
 						[ngClass]="{
-							'text-danger': status === 'Not Passed',
-							'text-success': status === 'Passed'
+							'text-danger': scoring.status === 'Not Passed',
+							'text-success': scoring.status === 'Passed'
 						}"
 					>
-						<b>{{ status }}</b>
+						<b>{{ scoring.status }}</b>
 					</div>
 				</div>
 				<div [hidden]="!(showScoringForm$ | async)">
@@ -309,7 +305,7 @@
 								<!-- TODO: Add role validation here (!= Trainee) -->
 								<div
 									class="actions"
-									*ngIf="(currentUser$ | async)?.Role.is(constant.role.AssistantSupervisor)"
+									*ngIf="(currentUser$ | async)?.Role.isAstSpv"
 								>
 									<rd-confirmable-pop-up
 										[description]="deleteReasonTemplate"

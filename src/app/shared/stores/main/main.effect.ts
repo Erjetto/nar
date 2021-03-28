@@ -6,6 +6,7 @@ import { EncryptToBase64 } from 'src/app/shared/utilities/aes';
 
 import * as MainStateAction from './main.action';
 import * as fromMasterState from '../master/master.reducer';
+import * as fromMainState from '../main/main.reducer';
 import { Observable, of } from 'rxjs';
 import {
 	switchMap,
@@ -23,8 +24,9 @@ import { AnnouncementService } from '../../services/new/announcement.service';
 import { flatten as _flatten, isEmpty as _isEmpty } from 'lodash';
 import { GeneralService } from '../../services/new/general.service';
 import { IAppState } from 'src/app/app.reducer';
-import { ClientGeneration } from '../../models';
+import { ClientGeneration, User } from '../../models';
 import { TrainerAttendanceService } from '../../services/new/trainer-attendance.service';
+import { RoleFlags } from '../../constants/role.constant';
 
 @Injectable({
 	providedIn: 'root',
@@ -112,7 +114,7 @@ export class MainStateEffects {
 	@Effect()
 	logout$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.Logout),
-		tap(() => this.store.dispatch(MainStateAction.InfoMessage('Logging out...'))),
+		// tap(() => this.store.dispatch(MainStateAction.InfoMessage('Logging out...'))),
 		switchMap(() => this.generalService.LogOut()),
 		mergeMap(() => of(MainStateAction.LogoutSuccess())),
 		share()
@@ -209,6 +211,9 @@ export class MainStateEffects {
 	@Effect()
 	getUserTeachingSchedules$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.FetchUserTeachingSchedules),
+		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentUser))),
+		// Not for junior trainer
+		filter(([act, user]:[any, User]) => !user.Role.is(RoleFlags.JuniorTrainer)),
 		switchMap(() => this.trainerAttendanceService.GetCurrentUserTeachingSchedule()),
 		mergeMap((res) => of(MainStateAction.FetchUserTeachingSchedulesSuccess({ payload: res }))),
 		share()

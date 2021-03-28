@@ -107,12 +107,11 @@ export class InterviewStateEffects {
 	@Effect()
 	createInterviewQuestion$: Observable<Action> = this.actions$.pipe(
 		ofType(InterviewStateAction.CreateInterviewQuestion),
-		switchMap((data) => this.leaderService.SaveInterviewQuestions(data)),
-
+		switchMap((data) => this.interviewService.SaveInterviewQuestions(data)),
 		mergeMap((res) =>
-			res === true
+			res.length === 0
 				? of(MainStateAction.SuccessfullyMessage('created interview questions'))
-				: of(MainStateAction.FailMessage('Saving interview questions'))
+				: of(MainStateAction.FailMessage('saving interview questions'))
 		),
 		share()
 	);
@@ -201,6 +200,18 @@ export class InterviewStateEffects {
 			res === true
 				? of(MainStateAction.SuccessfullyMessage('deleted interview material'))
 				: of(MainStateAction.FailMessage('deleting interview material'))
+		),
+		share()
+	);
+
+	@Effect()
+	deleteInterviewQuestion$: Observable<Action> = this.actions$.pipe(
+		ofType(InterviewStateAction.DeleteInterviewQuestion),
+		switchMap((data) => this.interviewService.DeleteInterviewQuestion(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted interview question'))
+				: of(MainStateAction.FailMessage('deleting interview question'))
 		),
 		share()
 	);

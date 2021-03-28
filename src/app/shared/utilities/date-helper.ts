@@ -77,4 +77,12 @@ export class DateHelper {
 	static dateToFormat(input: Date | number, format?: string) {
 		return DateHelper.singleton.datePipe.transform(input, format || 'yyyy-MM-dd');
 	}
+
+	/**
+	 * Get date difference in days
+	 * `abs(a-b) / (1000*60*60*24)` -> ms to day
+	 */
+	static dateDiffInDays(a: Date, b: Date){
+		return Math.abs(a.getTime() - b.getTime()) / 86400000;
+	}
 }

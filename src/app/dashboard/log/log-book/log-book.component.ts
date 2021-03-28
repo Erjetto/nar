@@ -95,8 +95,8 @@ export class LogBookComponent extends DashboardContentBase implements OnInit, On
 		this.viewLogBookForm.valueChanges
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((data) => this.store.dispatch(LogStateAction.FetchLogBooks(data)));
-    
-    // Masukkan data ke form kalo klik baris
+
+		// Masukkan data ke form kalo klik baris
 		this.viewCurrentLogBook$
 			.pipe(
 				filter((v) => !_isEmpty(v)),
@@ -130,7 +130,7 @@ export class LogBookComponent extends DashboardContentBase implements OnInit, On
 				this.newTraineeRowControl.reset();
 			});
 
-    // Kalo ganti generation
+		// Kalo ganti generation
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(BinusianStateAction.FetchAllTraineesInLatestPhase());
 			this.store.dispatch(LogStateAction.FetchLogBooks(this.viewLogBookForm.value));
@@ -143,13 +143,14 @@ export class LogBookComponent extends DashboardContentBase implements OnInit, On
 			.subscribe(() => this.loadingLogBookForm$.next(false));
 
 		// Auto refresh kalo ada CRUD
-		merge(this.logEffects.saveLogBooks$)
+		merge(this.logEffects.saveLogBooks$, this.logEffects.deleteLogBooks$)
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() =>
-				this.store.dispatch(LogStateAction.FetchLogBooks(this.viewLogBookForm.value))
-			);
+			.subscribe(() => {
+				this.cancelEdit();
+				this.store.dispatch(LogStateAction.FetchLogBooks(this.viewLogBookForm.value));
+			});
 
-    // Ambil Subject di phase Core Training
+		// Ambil Subject di phase Core Training
 		this.store
 			.pipe(
 				select(fromMasterState.getPhases),
@@ -185,6 +186,7 @@ export class LogBookComponent extends DashboardContentBase implements OnInit, On
 
 	newLogBook() {
 		this.viewCurrentLogBook$.next(new LogBookPIC());
+		this.logBookForm.get('SavedDate').setValue(DateHelper.dateToFormat(new Date()));
 	}
 
 	cancelEdit() {

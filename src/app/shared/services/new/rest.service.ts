@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { isEmpty as _isEmpty, map as _map } from 'lodash';
 import { environment } from 'src/environments/environment';
-import { TraineeSchedule } from '../../models';
+import { TraineePresentation, TraineeSchedule } from '../../models';
 import { map } from 'rxjs/operators';
 import { DateHelper } from '../../utilities/date-helper';
 import { Observable } from 'rxjs';
@@ -28,13 +28,14 @@ export class RESTService {
 		return arr.join('/');
 	}
 
+	//#region TraineeSchedule
 	public FetchTraineeScheduleBy(
-		generationId: string = null,
-		traineeId: string = null,
-		type: string = null,
-		date: string = null,
-		traineeScheduleId: string = null
-	) : Observable<TraineeSchedule[]> {
+		generationId?: string,
+		traineeId?: string,
+		type?: string,
+		date?: string,
+		traineeScheduleId?: string
+	): Observable<TraineeSchedule[]> {
 		const params = this.joinLinkInOrder([generationId, traineeId, type, date, traineeScheduleId]);
 		return this.httpClient
 			.get(`${this.baseUrl}TraineeSchedule/${params}/`)
@@ -43,25 +44,83 @@ export class RESTService {
 
 	public CreateTraineeSchedule(data: TraineeSchedule): Observable<boolean> {
 		return this.httpClient
-			.post(`${this.baseUrl}TraineeSchedule/`, {data:{
-				...data,
-				AttendanceDate: DateHelper.toCSharpDate(data.AttendanceDate)
-			}})
+			.post(`${this.baseUrl}TraineeSchedule/`, {
+				data: {
+					...data,
+					AttendanceDate: DateHelper.toCSharpDate(data.AttendanceDate),
+				},
+			})
 			.pipe(map((res: any) => res === true));
 	}
 
-	public DeleteTraineeSchedule(traineeScheduleId: string) : Observable<boolean> {
+	public DeleteTraineeSchedule(traineeScheduleId: string): Observable<boolean> {
 		return this.httpClient
-			.delete(`${this.baseUrl}TraineeSchedule/` + traineeScheduleId)
+			.post(`${this.baseUrl}TraineeSchedule/Delete`, { traineeScheduleId })
 			.pipe(map((res: any) => res === true));
 	}
-	
+
 	public UpdateTraineeSchedule(data: TraineeSchedule): Observable<boolean> {
 		return this.httpClient
-			.put(`${this.baseUrl}TraineeSchedule/`, {data:{
-				...data,
-				AttendanceDate: DateHelper.toCSharpDate(data.AttendanceDate)
-			}})
+			.post(`${this.baseUrl}TraineeSchedule/`, {
+				data: {
+					...data,
+					AttendanceDate: DateHelper.toCSharpDate(data.AttendanceDate),
+				},
+			})
 			.pipe(map((res: any) => res === true));
 	}
+	//#endregion
+
+	//#region TraineePresentation
+	public FetchTraineePresentationBy(
+		generationId?: string,
+		phaseId?: string,
+		subjectId?: string,
+		traineeId?: string,
+		presentationNo?: number
+	): Observable<TraineePresentation[]> {
+		const params = this.joinLinkInOrder([
+			generationId,
+			phaseId,
+			subjectId,
+			traineeId,
+			presentationNo+'',
+		]);
+		return this.httpClient
+			.get(`${this.baseUrl}TraineePresentation/${params}/`)
+			.pipe(map((res: any) => _map(res, TraineePresentation.fromJson)));
+	}
+
+	// public CreateTraineePresentation(data: TraineePresentation): Observable<boolean> {
+	// 	return this.httpClient
+	// 		.post(`${this.baseUrl}TraineePresentation/`, {
+	// 			data: {
+	// 				...data,
+	// 				AttendanceDate: DateHelper.toCSharpDate(data.AttendanceDate),
+	// 			},
+	// 		})
+	// 		.pipe(map((res: any) => res === true));
+	// }
+
+	public DeleteTraineePresentation(
+		subjectId: string,
+		traineeId: string,
+		presentationNo: string
+	): Observable<boolean> {
+		return this.httpClient
+			.post(`${this.baseUrl}TraineePresentation/Delete`, { subjectId, traineeId, presentationNo })
+			.pipe(map((res: any) => res === true));
+	}
+
+	public UpdateTraineePresentation(data: TraineePresentation): Observable<boolean> {
+		return this.httpClient
+			.put(`${this.baseUrl}TraineePresentation/`, {
+				data: {
+					...data,
+					savedAt: DateHelper.toCSharpDate(data.savedAt),
+				},
+			})
+			.pipe(map((res: any) => res === true));
+	}
+	//#endregion
 }

@@ -1,6 +1,6 @@
 <span
 	class="file-placeholder form-control"
-	[ngClass]="{ disabled: disabled }"
+	[ngClass]="{ disabled: disabled || singleFileForm.disabled || filesForm.disabled }"
 	(click)="fileUploader.click()"
 >
 	<ng-container [ngSwitch]="hasFile">
@@ -17,7 +17,7 @@
 	type="file"
 	class="form-control"
 	[multiple]="multiple"
-	[disabled]="disabled"
+	[disabled]="disabled || singleFileForm.disabled || filesForm.disabled"
 	(change)="uploadFile($event.target.files)"
 />
 <div class="input-group-append" [hidden]="!hasFile">
@@ -56,7 +56,7 @@
 		triggers="mouseenter:mouseleave"
 		title="Remove uploaded files"
 		(click)="removeUploadedFiles($event)"
-		[hidden]="!hasFile"
+		[hidden]="!hasFile || disabled"
 		style="width: 37px"
 	>
 		<ng-template #removePopContent>

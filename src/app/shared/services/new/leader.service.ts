@@ -148,6 +148,7 @@ export class LeaderService {
 		caseName: string;
 		correctorNames: string[];
 		traineeDays: string;
+		trainerDays: string;
 		scheduleDate: string;
 		noUpload: boolean;
 	}): Observable<string[]> {
@@ -490,15 +491,6 @@ export class LeaderService {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveTraineesToSchedule', data)
 			.pipe(map((res: any) => res.d as string[]));
-	}
-
-	public SaveInterviewQuestions(data: {
-		questionName: string;
-		questions: string[];
-	}): Observable<boolean> {
-		return this.httpClient
-			.post(this.baseUrl + 'SaveInterviewQuestions', data)
-			.pipe(map((res: any) => res.d === true));
 	}
 
 	public SaveUserInRoles(data: { userRoleId: string; usernames: string[] }): Observable<string[]> {

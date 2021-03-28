@@ -37,6 +37,8 @@ import { isEmpty as _isEmpty, sortBy as _sortBy} from 'lodash';
 export class ViewEvaluationComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	detailedViewDateFormat = 'dd-MM-yyyy HH:mm:ss';
 	viewDateFormat = 'dd MMM yyyy';
+	attendanceTimeFormat = DateHelper.FULL_TIME_FORMAT;
+	emptyAttendanceTime = '00:00:00'
 
 	// currentDate = new FormControl(DateHelper.dateToInputFormat(new Date()));
 	currentDate = this.fb.control(DateHelper.dateToFormat(new Date()));

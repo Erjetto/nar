@@ -5,7 +5,7 @@
 				<div class="col">
 					<rd-card [cardTitle]="'Trainee Statistic'" [isLoading]="loadingTraineeStatistic$ | async">
 						<div class="row mb-2">
-							<div class="col-2 col-form-label text-right">
+							<div class="pl-4 col-auto col-form-label text-right">
 								<b>Phase</b>
 							</div>
 							<div class="col-5">
@@ -25,11 +25,11 @@
 							</div>
 						</div>
 						<div class="row px-3">
-							<div class="col-4 p-2" *ngFor="let stat of statistics$ | async">
+							<div class="p-2" *ngFor="let stat of statistics$ | async">
 								<table class="w-100">
 									<thead>
 										<tr>
-											<td>{{ stat.Type }}</td>
+											<td style="min-width: 150px;">{{ stat.Type }}</td>
 											<td class="text-right">#</td>
 										</tr>
 									</thead>
@@ -52,6 +52,7 @@
 					<rd-card
 						[cardTitle]="'Your Teaching Schedule'"
 						[isLoading]="loadingTeachingSchedules$ | async"
+						*ngIf="!(currentUser$ | async).Role.is(constant.roles.JuniorTrainer)"
 					>
 						<rd-data-table
 							[data]="trainerTeachingSchedules$ | async"

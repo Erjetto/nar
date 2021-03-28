@@ -51,7 +51,7 @@
 					{ 'row-active': isRowSelected(row) }, 
 					!!conditionalRowClass && conditionalRowClass(row))
 				"
-				(click)="onClickRow(row)"
+				(click)="onClickRow($event, row)"
 			>
 				<!-- Add check box here -->
 				<td *ngIf="multipleSelectable">
@@ -59,7 +59,7 @@
 						type="checkbox"
 						[id]="'data-table-check-' + rowIdx"
 						[checked]="rowElement.classList.contains('row-active')"
-						(change)="onCheckRow($event, row)"
+						(change)="onCheckRow(row)"
 						/>
 				</td>
 

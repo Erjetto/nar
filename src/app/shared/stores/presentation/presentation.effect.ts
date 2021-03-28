@@ -9,19 +9,12 @@ import * as fromMainState from '../main/main.reducer';
 import * as fromPresentationState from './presentation.reducer';
 
 import { forkJoin, Observable, of } from 'rxjs';
-import {
-	switchMap,
-	mergeMap,
-	share,
-	map,
-	withLatestFrom,
-	filter,
-	first,
-} from 'rxjs/operators';
+import { switchMap, mergeMap, share, map, withLatestFrom, filter, first } from 'rxjs/operators';
 import { PresentationService } from '../../services/new/presentation.service';
 import { isEmpty as _isEmpty } from 'lodash';
 import { IAppState } from 'src/app/app.reducer';
 import { ClientGeneration, User } from '../../models';
+import { RESTService } from '../../services/new/rest.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -30,6 +23,7 @@ export class PresentationStateEffects {
 	constructor(
 		private actions$: Actions,
 		private presentationService: PresentationService,
+		private restService: RESTService,
 		private store: Store<IAppState>
 	) {}
 
@@ -39,6 +33,24 @@ export class PresentationStateEffects {
 		switchMap((data) => this.presentationService.GetPresentationReportSummary(data)),
 		mergeMap((res) =>
 			of(PresentationStateAction.FetchPresentationScoringsSummarySuccess({ payload: res }))
+		),
+		share()
+	);
+
+	@Effect()
+	getPresentationScorings$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.FetchPresentationScorings),
+		switchMap((data) =>
+			this.restService.FetchTraineePresentationBy(
+				data.generationId,
+				data.phaseId,
+				data.subjectId,
+				data.traineeId,
+				data.presentationNo
+			)
+		),
+		mergeMap((res) =>
+			of(PresentationStateAction.FetchPresentationScoringsSuccess({ payload: res }))
 		),
 		share()
 	);
@@ -60,17 +72,29 @@ export class PresentationStateEffects {
 	@Effect()
 	getMyPresentations$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchMyPresentations),
-		switchMap(_ => forkJoin([
-			this.store.pipe(select(fromMainState.getCurrentUser), filter(v => !_isEmpty(v)), first()),
-			this.store.pipe(select(fromMainState.getCurrentGeneration), filter(v => !_isEmpty(v)), first()),
-		])),
+		switchMap((_) =>
+			// Get first non-null current user & generation to fetch
+			// current user presentation
+			forkJoin([
+				this.store.pipe(
+					select(fromMainState.getCurrentUser),
+					filter((v) => !_isEmpty(v)),
+					first()
+				),
+				this.store.pipe(
+					select(fromMainState.getCurrentGeneration),
+					filter((v) => !_isEmpty(v)),
+					first()
+				),
+			])
+		),
 		switchMap(([user, gen]: [User, ClientGeneration]) =>
 			this.presentationService.FindCoreTrainingPresentationByTrainee({
 				generationId: gen.GenerationId,
 				traineeId: user.TraineeId,
 			})
 		),
-		mergeMap(res => of(PresentationStateAction.FetchMyPresentationsSuccess({payload: res}))),
+		mergeMap((res) => of(PresentationStateAction.FetchMyPresentationsSuccess({ payload: res }))),
 		share()
 	);
 
@@ -187,10 +211,22 @@ export class PresentationStateEffects {
 	@Effect()
 	updateTraineePresentation$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.SaveTraineePresentation),
-		switchMap((data) => this.presentationService.SaveTraineePresentation(data)),
-		mergeMap((res) =>
+		switchMap((data) =>
+			this.presentationService
+				.SaveTraineePresentation(data)
+				.pipe(map((res) => ({ res, data: data.data })))
+		),
+		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentGenerationId))),
+		mergeMap(([{ res, data }, generationId]) =>
 			res === true
-				? of(MainStateAction.SuccessfullyMessage('updated trainee presentation'))
+				? of(
+						MainStateAction.SuccessfullyMessage('updated trainee presentation'),
+						// Auto-fetch new scoring
+						PresentationStateAction.FetchPresentationScorings({
+							generationId,
+							...data,
+						})
+				  )
 				: of(MainStateAction.FailMessage('updating trainee presentation'))
 		),
 		share()

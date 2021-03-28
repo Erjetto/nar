@@ -31,7 +31,6 @@ body {
 
 	overflow-x: hidden;
 
-	
 	&::-webkit-scrollbar {
 		width: 10px;
 	}
@@ -211,105 +210,40 @@ a {
 	}
 }
 
+// Display
+.d-inline-block {
+	display: inline-block !important;
+}
+.d-unset {
+	display: unset !important;
+}
+
 // Border
-.bd-0 {
-	border: 0px !important;
-}
-.bd-1 {
-	border: 1px solid !important;
-}
-.bd-2 {
-	border: 2px solid !important;
-}
-.bd-4 {
-	border: 4px solid !important;
+// bd-0, bd-t-0, bd-r-4, etc.....
+@for $i from 0 through 4 {
+	.bd-#{$i} {
+		border: #{$i}px solid;
+	}
+
+	@for $j from 1 through 4 {
+		.bd-#{nth($sides, $j)}-#{$i} {
+			border-#{nth($side-names, $j)}: #{$i}px solid !important;
+		}
+	}
 }
 
-.bd-t-0 {
-	border-top: 0px !important;
-}
-.bd-t-1 {
-	border-top: 1px solid !important;
-}
-.bd-t-2 {
-	border-top: 2px solid !important;
-}
-.bd-t-4 {
-	border-top: 4px solid !important;
+@each $bd-color in $border-colors {
+	.bd-#{$bd-color} {
+		border-color: #{$bd-color} !important;
+	}
 }
 
-.bd-l-0 {
-	border-left: 0px !important;
-}
-.bd-l-1 {
-	border-left: 1px solid !important;
-}
-.bd-l-2 {
-	border-left: 2px solid !important;
-}
-.bd-l-4 {
-	border-left: 4px solid !important;
+@each $bd-rad in $border-radiuses {
+	.bd-rad-#{$bd-rad} {
+		border-radius: #{$bd-rad};
+	}
 }
 
-.bd-r-0 {
-	border-right: 0px !important;
-}
-.bd-r-1 {
-	border-right: 1px solid !important;
-}
-.bd-r-2 {
-	border-right: 2px solid !important;
-}
-.bd-r-4 {
-	border-right: 4px solid !important;
-}
-
-.bd-b-0 {
-	border-bottom: 0px !important;
-}
-.bd-b-1 {
-	border-bottom: 1px solid !important;
-}
-.bd-b-2 {
-	border-bottom: 2px solid !important;
-}
-.bd-b-4 {
-	border-bottom: 4px solid !important;
-}
-
-.bd-lightgrey {
-	border-color: lightgrey !important;
-}
-
-.bd-full-solid {
-	border: 1px solid;
-}
-.bd-full-dash {
-	border-right: 1px dashed;
-}
-
-.bd-right {
-	border-right: 1px solid;
-}
-.bd-left {
-	border-left: 1px solid;
-}
-.bd-top {
-	border-top: 1px solid;
-}
-.bd-bottom {
-	border-bottom: 1px solid;
-}
-
-.bd-rad-4 {
-	border-radius: 4px;
-}
-.bd-rad-8 {
-	border-radius: 8px;
-}
-.bd-rad-12 {
-	border-radius: 12px;
-}
 .bd-circle {
 	border-radius: 50%;
 }
@@ -353,15 +287,6 @@ a {
 }
 
 // Position
-.absolute-center {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
 .absolute-center {
 	position: absolute;
 	top: 50%;
@@ -449,7 +374,6 @@ a {
 	resize: vertical;
 }
 
-
 .bg-excel {
 	background-color: teal;
 	color: white;
@@ -504,15 +428,15 @@ a {
 
 // Background colors
 .bg-green {
-	background: $color-good;
+	background: $color-good !important;
 }
 
 .bg-red {
-	background: $color-bad;
+	background: $color-bad !important;
 }
 
 .bg-white {
-	background-color: white;
+	background-color: white !important;
 }
 
 // tables
