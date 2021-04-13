@@ -42,6 +42,10 @@
 					</thead>
 					<tbody>
 						<tr>
+							<td width="150px">Email</td>
+							<td>{{ (currentTrainee$ | async)?.Email }}</td>
+						</tr>
+						<tr>
 							<td width="150px">Name</td>
 							<td>{{ (currentTrainee$ | async)?.TraineeName }}</td>
 						</tr>
@@ -108,47 +112,98 @@
 				(toggleExpand)="viewingTable = $event"
 				[isLoading]="loadingTrainees$ | async"
 			>
-				<div class="row scrollable-table first-row-sticky maxh-550px">
-					<table class="table table-sm table-striped table-hover">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>NIM</th>
-								<th>Code</th>
-								<th>ID Card</th>
-								<th>Semester</th>
-								<th>Birth Date</th>
-								<th>Gender</th>
-								<th>Bank Branch</th>
-								<th>Bank Account</th>
-								<th>Permanent Address</th>
-								<th>Current Address</th>
-								<th>Current Address Type</th>
-								<th>Phone Number</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr *ngIf="(trainees$ | async)?.length === 0">
-								<td class="text-center" colspan="3">No trainees...</td>
-							</tr>
-							<tr *ngFor="let trainee of trainees$ | async">
-								<td>{{ trainee.TraineeName }}</td>
-								<td>{{ trainee.TraineeNumber }}</td>
-								<td>{{ trainee.TraineeCode }}</td>
-								<td>{{ trainee.AdditionalTraineeData?.KPTOrPassport }}</td>
-								<td>{{ trainee.Semester }}</td>
-								<td>{{ trainee.BirthDate | date: viewDateFormat }}</td>
-								<td>{{ trainee.Gender }}</td>
-								<td>{{ trainee.AdditionalTraineeData?.BankBranch }}</td>
-								<td>{{ trainee.AdditionalTraineeData?.BankAccount }}</td>
-								<td>{{ trainee.AdditionalTraineeData?.PemanentAddress }}</td>
-								<td>{{ trainee.AdditionalTraineeData?.CurrentAddress }}</td>
-								<td>{{ trainee.AdditionalTraineeData?.CurrentAddressType }}</td>
-								<td>{{ trainee.AdditionalTraineeData?.PhoneNumberList.join('\n') }}</td>
-							</tr>
-						</tbody>
-					</table>
+				<div rdCardBadges>
+					<button class="btn btn-sm bg-excel" (click)="exportTraineeData()">
+						Export into Excel
+					</button>
 				</div>
+				<rd-data-table
+					[data]="trainees$ | async"
+					[selectable]="true"
+					[sortable]="true"
+					[noDataMessage]="'No Trainee data'"
+					[fixedHeight]="500"
+				>
+					<rd-table-header> </rd-table-header>
+					<ng-container>
+						<rd-table-column
+							prop="TraineeName"
+							[label]="'Name'"
+							[sortable]="true"
+							[sortState]="'ASC'"
+							[cellClass]="'no-wrap'"
+						></rd-table-column>
+						<rd-table-column
+							prop="TraineeNumber"
+							[label]="'NIM'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="TraineeCode"
+							[label]="'Code'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="Email"
+							[label]="'Email'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="AdditionalTraineeData.KPTOrPassport"
+							[label]="'ID Card'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="Semester"
+							[label]="'Semester'"
+							[sortable]="true"
+						></rd-table-column>
+						<!-- Still uses [prop] for sorting purpose -->
+						<rd-table-column
+							prop="BirthDate"
+							[label]="'Birth Date'"
+							[sortable]="true"
+							[cellClass]="'no-wrap'"
+						>
+							<ng-template rdTableTemplate="body" let-trainee="rowData">
+								{{ trainee.BirthDate | date: viewDateFormat }}
+							</ng-template>
+						</rd-table-column>
+						<rd-table-column prop="Gender" [label]="'Gender'" [sortable]="true"></rd-table-column>
+						<rd-table-column
+							prop="AdditionalTraineeData.BankBranch"
+							[label]="'Bank Branch'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="AdditionalTraineeData.BankAccount"
+							[label]="'Bank Account'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="AdditionalTraineeData.PemanentAddress"
+							[label]="'Permanent Address'"
+							[sortable]="true"
+							[cellClass]="'pre'"
+						></rd-table-column>
+						<rd-table-column
+							prop="AdditionalTraineeData.CurrentAddress"
+							[label]="'Current Address'"
+							[sortable]="true"
+							[cellClass]="'pre'"
+						></rd-table-column>
+						<rd-table-column
+							prop="AdditionalTraineeData.CurrentAddressType"
+							[label]="'Current Address Type'"
+							[sortable]="true"
+						></rd-table-column>
+						<rd-table-column
+							prop="AdditionalTraineeData.PhoneNumberList"
+							[label]="'Phone Number'"
+							[sortable]="true"
+						></rd-table-column>
+					</ng-container>
+				</rd-data-table>
 			</rd-card>
 		</div>
 	</div>

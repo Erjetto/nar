@@ -128,7 +128,7 @@ export class DataTableComponent implements AfterContentInit, OnDestroy, OnChange
 	 */
 	getDataWithProp(data: any, prop: string){
 		if(prop.indexOf('.') === -1) return data[prop];
-		return prop.split('.').reduce((prev, curr) => prev[curr], data);
+		return prop.split('.').reduce((prev, curr) => !!prev ? prev[curr] : '', data);
 	}
 
 	onCheckAllChanged(event) {

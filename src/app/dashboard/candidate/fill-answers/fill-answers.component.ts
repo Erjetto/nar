@@ -26,9 +26,9 @@ export class FillAnswersComponent extends DashboardContentBase implements OnInit
 	questionModel$: Observable<SubcoCandidateQuestionModel>;
 	userAnswers$: Observable<SubcoCandidateAnswerModel[]>;
 	currentUserAnswer$ = new BehaviorSubject<SubcoCandidateAnswerModel>(null);
-	loadingViewQuestions$ = new BehaviorSubject<boolean>(false);
+	loadingViewQuestions$ = new BehaviorSubject(false);
 
-	canAnswer$ = new BehaviorSubject<boolean>(false);
+	canAnswer$ = new BehaviorSubject(false);
 
 	answersForm = this.fb.array([]);
 

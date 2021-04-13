@@ -46,7 +46,7 @@ export class PresentationReportComponent extends DashboardContentBase implements
 	loadingTrainers$: Observable<boolean>;
 	loadingPresentations$: Observable<boolean>;
 
-	loadingViewTraineeAnswerCount$ = new BehaviorSubject<boolean>(false);
+	loadingViewTraineeAnswerCount$ = new BehaviorSubject(false);
 
 	// percent => 0-100
 	traineeAnswerCount$: Observable<{ number; name; count; percent; isActive }[]>;

@@ -40,10 +40,10 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 	searchTextControl = this.fb.control('');
 	deactivateReasonControl = this.fb.control('');
 
-	loadingFormGen$ = new BehaviorSubject<boolean>(false);
-	loadingFormTrainee$ = new BehaviorSubject<boolean>(false);
+	loadingFormGen$ = new BehaviorSubject(false);
+	loadingFormTrainee$ = new BehaviorSubject(false);
 	loadingViewGen$: Observable<boolean>;
-	loadingViewTrainee$ = new BehaviorSubject<boolean>(false);
+	loadingViewTrainee$ = new BehaviorSubject(false);
 
 	constructor(
 		protected store: Store<IAppState>,

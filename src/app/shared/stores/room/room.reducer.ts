@@ -65,7 +65,7 @@ export const isRoomTransactionsLoading = getRoomStateBy((s) => s.loadingRoomTran
 
 /**
  * Expectation:
- * {'1': [....], '2': [....], ...}
+ * `{'1': [...], '2': [...], ...}`
  */
 export const getRoomTransactionsByShift = createSelector(getRoomTransactions, (roomTransactions) =>
 	roomTransactions.reduce(

@@ -10,7 +10,7 @@
 					>
 						<div class="row">
 							<div class="col" *ngIf="(traineeDailyAttendance$ | async) || {} as att">
-								<b>Secretariat</b>
+								<!-- <b>Secretariat</b>
 								<ul>
 									<li [class]="att.Secretariat?.StatusAbsentIn">
 										In: {{ att.Secretariat?.TraineeIn | date: attendanceDateFormat }}
@@ -18,7 +18,7 @@
 									<li [class]="att.Secretariat?.StatusAbsentOut">
 										Out: {{ att.Secretariat?.TraineeOut | date: attendanceDateFormat }}
 									</li>
-								</ul>
+								</ul> -->
 								<b>Room</b>
 								<ul>
 									<li [class]="att.Room?.StatusAbsentIn">
@@ -28,7 +28,7 @@
 										Out: {{ att.Room?.TraineeOut | date: attendanceDateFormat }}
 									</li>
 								</ul>
-								<b>Rest</b>
+								<!-- <b>Rest</b>
 								<ul>
 									<li [class]="att.Rest?.StatusAbsentIn">
 										In: {{ att.Rest?.TraineeIn | date: attendanceDateFormat }}
@@ -36,7 +36,7 @@
 									<li [class]="att.Rest?.StatusAbsentOut">
 										Out: {{ att.Rest?.TraineeOut | date: attendanceDateFormat }}
 									</li>
-								</ul>
+								</ul> -->
 							</div>
 						</div>
 					</rd-card>

@@ -29,15 +29,6 @@ export class TraineeService {
 			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
 	}
 
-	public GetTraineeScheduleHeader(data: {
-		binusianNumber: string;
-		period: string;
-	}): Observable<TraineeSchedule[]> {
-		return this.httpClient
-			.post(this.baseUrl + 'GetTraineeScheduleHeader', data)
-			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
-	}
-
 	public GetTraineeBinusianData(data: { binusianNumber: string }): Observable<TraineeSchedule[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeBinusianData', data)
@@ -105,7 +96,7 @@ export class TraineeService {
 	public GetTraineeRole(): Observable<string> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeRole', {})
-			.pipe(map((res: any) => res.d + ''));
+			.pipe(map((res: any) => res.d));
 	}
 
 	public GetTraineeActivationStatus(): Observable<boolean> {
@@ -132,6 +123,12 @@ export class TraineeService {
 			.pipe(map((res: any) => _map(res.d, ClientTraineeData.fromJson)));
 	}
 
+	public ExportTraineesData(): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'ExportTraineesData', {})
+			.pipe(map((res: any) => res.d));
+	}
+
 	public GetTrainee(data: { traineeId: string }): Observable<ClientTraineeData> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTrainee', data)
@@ -143,9 +140,29 @@ export class TraineeService {
 		period: string;
 		startDate: string;
 		endDate: string;
-	}): Observable<any> {
+	}): Observable<string> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetTraineeSchedule', data)
+			.pipe(map((res: any) => res.d));
+	}
+
+	public GetTraineeScheduleHeader(data: {
+		binusianNumber: string;
+		period: string;
+	}): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetTraineeScheduleHeader', data)
+			.pipe(map((res: any) => res.d));
+	}
+
+	public ExportTraineesSchedule(data: {
+		binusianNumber: string;
+		period: string;
+		startDate: string;
+		endDate: string;
+	}): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'ExportTraineesSchedule', data)
 			.pipe(map((res: any) => res.d));
 	}
 

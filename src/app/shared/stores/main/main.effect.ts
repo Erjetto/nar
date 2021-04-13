@@ -79,7 +79,6 @@ export class MainStateEffects {
 			this.generalService.ChangeRole({ role: act.role.roleName }).pipe(map((res) => ({ act, res })))
 		),
 		mergeMap(({ act }) => {
-			// localStorage.setItem(Cookies.CURR_ROLE, act.role.roleName);
 			return of(MainStateAction.ChangeRoleSuccess({ role: act.role }));
 		}),
 		share()
@@ -92,7 +91,6 @@ export class MainStateEffects {
 			this.generalService.ChangeGeneration({ genId: act.genId }).pipe(map((res) => ({ act, res })))
 		),
 		withLatestFrom(this.store.pipe(select(fromMasterState.getGenerations))),
-		// localStorage.setItem(Cookies.CURR_GEN_ID, act.genId); // gen is saved in server side
 		mergeMap(([{ act }, gens]) =>
 			of(
 				MainStateAction.ChangeGenerationSuccess({
@@ -226,6 +224,13 @@ export class MainStateEffects {
 		share()
 	);
 
+	@Effect({ dispatch: false })
+	downloadMemoryFile$ = this.actions$.pipe(
+		ofType(MainStateAction.DownloadMemoryFile),
+		map((data) => this.otherService.DownloadMemoryFile(data.filename)),
+		share()
+	);
+
 	// Langsung subscribe ke effect buat dapatkan result
 	@Effect({ dispatch: false })
 	testRequest$: Observable<any> = this.actions$.pipe(
@@ -254,11 +259,13 @@ export class MainStateEffects {
 	@Effect()
 	dispatchIfEmpty$: Observable<Action> = this.actions$.pipe(
 		ofType(MainStateAction.DispatchIfEmpty),
-		concatMap((action) =>
-			of(action).pipe(withLatestFrom(this.store.pipe(select(action.selectorToBeChecked))))
+		mergeMap((action) =>
+			action.selectorToBeChecked
+			? of(action).pipe(withLatestFrom(this.store.pipe(select(action.selectorToBeChecked))))
+			: of(action).pipe(withLatestFrom(action.observableToBeChecked))
 		),
-		filter(([action, data]) => _isEmpty(data)),
-		map(([action, data]) => action.action),
+		filter(([_, data]) => _isEmpty(data)), //  If data is empty,
+		map(([action, _]) => action.action), // Dispatch the action
 		share()
 	);
 }

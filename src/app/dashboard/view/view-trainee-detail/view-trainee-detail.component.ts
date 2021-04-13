@@ -41,7 +41,7 @@ export class ViewTraineeDetailComponent extends DashboardContentBase implements 
 		reputation: [this.reputations[0].val, Validators.required],
 	});
 
-	loadingViewNote$ = new BehaviorSubject<boolean>(false);
+	loadingViewNote$ = new BehaviorSubject(false);
 	loadingViewTrainee$: Observable<boolean>;
 	loadingViewTraineeRecord$: Observable<boolean>;
 
@@ -77,6 +77,10 @@ export class ViewTraineeDetailComponent extends DashboardContentBase implements 
 
 		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.loadingViewNote$.next(false);
+		});
+
+		this.noteEffects.createTraineeNote$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
+			this.noteForm.reset();
 		});
 
 		// Refresh note

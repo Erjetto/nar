@@ -22,6 +22,7 @@
 					[ngClass]="column.columnClass"
 					[class.cursor-pointer]="sortable && column.sortable"
 					(click)="column.sortable && sort.emit(column)"
+					[ngStyle]="{ width: column.width == 0 ? 'unset' : column.width + 'px' }"
 				>
 					<ng-container [ngSwitch]="column.headerTemplate == null">
 						<ng-container *ngSwitchCase="true">{{ column.label }}</ng-container>
@@ -47,9 +48,11 @@
 				#rowElement
 				*ngFor="let row of data; let rowIdx = index"
 				[class.cursor-pointer]="selectable"
-				[ngClass]="combineClass(
-					{ 'row-active': isRowSelected(row) }, 
-					!!conditionalRowClass && conditionalRowClass(row))
+				[ngClass]="
+					combineClass(
+						{ 'row-active': isRowSelected(row) },
+						!!conditionalRowClass && conditionalRowClass(row)
+					)
 				"
 				(click)="onClickRow($event, row)"
 			>
@@ -60,12 +63,11 @@
 						[id]="'data-table-check-' + rowIdx"
 						[checked]="rowElement.classList.contains('row-active')"
 						(change)="onCheckRow(row)"
-						/>
+					/>
 				</td>
 
 				<!-- Loop cell for each column -->
 				<td *ngFor="let column of columns; let colIdx = index" [ngClass]="column.cellClass">
-
 					<!-- If body template exists then use template -->
 					<ng-container [ngSwitch]="column.bodyTemplate == null">
 						<rd-column-body-template
@@ -74,19 +76,18 @@
 							[rowData]="row"
 							[rowIndex]="rowIdx"
 						></rd-column-body-template>
-						
+
 						<ng-container *ngSwitchDefault>
 							<!-- If using custom value, then use formulaFunction -->
 							<ng-container [ngSwitch]="!!column.formulaFunction">
 								<ng-container *ngSwitchCase="true">
-									{{column.formulaFunction(data[rowIdx])}}
+									{{ column.formulaFunction(data[rowIdx]) }}
 								</ng-container>
 								<ng-container *ngSwitchDefault>
 									{{ getDataWithProp(data[rowIdx], column.prop) }}
 								</ng-container>
 							</ng-container>
 						</ng-container>
-						
 					</ng-container>
 				</td>
 			</tr>

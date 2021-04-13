@@ -103,6 +103,18 @@ export class VoteStateEffects {
 	);
 
 	@Effect()
+	exportTopBottomVoteResult$: Observable<Action> = this.actions$.pipe(
+		ofType(VoteStateAction.ExportTopBottomVoteResult),
+		switchMap((data) => this.leaderService.ExportTopBottomVoteResult(data)),
+		mergeMap((filename) =>
+			filename !== ''
+				? of(MainStateAction.DownloadMemoryFile({ filename }))
+				: of(MainStateAction.FailMessage('exporting vote result'))
+		),
+		share()
+	);
+
+	@Effect()
 	trainerSubmitVote$: Observable<Action> = this.actions$.pipe(
 		ofType(VoteStateAction.SubmitTopBottomVote),
 		withLatestFrom(

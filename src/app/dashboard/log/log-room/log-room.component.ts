@@ -1,14 +1,9 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	OnDestroy,
-	OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { isEmpty as _isEmpty } from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
 import { adjustControlsInFormArray } from 'src/app/shared/methods';
 import { ClientTrainee, LogRoomPIC } from 'src/app/shared/models';
@@ -20,7 +15,7 @@ import {
 	BinusianStateAction,
 	LogStateEffects,
 	fromRoomState,
-	RoomStateAction
+	RoomStateAction,
 } from 'src/app/shared/store-modules';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -35,11 +30,12 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 	viewDateFormat = DateHelper.TIME_DATE_FORMAT;
 
 	rooms$: Observable<any[]>;
-	trainees$ = new BehaviorSubject<ClientTrainee[]>([]);
+	trainees$: Observable<ClientTrainee[]>;
+	traineeDict: { [traineeCode: string]: ClientTrainee } = {};
 
 	logRooms$: Observable<LogRoomPIC[]>;
 	currentLogRoom$ = new BehaviorSubject<LogRoomPIC>(null);
-	loadingLogRooms$ = new BehaviorSubject<boolean>(false);
+	loadingLogRooms$ = new BehaviorSubject(false);
 
 	logRoom = this.fb.control(null);
 	logRoomComputerSeat = this.fb.array([]);
@@ -59,9 +55,17 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 	ngOnInit(): void {
 		this.logRooms$ = this.store.pipe(select(fromLogState.getLogRooms));
 		this.rooms$ = this.store.pipe(select(fromRoomState.getRooms));
-		this.store
-			.pipe(select(fromBinusianState.getAllTrainees), takeUntil(this.destroyed$))
-			.subscribe(this.trainees$);
+		this.trainees$ = this.store.pipe(
+			select(fromBinusianState.getAllTrainees),
+			tap(
+				// Create dict to get trainee info with code
+				(res: ClientTrainee[]) =>
+					(this.traineeDict = res.reduce(
+						(prev, curr) => ({ ...prev, [curr.TraineeCode]: curr }),
+						{}
+					))
+			)
+		);
 		this.store
 			.pipe(select(fromLogState.isLogRoomsLoading), takeUntil(this.destroyed$))
 			.subscribe(this.loadingLogRooms$);
@@ -85,8 +89,8 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 				action: BinusianStateAction.FetchAllTraineesInCurrentGen(),
 				selectorToBeChecked: fromBinusianState.getAllTrainees,
 			})
-    );
-    this.loadingLogRooms$.subscribe(console.log);
+		);
+		this.loadingLogRooms$.subscribe(console.log);
 	}
 
 	get isEditing() {
@@ -141,7 +145,7 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 		const today = new Date();
 		// convert time input into Date()
 		computerSeat.forEach((el, idx) => {
-			el.seat = idx+1
+			el.seat = idx + 1;
 			if (el.trainee != null) el.trainee = el.trainee.TraineeCode;
 		});
 		presentation.forEach((el) => {
@@ -164,21 +168,21 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 				id: this.currentLogRoom$.value.Id,
 				room: '999',
 			})
-    );
-    this.loadingLogRooms$.next(true);
+		);
+		this.loadingLogRooms$.next(true);
 	}
 
 	getTrainee(code: string) {
 		if (_isEmpty(code)) return null;
 		// Data TraineeCode ntah kenapa ada spasi ("T162      ")
-		return this.trainees$.value.find((t) => t.TraineeCode.includes(code));
+		return this.traineeDict[code];
 	}
 
 	cancelEdit() {
 		this.currentLogRoom$.next(null);
 		this.logRoomComputerSeat.reset();
 		this.logRoomPresentation.reset();
-    this.logRoomNote.reset();
+		this.logRoomNote.reset();
 	}
 
 	addLogRoomNote() {
@@ -220,8 +224,8 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 	compSeatFactory = () => ({
 		seat: this.fb.control(null, Validators.required),
 		trainee: this.fb.control(null, Validators.required),
-  });
-  
+	});
+
 	searchByTraineeCodeAndName(term: string, item: ClientTrainee) {
 		return item.codeAndName.toLowerCase().includes(term.toLowerCase());
 	}

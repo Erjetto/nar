@@ -49,7 +49,7 @@
 			>
 				<div class="row">
 					<div class="col bd-lightgrey bd-right" [formGroup]="filterEvaluationForm">
-						<div class="row form-group bd-lightgrey bd-bottom justify-content-center">
+						<div class="row form-group bd-lightgrey bd-b-1 justify-content-center">
 							<h6><b>Filter Evaluation View</b></h6>
 						</div>
 						<!-- <span class="row justify-content-end pr-2"><b>Filter</b></span> -->
@@ -112,18 +112,23 @@
 						</div>
 					</div>
 					<div class="col-7 col-flex">
-						<div class="row form-group bd-lightgrey bd-bottom justify-content-center">
+						<div class="row form-group bd-lightgrey bd-b-1 justify-content-center">
 							<h6><b>Insert New Evaluation</b></h6>
 						</div>
 						<!-- <b class="row">Insert new Evaluation</b> -->
 						<form class="row flex-grow-1" [formGroup]="insertEvaluationForm">
 							<div class="col">
-								<textarea
+								<!-- <textarea
 									class="form-control h-100"
 									style="resize: none"
 									placeholder="Notes"
 									formControlName="notes"
-								></textarea>
+								></textarea> -->
+								<quill-editor
+									theme="bubble"
+									[classes]="'bd-1 bd-rad-8px bd-lightgrey'"
+									formControlName="notes"
+								></quill-editor>
 							</div>
 							<div class="col-4 v-list-m-12 col-flex justify-content-center">
 								<div class="row">
@@ -156,10 +161,11 @@
 							<div class="col">
 								<div class="row p-2">
 									<div class="col">
-										<div
-											class="pre-wrap"
-											[innerHTML]="note.Notes.substring(note.Notes.indexOf('-') + 2)"
-										></div>
+										<div class="row">
+											<quill-view-html
+												[content]="note.Notes.substring(note.Notes.indexOf('-') + 2)"
+											></quill-view-html>
+										</div>
 										<div class="pl-4 pt-1">
 											<span class="font-weight-bold">- {{ note.SavedBy }}</span>
 											at {{ note.SavedAt | date: detailedViewDateFormat }}
@@ -367,225 +373,361 @@
 					<span class="College legend"></span> College Permission
 					<span class="Neglects legend"></span> Neglects attendance
 				</div>
-				<table class="table table-sm table-striped text-center">
-					<thead>
-						<tr>
-							<th rowspan="3">Trainee</th>
-							<th colspan="4">Secretariat</th>
-							<th colspan="4">Room</th>
-							<th colspan="4">Rest</th>
-							<th rowspan="3" colspan="2">Permission</th>
-						</tr>
-						<tr>
-							<th colspan="2">Scheduled</th>
-							<th colspan="2">Registered</th>
-							<th colspan="2">Scheduled</th>
-							<th colspan="2">Registered</th>
-							<th colspan="2">Scheduled</th>
-							<th colspan="2">Registered</th>
-						</tr>
-						<tr>
-							<th>In</th>
-							<th>Out</th>
-							<th>In</th>
-							<th>Out</th>
-							<th>In</th>
-							<th>Out</th>
-							<th>In</th>
-							<th>Out</th>
-							<th>Out</th>
-							<th>In</th>
-							<th>Out</th>
-							<th>In</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr *ngIf="(attendanceReport$ | async)?.Attendances.length === 0">
-							<td class="p-3" colspan="14">No data yet</td>
-						</tr>
-						<tr *ngFor="let at of (attendanceReport$ | async)?.Attendances">
-							<td class="trainee-details-hotspot">
-								<!-- [ngClass]="{ Permission: at.FulldayPermission }"  -->
-								<rd-trainee-detail-on-hover [traineeId]="at.TraineeId">
-									<a
-										[routerLink]="['#View/Trainee', at.TraineeId, 'false']"
-										class="pointer relative"
+				<ng-container [ngSwitch]="(currentUser$ | async)?.Role.isAstSpv">
+					<!-- With edit access -->
+					<table class="table table-sm table-striped text-center" *ngSwitchCase="true">
+						<thead>
+							<tr>
+								<th rowspan="3">Trainee</th>
+								<th colspan="4">Secretariat</th>
+								<th colspan="4">Room</th>
+								<th colspan="4">Rest</th>
+								<th rowspan="3" colspan="2">Permission</th>
+							</tr>
+							<tr>
+								<th colspan="2">Scheduled</th>
+								<th colspan="2">Registered</th>
+								<th colspan="2">Scheduled</th>
+								<th colspan="2">Registered</th>
+								<th colspan="2">Scheduled</th>
+								<th colspan="2">Registered</th>
+							</tr>
+							<tr>
+								<th>In</th>
+								<th>Out</th>
+								<th>In</th>
+								<th>Out</th>
+								<th>In</th>
+								<th>Out</th>
+								<th>In</th>
+								<th>Out</th>
+								<th>Out</th>
+								<th>In</th>
+								<th>Out</th>
+								<th>In</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(attendanceReport$ | async)?.Attendances.length === 0">
+								<td class="p-3" colspan="14">No data yet</td>
+							</tr>
+							<tr *ngFor="let at of (attendanceReport$ | async)?.Attendances">
+								<td class="trainee-details-hotspot">
+									<!-- [ngClass]="{ Permission: at.FulldayPermission }"  -->
+									<rd-trainee-detail-on-hover [traineeId]="at.TraineeId">
+										<a
+											[routerLink]="['#View/Trainee', at.TraineeId, 'false']"
+											class="pointer relative"
+										>
+											{{ at.TraineeCode }}
+										</a>
+									</rd-trainee-detail-on-hover>
+								</td>
+								<td>{{ at.Secretariat.TimeIn || '-' }}</td>
+								<td>{{ at.Secretariat.TimeOut || '-' }}</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Secretariat.StatusAbsentIn || 'Absent'"
+									[ngbPopover]="at.Secretariat.NoteIn"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
+								>
+									<rd-confirmable-pop-up
+										[title]="'Change Secretariat In'"
+										[description]="changeAttendanceContent"
+										[autoClose]="false"
+										[canConfirm]="changeAttendanceForm.valid"
+										(confirm)="
+											confirmChangeAttendance(
+												at.Secretariat.AttendanceIdIn,
+												at.TraineeCode,
+												'Secretariat'
+											)
+										"
 									>
-										{{ at.TraineeCode }}
-									</a>
-								</rd-trainee-detail-on-hover>
-							</td>
-							<td>{{ at.Secretariat.TimeIn || '-' }}</td>
-							<td>{{ at.Secretariat.TimeOut || '-' }}</td>
-							<td
-								[ngClass]="{ Permission: at.FulldayPermission }"
-								[class]="at.Secretariat.StatusAbsentIn || 'Absent'"
-								[ngbPopover]="at.Secretariat.NoteIn"
-								triggers="mouseenter:mouseleave"
-								placement="bottom"
-								container="body"
-							>
-								<rd-confirmable-pop-up
-									[title]="'Change Secretariat In'"
-									[description]="changeAttendanceContent"
-									[autoClose]="false"
-									[canConfirm]="changeAttendanceForm.valid"
-									(confirm)="confirmChangeAttendance()"
-									(click)="
-										selectAttendanceToChange(
-											at.Secretariat.AttendanceIdIn,
-											at.TraineeCode,
-											'Secretariat'
-										)
-									"
+										{{
+											(at.Secretariat.TraineeIn | date: attendanceTimeFormat) || emptyAttendanceTime
+										}}
+									</rd-confirmable-pop-up>
+								</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Secretariat.StatusAbsentOut || 'Absent'"
+									[ngbPopover]="at.Secretariat.NoteOut"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
+								>
+									<rd-confirmable-pop-up
+										[title]="'Change Secretariat Out'"
+										[description]="changeAttendanceContent"
+										[autoClose]="false"
+										[canConfirm]="changeAttendanceForm.valid"
+										(confirm)="
+											confirmChangeAttendance(
+												at.Secretariat.AttendanceIdOut,
+												at.TraineeCode,
+												'Secretariat'
+											)
+										"
+									>
+										{{
+											(at.Secretariat.TraineeOut | date: attendanceTimeFormat) ||
+												emptyAttendanceTime
+										}}
+									</rd-confirmable-pop-up>
+								</td>
+								<td>{{ at.Room.TimeIn || '-' }}</td>
+								<td>{{ at.Room.TimeOut || '-' }}</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Room.StatusAbsentIn || 'Absent'"
+									[ngbPopover]="at.Room.NoteIn"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
+								>
+									<rd-confirmable-pop-up
+										[title]="'Change Room In'"
+										[description]="changeAttendanceContent"
+										[autoClose]="false"
+										[canConfirm]="changeAttendanceForm.valid"
+										(confirm)="
+											confirmChangeAttendance(at.Room.AttendanceIdIn, at.TraineeCode, 'Room')
+										"
+									>
+										{{ (at.Room.TraineeIn | date: attendanceTimeFormat) || emptyAttendanceTime }}
+									</rd-confirmable-pop-up>
+								</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Room.StatusAbsentOut || 'Absent'"
+									[ngbPopover]="at.Room.NoteOut"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
+								>
+									<rd-confirmable-pop-up
+										[title]="'Change Room Out'"
+										[description]="changeAttendanceContent"
+										[autoClose]="false"
+										[canConfirm]="changeAttendanceForm.valid"
+										(confirm)="
+											confirmChangeAttendance(at.Room.AttendanceIdOut, at.TraineeCode, 'Room')
+										"
+									>
+										{{ (at.Room.TraineeOut | date: attendanceTimeFormat) || emptyAttendanceTime }}
+									</rd-confirmable-pop-up>
+								</td>
+								<td>{{ at.Rest.TimeOut || '-' }}</td>
+								<td>{{ at.Rest.TimeIn || '-' }}</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Rest.StatusAbsentOut || 'Absent'"
+									[ngbPopover]="at.Rest.NoteOut"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
+								>
+									<rd-confirmable-pop-up
+										[title]="'Change Rest In'"
+										[description]="changeAttendanceContent"
+										[autoClose]="false"
+										[canConfirm]="changeAttendanceForm.valid"
+										(confirm)="
+											confirmChangeAttendance(at.Rest.AttendanceIdIn, at.TraineeCode, 'Rest')
+										"
+									>
+										{{ (at.Rest.TraineeOut | date: attendanceTimeFormat) || emptyAttendanceTime }}
+									</rd-confirmable-pop-up>
+								</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Rest.StatusAbsentIn || 'Absent'"
+									[ngbPopover]="at.Rest.NoteIn"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
+								>
+									<rd-confirmable-pop-up
+										[title]="'Change Rest Out'"
+										[description]="changeAttendanceContent"
+										[autoClose]="false"
+										[canConfirm]="changeAttendanceForm.valid"
+										(confirm)="
+											confirmChangeAttendance(at.Rest.AttendanceIdOut, at.TraineeCode, 'Rest')
+										"
+									>
+										{{ (at.Rest.TraineeIn | date: attendanceTimeFormat) || emptyAttendanceTime }}
+									</rd-confirmable-pop-up>
+								</td>
+								<td>
+									<rd-confirmable-pop-up
+										[title]="
+											at.FulldayPermission
+												? 'Remove All Day Permission?'
+												: 'Set Permission to All Day?'
+										"
+										[description]="changeFullDayPermissionTemplate"
+										(confirm)="toggleFullDayPermission(at)"
+										(cancel)="changeFullDayPermissionReason.reset()"
+										class="cursor-pointer"
+									>
+										{{ at.FulldayPermission ? '&#x2611;' : '&#x2610;' }}
+									</rd-confirmable-pop-up>
+								</td>
+								<td>
+									<div *ngFor="let permission of at.AttendanceTimePermission">
+										<span
+											[ngbPopover]="permission.Reason"
+											triggers="mouseenter:mouseleave"
+											container="body"
+										>
+											{{ permission.AttendanceDate | date: attendanceTimeFormat }}
+										</span>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- Without edit access -->
+					<table class="table table-sm table-striped text-center" *ngSwitchCase="false">
+						<thead>
+							<tr>
+								<th rowspan="3">Trainee</th>
+								<th colspan="4">Secretariat</th>
+								<th colspan="4">Room</th>
+								<th colspan="4">Rest</th>
+								<th rowspan="3" colspan="2">Permission</th>
+							</tr>
+							<tr>
+								<th colspan="2">Scheduled</th>
+								<th colspan="2">Registered</th>
+								<th colspan="2">Scheduled</th>
+								<th colspan="2">Registered</th>
+								<th colspan="2">Scheduled</th>
+								<th colspan="2">Registered</th>
+							</tr>
+							<tr>
+								<th>In</th>
+								<th>Out</th>
+								<th>In</th>
+								<th>Out</th>
+								<th>In</th>
+								<th>Out</th>
+								<th>In</th>
+								<th>Out</th>
+								<th>Out</th>
+								<th>In</th>
+								<th>Out</th>
+								<th>In</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(attendanceReport$ | async)?.Attendances.length === 0">
+								<td class="p-3" colspan="14">No data yet</td>
+							</tr>
+							<tr *ngFor="let at of (attendanceReport$ | async)?.Attendances">
+								<td class="trainee-details-hotspot">
+									<!-- [ngClass]="{ Permission: at.FulldayPermission }"  -->
+									<rd-trainee-detail-on-hover [traineeId]="at.TraineeId">
+										<a
+											[routerLink]="['#View/Trainee', at.TraineeId, 'false']"
+											class="pointer relative"
+										>
+											{{ at.TraineeCode }}
+										</a>
+									</rd-trainee-detail-on-hover>
+								</td>
+								<td>{{ at.Secretariat.TimeIn || '-' }}</td>
+								<td>{{ at.Secretariat.TimeOut || '-' }}</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Secretariat.StatusAbsentIn || 'Absent'"
+									[ngbPopover]="at.Secretariat.NoteIn"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
 								>
 									{{
 										(at.Secretariat.TraineeIn | date: attendanceTimeFormat) || emptyAttendanceTime
 									}}
-								</rd-confirmable-pop-up>
-							</td>
-							<td
-								[ngClass]="{ Permission: at.FulldayPermission }"
-								[class]="at.Secretariat.StatusAbsentOut || 'Absent'"
-								[ngbPopover]="at.Secretariat.NoteOut"
-								triggers="mouseenter:mouseleave"
-								placement="bottom"
-								container="body"
-							>
-								<rd-confirmable-pop-up
-									[title]="'Change Secretariat Out'"
-									[description]="changeAttendanceContent"
-									[autoClose]="false"
-									[canConfirm]="changeAttendanceForm.valid"
-									(confirm)="confirmChangeAttendance()"
-									(click)="
-										selectAttendanceToChange(
-											at.Secretariat.AttendanceIdOut,
-											at.TraineeCode,
-											'Secretariat'
-										)
-									"
+								</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Secretariat.StatusAbsentOut || 'Absent'"
+									[ngbPopover]="at.Secretariat.NoteOut"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
 								>
 									{{
 										(at.Secretariat.TraineeOut | date: attendanceTimeFormat) || emptyAttendanceTime
 									}}
-								</rd-confirmable-pop-up>
-							</td>
-							<td>{{ at.Room.TimeIn || '-' }}</td>
-							<td>{{ at.Room.TimeOut || '-' }}</td>
-							<td
-								[ngClass]="{ Permission: at.FulldayPermission }"
-								[class]="at.Room.StatusAbsentIn || 'Absent'"
-								[ngbPopover]="at.Room.NoteIn"
-								triggers="mouseenter:mouseleave"
-								placement="bottom"
-								container="body"
-							>
-								<rd-confirmable-pop-up
-									[title]="'Change Room In'"
-									[description]="changeAttendanceContent"
-									[autoClose]="false"
-									[canConfirm]="changeAttendanceForm.valid"
-									(confirm)="confirmChangeAttendance()"
-									(click)="selectAttendanceToChange(at.Room.AttendanceIdIn, at.TraineeCode, 'Room')"
+								</td>
+								<td>{{ at.Room.TimeIn || '-' }}</td>
+								<td>{{ at.Room.TimeOut || '-' }}</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Room.StatusAbsentIn || 'Absent'"
+									[ngbPopover]="at.Room.NoteIn"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
 								>
 									{{ (at.Room.TraineeIn | date: attendanceTimeFormat) || emptyAttendanceTime }}
-								</rd-confirmable-pop-up>
-							</td>
-							<td
-								[ngClass]="{ Permission: at.FulldayPermission }"
-								[class]="at.Room.StatusAbsentOut || 'Absent'"
-								[ngbPopover]="at.Room.NoteOut"
-								triggers="mouseenter:mouseleave"
-								placement="bottom"
-								container="body"
-							>
-								<rd-confirmable-pop-up
-									[title]="'Change Room Out'"
-									[description]="changeAttendanceContent"
-									[autoClose]="false"
-									[canConfirm]="changeAttendanceForm.valid"
-									(confirm)="confirmChangeAttendance()"
-									(click)="
-										selectAttendanceToChange(at.Room.AttendanceIdOut, at.TraineeCode, 'Room')
-									"
+								</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Room.StatusAbsentOut || 'Absent'"
+									[ngbPopover]="at.Room.NoteOut"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
 								>
 									{{ (at.Room.TraineeOut | date: attendanceTimeFormat) || emptyAttendanceTime }}
-								</rd-confirmable-pop-up>
-							</td>
-							<td>{{ at.Rest.TimeOut || '-' }}</td>
-							<td>{{ at.Rest.TimeIn || '-' }}</td>
-							<td
-								[ngClass]="{ Permission: at.FulldayPermission }"
-								[class]="at.Rest.StatusAbsentOut || 'Absent'"
-								[ngbPopover]="at.Rest.NoteOut"
-								triggers="mouseenter:mouseleave"
-								placement="bottom"
-								container="body"
-							>
-								<rd-confirmable-pop-up
-									[title]="'Change Rest In'"
-									[description]="changeAttendanceContent"
-									[autoClose]="false"
-									[canConfirm]="changeAttendanceForm.valid"
-									(confirm)="confirmChangeAttendance()"
-									(click)="selectAttendanceToChange(at.Rest.AttendanceIdIn, at.TraineeCode, 'Rest')"
+								</td>
+								<td>{{ at.Rest.TimeOut || '-' }}</td>
+								<td>{{ at.Rest.TimeIn || '-' }}</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Rest.StatusAbsentOut || 'Absent'"
+									[ngbPopover]="at.Rest.NoteOut"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
 								>
 									{{ (at.Rest.TraineeOut | date: attendanceTimeFormat) || emptyAttendanceTime }}
-								</rd-confirmable-pop-up>
-							</td>
-							<td
-								[ngClass]="{ Permission: at.FulldayPermission }"
-								[class]="at.Rest.StatusAbsentIn || 'Absent'"
-								[ngbPopover]="at.Rest.NoteIn"
-								triggers="mouseenter:mouseleave"
-								placement="bottom"
-								container="body"
-							>
-								<rd-confirmable-pop-up
-									[title]="'Change Rest Out'"
-									[description]="changeAttendanceContent"
-									[autoClose]="false"
-									[canConfirm]="changeAttendanceForm.valid"
-									(confirm)="confirmChangeAttendance()"
-									(click)="
-										selectAttendanceToChange(at.Rest.AttendanceIdOut, at.TraineeCode, 'Rest')
-									"
+								</td>
+								<td
+									[ngClass]="{ Permission: at.FulldayPermission }"
+									[class]="at.Rest.StatusAbsentIn || 'Absent'"
+									[ngbPopover]="at.Rest.NoteIn"
+									triggers="mouseenter:mouseleave"
+									placement="bottom"
+									container="body"
 								>
 									{{ (at.Rest.TraineeIn | date: attendanceTimeFormat) || emptyAttendanceTime }}
-								</rd-confirmable-pop-up>
-							</td>
-							<td>
-								<rd-confirmable-pop-up
-									[title]="
-										at.FulldayPermission
-											? 'Remove All Day Permission?'
-											: 'Set Permission to All Day?'
-									"
-									[description]="changeFullDayPermissionTemplate"
-									(confirm)="toggleFullDayPermission(at)"
-									(cancel)="changeFullDayPermissionReason.reset()"
-									class="cursor-pointer"
-								>
+								</td>
+								<td>
 									{{ at.FulldayPermission ? '&#x2611;' : '&#x2610;' }}
-								</rd-confirmable-pop-up>
-							</td>
-							<td>
-								<div *ngFor="let permission of at.AttendanceTimePermission">
-									<span
-										[ngbPopover]="permission.Reason"
-										triggers="mouseenter:mouseleave"
-										container="body"
-									>
-										{{ permission.AttendanceDate | date: attendanceTimeFormat }}
-									</span>
-									<!-- {{ permission.AttendanceDate | date: attendanceTimeFormat }} -
-									{{ permission.Reason }} -->
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+								</td>
+								<td>
+									<div *ngFor="let permission of at.AttendanceTimePermission">
+										<span
+											[ngbPopover]="permission.Reason"
+											triggers="mouseenter:mouseleave"
+											container="body"
+										>
+											{{ permission.AttendanceDate | date: attendanceTimeFormat }}
+										</span>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</ng-container>
 			</rd-card>
 		</div>
 	</div>

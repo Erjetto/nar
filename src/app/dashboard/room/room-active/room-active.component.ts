@@ -25,16 +25,16 @@ export class RoomActiveComponent extends DashboardContentBase implements OnInit,
 	}>;
 	rooms$: Observable<ClientRoom[]>;
 
-	loadingForm$ = new BehaviorSubject<boolean>(false);
-	loadingView$ = new BehaviorSubject<boolean>(false);
+	loadingForm$ = new BehaviorSubject(false);
+	loadingView$ = new BehaviorSubject(false);
 
 	roomTypes = ['Presentation', 'Room', 'Teaching'];
 	roomTransactionViewControl = this.fb.control(null);
 	insertRoomForm = this.fb.group({
-		Date: [DateHelper.dateToFormat(new Date()), Validators.required], // "3-27-2021"
+		Date: [DateHelper.dateToFormat(new Date())], // "3-27-2021"
 		Shift: [null, Validators.required],
 		PIC: [null, Validators.required],
-		Type: ['Presentation', Validators.required],
+		Type: ['Presentation'],
 		Zoom: [null],
 		RoomId: [null],
 	});

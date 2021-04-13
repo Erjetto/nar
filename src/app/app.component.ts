@@ -1,25 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Cookies } from './shared/constants/cookie.constants';
+import { LocalStorage } from './shared/constants/local-storage.constants';
 
 @Component({
-  selector: 'rd-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+	selector: 'rd-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit{
-  title = 'nar';
-  isDark = true;
+export class AppComponent implements OnInit {
+	title = 'nar';
+	isDark = true;
 
-  constructor(
-		private cookieService: CookieService,){
+	constructor(private cookieService: CookieService) {}
 
-  }
-
-  ngOnInit(){
+	ngOnInit() {
 		this.initiateTheme();
-    
-  }
+	}
 
 	toggleGreyMode(to?: boolean) {
 		this.isDark = to != null ? to : !this.isDark;
@@ -27,16 +23,15 @@ export class AppComponent implements OnInit{
 		if (this.isDark) document.body.classList.add('dark-theme');
 		else document.body.classList.remove('dark-theme');
 
-		this.cookieService.set(Cookies.DARK_THEME, this.isDark ? 'true' : 'false', Number.MAX_SAFE_INTEGER, '/');
+		LocalStorage.useDarkTheme(this.isDark);
 	}
 
 	initiateTheme() {
-    // Check from cookies first
-		if (this.cookieService.check(Cookies.DARK_THEME))
-			this.toggleGreyMode(this.cookieService.get(Cookies.DARK_THEME) === 'true');
+		// Check from cookies first
+		if (LocalStorage.useDarkTheme() !== undefined) this.toggleGreyMode(LocalStorage.useDarkTheme());
 		else if (window.matchMedia) {
-      // Get default theme from OS
-      this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			// Get default theme from OS
+			this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 			this.toggleGreyMode(this.isDark);
 		}
 	}

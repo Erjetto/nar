@@ -32,6 +32,14 @@ export class AttendanceStateEffects {
 	);
 
 	@Effect()
+	exportPeriodicAttendance$: Observable<Action> = this.actions$.pipe(
+		ofType(AttendanceStateAction.ExportPeriodicTraineeAttendancesForSubject),
+		switchMap((data) => this.attendanceService.ExportPeriodicTraineeAttendancesForSubject(data)),
+		mergeMap((filename) => of(MainStateAction.DownloadMemoryFile({ filename }))),
+		share()
+	);
+
+	@Effect()
 	changeAttendanceStatus$: Observable<Action> = this.actions$.pipe(
 		ofType(AttendanceStateAction.ChangeTraineeAttendanceStatus),
 		switchMap((data) => this.attendanceService.ChangeTraineeAttendanceStatus(data)),

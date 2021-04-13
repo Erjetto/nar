@@ -47,11 +47,14 @@ import {
 import { PresentationReportComponent } from './presentation/presentation-report/presentation-report.component';
 import { TraineeAttendanceReportComponent } from './trainee/trainee-attendance-report/trainee-attendance-report.component';
 import { PresentationSummaryComponent } from './presentation/presentation-summary/presentation-summary.component';
-import { map, mapTo, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, mapTo, tap, withLatestFrom } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ClientGeneration, ClientPhase, User } from '../shared/models';
-import { genDifferenceInSemester, TryGetCoreTrainingPhase } from '../shared/methods';
+import { allValuesNotEmpty, genDifferenceInSemester, TryGetCoreTrainingPhase } from '../shared/methods';
 import { RoomActiveComponent } from './room/room-active/room-active.component';
+import { isEmpty as _isEmpty } from 'lodash';
+import { TraineeSchedulesComponent } from './trainee/trainee-schedules/trainee-schedules.component';
+import { environment } from 'src/environments/environment';
 
 export const routes: Routes = [
 	{
@@ -174,6 +177,7 @@ export const routes: Routes = [
 						store.pipe(
 							select(fromMasterState.getPhases),
 							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+							filter(allValuesNotEmpty),
 							map(
 								([phases, user]: [ClientPhase[], User]) =>
 									user.Role.isAstSpv ||
@@ -193,6 +197,7 @@ export const routes: Routes = [
 					// 	store.pipe(
 					// 		select(fromMasterState.getPhases),
 					// 		withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+					// 		filter(values => values.every(v => !_isEmpty(v))),
 					// 		map(
 					// 			([phases, user]: [ClientPhase[], User]) =>
 					// 				user.Role.isAstSpv ||
@@ -264,16 +269,17 @@ export const routes: Routes = [
 					roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
 					name: 'Presentation',
 					// Hanya muncul kalo SPV dan sudah ada Phase 'Core'
-					validation: (store: Store<IAppState>): Observable<boolean> =>
-						store.pipe(
-							select(fromMasterState.getPhases),
-							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
-							map(
-								([phases, user]: [ClientPhase[], User]) =>
-									user.Role.isAstSpv ||
-									phases.find((p) => p.Description.includes('Core')) !== undefined
-							)
-						),
+					// validation: (store: Store<IAppState>): Observable<boolean> =>
+					// 	store.pipe(
+					// 		select(fromMasterState.getPhases),
+					// 		withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+					// 		filter(allValuesNotEmpty),
+					// 		map(
+					// 			([phases, user]: [ClientPhase[], User]) =>
+					// 				user.Role.isAstSpv ||
+					// 				phases.find((p) => p.Description.includes('Core')) !== undefined
+					// 		)
+					// 	),
 				},
 				children: [
 					{
@@ -349,31 +355,31 @@ export const routes: Routes = [
 				children: [
 					{
 						path: 'RoomAttendance.aspx',
-						redirectTo: '/RoomAttendance.aspx',
+						redirectTo: environment.apiUrl + 'RoomAttendance.aspx',
 						data: {
 							roles: RoleFlags.Dummy | RoleFlags.Trainee,
 							name: 'Room Attendance',
 							externalUrl: true,
 						},
 					},
-					{
-						path: 'RestAttendance.aspx',
-						redirectTo: '/RestAttendance.aspx',
-						data: {
-							roles: RoleFlags.Dummy | RoleFlags.Trainee,
-							name: 'Rest Attendance',
-							externalUrl: true,
-						},
-					},
-					{
-						path: 'Permission.aspx',
-						redirectTo: '/Permission.aspx',
-						data: {
-							roles: RoleFlags.Dummy | RoleFlags.Trainee,
-							name: 'Permission',
-							externalUrl: true,
-						},
-					},
+					// {
+					// 	path: 'RestAttendance.aspx',
+					// 	redirectTo: environment.apiUrl + 'RestAttendance.aspx',
+					// 	data: {
+					// 		roles: RoleFlags.Dummy | RoleFlags.Trainee,
+					// 		name: 'Rest Attendance',
+					// 		externalUrl: true,
+					// 	},
+					// },
+					// {
+					// 	path: 'Permission.aspx',
+					// 	redirectTo: environment.apiUrl + 'Permission.aspx',
+					// 	data: {
+					// 		roles: RoleFlags.Dummy | RoleFlags.Trainee,
+					// 		name: 'Permission',
+					// 		externalUrl: true,
+					// 	},
+					// },
 				],
 			},
 			{
@@ -392,21 +398,9 @@ export const routes: Routes = [
 					},
 					{
 						path: 'schedule',
-						redirectTo: '/home',
-						// component: null,
+						component: TraineeSchedulesComponent,
 						data: {
-							roles: RoleFlags.AssistantSupervisor | RoleFlags.SubjectCoordinator,
-							name: 'Schedule (-)',
-						},
-					},
-					{
-						path: 'binusian-data',
-						redirectTo: '/home',
-						// component: null,
-						data: {
-							roles: RoleFlags.AssistantSupervisor,
-							name: 'Binusian Data (-)',
-						},
+							roles: RoleFlags.AssistantSupervisor, name: 'Schedule' },
 					},
 				],
 			},
@@ -415,10 +409,11 @@ export const routes: Routes = [
 				data: {
 					name: 'Candidate',
 					// Hanya muncul kalo SPV dan trainer generasi yg jadi calon subco
-					// validation: (store: Store<IAppState>): Observable<boolean> => 
+					// validation: (store: Store<IAppState>): Observable<boolean> =>
 					// 	store.pipe(
 					// 		select(fromMainState.getCurrentGeneration),
 					// 		withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+					// filter(values => values.every(v => !_isEmpty(v))),
 					// 		map(([currGen, currUser]: [ClientGeneration, User]) => {
 					// 			if (!currGen || !currUser) return false;
 					// 			return (

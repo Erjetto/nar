@@ -18,6 +18,12 @@ export class TrainerService {
 			.pipe(map((res: any) => _map(res.d, ClientCaseTrainer.fromJson)));
 	}
 
+	public DownloadAllAnswers(data: { caseId: string }): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'DownloadAllAnswers', data)
+			.pipe(map((res: any) => res.d));
+	}
+
 	public GetCaseBySubject(data: { subjectId: string }): Observable<ClientCaseTrainer[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetCaseBySubject', data)

@@ -51,7 +51,7 @@ export class ViewAllPresentationComponent
 	currentSubject$: Subject<ClientSubject> = new Subject();
 	currentPhase$: Subject<ClientPhase> = new Subject();
 
-	showScoringForm$ = new BehaviorSubject<boolean>(false);
+	showScoringForm$ = new BehaviorSubject(false);
 	scoringForm = this.fb.group({
 		phaseId: ['', Validators.required],
 		subjectId: ['', Validators.required],
@@ -68,7 +68,7 @@ export class ViewAllPresentationComponent
 	subjectsLoading$: Observable<boolean>;
 	loadingPresentations$: Observable<boolean>;
 	loadingMyPresentations$: Observable<boolean>;
-	loadingViewPresentation$ = new BehaviorSubject<boolean>(false);
+	loadingViewPresentation$ = new BehaviorSubject(false);
 
 	constant = {
 		role: RoleFlags,

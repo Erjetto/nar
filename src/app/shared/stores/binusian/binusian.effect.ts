@@ -18,6 +18,7 @@ import { TraineeAttendanceService } from '../../services/new/trainee-attendance.
 import { ClientTrainee, User } from '../../models';
 import { IAppState } from 'src/app/app.reducer';
 import { InterviewService } from '../../services/new/interview.service';
+import { OtherService } from '../../services/new/other.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -30,14 +31,17 @@ export class BinusianStateEffects {
 		private generalService: GeneralService,
 		private traineeService: TraineeService,
 		private interviewService: InterviewService,
-		private traineeAttendanceService: TraineeAttendanceService
+		private traineeAttendanceService: TraineeAttendanceService,
+		private otherService: OtherService
 	) {}
 
 	@Effect()
 	getMyDailyAttendance$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchDailyAttendance),
 		switchMap(() => this.traineeAttendanceService.GetTraineeAttendanceForTrainee()),
-		mergeMap((results) => of(BinusianStateAction.FetchDailyAttendanceSuccess({payload: results}))),
+		mergeMap((results) =>
+			of(BinusianStateAction.FetchDailyAttendanceSuccess({ payload: results }))
+		),
 		share()
 	);
 
@@ -45,7 +49,9 @@ export class BinusianStateEffects {
 	getMyInterviewSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(BinusianStateAction.FetchMyInterviewSchedule),
 		switchMap(() => this.interviewService.GetInterviewSchedulesForTrainee()),
-		mergeMap((results) => of(BinusianStateAction.FetchMyInterviewScheduleSuccess({payload: results}))),
+		mergeMap((results) =>
+			of(BinusianStateAction.FetchMyInterviewScheduleSuccess({ payload: results }))
+		),
 		share()
 	);
 
@@ -90,6 +96,22 @@ export class BinusianStateEffects {
 		ofType(BinusianStateAction.FetchTraineesData),
 		switchMap(() => this.traineeService.GetTrainees()),
 		mergeMap((results) => of(BinusianStateAction.FetchTraineesDataSuccess({ payload: results }))),
+		share()
+	);
+
+	@Effect()
+	exportTraineesData$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.ExportTraineesData),
+		switchMap(() => this.traineeService.ExportTraineesData()),
+		mergeMap((filename) => of(MainStateAction.DownloadMemoryFile({ filename }))),
+		share()
+	);
+
+	@Effect()
+	exportTraineesSchedule$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.ExportTraineesSchedule),
+		switchMap((data) => this.traineeService.ExportTraineesSchedule(data)),
+		mergeMap((filename) => of(MainStateAction.DownloadMemoryFile({ filename }))),
 		share()
 	);
 

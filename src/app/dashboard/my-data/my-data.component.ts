@@ -41,7 +41,7 @@ Kota Samarinda Kalimatan Timur`;
 	];
 
 	myData$ = new BehaviorSubject<ClientTraineeData>(null);
-	loadingMyData$ = new BehaviorSubject<boolean>(false);
+	loadingMyData$ = new BehaviorSubject(false);
 
 	myDataForm = this.fb.group({
 		NameBasedOnIDCard: [''],

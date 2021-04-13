@@ -29,6 +29,9 @@
 				<div class="col-3">Major</div>
 				<div class="col">{{ trainee.Major }}</div>
 			</div>
+			<div class="row p-2" *ngIf="trainee.DeactivateReasons[0] != undefined">
+				<div class="col">{{ trainee.DeactivateReasons[0].Reason }}</div>
+			</div>
 			<div class="row">
 				<div class="col">
 					<div

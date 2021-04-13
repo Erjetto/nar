@@ -14,7 +14,8 @@ export class TableColumnComponent implements AfterContentInit {
 	@Input() colspan = 1;
 	@Input() columnClass: any | string;
 	@Input() cellClass: any | string;
-  @Input() sortState: SortDirection = '';
+	@Input() sortState: SortDirection = '';
+	@Input() width = 0;
   @Input() formulaFunction: (_:any) => string; // For custom value
   
   @ContentChildren(TableTemplateDirective) templates: QueryList<TableTemplateDirective>;

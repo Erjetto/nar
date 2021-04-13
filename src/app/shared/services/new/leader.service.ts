@@ -279,7 +279,6 @@ export class LeaderService {
 			.pipe(map((res: any) => res.d === true));
 	}
 
-	// QUESTION: Will passing Date work?
 	public SaveTopBottomVoteSchedule(data: {
 		scheduleName: string;
 		startDate: Date;
@@ -317,6 +316,12 @@ export class LeaderService {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteTopBottomVoteSchedule', data)
 			.pipe(map((res: any) => res.d === true));
+	}
+
+	public ExportTopBottomVoteResult(data: { scheduleId: string }): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'ExportTopBottomVoteResult', data)
+			.pipe(map((res: any) => res.d));
 	}
 
 	// ZipModel

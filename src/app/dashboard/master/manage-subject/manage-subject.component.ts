@@ -12,7 +12,7 @@ import {
 	MainStateEffects,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
-import { map, takeUntil, withLatestFrom, tap } from 'rxjs/operators';
+import { map, takeUntil, withLatestFrom, tap, filter } from 'rxjs/operators';
 import { NgModel, NgForm, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -27,7 +27,7 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 	phases$: Observable<ClientPhase[]>;
 
 	loadingViewSubject$: Observable<boolean>;
-	loadingFormSubject$ = new BehaviorSubject<boolean>(false);
+	loadingFormSubject$ = new BehaviorSubject(false);
 
 	viewCurrentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
@@ -60,7 +60,14 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 
 	ngOnInit(): void {
 		//#region Bind to store
-		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
+		this.phases$ = this.store.pipe(
+			select(fromMasterState.getPhases),
+			filter((res) => !_isEmpty(res)),
+			tap((res) => {
+				this.viewCurrentPhase$.next(res[0]); // Auto first in ng-select
+				this.subjectForm.get('phaseId').setValue(res[0]?.PhaseId);
+			}) 
+		);
 		this.subjectsEntity$ = this.store.pipe(select(fromMasterState.getSubjectsEntity));
 		this.loadingViewSubject$ = this.store.pipe(
 			select(fromMasterState.getMasterState),
@@ -79,13 +86,6 @@ export class ManageSubjectComponent extends DashboardContentBase implements OnIn
 				}
 			})
 		);
-		//#endregion
-
-		//#region Auto select first in array
-		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((phases) => {
-			this.viewCurrentPhase$.next(phases[0]);
-			this.subjectForm.get('phaseId').setValue(phases[0]?.PhaseId);
-		});
 		//#endregion
 
 		//#region Subscribe to effects

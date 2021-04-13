@@ -13,7 +13,8 @@ import {
 	MainStateEffects,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
-import { takeUntil, withLatestFrom } from 'rxjs/operators';
+import { filter, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { isEmpty as _isEmpty } from 'lodash';
 
 @Component({
 	selector: 'rd-manage-phase',
@@ -35,8 +36,8 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 	traineeInPhase$: Observable<ClientTrainee[]>;
 	phases$: Observable<ClientPhase[]>;
 
-	loadingInsertPhase$ = new BehaviorSubject<boolean>(false);
-	loadingInsertTraineeInPhase$ = new BehaviorSubject<boolean>(false);
+	loadingInsertPhase$ = new BehaviorSubject(false);
+	loadingInsertTraineeInPhase$ = new BehaviorSubject(false);
 	loadingViewTraineeInPhase$: Observable<boolean>;
 	loadingViewPhases$: Observable<boolean>;
 
@@ -49,19 +50,20 @@ export class ManagePhaseComponent extends DashboardContentBase implements OnInit
 	}
 
 	ngOnInit(): void {
-		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.traineeInPhase$ = fromMasterState.getTraineeInPhaseFromEntity(this.store, this.currentPhase$);
+		this.phases$ = this.store.pipe(
+			select(fromMasterState.getPhases),
+			filter((res) => !_isEmpty(res)),
+			tap((res) => this.currentPhase$.next(res[0])) // Auto first in select
+		);
+		this.traineeInPhase$ = fromMasterState.getTraineeInPhaseFromEntity(
+			this.store,
+			this.currentPhase$
+		);
 
 		this.loadingViewPhases$ = this.store.pipe(select(fromMasterState.isPhasesLoading));
 		this.loadingViewTraineeInPhase$ = this.store.pipe(
 			select(fromMasterState.isTraineeInPhaseLoading)
 		);
-
-		//#region Auto select first in array
-		this.phases$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((phases) => this.currentPhase$.next(phases[0]));
-		//#endregion
 
 		//#region Subscribe to effects
 		// Remove Loading

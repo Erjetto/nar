@@ -49,7 +49,7 @@ export class ModifyInterviewMaterialComponent
 	interviewMaterials$: Observable<InterviewMaterial[]>;
 
 	loadingViewInterviewMaterial$: Observable<boolean>;
-	loadingFormInterviewMaterial$ = new BehaviorSubject<boolean>(false);
+	loadingFormInterviewMaterial$ = new BehaviorSubject(false);
 
 	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
 

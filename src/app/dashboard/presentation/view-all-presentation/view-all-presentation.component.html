@@ -4,7 +4,7 @@
 			<rd-card
 				[cardTitle]="'Search Presentation'"
 				[isLoading]="false"
-				[expanded]="(currentUser$ | async)?.Role.is(constant.role.Trainee) == false"
+				*ngIf="(currentUser$ | async)?.Role.is(constant.role.Trainee) == false"
 			>
 				<div class="col v-list-m-12 v-list-bordered px-0">
 					<div class="row">
@@ -58,7 +58,7 @@
 			</rd-card>
 			<rd-card
 				[cardTitle]="'My Presentations'"
-				[isLoading]="loadingMyPresentations$|async"
+				[isLoading]="loadingMyPresentations$ | async"
 				*ngIf="(currentUser$ | async)?.Role.is(constant.role.Trainee)"
 			>
 				<div class="col v-list-m-12 v-list-bordered px-0">
@@ -95,7 +95,7 @@
 				[formGroup]="scoringForm"
 				[isLoading]="loadingViewPresentation$ | async"
 			>
-				<div rdCardBadges>
+				<div rdCardBadges *ngIf="(currentUser$ | async)?.Role.is(constant.role.Trainee) == false">
 					<!-- Button hanya kalau blum di-score & bukan utk trainee -->
 					<button
 						class="btn btn-sm btn-primary mr-1"
@@ -303,10 +303,7 @@
 							>
 								<!-- currentGenId="(currentGeneration$ | async)?.GenerationId" -->
 								<!-- TODO: Add role validation here (!= Trainee) -->
-								<div
-									class="actions"
-									*ngIf="(currentUser$ | async)?.Role.isAstSpv"
-								>
+								<div class="actions" *ngIf="(currentUser$ | async)?.Role.isAstSpv">
 									<rd-confirmable-pop-up
 										[description]="deleteReasonTemplate"
 										[title]="'Delete this question?'"

@@ -64,7 +64,7 @@ export class LogBookComponent extends DashboardContentBase implements OnInit, On
 	viewCurrentLogBook$ = new BehaviorSubject<LogBookPIC>(null);
 
 	loadingLogBook$: Observable<boolean>;
-	loadingLogBookForm$ = new BehaviorSubject<boolean>(false);
+	loadingLogBookForm$ = new BehaviorSubject(false);
 
 	constructor(
 		protected store: Store<IAppState>,

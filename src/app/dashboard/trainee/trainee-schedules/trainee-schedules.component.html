@@ -1,0 +1,79 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col">
+			<rd-card
+				[cardTitle]="'Trainee Schedules'"
+				[isLoading]="loadingTraineeSchedule$ | async"
+				[formGroup]="form"
+			>
+				<!-- <div class="row mb-2">
+					<div class="col-2 col-form-label">Phase</div>
+					<div class="col-4">
+						<ng-select
+							[items]="phases$ | async"
+							[searchable]="false"
+							[clearable]="false"
+						></ng-select>
+					</div>
+				</div> -->
+				<div class="row mb-2">
+					<div class="col-2 col-form-label">Phase</div>
+					<div class="col-4">
+						<ng-select
+							[items]="period"
+							[searchable]="false"
+							[clearable]="false"
+							bindLabel="key"
+							bindValue="value"
+							formControlName="period"
+						></ng-select>
+					</div>
+				</div>
+				<div class="row mb-2">
+					<div class="col-2 col-form-label">Trainee</div>
+					<div class="col-4">
+						<ng-select
+							[items]="trainees$ | async"
+							[clearable]="false"
+							bindValue="TraineeNumber"
+							formControlName="binusianNumber"
+						>
+							<ng-template ng-label-tmp let-item="item">
+								<span>{{ item.codeAndName }}</span>
+							</ng-template>
+							<ng-template ng-option-tmp let-item="item" let-index="index">
+								<span>{{ item.codeAndName }}</span>
+							</ng-template>
+						</ng-select>
+					</div>
+				</div>
+				<div class="row mb-2">
+					<div class="col-2 col-form-label">From</div>
+					<div class="col-4">
+						<input type="date" class="form-control" formControlName="startDate" />
+					</div>
+				</div>
+				<div class="row mb-2">
+					<div class="col-2 col-form-label">To</div>
+					<div class="col-4">
+						<input type="date" class="form-control" formControlName="endDate" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6 text-right">
+						<button class="btn bg-excel" [disabled]="form.invalid" (click)="exportSchedule()">
+							Export into Excel
+						</button>
+					</div>
+				</div>
+			</rd-card>
+			<rd-card
+				[cardTitle]="'Trainee Schedules Header (-)'"
+				[isLoading]="false"
+				[expanded]="false"
+				[collapsible]="false"
+			>
+			</rd-card>
+		</div>
+	</div>
+</div>

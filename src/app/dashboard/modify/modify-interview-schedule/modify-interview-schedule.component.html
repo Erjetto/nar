@@ -1,10 +1,10 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col">
-			<rd-card 
-				[cardTitle]="'Insert/Update Interview Schedule'" 
+			<rd-card
+				[cardTitle]="'Insert/Update Interview Schedule'"
 				[expanded]="false"
-				*ngIf="(currentUser$|async)?.Role.isAstSpv"
+				*ngIf="(currentUser$ | async)?.Role.isAstSpv"
 			>
 				<div class="row">
 					<div class="col">
@@ -74,11 +74,11 @@
 				[isLoading]="loadingViewInterviewSchedules$ | async"
 				[expanded]="(currentInterviewSchedule$ | async) == null"
 			>
-        <div rdCardBadges>
-          <button class="btn btn-sm btn-secondary" (click)="refreshInterviewSchedules()">
-            <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Refresh
-          </button>
-        </div>
+				<div rdCardBadges>
+					<button class="btn btn-sm btn-secondary" (click)="refreshInterviewSchedules()">
+						<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Refresh
+					</button>
+				</div>
 				<div class="row pb-2">
 					<b>Legends: </b>
 					<span class="reject legend"></span> Rej ({{
@@ -106,11 +106,11 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngIf="(interviewScheduleReport$ | async)?.Schedules.length === 0">
+							<tr *ngIf="(filteredInterviewSchedules$ | async)?.length === 0">
 								<td class="p-3" colspan="10">No schedules yet</td>
 							</tr>
 							<tr
-								*ngFor="let interview of (interviewScheduleReport$ | async)?.Schedules"
+								*ngFor="let interview of filteredInterviewSchedules$ | async"
 								class="cursor-pointer"
 								(click)="showInterviewResult(interview)"
 							>

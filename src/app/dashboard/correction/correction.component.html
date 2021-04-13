@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col">
 			<rd-card [cardTitle]="'Case List'" [isLoading]="loadingViewCases$ | async">
-				<div class="row mb-3">
+				<div class="row mb-3" *ngIf="!(isTrainerOrJunior$ | async); else correctorFormControl">
 					<div class="col-4">
 						<ng-select
 							[items]="phases$ | async"
@@ -35,12 +35,27 @@
 						</button>
 					</div>
 				</div>
+				<ng-template #correctorFormControl>
+					<div class="row mb-3">
+						<div class="col-5">
+							<ng-select
+								[items]="phases$ | async"
+								[clearable]="false"
+								[searchable]="false"
+								bindLabel="Description"
+								[ngModel]="viewCurrentPhase$ | async"
+								(change)="viewCurrentPhase$.next($event)"
+								placeholder="Phase"
+							></ng-select>
+						</div>
+					</div>
+				</ng-template>
 				<div class="row">
 					<table class="table table-sm table-striped table-hover text-center">
 						<thead>
 							<tr>
 								<th>Name</th>
-								<th>Date</th>
+								<th>Correction Date</th>
 								<th>Corrector(s)</th>
 								<th>Case File</th>
 								<th>Completed</th>
@@ -57,7 +72,10 @@
 								(click)="showScoringForCase(case)"
 							>
 								<td>{{ case.CaseName }}</td>
-								<td>{{ case.ScheduleDate | date: scheduleDateFormat }}</td>
+								<td>
+									{{ case.StartDate | date: startDateFormat }} -
+									{{ case.Deadline | date: getDeadlineFormat(case.StartDate, case.Deadline) }}
+								</td>
 								<td>{{ case.Corrector.join(', ') }}</td>
 								<td><a [href]="case.downloadLink">Download</a></td>
 								<td>{{ case.Done }} of {{ case.All }}</td>

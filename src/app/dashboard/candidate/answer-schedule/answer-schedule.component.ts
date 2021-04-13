@@ -42,8 +42,8 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 	questionModel$: Observable<SubcoCandidateQuestionModel>;
 
 	loadingViewSchedule$: Observable<boolean>;
-	loadingViewScheduleDetail$ = new BehaviorSubject<boolean>(false);
-	loadingFormSchedule$ = new BehaviorSubject<boolean>(false);
+	loadingViewScheduleDetail$ = new BehaviorSubject(false);
+	loadingFormSchedule$ = new BehaviorSubject(false);
 	genOneYearLower$: Observable<string>;
 
 	constructor(

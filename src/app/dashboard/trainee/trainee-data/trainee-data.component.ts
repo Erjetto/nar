@@ -52,5 +52,9 @@ export class TraineeDataComponent extends DashboardContentBase implements OnInit
   
   showTraineeData(data: ClientTraineeData){
     this.currentTrainee$.next(data);
-  }
+	}
+	
+	exportTraineeData(){
+		this.store.dispatch(BinusianStateAction.ExportTraineesData());
+	}
 }

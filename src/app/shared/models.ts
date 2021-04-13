@@ -116,7 +116,7 @@ export class ClientGeneration extends BaseModel {
 	) {
 		super();
 	}
-	public get yearRange() {
+	get yearRange() {
 		return `${this.Year - 1}/${this.Year}`;
 	}
 	static fromJson(data?: any): ClientGeneration {
@@ -166,7 +166,7 @@ export class ClientSchedule extends BaseModel {
 	) {
 		super();
 	}
-	public get scheduleType() {
+	get scheduleType() {
 		return this.IsSpecific ? 'Specific' : 'Daily';
 	}
 
@@ -215,7 +215,7 @@ export class ClientTrainee extends BaseModel {
 		return Object.assign(new ClientTrainee(), data);
 	}
 
-	public get codeAndName() {
+	get codeAndName() {
 		return this.TraineeCode + ' - ' + this.TraineeName;
 	}
 }
@@ -323,7 +323,7 @@ export class AdditionalTraineeData extends BaseModel {
 	) {
 		super();
 	}
-	public get FileName() {
+	get FileName() {
 		return this.GenerationId + '|' + this.TraineeId;
 	}
 	static fromJson(data?: any): AdditionalTraineeData {
@@ -342,6 +342,9 @@ export class SimpleTraineeData extends BaseModel {
 		public TraineeNumber = ''
 	) {
 		super();
+	}
+	get codeAndName() {
+		return this.TraineeCode + ' - ' + this.TraineeName;
 	}
 	get isActive() {
 		return this.DeactivateReason === null;
@@ -362,6 +365,7 @@ export class ClientTraineeData extends BaseModel {
 		public TraineeCode = '',
 		public TraineeName = '',
 		public TraineeNumber = '',
+		public Email = '',
 		public Major = '',
 		public Gender = '',
 		public Scores: ClientTraineeDataScore[] = [],
@@ -1287,7 +1291,7 @@ export class Message extends BaseModel {
 	) {
 		super();
 	}
-	public get contentAndAttachmentHTML() {
+	get contentAndAttachmentHTML() {
 		return (
 			`<p>${this.Note}</p>` +
 			(this.HasFile
@@ -1695,7 +1699,7 @@ export class ClientInterviewSchedule extends BaseModel {
 	) {
 		super();
 	}
-	public get startToEndTime() {
+	get startToEndTime() {
 		return this.StartTime + ' - ' + this.EndTime;
 	}
 	static fromJson(data: any) {

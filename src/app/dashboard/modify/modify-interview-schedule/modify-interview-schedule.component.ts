@@ -4,12 +4,13 @@ import {
 	ClientInterviewSchedule,
 	ClientInterviewQuestion,
 	ClientInterviewResult,
+	User,
 } from 'src/app/shared/models';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable, merge } from 'rxjs';
+import { BehaviorSubject, Observable, merge, combineLatest } from 'rxjs';
 import {
 	MainStateEffects,
 	MainStateAction,
@@ -17,9 +18,9 @@ import {
 	InterviewStateAction,
 	fromInterviewState,
 } from 'src/app/shared/store-modules';
-import { takeUntil, filter, withLatestFrom } from 'rxjs/operators';
+import { takeUntil, filter, withLatestFrom, map } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
-import { adjustControlsInFormArray } from 'src/app/shared/methods';
+import { adjustControlsInFormArray, allValuesNotEmpty } from 'src/app/shared/methods';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { Router } from '@angular/router';
 
@@ -63,12 +64,13 @@ export class ModifyInterviewScheduleComponent
 	grade$ = new BehaviorSubject<string>('');
 
 	interviewScheduleReport$: Observable<ClientInterviewReport>;
+	filteredInterviewSchedules$: Observable<ClientInterviewSchedule[]>;
 	interviewQuestions$: Observable<ClientInterviewQuestion[]>;
 	loadingInterviewScheduleReport$: Observable<boolean>;
 
-	loadingViewInterviewSchedules$ = new BehaviorSubject<boolean>(false);
-	loadingFormInterviewSchedules$ = new BehaviorSubject<boolean>(false);
-	loadingFormInterviewResult$ = new BehaviorSubject<boolean>(false);
+	loadingViewInterviewSchedules$ = new BehaviorSubject(false);
+	loadingFormInterviewSchedules$ = new BehaviorSubject(false);
+	loadingFormInterviewResult$ = new BehaviorSubject(false);
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -89,6 +91,20 @@ export class ModifyInterviewScheduleComponent
 			select(fromInterviewState.isInterviewSchedulesReportLoading)
 		);
 		this.interviewQuestions$ = this.store.pipe(select(fromInterviewState.getInterviewQuestions));
+
+		this.filteredInterviewSchedules$ = combineLatest([
+			this.interviewScheduleReport$,
+			this.currentUser$,
+		]).pipe(
+			filter(allValuesNotEmpty),
+			map(([report, user]: [ClientInterviewReport, User]) =>
+				user.Role.isAstSpv
+					? report.Schedules
+					: report.Schedules.filter((sch) =>
+							`${sch.MainInterviewer} ${sch.CoInterviewer}`.includes(user.UserName)
+					  )
+			)
+		);
 
 		// Add subscription to subject
 		this.store
@@ -132,10 +148,7 @@ export class ModifyInterviewScheduleComponent
 
 		// Update total & grade
 		this.QuestionsFormArr.valueChanges
-			.pipe(
-				filter((vals) => vals.every((v) => !_isEmpty(v))),
-				takeUntil(this.destroyed$)
-			)
+			.pipe(filter(allValuesNotEmpty), takeUntil(this.destroyed$))
 			.subscribe((arr) => {
 				const total = arr.reduce((prev, curr, idx) => prev + +curr * this.weights[idx], 0);
 
@@ -222,11 +235,11 @@ export class ModifyInterviewScheduleComponent
 
 	showInterviewResult(schedule: ClientInterviewSchedule) {
 		this.currentInterviewSchedule$.next(schedule);
-  }
-  
-  refreshInterviewSchedules(){
-    this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport());
-  }
+	}
+
+	refreshInterviewSchedules() {
+		this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport());
+	}
 
 	save() {
 		const {

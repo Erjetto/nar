@@ -38,7 +38,7 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 	subjectList$: Observable<ClientSubject[]>;
 	caseList$: Observable<ClientCaseTrainee>;
 
-	loadingPage$ = new BehaviorSubject<boolean>(false);
+	loadingPage$ = new BehaviorSubject(false);
 	uploadForms = this.fb.array([]);
 
 	constructor(
@@ -51,11 +51,19 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 
 	ngOnInit(): void {
 		//#region Bind to store
-		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
+		this.phases$ = this.store.pipe(
+			select(fromMasterState.getPhases),
+			filter((res) => !_isEmpty(res)),
+			tap((res) => this.currentViewPhase$.next(res[0])) // Auto first in ng-select
+		);
 
 		this.subjectList$ = fromMasterState
 			.getSubjectsFromEntity(this.store, this.currentViewPhase$)
-			.pipe(map((subs) => [new ClientSubject('All'), ...subs]));
+			.pipe(
+				filter((res) => !_isEmpty(res)),
+				map((subs) => [new ClientSubject('All'), ...subs]),
+				tap((res) => this.currentViewSubject$.next(res[0])) // Auto first in ng-select
+			);
 
 		this.caseList$ = this.store.pipe(
 			select(fromCaseState.getClientCaseTrainees),
@@ -78,14 +86,6 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 
 		//#endregion
 
-		//#region auto select first in array
-		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.currentViewPhase$.next(res[0]);
-		});
-		this.subjectList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.currentViewSubject$.next(res[0]);
-		});
-
 		// Reload cases ketika submit atau ubah subject
 		merge(this.currentViewSubject$, this.caseEffects.submitTraineeAnswer$)
 			.pipe(
@@ -101,7 +101,6 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 					})
 				);
 			});
-		//#endregion
 
 		//#region Subscribe to effects
 		// this.mainEffects.afterRequest$

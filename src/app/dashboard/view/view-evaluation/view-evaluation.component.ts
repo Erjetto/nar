@@ -27,7 +27,7 @@ import {
 	AttendanceStateEffects,
 } from 'src/app/shared/store-modules';
 import { takeUntil, map, filter } from 'rxjs/operators';
-import { isEmpty as _isEmpty, sortBy as _sortBy} from 'lodash';
+import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 
 @Component({
 	selector: 'rd-view-evaluation',
@@ -38,7 +38,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	detailedViewDateFormat = 'dd-MM-yyyy HH:mm:ss';
 	viewDateFormat = 'dd MMM yyyy';
 	attendanceTimeFormat = DateHelper.FULL_TIME_FORMAT;
-	emptyAttendanceTime = '00:00:00'
+	emptyAttendanceTime = '00:00:00';
 
 	// currentDate = new FormControl(DateHelper.dateToInputFormat(new Date()));
 	currentDate = this.fb.control(DateHelper.dateToFormat(new Date()));
@@ -53,12 +53,8 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		evalType: [null, Validators.required],
 	});
 	changeAttendanceForm = this.fb.group({
-		attendanceId: ['', Validators.required],
 		status: ['Present', Validators.required],
 		note: ['', Validators.required],
-		traineeCode: ['', Validators.required],
-		attType: ['', Validators.required],
-		attendanceDate: ['', Validators.required],
 	});
 	changeFullDayPermissionReason = this.fb.control('', Validators.required);
 
@@ -76,8 +72,8 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	loadingEvaluations$: Observable<boolean>;
 
 	//
-	loadingViewEvaluations$ = new BehaviorSubject<boolean>(false);
-	loadingViewAttendances$ = new BehaviorSubject<boolean>(false);
+	loadingViewEvaluations$ = new BehaviorSubject(false);
+	loadingViewAttendances$ = new BehaviorSubject(false);
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -189,7 +185,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		this.loadingViewEvaluations$.next(true);
 		this.store.dispatch(
 			NoteStateAction.DeleteEvaluationNote({
-        noteId: note.NoteId,
+				noteId: note.NoteId,
 			})
 		);
 	}
@@ -198,7 +194,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		this.loadingViewAttendances$.next(true);
 	}
 
-	confirmChangeAttendance() {
+	confirmChangeAttendance(attendanceId, traineeCode, attType) {
 		/*
     Example value:
     attType: "Secretariat"​
@@ -209,17 +205,16 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
     traineeCode: "T080"
     */
 		this.store.dispatch(
-			AttendanceStateAction.ChangeTraineeAttendanceStatus(this.changeAttendanceForm.value)
+			AttendanceStateAction.ChangeTraineeAttendanceStatus({
+				...this.changeAttendanceForm.value,
+				attendanceId,
+				traineeCode,
+				attType,
+				attendanceDate: this.currentDate.value,
+			})
 		);
 	}
-	selectAttendanceToChange(attendanceId, traineeCode, attType) {
-		this.changeAttendanceForm.patchValue({
-			attendanceId,
-			traineeCode,
-			attType,
-			attendanceDate: this.currentDate.value,
-		});
-	}
+
 	cancelAttendanceChange() {
 		this.changeAttendanceForm.reset();
 	}

@@ -49,10 +49,10 @@ export class ModifyTraineeScheduleComponent
 	insertTraineeAttendanceText = this.fb.control('', Validators.required);
 	insertLectureScheduleText = this.fb.control('', Validators.required);
 
-	loadingFormInsertTeachingSchedule$ = new BehaviorSubject<boolean>(false);
-	loadingFormInsertTrainingSchedule$ = new BehaviorSubject<boolean>(false);
-	loadingFormInsertTraineeAttendance$ = new BehaviorSubject<boolean>(false);
-	loadingFormInsertLectureSchedule$ = new BehaviorSubject<boolean>(false);
+	loadingFormInsertTeachingSchedule$ = new BehaviorSubject(false);
+	loadingFormInsertTrainingSchedule$ = new BehaviorSubject(false);
+	loadingFormInsertTraineeAttendance$ = new BehaviorSubject(false);
+	loadingFormInsertLectureSchedule$ = new BehaviorSubject(false);
 
 	//#region TraineeSchedule Data
 	viewTrainerTeachingSchedule$: Observable<TrainerTeachingSchedule[]>;
@@ -196,6 +196,7 @@ export class ModifyTraineeScheduleComponent
 		)
 	}
 	deleteTraineeTrainingSchedule(schedule: TraineeSchedule) {
+		this.loadingFormInsertTrainingSchedule$.next(true);
 		this.store.dispatch(
 			MasterStateAction.DeleteTraineeSchedules({ 
 				traineeScheduleIds: [schedule.TraineeScheduleId],
@@ -204,6 +205,7 @@ export class ModifyTraineeScheduleComponent
 		);
 	}
 	massDeleteTraineeTrainingSchedule() {
+		this.loadingFormInsertTrainingSchedule$.next(true);
 		this.store.dispatch(
 			MasterStateAction.DeleteTraineeSchedules({ 
 				traineeScheduleIds: this.selectedTraineeSchedules.map(s => s.TraineeScheduleId),

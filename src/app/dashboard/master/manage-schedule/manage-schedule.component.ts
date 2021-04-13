@@ -1,11 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ClientPhase, ClientSubject, ClientSchedule, ClientTrainee } from 'src/app/shared/models';
-import {
-	takeUntil,
-	withLatestFrom,
-	filter,
-	distinctUntilChanged,
-} from 'rxjs/operators';
+import { takeUntil, withLatestFrom, filter, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -17,13 +12,9 @@ import {
 	MainStateEffects,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
-import {
-	FormBuilder,
-	Validators,
-	FormArray,
-	FormControl,
-} from '@angular/forms';
+import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { isEmpty as _isEmpty } from 'lodash';
+import { adjustControlsInFormArray, allValuesNotEmpty } from 'src/app/shared/methods';
 
 /*
 NOTE: Schedule HAS NO UPDATE
@@ -93,10 +84,10 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 
 	traineeInSchedule$: Observable<ClientTrainee[]>;
 
-	loadingFormSchedule$ = new BehaviorSubject<boolean>(false);
-	loadingFormTraineeInSchedule$ = new BehaviorSubject<boolean>(false);
-	loadingViewSchedule$ = new BehaviorSubject<boolean>(false);
-	loadingViewTraineeInSchedule$ = new BehaviorSubject<boolean>(false);
+	loadingFormSchedule$ = new BehaviorSubject(false);
+	loadingFormTraineeInSchedule$ = new BehaviorSubject(false);
+	loadingViewSchedule$ = new BehaviorSubject(false);
+	loadingViewTraineeInSchedule$ = new BehaviorSubject(false);
 	loadingSubject$: Observable<boolean>;
 	loadingSchedule$: Observable<boolean>;
 	phases$: Observable<ClientPhase[]>;
@@ -120,10 +111,12 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			.valueChanges.subscribe((val) => this.updateScheduleDates(val));
 
 		//#region Bind to store
-		// this.subjectsEntity$ = this.store.pipe(select(fromMasterState.getSubjectsEntity));
-		// this.schedulesEntity$ = this.store.pipe(select(fromMasterState.getSchedulesEntity));
-
-		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
+		
+		this.phases$ = this.store.pipe(
+			select(fromMasterState.getPhases),
+			filter((res) => !_isEmpty(res)),
+			tap((res) => this.viewCurrentPhase$.next(res[0])) // Auto first in select
+		);
 		this.loadingSchedule$ = this.store.pipe(select(fromMasterState.isSchedulesLoading));
 		this.loadingSubject$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
 
@@ -132,54 +125,21 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			.pipe(select(fromMasterState.isTraineeInScheduleLoading), takeUntil(this.destroyed$))
 			.subscribe(this.loadingViewTraineeInSchedule$);
 
-		// this.loadingSchedule$
-		// 	.pipe(takeUntil(this.destroyed$))
-		// 	.subscribe(this.loadingViewSchedule$);
 		//#endregion
 
 		//#region Get from entity, and show reload animation
-		this.viewSubjectList$ = fromMasterState.getSubjectsFromEntity(
-      this.store,
-			this.viewCurrentPhase$,
-			this.loadingViewSchedule$
-		);
-		this.viewScheduleList$ = fromMasterState.getSchedulesFromEntity(
-      this.store,
-			this.viewCurrentSubject$,
-			this.loadingViewSchedule$
-		);
-		//#endregion
-
-		//#region Auto select first in array
-		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((phases) => {
-			// this.scheduleForm.get('phase').setValue(phases[0]);
-			// this.insertTraineeInScheduleForm.get('phase').setValue(phases[0]);
-			this.viewCurrentPhase$.next(phases[0]);
-		});
-
-		// this.formSubjectList$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
-		// 	this.scheduleForm.get('subjectId').setValue(subjects[0]?.SubjectId);
-		// });
-
-		this.viewSubjectList$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
-			this.viewCurrentSubject$.next(subjects[0]);
-		});
-
-		this.viewScheduleList$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((schedules) => this.viewCurrentSchedule$.next(schedules[0]));
-
-		// Insert Trainee in Schedule Form
-		// this.insertTraineeSubjectList$
-		// 	.pipe(takeUntil(this.destroyed$))
-		// 	.subscribe((subjects) =>
-		// 		this.insertTraineeInScheduleForm.get('subject').setValue(subjects[0])
-		// 	);
-		// this.insertTraineeScheduleList$
-		// 	.pipe(takeUntil(this.destroyed$))
-		// 	.subscribe((schedules) =>
-		// 		this.insertTraineeInScheduleForm.get('schedule').setValue(schedules[0])
-		// 	);
+		this.viewSubjectList$ = fromMasterState
+			.getSubjectsFromEntity(this.store, this.viewCurrentPhase$, this.loadingViewSchedule$)
+			.pipe(
+				filter((res) => !_isEmpty(res)),
+				tap((res) => this.viewCurrentSubject$.next(res[0])) // Auto first in ng-select
+			);
+		this.viewScheduleList$ = fromMasterState
+			.getSchedulesFromEntity(this.store, this.viewCurrentSubject$, this.loadingViewSchedule$)
+			.pipe(
+				filter((res) => !_isEmpty(res)),
+				tap((res) => this.viewCurrentSubject$.next(res[0])) // Auto first in ng-select
+			);
 		//#endregion
 
 		//#region auto fill form
@@ -187,7 +147,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			.pipe(
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.viewCurrentPhase$),
-				filter((vals) => vals.every((v) => !_isEmpty(v)))
+				filter(allValuesNotEmpty)
 			)
 			.subscribe(([sub, phs]) => {
 				this.scheduleForm.patchValue({
@@ -199,7 +159,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			.pipe(
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.viewCurrentPhase$, this.viewCurrentSubject$),
-				filter((vals) => vals.every((v) => !_isEmpty(v)))
+				filter(allValuesNotEmpty)
 			)
 			.subscribe(([sch, phs, sub]) => {
 				this.insertTraineeInScheduleForm.patchValue({
@@ -233,8 +193,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.viewCurrentSubject$))
 			.subscribe(([act, sub]) => {
 				// Reset except phase & subject ng-select
-				const { phaseId, subjectId } = this.scheduleForm.value;
-				this.scheduleForm.reset({ phaseId, subjectId });
+				this.cancelEdit();
 				if (!!sub)
 					this.store.dispatch(MasterStateAction.FetchSchedules({ subjectId: sub.SubjectId }));
 			});
@@ -327,16 +286,9 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 	}
 
 	updateScheduleDates(count: number) {
-		// If needed more
-		while (count - this.scheduleDates.length > 0) {
-			this.scheduleDates.push(this.fb.control(''));
-		}
-		// If needed less
-		while (count - this.scheduleDates.length < 0) {
-			this.scheduleDates.removeAt(this.scheduleDates.length - 1);
-		}
-
+		adjustControlsInFormArray(this.scheduleDates, count);
 		return;
+		// NOTE: Ini fitur dulu, sepertinya sudah tak dipake
 		// - this.meetings.length;
 		// const detail = { ScheduleDate: '', ShiftStart: 1, ShiftEnd: 1 };
 		// const newVariant = {
@@ -391,9 +343,9 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 		);
 	}
 
+	// Reset form
 	cancelEdit() {
 		const { phaseId, subjectId } = this.scheduleForm.value;
-		this.scheduleForm.reset({ phaseId, subjectId });
+		this.scheduleForm.reset({ phaseId, subjectId, scheduleCount: 1 });
 	}
-
 }

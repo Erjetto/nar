@@ -11,6 +11,11 @@ import {
 
 export const FetchTraineesSimpleData = createAction('[BinusianState] FetchTraineesSimpleData');
 export const FetchTraineesData = createAction('[BinusianState] FetchTraineesData');
+export const ExportTraineesData = createAction('[BinusianState] ExportTraineesData');
+export const ExportTraineesSchedule = createAction(
+	'[BinusianState] ExportTraineesSchedule',
+	props<{ binusianNumber: string; period: string; startDate: string; endDate: string }>()
+);
 // TODO: Ganti semua FetchTrainees jadi FetchTraineesBy
 export const FetchAllTraineesInLatestPhase = createAction(
 	'[BinusianState] FetchAllTraineesInLatestPhase'
@@ -85,9 +90,7 @@ export const UpdateTraineeActive = createAction(
 	}>()
 );
 
-export const FetchMyInterviewSchedule = createAction(
-	'[BinusianState] FetchMyInterviewSchedule'
-);
+export const FetchMyInterviewSchedule = createAction('[BinusianState] FetchMyInterviewSchedule');
 
 export const FetchMyInterviewScheduleSuccess = createAction(
 	'[BinusianState] FetchMyInterviewScheduleSuccess',

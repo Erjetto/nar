@@ -6,7 +6,6 @@ import { Action } from '@ngrx/store';
 import * as CaseStateAction from './case.action';
 import * as MainStateAction from '../main/main.action';
 
-
 import { forkJoin, Observable, of } from 'rxjs';
 import { switchMap, mergeMap, share, catchError } from 'rxjs/operators';
 import { LeaderService } from '../../services/new/leader.service';
@@ -114,8 +113,8 @@ export class CaseStateEffects {
 		),
 		mergeMap((results) => of(CaseStateAction.FetchCorrectionListSuccess({ payload: results }))),
 		share()
-  );
-  
+	);
+
 	@Effect()
 	fetchCorrectionScoring$: Observable<Action> = this.actions$.pipe(
 		ofType(CaseStateAction.FetchCorrectionScoring),
@@ -123,64 +122,71 @@ export class CaseStateEffects {
 		mergeMap((results) => of(CaseStateAction.FetchCorrectionScoringSuccess({ payload: results }))),
 		share()
 	);
-  
+
 	@Effect()
 	importScoreFromExcel$: Observable<Action> = this.actions$.pipe(
 		ofType(CaseStateAction.ImportScoreFromExcel),
 		switchMap((data) => this.trainerService.ImportScoreFromExcel(data)),
-		mergeMap((results) => 
+		mergeMap((results) =>
 			_isEmpty(results)
-			? of(MainStateAction.SuccessfullyMessage('Saved all scores'))
-			: of(MainStateAction.FailMessage('Saving the following trainees: ', results.join(', ')))
+				? of(MainStateAction.SuccessfullyMessage('Saved all scores'))
+				: of(MainStateAction.FailMessage('Saving the following trainees: ', results.join(', ')))
 		),
 		share()
 	);
-  
+
 	@Effect()
 	exportScoreBySubject$ = this.actions$.pipe(
 		ofType(CaseStateAction.ExportScoreBySubject),
 		switchMap((data) => this.generalService.ExportScoreBySubject(data)),
-		mergeMap((results) => {
-			this.otherService.DownloadMemoryFile(results)
-			return of()
-		}),
+		mergeMap((filename) => of(MainStateAction.DownloadMemoryFile({ filename }))),
 		share()
 	);
-  
+
 	@Effect()
 	generateExcelTemplateForScoring$ = this.actions$.pipe(
 		ofType(CaseStateAction.GenerateExcelTemplateForScoring),
 		switchMap((data) => this.trainerService.GenerateExcelTemplateForScoring(data)),
-		mergeMap((results) => {
-			this.otherService.DownloadMemoryFile(results)
-			return of()
-		}),
+		mergeMap((filename) => of(MainStateAction.DownloadMemoryFile({ filename }))),
+		share()
+	);
+	
+	@Effect()
+	downloadAllAnswers$ = this.actions$.pipe(
+		ofType(CaseStateAction.DownloadAllAnswers),
+		switchMap((data) => this.trainerService.DownloadAllAnswers(data)),
+		mergeMap((filename) => of(MainStateAction.DownloadMemoryFile({ filename }))),
 		share()
 	);
 
 	@Effect()
 	saveTraineeScores$: Observable<Action> = this.actions$.pipe(
 		ofType(CaseStateAction.SaveTraineeScores),
-    switchMap((data) =>
-      // Create array of saveScore request
+		switchMap((data) =>
+			// Create array of saveScore request
 			forkJoin(
 				data.traineeId.map((t, idx) =>
-					this.trainerService.SaveScore({
-						phaseId: data.phaseId,
-						caseId: data.caseId,
-						traineeId: t,
-						score: data.score[idx],
-						zeroingReason: data.zeroingReason[idx],
-						subjectId: data.subjectId
-					}).pipe(catchError((error) => of(false)))
+					this.trainerService
+						.SaveScore({
+							phaseId: data.phaseId,
+							caseId: data.caseId,
+							traineeId: t,
+							score: data.score[idx],
+							zeroingReason: data.zeroingReason[idx],
+							subjectId: data.subjectId,
+						})
+						.pipe(catchError((error) => of(false)))
 				)
 			)
 		),
 		mergeMap((results) => {
-      const failed = results.filter(r => !r).length;
-      if(failed === 0) return of(MainStateAction.SuccessfullyMessage('saved score'))
-      else return of(MainStateAction.FailMessage('saving score', failed + ' scores failed to be saved'))
-    }),
+			const failed = results.filter((r) => !r).length;
+			if (failed === 0) return of(MainStateAction.SuccessfullyMessage('saved score'));
+			else
+				return of(
+					MainStateAction.FailMessage('saving score', failed + ' scores failed to be saved')
+				);
+		}),
 		share()
 	);
 	//#endregion

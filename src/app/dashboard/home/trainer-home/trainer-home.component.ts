@@ -43,7 +43,7 @@ export class TrainerHomeComponent extends DashboardContentBase implements OnInit
 
 	currentPhase = new FormControl();
 	statistics$ = new Subject<ClientStatistic[]>();
-	loadingTraineeStatistic$ = new BehaviorSubject<boolean>(false);
+	loadingTraineeStatistic$ = new BehaviorSubject(false);
 	loadingAnnouncements$: Observable<boolean>;
 	loadingTeachingSchedules$:Observable<boolean>;
 

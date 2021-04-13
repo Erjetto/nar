@@ -78,3 +78,8 @@ export const SetFilterText = createAction(
 	'[VoteState] SetFilterText',
 	props<{ filterText: string }>()
 );
+
+export const ExportTopBottomVoteResult = createAction(
+	'[VoteState] ExportTopBottomVoteResult',
+	props<{ scheduleId: string }>()
+);

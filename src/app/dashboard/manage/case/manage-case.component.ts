@@ -21,7 +21,7 @@ import {
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 
-import { takeUntil, map, take } from 'rxjs/operators';
+import { takeUntil, map, take, filter, tap } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { isEmpty as _isEmpty } from 'lodash';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -52,7 +52,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 
 	caseListLoading$: Observable<boolean>;
 	viewCaseLoading$: Observable<boolean>;
-	formCaseLoading$ = new BehaviorSubject<boolean>(false);
+	formCaseLoading$ = new BehaviorSubject(false);
 
 	caseForm = this.fb.group({
 		caseId: [''], // Update
@@ -80,13 +80,24 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 
 	ngOnInit(): void {
 		//#region Bind to store
-		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-
-		this.subjectList$ = fromMasterState.getSubjectsFromEntity(this.store, this.viewCurrentPhase$);
-		this.viewScheduleList$ = fromMasterState.getSchedulesFromEntity(
-			this.store,
-			this.viewCurrentSubject$
+		this.phases$ = this.store.pipe(
+			select(fromMasterState.getPhases),
+			filter((res) => !_isEmpty(res)),
+			tap((res) => this.viewCurrentPhase$.next(res[0])) // Auto first in ng-select
 		);
+
+		this.subjectList$ = fromMasterState
+			.getSubjectsFromEntity(this.store, this.viewCurrentPhase$)
+			.pipe(
+				filter((res) => !_isEmpty(res)),
+				tap((res) => this.viewCurrentSubject$.next(res[0])) // Auto first in ng-select
+			);
+		this.viewScheduleList$ = fromMasterState
+			.getSchedulesFromEntity(this.store, this.viewCurrentSubject$)
+			.pipe(
+				filter((res) => !_isEmpty(res)),
+				tap((res) => this.viewCurrentSchedule$.next(res[0])) // Auto first in ng-select
+			);
 
 		this.viewCaseLoading$ = this.store.pipe(
 			select(fromMasterState.getMasterState),
@@ -95,23 +106,6 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 
 		this.caseList$ = this.store.pipe(select(fromCaseState.getCases));
 		this.caseListLoading$ = this.store.pipe(select(fromCaseState.isCasesLoading));
-
-		this.currentUser$.pipe(take(1)).subscribe((u:User) => {
-			if(u.Role.isAstSpv === false) this.caseForm.disable();
-		})
-
-		//#endregion
-
-		//#region auto select first in array
-		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.viewCurrentPhase$.next(res[0]);
-		});
-		this.subjectList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.viewCurrentSubject$.next(res[0]);
-		});
-		this.viewScheduleList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.viewCurrentSchedule$.next(res[0]);
-		});
 
 		//#endregion
 
@@ -155,7 +149,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		return !_isEmpty(this.caseForm.value.fileId);
 	}
 
-	onUpload(){
+	onUpload() {
 		this.caseForm.get('changedFile').setValue(true);
 	}
 
@@ -170,6 +164,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			caseName: row.CaseName,
 			correctorNames: row.correctorList,
 			traineeDays: DateHelper.dateToFormat(row.TraineeDeadline, this.editDateFormat),
+			trainerDays: DateHelper.dateToFormat(row.TrainerDeadline, this.editDateFormat),
 			scheduleDate: DateHelper.dateToFormat(row.ScheduleDate, this.editDateFormat),
 			noUpload: row.NoUpload,
 		});
@@ -185,8 +180,8 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		});
 	}
 
-	downloadFile() {
-		this.store.dispatch(MainStateAction.DownloadFile({ fileId: this.caseForm.value.fileId }));
+	downloadFile(fileId: string) {
+		this.store.dispatch(MainStateAction.DownloadFile({ fileId }));
 	}
 
 	createCase() {

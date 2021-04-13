@@ -46,7 +46,11 @@
 					</div>
 				</div>
 			</rd-card>
-			<rd-card [cardTitle]="'Attendance History'" [isLoading]="loadingViewTraineeRecord$|async" [maxHeight]="300">
+			<rd-card
+				[cardTitle]="'Attendance History'"
+				[isLoading]="loadingViewTraineeRecord$ | async"
+				[maxHeight]="300"
+			>
 				<table class="table table-sm table-striped table-hover">
 					<thead>
 						<tr>
@@ -56,14 +60,11 @@
 					</thead>
 					<tbody>
 						<tr *ngIf="(traineeRecord$ | async)?.Attendances?.length === 0">
-							<td colspan="2">No attendances</td>
+							<td colspan="2" class="text-center p-4 font-italic">No attendances</td>
 						</tr>
-						<tr
-							*ngFor="let att of (traineeRecord$ | async)?.Attendances"
-							class="cursor-pointer"
-						>
+						<tr *ngFor="let att of (traineeRecord$ | async)?.Attendances" class="cursor-pointer">
 							<td>{{ att.Status }}</td>
-							<td>{{ att.AttendanceTime | date:attendanceDateFormat }}</td>
+							<td>{{ att.AttendanceTime | date: attendanceDateFormat }}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -71,7 +72,7 @@
 		</div>
 		<!-- If veteran -->
 		<div class="col">
-			<rd-card [cardTitle]="'Scores'" [isLoading]="loadingViewTraineeRecord$|async">
+			<rd-card [cardTitle]="'Scores'" [isLoading]="loadingViewTraineeRecord$ | async">
 				<table class="table table-sm table-striped table-hover text-center">
 					<thead>
 						<tr>
@@ -86,10 +87,7 @@
 						<tr *ngIf="(traineeRecord$ | async)?.Scores?.length === 0">
 							<td colspan="5">No scores</td>
 						</tr>
-						<tr
-							*ngFor="let score of (traineeRecord$ | async)?.Scores"
-							class="cursor-pointer"
-						>
+						<tr *ngFor="let score of (traineeRecord$ | async)?.Scores" class="cursor-pointer">
 							<td>{{ score.PhaseName }}</td>
 							<td>{{ score.ScheduleName }}</td>
 							<td>{{ score.CaseName }}</td>
@@ -126,21 +124,25 @@
 											</div>
 										</div>
 										<div class="col">
-											<div>{{ note.Description }}</div>
-											<div>
+											<div class="row">
+												<div class="col">
+													<quill-view-html [content]="note.Description"></quill-view-html>
+												</div>
+												<div
+													class="col-auto p-2"
+													*ngIf="note.SavedBy == (currentUser$ | async).UserName"
+												>
+													<rd-confirmable-pop-up (confirm)="deleteNote(note)">
+														<button class="btn btn-danger">
+															<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+														</button>
+													</rd-confirmable-pop-up>
+												</div>
+											</div>
+											<div class="text-right pr-1">
 												<span class="font-weight-bold">{{ note.SavedBy }}</span>
 												at {{ note.SavedAt | date: viewDateFormat }}
 											</div>
-										</div>
-										<div
-											class="col-auto p-2"
-											*ngIf="note.SavedBy == (currentUser$ | async).UserName"
-										>
-											<rd-confirmable-pop-up (confirm)="deleteNote(note)">
-												<button class="btn btn-danger">
-													<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
-												</button>
-											</rd-confirmable-pop-up>
 										</div>
 									</div>
 								</div>
@@ -149,12 +151,12 @@
 								<div class="col">
 									<div class="row" [formGroup]="noteForm">
 										<div class="col-9">
-											<textarea
-												class="form-control h-100"
-												style="resize: none"
+											<quill-editor
+												theme="bubble"
+												[classes]="'bd-1 bd-rad-8px bd-lightgrey'"
 												placeholder="Add new notes"
 												formControlName="note"
-											></textarea>
+											></quill-editor>
 										</div>
 										<div class="col-3">
 											<div class="row mb-2">

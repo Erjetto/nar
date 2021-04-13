@@ -3,6 +3,8 @@ import { Message, User, ClientGeneration, Role, ToastType, Notification, ClientT
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { IAppState } from 'src/app/app.reducer';
+import { Observable } from 'rxjs';
+import { OtherService } from '../../services/new/other.service';
 
 export const Login = createAction(
 	'[MainState] Login',
@@ -104,6 +106,7 @@ export const FetchUserTeachingSchedulesSuccess = createAction(
 
 //#region Download & Upload
 export const DownloadFile = createAction('[MainState] DownloadFile', props<{ fileId: string }>());
+export const DownloadMemoryFile = createAction('[MainState] DownloadMemoryFile', props<{ filename: string }>());
 export const UploadFileFailed = createAction('[MainState] UploadFileFailed');
 export const RemoveUploadedFiles = createAction('[MainState] RemoveUploadedFiles');
 //#endregion
@@ -173,6 +176,7 @@ export const DispatchIfEmpty = createAction(
 	'[MainState] FetchIfEmpty',
 	props<{
 		action: Action;
-		selectorToBeChecked: MemoizedSelector<IAppState, any>;
+		selectorToBeChecked?: MemoizedSelector<IAppState, any>;
+		observableToBeChecked?: Observable<any>;
 	}>()
 );

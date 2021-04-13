@@ -117,4 +117,9 @@ export const ImportScoreFromExcel = createAction(
 		subjectId: string;
 	}>()
 );
+export const DownloadAllAnswers = createAction(
+	'[CaseState] DownloadAllAnswers',
+	props<{caseId: string;}>()
+);
+
 //#endregion

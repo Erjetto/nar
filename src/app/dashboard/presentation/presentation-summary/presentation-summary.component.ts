@@ -44,7 +44,7 @@ export class PresentationSummaryComponent
 	selectedTraineeSummary$ = new BehaviorSubject<TraineePresentation>(null);
 	selectedPresentation$ = new BehaviorSubject<TraineePresentation>(null);
 
-  loadingPresentationSummary$ = new BehaviorSubject<boolean>(false);
+  loadingPresentationSummary$ = new BehaviorSubject(false);
 
 	constructor(
 		protected store: Store<IAppState>,

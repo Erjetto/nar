@@ -18,7 +18,7 @@ $color-good: #6bf0cb4d; // Slight transparent green
 $color-bad: #f06b6b4d; // Slight transparent red
 
 // Borders
-$sides: (b, t, l, r);
-$side-names: (bottom, top, left, right);
-$border-colors: (black, white, lightgrey);
+$sides: ('b', 't', 'l', 'r');
+$side-names: ('bottom', 'top', 'left', 'right');
+$border-colors: ('black', 'white', 'lightgrey');
 $border-radiuses: (4px, 8px, 12px)

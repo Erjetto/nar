@@ -36,7 +36,6 @@ import { FillAnswersComponent } from './candidate/fill-answers/fill-answers.comp
 import { LogRoomComponent } from './log/log-room/log-room.component';
 import { LogBookComponent } from './log/log-book/log-book.component';
 import { TraineeUploadComponent } from './trainee-upload/trainee-upload.component';
-import { MyScheduleComponent } from './my-schedule/my-schedule.component';
 import { CorrectionComponent } from './correction/correction.component';
 import { MyDataComponent } from './my-data/my-data.component';
 import { PresentationReportComponent } from './presentation/presentation-report/presentation-report.component';
@@ -45,10 +44,12 @@ import { PresentationSummaryComponent } from './presentation/presentation-summar
 import { TraineeHomeComponent } from './home/trainee-home/trainee-home.component';
 import { TrainerHomeComponent } from './home/trainer-home/trainer-home.component';
 import { RoomActiveComponent } from './room/room-active/room-active.component';
+import { TraineeSchedulesComponent } from './trainee/trainee-schedules/trainee-schedules.component';
 
 @NgModule({
 	declarations: [
 		DashboardComponent,
+		TrainerHomeComponent,
 		HomeComponent,
 		CandidateQuestionsComponent,
 		AnswerScheduleComponent,
@@ -56,6 +57,9 @@ import { RoomActiveComponent } from './room/room-active/room-active.component';
 
 		ManageCaseComponent,
 		ManageTopBottomVoteComponent,
+		
+		LogRoomComponent,
+		LogBookComponent,
 
 		ViewTraineeComponent,
 		ViewEvaluationComponent,
@@ -72,6 +76,8 @@ import { RoomActiveComponent } from './room/room-active/room-active.component';
 		ModifyAnnouncementComponent,
 		ModifyInterviewScheduleComponent,
 		ModifyInterviewMaterialComponent,
+    
+		CorrectionComponent,
 
 		ViewQuestionComponent,
 		ViewAllQuestionComponent,
@@ -81,26 +87,17 @@ import { RoomActiveComponent } from './room/room-active/room-active.component';
     
     ModifyTraineeScheduleComponent,
     
-		TraineeDataComponent,    
+		TraineeHomeComponent,
+		MyDataComponent,
 		NewPresentationComponent,
 		TopBottomVoteComponent,
 		TraineeUploadComponent,
-		MyScheduleComponent,
-		TraineeAttendanceReportComponent,
     
-		LogRoomComponent,
-		LogBookComponent,
-    
-		CorrectionComponent,
-    
-		MyDataComponent,
-    
-		TraineeHomeComponent,
-    
-		TrainerHomeComponent,
     
 		RoomActiveComponent,
-    
+		TraineeDataComponent,    
+		TraineeSchedulesComponent,
+		TraineeAttendanceReportComponent,
     
 	],
 	imports: [

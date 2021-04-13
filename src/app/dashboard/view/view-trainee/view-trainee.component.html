@@ -34,6 +34,13 @@
 								/>
 							</div>
 						</div>
+						<div class="row form-group">
+							<span class="font-weight-bold text-success">Active</span>
+							<span>({{ activeNumber$ | async }})</span>
+							&nbsp; &nbsp; &nbsp;
+							<span class="font-weight-bold text-danger">Inactive</span>
+							<span>({{ inactiveNumber$ | async }})</span>
+						</div>
 					</div>
 					<div class="col">
 						<div class="row justify-content-end">
@@ -82,7 +89,7 @@
 								<!-- [src]="['File.svc/GetThumbnail',trainee.PictureId,'95']" -->
 								<span style="position: relative" *ngIf="!trainee.IsActive">
 									<img
-										src="../../../../assets//images/rose-icon.png"
+										src="assets/images/rose-icon.png"
 										style="position: absolute; top: -30px; left: 30px; width: 30px"
 									/>
 								</span>

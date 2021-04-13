@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 		isPersistent: [false],
 	});
 
-	isLoggingIn$ = new BehaviorSubject<boolean>(false);
+	isLoggingIn$ = new BehaviorSubject(false);
 	destroyed$ = new Subject<void>();
 
 	constructor(

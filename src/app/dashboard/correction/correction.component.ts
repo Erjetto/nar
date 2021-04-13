@@ -5,7 +5,7 @@ import {
 	ClientCaseTrainer,
 	ClientUploadAnswer,
 } from 'src/app/shared/models';
-import { takeUntil, filter, map, withLatestFrom } from 'rxjs/operators';
+import { takeUntil, filter, map, withLatestFrom, tap } from 'rxjs/operators';
 import { DashboardContentBase } from '../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -18,11 +18,13 @@ import {
 	CaseStateAction,
 	MainStateAction,
 	CaseStateEffects,
+	fromMainState,
 } from 'src/app/shared/store-modules';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { adjustControlsInFormArray } from 'src/app/shared/methods';
+import { RoleFlags } from 'src/app/shared/constants/role.constant';
 
 @Component({
 	selector: 'rd-correction',
@@ -30,7 +32,7 @@ import { adjustControlsInFormArray } from 'src/app/shared/methods';
 	styleUrls: ['./correction.component.scss'],
 })
 export class CorrectionComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	scheduleDateFormat = DateHelper.WEEKDAY_DATE_FORMAT;
+	startDateFormat = DateHelper.DATE_TIME_FORMAT;
 	uploadDateFormat = DateHelper.TIME_DATE_FORMAT;
 
 	phaseId = this.fb.control('');
@@ -55,8 +57,10 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 	loadingSubject$: Observable<boolean>;
 	loadingCases$: Observable<boolean>;
 
-	loadingViewCases$ = new BehaviorSubject<boolean>(false);
-	loadingScoreList$ = new BehaviorSubject<boolean>(false);
+	loadingViewCases$ = new BehaviorSubject(false);
+	loadingScoreList$ = new BehaviorSubject(false);
+
+	isTrainerOrJunior$: Observable<boolean>;
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -69,10 +73,22 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 
 	ngOnInit(): void {
 		//#region Bind to store
-		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
+		this.phases$ = this.store.pipe(
+			select(fromMasterState.getPhases),
+			filter((res) => !_isEmpty(res)),
+			tap((res) => this.viewCurrentPhase$.next(res[0])) // Auto first in select
+		);
+		// get subjects by phase
+		this.viewSubjectList$ = fromMasterState.getSubjectsFromEntity(
+			this.store,
+			this.viewCurrentPhase$,
+			this.loadingViewCases$
+		);
+
 		this.store
 			.pipe(select(fromCaseState.getClientCaseTrainers), takeUntil(this.destroyed$))
 			.subscribe(this.viewCaseList$);
+
 		this.store
 			.pipe(
 				select(fromCaseState.getTraineeAnswers),
@@ -84,6 +100,7 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 		this.loadingPhases$ = this.store.pipe(select(fromMasterState.isPhasesLoading));
 		this.loadingSubject$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
 		this.loadingCases$ = this.store.pipe(select(fromCaseState.isCasesLoading));
+
 		// Gabung ketiga loading jadi satu
 		merge(this.loadingPhases$, this.loadingSubject$, this.loadingCases$).subscribe(
 			this.loadingViewCases$
@@ -93,22 +110,32 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 			.subscribe(this.loadingScoreList$);
 		//#endregion
 
-		// get subjects by phase
-		this.viewSubjectList$ = fromMasterState.getSubjectsFromEntity(
-			this.store,
-			this.viewCurrentPhase$,
-			this.loadingViewCases$
+		this.isTrainerOrJunior$ = this.currentUser$.pipe(
+			map((u) => u.Role.is(RoleFlags.JuniorTrainer, RoleFlags.Trainer)),
+			tap((isCorrector) => {
+				if (!isCorrector) {
+					// get cases by subject
+					this.viewCurrentSubject$
+						.pipe(
+							takeUntil(this.destroyed$),
+							filter((v) => !_isEmpty(v))
+						)
+						.subscribe((s) =>
+							this.store.dispatch(CaseStateAction.FetchCorrectionListBy({ subjectId: s.SubjectId }))
+						);
+				} else {
+					// get cases by phase
+					this.viewCurrentPhase$
+						.pipe(
+							takeUntil(this.destroyed$),
+							filter((v) => !_isEmpty(v))
+						)
+						.subscribe((p) =>
+							this.store.dispatch(CaseStateAction.FetchCorrectionListBy({ phaseId: p.PhaseId }))
+						);
+				}
+			})
 		);
-
-		// get cases by subject
-		this.viewCurrentSubject$
-			.pipe(
-				takeUntil(this.destroyed$),
-				filter((v) => !_isEmpty(v))
-			)
-			.subscribe((s) =>
-				this.store.dispatch(CaseStateAction.FetchCorrectionListBy({ subjectId: s.SubjectId }))
-			);
 
 		// Get trainees answer when clicked
 		this.viewCurrentCase$
@@ -141,15 +168,6 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 				});
 			});
 
-		//#region auto select first in array
-		this.phases$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-			this.viewCurrentPhase$.next(res[0]);
-		});
-		// this.viewSubjectList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-		// 	this.viewCurrentSubject$.next(res[0]);
-		// });
-		//#endregion
-
 		//#region Subscribe to effects
 		this.mainEffects.afterRequest$
 			.pipe(takeUntil(this.destroyed$))
@@ -167,7 +185,16 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 			});
 		//#endregion
 
-		this.store.dispatch(MasterStateAction.FetchPhases());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
+	}
+
+	initData(){
+		
 	}
 
 	showScoringForCase(c: ClientCaseTrainer) {
@@ -206,7 +233,10 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 		this.viewCaseList$.value.forEach((c) => window.open(c.downloadLink));
 	}
 	downloadAllAnswers() {
-		this.answerList$.value.forEach((a) => window.open(a.answerDownloadLink));
+		// this.answerList$.value.forEach((a) => window.open(a.answerDownloadLink));
+		this.store.dispatch(CaseStateAction.DownloadAllAnswers({
+			caseId: this.caseId.value
+		}));
 	}
 
 	exportIntoExcel() {
@@ -233,5 +263,10 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 				subjectId: this.viewCurrentSubject$.value.SubjectId,
 			})
 		);
+	}
+
+	getDeadlineFormat(start: Date, end: Date) {
+		const sameYear = start.getFullYear() === end.getFullYear();
+		return `${!sameYear ? 'yyyy ' : ''} MMM dd, HH:mm`;
 	}
 }

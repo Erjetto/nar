@@ -45,7 +45,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 
 	// uploadedFiles$: Observable<{ fileid: string; filename: string }[]>;
 	// uploadedFileId: string; // NOTE: Utk sekarang announcement hanya upload 1 file saja
-	loadingFormAnnouncement$ = new BehaviorSubject<boolean>(false);
+	loadingFormAnnouncement$ = new BehaviorSubject(false);
 	loadingViewAnnouncements$: Observable<boolean>;
 
 	constructor(

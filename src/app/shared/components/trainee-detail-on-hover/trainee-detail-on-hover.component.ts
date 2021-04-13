@@ -33,7 +33,7 @@ export class TraineeDetailOnHoverComponent implements OnInit, OnDestroy, AfterVi
 	destroyed$: Subject<void> = new Subject<void>();
 	traineeDetail$: Observable<ClientTraineeData>;
 	last5Notes$: Observable<ClientNote[]>;
-	loadingViewTrainee$ = new BehaviorSubject<boolean>(false);
+	loadingViewTrainee$ = new BehaviorSubject(false);
 
 	constructor(private store: Store<IAppState>) {}
 

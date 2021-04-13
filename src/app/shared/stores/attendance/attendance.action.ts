@@ -19,6 +19,11 @@ export const FetchPeriodicAttendanceSuccess = createAction(
 	props<{ payload: ClientPeriodicTraineeAttendance[] }>()
 );
 
+export const ExportPeriodicTraineeAttendancesForSubject = createAction(
+	'[NoteState] ExportPeriodicTraineeAttendancesForSubject',
+	props<{ subjectId: string }>()
+);
+
 export const SaveTraineeAttendance = createAction(
 	'[NoteState] SaveTraineeAttendance',
 	props<{ traineeCode: string; attType: AttendanceType }>()

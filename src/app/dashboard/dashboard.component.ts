@@ -23,7 +23,7 @@ import {
 } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { query, style, group, animate } from '@angular/animations';
-import { Cookies } from '../shared/constants/cookie.constants';
+import { LocalStorage } from '../shared/constants/local-storage.constants';
 import { Title } from '@angular/platform-browser';
 import { isEmpty as _isEmpty } from 'lodash';
 
@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	genList$: Observable<ClientGeneration[]>;
 	roleList$: Observable<Role[]>;
 
-	loadingChangeGen$ = new BehaviorSubject<boolean>(false);
+	loadingChangeGen$ = new BehaviorSubject(false);
 
 	selectedGenId$: Observable<string>;
 	selectedRole$: Observable<Role>;
@@ -72,13 +72,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		let root = this.route.snapshot;
 		while (root.firstChild) root = root.firstChild;
 		return root;
-	}
-
-	click(){
-		this.store.dispatch(MainStateAction.ToastMessage({
-			message:'Test',
-			messageType: 'info'
-		}))
 	}
 
 	ngOnInit(): void {
@@ -200,10 +193,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 	initiateRoleAndGen() {
 		// NOTE: Gen sudah otomatis tersimpan di server side
-		if (!!localStorage.getItem('current-role'))
+		if (!!LocalStorage.currentRole())
 			this.store.dispatch(
 				MainStateAction.ChangeRole({
-					role: Role.from(localStorage.getItem('current-role')),
+					role: Role.from(LocalStorage.currentRole()),
 				})
 			);
 		else
@@ -223,9 +216,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 	initiateTheme() {
 		// Check from cookies first
-
-		if (this.cookieService.check(Cookies.DARK_THEME))
-			this.toggleGreyMode(this.cookieService.get(Cookies.DARK_THEME) === 'true');
+		
+		if (LocalStorage.useDarkTheme() !== undefined)
+			this.toggleGreyMode(LocalStorage.useDarkTheme());
 		else if (window.matchMedia) {
 			// Get default theme from OS
 			this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -239,12 +232,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		if (this.isDark) document.body.classList.add('dark-theme');
 		else document.body.classList.remove('dark-theme');
 
-		this.cookieService.set(
-			Cookies.DARK_THEME,
-			this.isDark ? 'true' : 'false',
-			Number.MAX_SAFE_INTEGER,
-			'/'
-		);
+		LocalStorage.useDarkTheme(this.isDark);
 	}
 
 	//#region Animation for page

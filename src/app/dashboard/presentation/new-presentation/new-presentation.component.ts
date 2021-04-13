@@ -33,7 +33,7 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 	phases$: Observable<ClientPhase[]>;
 	subjects$: Observable<ClientSubject[]>;
 
-	loadingFormPresentation$ = new BehaviorSubject<boolean>(false);
+	loadingFormPresentation$ = new BehaviorSubject(false);
 
 	presentationForm = this.fb.group({
 		generationId: [''],

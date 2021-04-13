@@ -59,6 +59,7 @@
 							<th>Trainee Deadline</th>
 							<th>Trainer Deadline</th>
 							<th>Correctors</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -75,6 +76,11 @@
 							<td>{{ case.TraineeDeadline | date: viewDateFormat }}</td>
 							<td>{{ case.TrainerDeadline | date: viewDateFormat }}</td>
 							<td>{{ case.correctorList }}</td>
+							<td>
+								<button class="btn btn-primary btn-sm" (click)="downloadFile(case.FileId)">
+									<fa-icon [icon]="['fas', 'download']"></fa-icon>
+								</button>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -82,6 +88,7 @@
 			<rd-card
 				[cardTitle]="isEditing ? 'Edit/View Case' : 'Insert New Case'"
 				[isLoading]="formCaseLoading$ | async"
+				*ngIf="(currentUser$ | async)?.Role.isAstSpv"
 			>
 				<!-- Expand if form has value -->
 				<div rdCardBadges *ngIf="isEditing">
@@ -156,10 +163,10 @@
 							</div>
 						</div>
 					</div>
-					<div 
-						class="row justify-content-around mt-2" 
+					<div
+						class="row justify-content-around mt-2"
 						[ngSwitch]="isEditing"
-						*ngIf="(currentUser$|async)?.Role?.isAstSpv"
+						*ngIf="(currentUser$ | async)?.Role?.isAstSpv"
 					>
 						<ng-container *ngSwitchCase="false">
 							<button class="btn btn-primary" [disabled]="caseForm.invalid" (click)="createCase()">

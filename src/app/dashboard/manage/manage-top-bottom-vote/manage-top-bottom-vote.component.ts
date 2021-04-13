@@ -45,7 +45,7 @@ export class ManageTopBottomVoteComponent
 
 	loadingViewVoteSchedule$: Observable<boolean>;
 	loadingViewVoteResult$: Observable<boolean>;
-	loadingFormVoteSchedule$ = new BehaviorSubject<boolean>(false);
+	loadingFormVoteSchedule$ = new BehaviorSubject(false);
 
 	traineesEntity: { [id: string]: ClientTrainee } = {}; // for get trainee name by id
 	traineeIfNotFound = new ClientTrainee('000', 'T???', 'Unkown Trainee', '0000', false);
@@ -186,6 +186,14 @@ export class ManageTopBottomVoteComponent
 		this.loadingFormVoteSchedule$.next(true);
 		this.store.dispatch(
 			VoteStateAction.DeleteTopBottomVoteSchedule({
+				scheduleId: this.voteForm.get('scheduleId').value,
+			})
+		);
+	}
+
+	exportVoteResult(){
+		this.store.dispatch(
+			VoteStateAction.ExportTopBottomVoteResult({
 				scheduleId: this.voteForm.get('scheduleId').value,
 			})
 		);

@@ -16,36 +16,32 @@
 								<!-- <tr *ngIf="(voteSchedules$ | async)?.length === 0">
 									<td class="p-3" colspan="2">No schedules yet</td>
                 </tr> -->
-                <!-- For Trainee -->
-                <tr>
-                  <td class="p-2 font-weight-bold" colspan="2">
-                    Trainee's Vote
-                  </td>
-                </tr>
-                <!-- Kalo kosong kasi '-' -->
-                <tr *ngIf="(traineeVoteSchedules$ | async)?.length === 0">
-									<td class="p-3" colspan="2"> - </td>
-                </tr>
+								<!-- For Trainee -->
+								<tr>
+									<td class="p-2 font-weight-bold" colspan="2">Trainee's Vote</td>
+								</tr>
+								<!-- Kalo kosong kasi '-' -->
+								<tr *ngIf="(traineeVoteSchedules$ | async)?.length === 0">
+									<td class="p-3" colspan="2">-</td>
+								</tr>
 								<tr
 									*ngFor="let schedule of traineeVoteSchedules$ | async"
 									(click)="selectSchedule(schedule)"
-                  class="cursor-pointer"
+									class="cursor-pointer"
 								>
 									<td>{{ schedule.ScheduleName }}</td>
 									<td>
 										{{ schedule.StartDate | date: viewDateFormat }} -
 										{{ schedule.EndDate | date: viewDateFormat }}
 									</td>
-                </tr>
-                <!-- For Trainer -->
-                <tr>
-                  <td class="p-2 font-weight-bold" colspan="2">
-                    Trainer's Vote
-                  </td>
-                </tr>
-                <tr *ngIf="(trainerVoteSchedules$ | async)?.length === 0">
-									<td class="p-3" colspan="2"> - </td>
-                </tr>
+								</tr>
+								<!-- For Trainer -->
+								<tr>
+									<td class="p-2 font-weight-bold" colspan="2">Trainer's Vote</td>
+								</tr>
+								<tr *ngIf="(trainerVoteSchedules$ | async)?.length === 0">
+									<td class="p-3" colspan="2">-</td>
+								</tr>
 								<tr
 									*ngFor="let schedule of trainerVoteSchedules$ | async"
 									(click)="selectSchedule(schedule)"
@@ -80,7 +76,7 @@
 								<div class="col-3">
 									<div class="row">
 										<label># of votes</label>
-										<input type="number" class="form-control" formControlName="voteCount" min="1"/>
+										<input type="number" class="form-control" formControlName="voteCount" min="1" />
 									</div>
 								</div>
 							</div>
@@ -140,15 +136,20 @@
 				[cardTitle]="
 					'Vote Result' + (isEditing ? ' - ' + this.voteForm.get('scheduleName').value : '')
 				"
-        [expanded]="isEditing"
-        [collapsible]="false"
-        >
-        <!-- [isLoading]="loadingViewVoteResult$ | async" -->
+				[expanded]="isEditing"
+				[collapsible]="false"
+			>
+				<div rdCardBadges class="" [hidden]="!isEditing">
+					<button class="btn btn-sm bg-excel mr-1" (click)="exportVoteResult()">
+						<fa-icon [icon]="['fas', 'download']"></fa-icon> Export into Excel
+					</button>
+				</div>
+				<!-- [isLoading]="loadingViewVoteResult$ | async" -->
 				<div class="row">
 					<div class="col justify-content-end">
-            <h4 class="m-0 p-1 bd-bottom bd-lightgrey">
-              {{currentVote == 'trainer' ? 'Trainer\'s ' : 'Trainee\'s '}} Vote
-            </h4>
+						<h4 class="m-0 p-1 bd-bottom bd-lightgrey">
+							{{ currentVote == 'trainer' ? "Trainer's " : "Trainee's " }} Vote
+						</h4>
 						<!-- <ul class="nav nav-tabs">
 							<li class="nav-item cursor-pointer">
 								<b

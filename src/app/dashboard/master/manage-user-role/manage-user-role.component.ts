@@ -33,7 +33,7 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 	userInRolesFiltered$: Observable<ClientUserInRoles[]>;
 	searchTextControl = new FormControl('');
 
-	loadingFormUserInRole$ = new BehaviorSubject<boolean>(false);
+	loadingFormUserInRole$ = new BehaviorSubject(false);
 	loadingViewUserInRole$: Observable<boolean>;
 
 	constructor(

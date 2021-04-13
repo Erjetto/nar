@@ -26,7 +26,7 @@ export class ManageAttendanceIpListComponent
 	ipFormat = /\d{1-3}.\d{1-3}.\d{1-3}.\d{1-3}/;
 	ipListText = new FormControl('', [Validators.required, this.ipFormatValid]);
 	ipList$: Observable<string[]>;
-	loadingForm$ = new BehaviorSubject<boolean>(false);
+	loadingForm$ = new BehaviorSubject(false);
 
 	constructor(
 		protected store: Store<IAppState>,

@@ -39,7 +39,7 @@ export class TopBottomVoteComponent extends DashboardContentBase implements OnIn
 	viewDateFormat = 'dd MMM';
 
 	loadingViewVote$: Observable<boolean>;
-	loadingFormVote$ = new BehaviorSubject<boolean>(false);
+	loadingFormVote$ = new BehaviorSubject(false);
 	isVoting$: Observable<boolean>;
 
 	voteInScheduleEntity$: Observable<{ [scheduleId: string]: TopBottomVote[] }>;

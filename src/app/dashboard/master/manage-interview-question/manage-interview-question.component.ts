@@ -36,8 +36,8 @@ export class ManageInterviewQuestionComponent
 
 	currInterviewQuestion$ = new BehaviorSubject<ClientInterviewQuestion>(null);
 
-	loadingViewInterviewQuestions$ = new BehaviorSubject<boolean>(false);
-	loadingFormInterviewQuestions$ = new BehaviorSubject<boolean>(false);
+	loadingViewInterviewQuestions$ = new BehaviorSubject(false);
+	loadingFormInterviewQuestions$ = new BehaviorSubject(false);
 
 	constructor(
 		protected store: Store<IAppState>,

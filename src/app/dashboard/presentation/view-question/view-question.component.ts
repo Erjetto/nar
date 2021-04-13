@@ -42,7 +42,7 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 	questionId$ = new BehaviorSubject<string>('');
 
 	loadingPresentations$: Observable<boolean>;
-	loadingViewQuestion$ = new BehaviorSubject<boolean>(false);
+	loadingViewQuestion$ = new BehaviorSubject(false);
 
 	answersForm = this.fb.array([
 		// 	// Automatically generated after fetching question

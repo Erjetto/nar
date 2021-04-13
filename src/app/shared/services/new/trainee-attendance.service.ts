@@ -182,4 +182,11 @@ export class TraineeAttendanceService {
 			.post(this.baseUrl + 'getIPWhiteList', {})
 			.pipe(map((res: any) => res.d as string[]));
 	}
+
+	public ExportPeriodicTraineeAttendancesForSubject(data: { subjectId: string }): Observable<string> {
+		return this.httpClient
+			.post(this.baseUrl + 'ExportPeriodicTraineeAttendancesForSubject', data)
+			.pipe(map((res: any) => res.d));
+	}
+
 }
