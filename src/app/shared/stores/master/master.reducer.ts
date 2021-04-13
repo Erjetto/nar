@@ -325,7 +325,7 @@ export function getSubjectsFromEntity(
 	store: Store<IAppState>,
 	phaseObservable: Observable<ClientPhase>,
 	loader?: Subject<boolean>
-) {
+): Observable<ClientSubject[]> {
 	return combineLatest([store.pipe(select(getSubjectsEntity)), phaseObservable]).pipe(
 		map(([entity, currPhase]) => {
 			if (!currPhase) return [];
@@ -347,7 +347,7 @@ export function getSchedulesFromEntity(
 	store: Store<IAppState>,
 	subjectObservable: Observable<ClientSubject>,
 	loader?: Subject<boolean>
-) {
+): Observable<ClientSchedule[]> {
 	return combineLatest([store.pipe(select(getSchedulesEntity)), subjectObservable]).pipe(
 		map(([entity, currSubj]) => {
 			if (!currSubj) return [];

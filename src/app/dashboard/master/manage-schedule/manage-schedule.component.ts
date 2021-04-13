@@ -138,7 +138,7 @@ export class ManageScheduleComponent extends DashboardContentBase implements OnI
 			.getSchedulesFromEntity(this.store, this.viewCurrentSubject$, this.loadingViewSchedule$)
 			.pipe(
 				filter((res) => !_isEmpty(res)),
-				tap((res) => this.viewCurrentSubject$.next(res[0])) // Auto first in ng-select
+				tap((res) => this.viewCurrentSchedule$.next(res[0])) // Auto first in ng-select
 			);
 		//#endregion
 
