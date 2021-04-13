@@ -28,7 +28,8 @@ export class AppComponent implements OnInit {
 
 	initiateTheme() {
 		// Check from cookies first
-		if (LocalStorage.useDarkTheme() !== undefined) this.toggleGreyMode(LocalStorage.useDarkTheme());
+		if (LocalStorage.useDarkTheme() !== undefined) 
+			this.toggleGreyMode(LocalStorage.useDarkTheme() === true);
 		else if (window.matchMedia) {
 			// Get default theme from OS
 			this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

@@ -1,7 +1,7 @@
 export class LocalStorage {
 	public static useDarkTheme(to?: boolean) {
 		if (to !== undefined) localStorage['use-dark-theme'] = to;
-		return localStorage['use-dark-theme'] === true;
+		return localStorage['use-dark-theme'];
 	}
 
 	public static currentRole(to?: string) {
