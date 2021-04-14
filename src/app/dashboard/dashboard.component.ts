@@ -218,7 +218,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		// Check from cookies first
 		
 		if (LocalStorage.useDarkTheme() !== undefined)
-			this.toggleGreyMode(LocalStorage.useDarkTheme() === true);
+			this.toggleGreyMode(LocalStorage.useDarkTheme() === 'true');
 		else if (window.matchMedia) {
 			// Get default theme from OS
 			this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
