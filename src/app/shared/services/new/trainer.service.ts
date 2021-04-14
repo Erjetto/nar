@@ -56,10 +56,8 @@ export class TrainerService {
 	}
 
 	public ImportScoreFromExcel(data: {
-		phaseId: string;
 		fileId: string;
 		caseId: string;
-		subjectId: string;
 	}): Observable<string[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'ImportScoreFromExcel', data)

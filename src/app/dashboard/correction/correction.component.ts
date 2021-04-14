@@ -259,8 +259,6 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 			CaseStateAction.ImportScoreFromExcel({
 				fileId: scoreForm.value.fileId,
 				caseId: this.caseId.value,
-				phaseId: this.phaseId.value,
-				subjectId: this.viewCurrentSubject$.value.SubjectId,
 			})
 		);
 	}

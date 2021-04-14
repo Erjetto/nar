@@ -39,7 +39,7 @@ export class UploadInputComponent implements OnInit {
 	 */
 	@Input() filesForm: FormArray = this.fb.array([]);
 	@Input() singleFileForm: FormGroup = this.fb.group({ fileId: [''], fileName: [''] });
-  @Input() multiple = false;
+	@Input() multiple = false;
 	@Input() disabled = false;
 	@Input() placeholder = '';
 	@Output() upload = new EventEmitter<AbstractControl>(); // emit filesForm atau singleFileForm
@@ -69,15 +69,17 @@ export class UploadInputComponent implements OnInit {
 		else return this.singleFileForm.value.fileName;
 	}
 
-	@HostListener('dragover', ['$event']) ondragover(evt: DragEvent){
+	@HostListener('dragover', ['$event'])
+	ondragover(evt: DragEvent) {
 		evt.preventDefault();
-	}	
+	}
 
-	@HostListener('drop', ['$event']) ondrop(evt: DragEvent){
+	@HostListener('drop', ['$event'])
+	ondrop(evt: DragEvent) {
 		evt.preventDefault();
 		evt.stopPropagation();
 		const files = evt.dataTransfer.files;
-		if(files.length > 0){
+		if (files.length > 0) {
 			this.uploadFile(files);
 		}
 	}

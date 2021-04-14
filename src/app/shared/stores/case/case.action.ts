@@ -113,8 +113,6 @@ export const ImportScoreFromExcel = createAction(
 	props<{
 		fileId: string;
 		caseId: string;
-		phaseId: string;
-		subjectId: string;
 	}>()
 );
 export const DownloadAllAnswers = createAction(
