@@ -44,7 +44,6 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 	loadingViewSchedule$: Observable<boolean>;
 	loadingViewScheduleDetail$ = new BehaviorSubject(false);
 	loadingFormSchedule$ = new BehaviorSubject(false);
-	genOneYearLower$: Observable<string>;
 
 	constructor(
 		protected store: Store<IAppState>,
@@ -64,7 +63,6 @@ export class AnswerScheduleComponent extends DashboardContentBase implements OnI
 		this.selectedSchedule$ = this.store.pipe(select(fromCandidateState.getSelectedAnswer));
 		this.questionModel$ = this.store.pipe(select(fromCandidateState.getQuestionModel));
 		this.loadingViewSchedule$ = this.store.pipe(select(fromCandidateState.isLoadingAnswersModel));
-		this.genOneYearLower$ = this.store.pipe(select(fromMasterState.getGenerationOneYearLower));
 		this.questionModel$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
 			this.questions = res;
 		});
