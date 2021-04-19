@@ -63,9 +63,9 @@ export class DateHelper {
 	static toCSharpDate(input: Date | string): string {
 		switch (typeof input) {
 			case 'string':
-				return `/Date(${new Date(input).getTime()})/`;
+				return `/Date(${new Date(input).getTime() - new Date().getTimezoneOffset()*60000})/`;
 			default:
-				return `/Date(${input.getTime()})/`;
+				return `/Date(${input.getTime() - new Date().getTimezoneOffset()*60000})/`;
 		}
 	}
 
