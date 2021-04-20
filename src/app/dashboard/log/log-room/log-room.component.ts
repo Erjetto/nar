@@ -5,7 +5,7 @@ import { isEmpty as _isEmpty } from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
-import { adjustControlsInFormArray } from 'src/app/shared/methods';
+import { adjustControlsInFormArray, arrayToObject } from 'src/app/shared/methods';
 import { ClientTrainee, LogRoomPIC } from 'src/app/shared/models';
 import {
 	LogStateAction,
@@ -57,14 +57,7 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 		this.rooms$ = this.store.pipe(select(fromRoomState.getRooms));
 		this.trainees$ = this.store.pipe(
 			select(fromBinusianState.getAllTrainees),
-			tap(
-				// Create dict to get trainee info with code
-				(res: ClientTrainee[]) =>
-					(this.traineeDict = res.reduce(
-						(prev, curr) => ({ ...prev, [curr.TraineeCode]: curr }),
-						{}
-					))
-			)
+			tap((res: ClientTrainee[]) => (this.traineeDict = arrayToObject(res, (t) => t.TraineeCode)))
 		);
 		this.store
 			.pipe(select(fromLogState.isLogRoomsLoading), takeUntil(this.destroyed$))

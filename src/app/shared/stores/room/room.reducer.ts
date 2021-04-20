@@ -67,12 +67,14 @@ export const isRoomTransactionsLoading = getRoomStateBy((s) => s.loadingRoomTran
  * Expectation:
  * `{'1': [...], '2': [...], ...}`
  */
-export const getRoomTransactionsByShift = createSelector(getRoomTransactions, (roomTransactions) =>
-	roomTransactions.reduce(
-		(prev, curr) => ({
-			...prev,
-			...{ [curr.Shift]: [...(prev[curr.Shift] ?? []), curr] },
-		}),
-		{}
-	)
+export const getRoomTransactionsByShift = createSelector(
+	getRoomTransactions,
+	(roomTransactions: ClientRoomTransaction[]) =>
+		roomTransactions.reduce(
+			(prev, curr) => ({
+				...prev,
+				...{ [curr.Shift]: [...(prev[curr.Shift] ?? []), curr] },
+			}),
+			{}
+		)
 );

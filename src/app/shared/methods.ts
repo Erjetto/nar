@@ -91,5 +91,21 @@ export const isEmptyGuid = (str: string): boolean => str === '00000000-0000-0000
 export const genDifferenceInSemester = (gen1: string, gen2: string): number =>
 	+gen1.substr(0, 2) * 2 + +gen1[3] - (+gen2.substr(0, 2) * 2 + +gen2[3]);
 
-export const allValuesNotEmpty = (values: any[]): boolean => 
-	values.every(v => !_isEmpty(v))
+export const allValuesNotEmpty = (values: any[]): boolean => values.every((v) => !_isEmpty(v));
+
+/**
+ * Create dict from array
+ * @returns Object, ex: `{'T001': {}, 'T002': {}, ...}
+ */
+export const arrayToObject = (
+	values: any[],
+	keySelector: (_: any) => string,
+	valueSelector: (_: any) => any = (value) => value
+) =>
+	values.reduce(
+		(prev, curr) => ({
+			...prev,
+			[keySelector(curr)]: valueSelector(curr),
+		}),
+		{}
+	);

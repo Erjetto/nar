@@ -218,7 +218,7 @@ export const MasterStateReducer = createReducer(
 		subjects: payload,
 		maxFileSizes: {
 			...state.maxFileSizes,
-			...payload.reduce((acc, prev) => ({ ...acc, [prev.SubjectId]: prev.MaxFileSize }), {}),
+			...payload.reduce((acc, curr) => ({ ...acc, [curr.SubjectId]: curr.MaxFileSize }), {}),
 		},
 		subjectsByPhaseEntity: { ...state.subjectsByPhaseEntity, [phaseId]: payload },
 	})),

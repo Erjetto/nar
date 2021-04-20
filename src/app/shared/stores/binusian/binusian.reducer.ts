@@ -28,6 +28,7 @@ import {
 	FetchMyInterviewSchedule,
 	FetchMyInterviewScheduleSuccess,
 } from './binusian.action';
+import { arrayToObject } from '../../methods';
 
 export interface IBinusianState {
 	//#region Current User data here
@@ -94,13 +95,13 @@ export const BinusianStateReducer = createReducer(
 		...state,
 		loadingTrainees: false,
 		allTrainees: payload,
-		traineesEntity: payload.reduce((accum, curr) => ({ ...accum, [curr.TraineeId]: curr }), {}),
+		traineesEntity: arrayToObject(payload, t => t.TraineeId)
 	})),
 	on(FetchTraineesSuccess, (state, { payload }) => ({
 		...state,
 		loadingTrainees: false,
 		trainees: payload,
-		traineesEntity: payload.reduce((accum, curr) => ({ ...accum, [curr.TraineeId]: curr }), {}),
+		traineesEntity: arrayToObject(payload, t => t.TraineeId)
 	})),
 
 	on(FetchTraineesSimpleData, (state) => ({ ...state, loadingTraineesSimpleData: true })),
