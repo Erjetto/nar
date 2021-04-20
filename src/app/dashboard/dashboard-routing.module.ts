@@ -50,11 +50,26 @@ import { PresentationSummaryComponent } from './presentation/presentation-summar
 import { filter, map, mapTo, tap, withLatestFrom } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ClientGeneration, ClientPhase, User } from '../shared/models';
-import { allValuesNotEmpty, genDifferenceInSemester, TryGetCoreTrainingPhase } from '../shared/methods';
+import {
+	allValuesNotEmpty,
+	genDifferenceInSemester,
+	TryGetCoreTrainingPhase,
+} from '../shared/methods';
 import { RoomActiveComponent } from './room/room-active/room-active.component';
 import { isEmpty as _isEmpty } from 'lodash';
 import { TraineeSchedulesComponent } from './trainee/trainee-schedules/trainee-schedules.component';
 import { environment } from 'src/environments/environment';
+
+const isSPVOrInCoreTraining = (store: Store<IAppState>): Observable<boolean> =>
+	store.pipe(
+		select(fromMasterState.getPhases),
+		withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+		filter(allValuesNotEmpty),
+		map(
+			([phases, user]: [ClientPhase[], User]) =>
+				user.Role.isAstSpv || phases.find((p) => p.Description.includes('Core')) !== undefined
+		)
+	);
 
 export const routes: Routes = [
 	{
@@ -172,18 +187,7 @@ export const routes: Routes = [
 				data: {
 					roles: RoleFlags.Trainee | RoleFlags.Trainer | RoleFlags.Interviewer,
 					name: 'Top Bottom Vote',
-					// Hanya muncul kalo SPV dan sudah ada Phase 'Core'
-					validation: (store: Store<IAppState>): Observable<boolean> =>
-						store.pipe(
-							select(fromMasterState.getPhases),
-							withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
-							filter(allValuesNotEmpty),
-							map(
-								([phases, user]: [ClientPhase[], User]) =>
-									user.Role.isAstSpv ||
-									phases.find((p) => p.Description.includes('Core')) !== undefined
-							)
-						),
+					validation: isSPVOrInCoreTraining,
 				},
 			},
 			{
@@ -316,7 +320,10 @@ export const routes: Routes = [
 					{
 						path: 'new',
 						component: NewPresentationComponent,
-						data: { roles: RoleFlags.Trainee, name: 'New Presentations' },
+						data: {
+							roles: RoleFlags.Trainee,
+							name: 'New Presentations',
+						},
 					},
 					{
 						path: 'report',
@@ -400,7 +407,9 @@ export const routes: Routes = [
 						path: 'schedule',
 						component: TraineeSchedulesComponent,
 						data: {
-							roles: RoleFlags.AssistantSupervisor, name: 'Schedule' },
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'Schedule',
+						},
 					},
 				],
 			},
