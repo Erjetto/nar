@@ -14,14 +14,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { metaReducers } from 'src/app/app.reducer';
 import { SharedModule } from 'src/app/shared/shared.module';
 
-import { ToCSharpDateInterceptor } from 'src/app/shared/interceptors/to-csharp-date-interceptor';
 import { LogInterceptor } from 'src/app/shared/interceptors/log-interceptor';
 import { StoreDispatcherInterceptor } from 'src/app/shared/interceptors/store-dispatcher-interceptor';
 import { UserCookieInterceptor } from './shared/interceptors/user-cookie-interceptor';
 import { PrintInterviewResultComponent } from './print/print-interview-result/print-interview-result.component';
 
 @NgModule({
-	declarations: [AppComponent, LoginComponent, PrintInterviewResultComponent],
+	declarations: [
+		AppComponent,
+		LoginComponent,
+		PrintInterviewResultComponent,
+	],
 	imports: [
 		SharedModule,
 		BrowserModule,
@@ -37,12 +40,12 @@ import { PrintInterviewResultComponent } from './print/print-interview-result/pr
 		BrowserAnimationsModule,
 	],
 	providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: UserCookieInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: StoreDispatcherInterceptor, multi: true },
-    // { provide: HTTP_INTERCEPTORS, useClass: ToCSharpDateInterceptor, multi: true },
-    // { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
-    CookieService,
-  ],
+		{ provide: HTTP_INTERCEPTORS, useClass: UserCookieInterceptor, multi: true },
+		{ provide: HTTP_INTERCEPTORS, useClass: StoreDispatcherInterceptor, multi: true },
+		// { provide: HTTP_INTERCEPTORS, useClass: ToCSharpDateInterceptor, multi: true },
+		// { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
+		CookieService,
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

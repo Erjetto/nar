@@ -45,6 +45,7 @@ import { TraineeHomeComponent } from './home/trainee-home/trainee-home.component
 import { TrainerHomeComponent } from './home/trainer-home/trainer-home.component';
 import { RoomActiveComponent } from './room/room-active/room-active.component';
 import { TraineeSchedulesComponent } from './trainee/trainee-schedules/trainee-schedules.component';
+import { ViewMyPresentationComponent } from './presentation/view-my-presentation/view-my-presentation.component';
 
 @NgModule({
 	declarations: [
@@ -82,6 +83,7 @@ import { TraineeSchedulesComponent } from './trainee/trainee-schedules/trainee-s
 		ViewQuestionComponent,
 		ViewAllQuestionComponent,
 		ViewAllPresentationComponent,
+		ViewMyPresentationComponent,
     PresentationReportComponent,
 		PresentationSummaryComponent,
     

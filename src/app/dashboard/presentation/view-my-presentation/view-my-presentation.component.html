@@ -1,0 +1,84 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col-3">
+			<rd-card
+				[cardTitle]="'My Presentations'"
+				[isLoading]="loadingFilterPresentation$ | async"
+				*ngIf="(currentUser$ | async)?.Role.is(constant.role.Trainee)"
+			>
+				<div class="col v-list-m-12 v-list-bordered px-0">
+					<div class="row">
+						<div class="col">
+							<ng-select
+								[items]="phases$ | async"
+								[clearable]="false"
+								bindLabel="Description"
+								[searchable]="false"
+								[ngModel]="currentPhase$ | async"
+								(change)="currentPhase$.next($event)"
+							></ng-select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<ng-select
+								[items]="myPresentationList$ | async"
+								[clearable]="false"
+								placeholder="Material Name"
+								[ngModel]="currentPresentation$ | async"
+								(change)="currentPresentation$.next($event)"
+							>
+								<ng-template ng-label-tmp let-item="item">
+									{{ subjectNameDict[item.SubjectId] || '?' }} - {{ item.PresentationNo }} -
+									{{ item.Material }}
+								</ng-template>
+								<ng-template
+									ng-option-tmp
+									let-item="item"
+									let-index="index"
+									let-search="searchTerm"
+								>
+									{{ subjectNameDict[item.SubjectId] || '?' }} - {{ item.PresentationNo }} -
+									{{ item.Material }}
+								</ng-template>
+							</ng-select>
+						</div>
+					</div>
+				</div>
+			</rd-card>
+		</div>
+		<div class="col">
+			<rd-card
+				[cardTitle]="'View Presentation'"
+				[expanded]="currentPresentation$ | async"
+				[collapsible]="false"
+				[isLoading]="loadingViewPresentation$ | async"
+			>
+				<div class="row mb-3">
+					<div class="col-3"><b>Material</b></div>
+					<div class="col">
+						{{ (currentPresentation$ | async)?.Material }}
+					</div>
+				</div>
+				<div class="row mb-3">
+					<b>Questions:</b>
+				</div>
+				<div class="row mb-3">
+					<div class="col v-list-m-12 v-list-bordered px-0">
+						<div class="row" *ngFor="let question of (currentPresentation$ | async)?.Questions">
+							<rd-presentation-question
+								[presentation]="currentPresentation$ | async"
+								[question]="question"
+							>
+							</rd-presentation-question>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<b class="pr-2">Comment: </b>
+					<div [innerHTML]="(currentPresentation$ | async)?.PresentationComment.Comment"></div>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+</div>

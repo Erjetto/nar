@@ -59,6 +59,7 @@ import { RoomActiveComponent } from './room/room-active/room-active.component';
 import { isEmpty as _isEmpty } from 'lodash';
 import { TraineeSchedulesComponent } from './trainee/trainee-schedules/trainee-schedules.component';
 import { environment } from 'src/environments/environment';
+import { ViewMyPresentationComponent } from './presentation/view-my-presentation/view-my-presentation.component';
 
 const isSPVOrInCoreTraining = (store: Store<IAppState>): Observable<boolean> =>
 	store.pipe(
@@ -298,8 +299,16 @@ export const routes: Routes = [
 						path: 'view-all-presentations',
 						component: ViewAllPresentationComponent,
 						data: {
-							roles: RoleGroups.SENIOR_ROLES | RoleFlags.Trainee | RoleFlags.JuniorTrainer,
+							roles: RoleGroups.SENIOR_ROLES | RoleFlags.JuniorTrainer,
 							name: 'View All Presentations',
+						},
+					},
+					{
+						path: 'view-my-presentations',
+						component: ViewMyPresentationComponent,
+						data: {
+							roles: RoleFlags.Trainee,
+							name: 'My Presentations',
 						},
 					},
 					{

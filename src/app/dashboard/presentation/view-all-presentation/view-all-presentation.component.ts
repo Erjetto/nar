@@ -21,8 +21,14 @@ import {
 	TraineePresentation,
 	CoreTrainingPresentationQuestion,
 } from 'src/app/shared/models';
-import { curryRight, isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
-import { takeUntil, filter, withLatestFrom, map, delay, tap } from 'rxjs/operators';
+import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
+import {
+	takeUntil,
+	filter,
+	withLatestFrom,
+	map,
+	tap,
+} from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 
@@ -35,15 +41,11 @@ import { RoleFlags } from 'src/app/shared/constants/role.constant';
 export class ViewAllPresentationComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
-	// subjects: ClientSubject[] = []; // to find subject name by id
-
 	phases$: Observable<ClientPhase[]>;
 	subjects$: Observable<ClientSubject[]>;
 	presentations$: Observable<CoreTrainingPresentation[]>;
 	traineesInSubject$: Observable<string[]>;
 	presentationsForTrainee$: Observable<CoreTrainingPresentation[]>;
-	myPresentationList$: Observable<CoreTrainingPresentation[]>;
-	// presentationStatus$: Observable<string>;
 
 	currentPresentation$ = new BehaviorSubject<CoreTrainingPresentation>(null);
 	currentPresentationScoring$: Observable<TraineePresentation>;
@@ -84,15 +86,18 @@ export class ViewAllPresentationComponent
 
 	ngOnInit(): void {
 		//#region Bind from store
-		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
+		this.phases$ = this.store.pipe(
+			select(fromMasterState.getPhases),
+			tap((res) => this.currentPhase$.next(res[0]))
+		);
 		this.subjects$ = this.store.pipe(
 			select(fromMasterState.getSubjects),
-			map((subs: ClientSubject[]) => [...subs].reverse()) // The last subject is the first in list
+			map((subs: ClientSubject[]) => [...subs].reverse()), // The last subject is the first in list
+			tap((res) => this.currentSubject$.next(res[0]))
 		);
 		this.subjectsLoading$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
 
 		this.presentations$ = this.store.pipe(select(fromPresentationState.getPresentations));
-		// this.presentationStatus$ = this.store.pipe(select(fromPresentationState.getPresentationStatus));
 
 		// Get scoring from presentationScorings
 		// Expectation: presentationScorings fetched only one from latest dispatch
@@ -120,10 +125,6 @@ export class ViewAllPresentationComponent
 			select(fromPresentationState.isMyPresentationsLoading)
 		);
 
-		this.myPresentationList$ = this.store.pipe(
-			select(fromPresentationState.getMyPresentations),
-			map((presentations) => _sortBy(presentations, 'PresentationDate').reverse())
-		);
 		//#endregion
 
 		// When one of these changed, also change filtered trainees
@@ -151,24 +152,6 @@ export class ViewAllPresentationComponent
 			)
 		);
 
-		//#region Auto get first value in array
-		this.phases$.pipe(delay(100), takeUntil(this.destroyed$)).subscribe((res) => {
-			this.currentPhase$.next(res[0]);
-		});
-
-		this.subjects$.pipe(takeUntil(this.destroyed$)).subscribe((subjects) => {
-			this.currentSubject$.next(subjects[0]);
-		});
-
-		this.traineesInSubject$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((traineeCodes) => this.currentTraineeCode$.next(traineeCodes[0]));
-
-		this.presentationsForTrainee$
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe((presentations) => this.currentPresentation$.next(presentations[0]));
-		//#endregion
-
 		//#region Bind to effects
 		this.mainEffects.afterRequest$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.loadingViewPresentation$.next(false);
@@ -178,7 +161,6 @@ export class ViewAllPresentationComponent
 		});
 		//#endregion
 
-		//#region Auto fetch
 		this.currentPhase$
 			.pipe(
 				filter((res) => !_isEmpty(res)),
@@ -186,21 +168,6 @@ export class ViewAllPresentationComponent
 			)
 			.subscribe((p) => {
 				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: p.PhaseId }));
-			});
-
-		this.currentSubject$
-			.pipe(
-				filter((res) => !_isEmpty(res)),
-				takeUntil(this.destroyed$),
-				withLatestFrom(this.currentGeneration$)
-			)
-			.subscribe(([sub, gen]) => {
-				this.store.dispatch(
-					PresentationStateAction.FetchPresentationsBy({
-						generationId: gen.GenerationId,
-						subjectId: sub.SubjectId,
-					})
-				);
 			});
 
 		this.currentPresentation$ // Auto fetch Presentation Status
@@ -232,9 +199,35 @@ export class ViewAllPresentationComponent
 				});
 			});
 
-		this.store.dispatch(PresentationStateAction.FetchMyPresentations());
+		//#region Auto fetch
+
+		this.currentSubject$
+			.pipe(
+				filter((res) => !_isEmpty(res)),
+				takeUntil(this.destroyed$),
+				withLatestFrom(this.currentGeneration$)
+			)
+			.subscribe(([sub, gen]) => {
+				this.store.dispatch(
+					PresentationStateAction.FetchPresentationsBy({
+						generationId: gen.GenerationId,
+						subjectId: sub.SubjectId,
+					})
+				);
+			});
 		//#endregion
 
+		//#region Auto get first value in array
+		this.traineesInSubject$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((traineeCodes) => this.currentTraineeCode$.next(traineeCodes[0]));
+
+		this.presentationsForTrainee$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((presentations) => this.currentPresentation$.next(presentations[0]));
+		//#endregion
+
+		//#endregion
 		this.store.dispatch(
 			MainStateAction.DispatchIfEmpty({
 				action: MasterStateAction.FetchPhases(),
