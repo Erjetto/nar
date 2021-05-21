@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
@@ -25,7 +25,7 @@ import {
 	distinctUntilChanged,
 	debounceTime,
 } from 'rxjs/operators';
-import { isEmpty as _isEmpty, flatten as _flatten, sortBy as _sortBy } from 'lodash';
+import { isEmpty as _isEmpty, flatten as _flatten, orderBy as _orderBy } from 'lodash';
 import { dateInRange } from 'src/app/shared/methods';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 
@@ -33,6 +33,7 @@ import { DateHelper } from 'src/app/shared/utilities/date-helper';
 	selector: 'rd-presentation-report',
 	templateUrl: './presentation-report.component.html',
 	styleUrls: ['./presentation-report.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PresentationReportComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	today = DateHelper.dateToFormat(new Date());
@@ -136,10 +137,11 @@ export class PresentationReportComponent extends DashboardContentBase implements
 			takeUntil(this.destroyed$),
 			map(([trainees, name]) =>
 				// Filter lalu sort by count desc
-				_sortBy(
+				_orderBy(
 					Object.values(trainees).filter((t) => t.name.toLowerCase().includes(name)),
-					'count'
-				).reverse()
+					'count',
+					'desc'
+				)
 			)
 		);
 

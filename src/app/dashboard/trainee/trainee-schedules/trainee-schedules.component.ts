@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
@@ -22,6 +22,7 @@ import { isEmpty as _isEmpty } from 'lodash';
 	selector: 'rd-trainee-schedules',
 	templateUrl: './trainee-schedules.component.html',
 	styleUrls: ['./trainee-schedules.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TraineeSchedulesComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	// phases$: Observable<ClientPhase[]>;

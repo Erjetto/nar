@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { DashboardContentBase } from '../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -34,6 +34,7 @@ import { adjustControlsInFormArray } from 'src/app/shared/methods';
 	selector: 'rd-top-bottom-vote',
 	templateUrl: './top-bottom-vote.component.html',
 	styleUrls: ['./top-bottom-vote.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBottomVoteComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	viewDateFormat = 'dd MMM';

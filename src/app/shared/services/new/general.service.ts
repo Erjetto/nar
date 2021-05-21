@@ -33,6 +33,9 @@ export class GeneralService {
 		return this.httpClient
 			.post(this.baseUrl + 'GetUserSalt', data)
 			.pipe(map((res: any) => res.d + ''));
+		// return this.httpClient
+		// 	.get('https://laboratory.binus.ac.id/lapi/api/Account/Salt/' + data.userName)
+		// 	.pipe(map((res: any) => res.Salt + ''));
 	}
 
 	public LogOn(data: {
@@ -43,6 +46,9 @@ export class GeneralService {
 		return this.httpClient
 			.post(this.baseUrl + 'LogOn', data)
 			.pipe(map((res: any) => User.fromJson(res.d)));
+		// return this.httpClient
+		// .post('https://laboratory.binus.ac.id/lapi/api/Account/LogOnBPlus', data)
+		// .pipe(map((res: any) => User.fromJson(res.d)));
 	}
 
 	public LogOut(): Observable<boolean> {

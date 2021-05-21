@@ -9,7 +9,6 @@ import {
 	PresentationStateAction,
 	fromPresentationState,
 	MainStateEffects,
-	PresentationStateEffects,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
 
@@ -18,19 +17,14 @@ import {
 	ClientSubject,
 	CoreTrainingPresentation,
 	ClientPhase,
-	TraineePresentation,
-	CoreTrainingPresentationQuestion,
-	User,
 } from 'src/app/shared/models';
-import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
+import { isEmpty as _isEmpty, orderBy as _orderBy } from 'lodash';
 import {
 	takeUntil,
 	filter,
 	withLatestFrom,
 	map,
-	delay,
 	tap,
-	first,
 	delayWhen,
 } from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -83,7 +77,6 @@ export class ViewMyPresentationComponent extends DashboardContentBase implements
 						(s) => s.Name
 					))
 			),
-			tap(console.log),
 			map((subs: ClientSubject[]) => [...subs].reverse()) // The last subject is the first in list
 		);
 
@@ -98,7 +91,7 @@ export class ViewMyPresentationComponent extends DashboardContentBase implements
 			select(fromPresentationState.getMyPresentations),
 			// Wait for subjectDict
 			delayWhen(() => this.subjects$.pipe(filter((v) => !_isEmpty(v)))), 
-			map((presentations) => _sortBy(presentations, 'PresentationDate').reverse()),
+			map((presentations) => _orderBy(presentations, 'PresentationDate').reverse()),
 			tap((presentations) => this.currentPresentation$.next(presentations[0]))
 		);
 		//#endregion

@@ -177,8 +177,6 @@ export class ViewQuestionComponent extends DashboardContentBase implements OnIni
 	}
 
 	toggleEdit(answerIdx, commentIdx?) {
-		console.log(answerIdx, commentIdx);
-
 		let control: AbstractControl = null;
 		if (commentIdx === undefined) control = this.answersForm.controls[answerIdx].get('isEditing');
 		else

@@ -148,8 +148,8 @@
 												rows="4"
 											></textarea>
 										</ng-template>
-										<button class="btn btn-danger btn-sm">
-											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+										<button class="btn btn-danger btn-sm" title="Delete">
+											<fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
 										</button>
 									</rd-confirmable-pop-up>
 								</td>
@@ -162,11 +162,12 @@
 				[cardTitle]="'Interview Detail'"
 				[isLoading]="loadingFormInterviewResult$ | async"
 				[expanded]="(currentInterviewSchedule$ | async) != null"
+				[collapsible]="(currentInterviewSchedule$ | async) != null"
 				[formGroup]="interviewResultForm"
 			>
-				<div class="row mb-3">
+				<div class="row mb-3" *ngIf="(currentInterviewResult$ | async); let interview">
 					<div class="col" style="flex: 0 0 200px">
-						<img [src]="(currentInterviewResult$ | async)?.thumbnailLink(200)" />
+						<img [src]="interview.thumbnailLink(200)" />
 					</div>
 					<div class="col">
 						<div class="row">
@@ -174,35 +175,35 @@
 								<div>No. Pendaftaran</div>
 								<small><i>Registration Number</i></small>
 							</div>
-							<div class="col">: {{ (currentInterviewResult$ | async)?.RegistrationCode }}</div>
+							<div class="col">: {{ interview.RegistrationCode }}</div>
 						</div>
 						<div class="row">
 							<div class="col-4">
 								<div>NIM</div>
 								<small><i>Binusian ID</i></small>
 							</div>
-							<div class="col">: {{ (currentInterviewResult$ | async)?.TraineeNumber }}</div>
+							<div class="col">: {{ interview.TraineeNumber }}</div>
 						</div>
 						<div class="row">
 							<div class="col-4">
 								<div>No. Trainee</div>
 								<small><i>Trainee Number</i></small>
 							</div>
-							<div class="col">: {{ (currentInterviewResult$ | async)?.TraineeCode }}</div>
+							<div class="col">: {{ interview.TraineeCode }}</div>
 						</div>
 						<div class="row">
 							<div class="col-4">
 								<div>Nama Trainee</div>
 								<small><i>Trainee Name</i></small>
 							</div>
-							<div class="col">: {{ (currentInterviewResult$ | async)?.TraineeName }}</div>
+							<div class="col">: {{ interview.TraineeName }}</div>
 						</div>
 						<div class="row">
 							<div class="col-4">
 								<div>Jurusan</div>
 								<small><i>Major</i></small>
 							</div>
-							<div class="col">: {{ (currentInterviewResult$ | async)?.Major }}</div>
+							<div class="col">: {{ interview.Major }}</div>
 						</div>
 					</div>
 					<div class="col">
@@ -212,7 +213,7 @@
 								<small><i>Interview Date</i></small>
 							</div>
 							<div class="col">
-								: {{ (currentInterviewResult$ | async)?.InterviewDate | date: interviewDateFormat }}
+								: {{ interview.InterviewDate | date: interviewDateFormat }}
 							</div>
 						</div>
 						<div class="row">
@@ -220,14 +221,14 @@
 								<div>Waktu Mulai</div>
 								<small><i>Start Time</i></small>
 							</div>
-							<div class="col">: {{ (currentInterviewResult$ | async)?.StartTime }}</div>
+							<div class="col">: {{ interview.StartTime }}</div>
 						</div>
 						<div class="row">
 							<div class="col-4">
 								<div>Waktu Selesai</div>
 								<small><i>End Time</i></small>
 							</div>
-							<div class="col">: {{ (currentInterviewResult$ | async)?.EndTime }}</div>
+							<div class="col">: {{ interview.EndTime }}</div>
 						</div>
 						<div class="row">
 							<div class="col-4">
@@ -236,12 +237,12 @@
 							</div>
 							<div
 								class="col"
-								[ngSwitch]="isLocationLink((currentInterviewResult$ | async)?.Location || '')"
+								[ngSwitch]="isLocationLink(interview.Location || '')"
 							>
 								<span *ngSwitchCase="true">
-									: <a [href]="(currentInterviewResult$ | async)?.Location">Link here</a>
+									: <a [href]="interview.Location">Link here</a>
 								</span>
-								<span *ngSwitchDefault>: {{ (currentInterviewResult$ | async)?.Location }}</span>
+								<span *ngSwitchDefault>: {{ interview.Location }}</span>
 							</div>
 						</div>
 						<div class="row">
@@ -250,11 +251,21 @@
 								<small><i>Interviewer</i></small>
 							</div>
 							<div class="col">
-								: {{ (currentInterviewResult$ | async)?.MainInterviewer }} <br />
+								: {{ interview.MainInterviewer }} <br />
 								&nbsp;
-								{{ (currentInterviewResult$ | async)?.CoInterviewer }}
+								{{ interview.CoInterviewer }}
 							</div>
 						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col">
+						<span class="mr-3">Interview Materials:</span>
+						<a 
+							class="mr-2 badge badge-primary"
+							*ngFor="let item of interviewMaterialsForTrainee$ | async"
+							[href]="item.downloadLink" 
+						> {{ item.MaterialName }} </a>
 					</div>
 				</div>
 				<div class="row mb-3">
@@ -559,7 +570,7 @@
 							[disabled]="interviewResultForm.pristine"
 							(click)="cancel()"
 						>
-							<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
+							<fa-icon [icon]="['fas', 'times']"></fa-icon> Discard Changes
 						</button>
 					</div>
 				</div>

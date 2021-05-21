@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ClientSubject, LogBookPIC, ClientTrainee, ClientPhase } from 'src/app/shared/models';
 import { takeUntil, filter, map, startWith } from 'rxjs/operators';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -29,6 +29,7 @@ import { DispatchIfEmpty } from 'src/app/shared/stores/main/main.action';
 	selector: 'rd-log-book',
 	templateUrl: './log-book.component.html',
 	styleUrls: ['./log-book.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogBookComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	logDateFormat = DateHelper.WEEKDAY_DATE_FORMAT;

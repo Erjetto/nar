@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
@@ -19,6 +19,7 @@ import { getSubjectsFromEntity } from 'src/app/shared/stores/master/master.reduc
 	selector: 'rd-trainee-attendance-report',
 	templateUrl: './trainee-attendance-report.component.html',
 	styleUrls: ['./trainee-attendance-report.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TraineeAttendanceReportComponent
 	extends DashboardContentBase
@@ -50,12 +51,16 @@ export class TraineeAttendanceReportComponent
 			tap((phases) => (!_isEmpty(phases) ? this.phaseControl.setValue(phases[0]) : ''))
 		);
 
+		this.store
+			.pipe(select(fromMasterState.isPhasesLoading), takeUntil(this.destroyed$))
+			.subscribe(this.loadingExportView$);
+
 		this.subjects$ = getSubjectsFromEntity(
 			this.store,
 			this.phaseControl.valueChanges,
 			this.loadingExportView$
 		).pipe(
-			tap((subjects) => (!_isEmpty(subjects) ? this.subjectControl.setValue(subjects[0]) : ''))
+			tap((subjects) => (!_isEmpty(subjects) ? this.subjectControl.setValue(subjects[0].SubjectId) : ''))
 		);
 
 		this.report$ = this.store.pipe(select(fromAttendanceState.getPeriodicAttendance));
@@ -69,8 +74,10 @@ export class TraineeAttendanceReportComponent
 	}
 
 	exportIntoExcel() {
-		this.store.dispatch(AttendanceStateAction.ExportPeriodicTraineeAttendancesForSubject({
-			subjectId: this.subjectControl.value
-		}))
+		this.store.dispatch(
+			AttendanceStateAction.ExportPeriodicTraineeAttendancesForSubject({
+				subjectId: this.subjectControl.value,
+			})
+		);
 	}
 }

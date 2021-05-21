@@ -23,6 +23,7 @@ import {
 import { takeUntil, withLatestFrom, filter, map } from 'rxjs/operators';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { isEmpty as _isEmpty, map as _map } from 'lodash';
+import { singleUploadForm as singleUploadFormTemplate } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-modify-interview-material',
@@ -34,7 +35,7 @@ export class ModifyInterviewMaterialComponent
 	extends DashboardContentBase
 	implements OnInit, OnDestroy {
 	singleUploadForm = this.fb.group({
-		fileForm: this.fb.group({ fileId: '', fileName: '' }),
+		fileForm: singleUploadFormTemplate(),
 		materialName: ['', Validators.required],
 		trainee_Id: ['', Validators.required],
 	});

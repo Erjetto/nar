@@ -5,6 +5,9 @@ import {
 	ClientInterviewQuestion,
 	ClientInterviewResult,
 	User,
+	InterviewMaterial,
+	InterviewMaterialDetail,
+	ClientPhase,
 } from 'src/app/shared/models';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
@@ -17,8 +20,10 @@ import {
 	InterviewStateEffects,
 	InterviewStateAction,
 	fromInterviewState,
+	MasterStateAction,
+	fromMasterState,
 } from 'src/app/shared/store-modules';
-import { takeUntil, filter, withLatestFrom, map } from 'rxjs/operators';
+import { takeUntil, filter, withLatestFrom, map, tap } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
 import { adjustControlsInFormArray, allValuesNotEmpty } from 'src/app/shared/methods';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
@@ -32,7 +37,8 @@ import { Router } from '@angular/router';
 })
 export class ModifyInterviewScheduleComponent
 	extends DashboardContentBase
-	implements OnInit, OnDestroy {
+	implements OnInit, OnDestroy
+{
 	interviewDateFormat = DateHelper.WEEKDAY_DATE_FORMAT;
 	savedAtFormat = DateHelper.WEEKDAY_DATE_FORMAT + ', ' + DateHelper.FULL_TIME_FORMAT;
 	statusClass = { Acc: 'acc', Rej: 'reject', Pos: 'pos' };
@@ -63,6 +69,9 @@ export class ModifyInterviewScheduleComponent
 	total$ = new BehaviorSubject<number>(0);
 	grade$ = new BehaviorSubject<string>('');
 
+	phases$: Observable<ClientPhase[]>;
+	interviewMaterials$: Observable<InterviewMaterial[]>;
+	interviewMaterialsForTrainee$: Observable<InterviewMaterialDetail[]>;
 	interviewScheduleReport$: Observable<ClientInterviewReport>;
 	filteredInterviewSchedules$: Observable<ClientInterviewSchedule[]>;
 	interviewQuestions$: Observable<ClientInterviewQuestion[]>;
@@ -84,6 +93,7 @@ export class ModifyInterviewScheduleComponent
 
 	ngOnInit(): void {
 		//#region Bind to store
+		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
 		this.interviewScheduleReport$ = this.store.pipe(
 			select(fromInterviewState.getInterviewSchedulesReport)
 		);
@@ -91,6 +101,7 @@ export class ModifyInterviewScheduleComponent
 			select(fromInterviewState.isInterviewSchedulesReportLoading)
 		);
 		this.interviewQuestions$ = this.store.pipe(select(fromInterviewState.getInterviewQuestions));
+		this.interviewMaterials$ = this.store.pipe(select(fromInterviewState.getInterviewMaterials));
 
 		this.filteredInterviewSchedules$ = combineLatest([
 			this.interviewScheduleReport$,
@@ -104,6 +115,19 @@ export class ModifyInterviewScheduleComponent
 							`${sch.MainInterviewer} ${sch.CoInterviewer}`.includes(user.UserName)
 					  )
 			)
+		);
+		this.interviewMaterialsForTrainee$ = combineLatest([
+			this.interviewMaterials$,
+			this.currentInterviewResult$,
+		]).pipe(
+			filter(allValuesNotEmpty),
+			tap(console.log),
+			map(([materialsPerTrainee, currInterview]) => [
+				...materialsPerTrainee[0].Materials,
+				...materialsPerTrainee.find((t) => t.Trainee.TraineeId === currInterview.TraineeId)
+					.Materials,
+			]),
+			tap(console.log)
 		);
 
 		// Add subscription to subject
@@ -130,6 +154,17 @@ export class ModifyInterviewScheduleComponent
 					})
 				);
 			});
+
+		// Fetch interview material for trainee for first phase (everyone)
+		this.phases$
+			.pipe(takeUntil(this.destroyed$), filter(v => !_isEmpty(v)))
+			.subscribe((phases: ClientPhase[]) =>
+				this.store.dispatch(
+					InterviewStateAction.FetchInterviewMaterials({
+						phaseId: phases[phases.length - 1].PhaseId,
+					})
+				)
+			);
 
 		// Add value into form
 		this.currentInterviewResult$
@@ -181,7 +216,10 @@ export class ModifyInterviewScheduleComponent
 				filter((v) => !_isEmpty(v)),
 				takeUntil(this.destroyed$)
 			)
-			.subscribe(() => this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport()));
+			.subscribe(() => {
+				this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport());
+				this.store.dispatch(MasterStateAction.FetchPhases());
+			});
 
 		// Reload when update result
 		this.interviewEffects.updateInterviewResult$
@@ -203,6 +241,12 @@ export class ModifyInterviewScheduleComponent
 			})
 		);
 		this.store.dispatch(InterviewStateAction.FetchInterviewSchedulesReport());
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: MasterStateAction.FetchPhases(),
+				selectorToBeChecked: fromMasterState.getPhases,
+			})
+		);
 	}
 
 	get QuestionsFormArr() {
@@ -242,14 +286,8 @@ export class ModifyInterviewScheduleComponent
 	}
 
 	save() {
-		const {
-			Questions,
-			AttitudeNote,
-			DevelopmentNote,
-			Note,
-			Decision,
-			Summary,
-		} = this.interviewResultForm.value;
+		const { Questions, AttitudeNote, DevelopmentNote, Note, Decision, Summary } =
+			this.interviewResultForm.value;
 		this.store.dispatch(
 			InterviewStateAction.UpdateInterviewResult({
 				interviewScheduleId: this.currentInterviewResult$.value.InterviewScheduleId,

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
 import {
@@ -28,6 +28,7 @@ import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 	selector: 'rd-new-presentation',
 	templateUrl: './new-presentation.component.html',
 	styleUrls: ['./new-presentation.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewPresentationComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	phases$: Observable<ClientPhase[]>;

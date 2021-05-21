@@ -11,12 +11,12 @@ import {
 	fromBinusianState,
 	BinusianStateAction,
 	BinusianStateEffects,
-  MainStateAction,
+	MainStateAction,
 } from 'src/app/shared/store-modules';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { FormBuilder, Validators } from '@angular/forms';
 import { takeUntil, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
-import { isEmpty as _isEmpty} from 'lodash';
+import { isEmpty as _isEmpty } from 'lodash';
 
 @Component({
 	selector: 'rd-manage-generation',
@@ -99,12 +99,18 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 			this.binusianEffects.updateTraineeActive$
 		)
 			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.store.dispatch(BinusianStateAction.FetchTraineesSimpleData()));
+			.subscribe((act) => {
+				this.store.dispatch(BinusianStateAction.FetchTraineesSimpleData());
+				if(act['messageType'].includes('success'))
+					this.deactivateReasonControl.reset();
+			});
 
-		this.store.dispatch(MainStateAction.DispatchIfEmpty({
-      action: BinusianStateAction.FetchTraineesSimpleData(),
-      selectorToBeChecked: fromBinusianState.getTraineesSimpleData
-    }));
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: BinusianStateAction.FetchTraineesSimpleData(),
+				selectorToBeChecked: fromBinusianState.getTraineesSimpleData,
+			})
+		);
 	}
 
 	get isEditing() {
@@ -153,14 +159,16 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 		this.store.dispatch(
 			BinusianStateAction.DeleteTrainee({ binusianNumber: trainee.TraineeNumber })
 		);
-  }
-  
-  toggleTraineeActive(trainee: SimpleTraineeData){
+	}
+
+	toggleTraineeActive(trainee: SimpleTraineeData) {
 		this.loadingViewTrainee$.next(true);
-		this.store.dispatch(BinusianStateAction.UpdateTraineeActive({
-			isActive: !trainee.isActive,
-			reason: this.deactivateReasonControl.value,
-			traineeId: trainee.TraineeId
-		}));
-  }
+		this.store.dispatch(
+			BinusianStateAction.UpdateTraineeActive({
+				isActive: !trainee.isActive,
+				reason: this.deactivateReasonControl.value,
+				traineeId: trainee.TraineeId,
+			})
+		);
+	}
 }

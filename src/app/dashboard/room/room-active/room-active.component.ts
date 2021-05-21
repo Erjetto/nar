@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -18,6 +18,7 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 	selector: 'rd-room-active',
 	templateUrl: './room-active.component.html',
 	styleUrls: ['./room-active.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoomActiveComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	roomTransactionsByShift$: Observable<{

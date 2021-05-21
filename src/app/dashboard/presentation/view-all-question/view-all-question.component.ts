@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -35,6 +35,7 @@ import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 	selector: 'rd-view-all-question',
 	templateUrl: './view-all-question.component.html',
 	styleUrls: ['./view-all-question.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewAllQuestionComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	viewDateFormat = 'dd MMM yyyy hh:mm a';

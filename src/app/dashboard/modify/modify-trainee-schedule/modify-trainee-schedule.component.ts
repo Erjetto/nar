@@ -185,7 +185,6 @@ export class ModifyTraineeScheduleComponent
 
 	onSelectMultipleTraineeSchedule(schedules:any[]){
 		this.selectedTraineeSchedules = schedules;
-		console.log(schedules);
 	}
 
 	deleteTrainerTeachingSchedule(schedule: TrainerTeachingSchedule) {

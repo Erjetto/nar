@@ -26,7 +26,7 @@ import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { isEmpty as _isEmpty } from 'lodash';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
-import { isEmptyGuid } from 'src/app/shared/methods';
+import { isEmptyGuid, singleUploadForm } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-manage-case',
@@ -58,7 +58,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		caseId: [''], // Update
 		changedFile: [false], // Check if 'edit case' uploads new file
 
-		fileForm: this.fb.group({ fileId: [''], fileName: [''] }, Validators.required),
+		fileForm: singleUploadForm(true),
 
 		caseName: ['', Validators.required],
 		correctorNames: ['', Validators.required],
@@ -119,14 +119,20 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 			.subscribe(() => this.store.dispatch(MasterStateAction.FetchPhases()));
 
 		// Reload cases when doing CRUD
-		merge(
-			this.viewCurrentSchedule$,
-			this.caseEffects.createCase$,
-			this.caseEffects.deleteCase$,
-			this.caseEffects.updateCase$
-		)
-			.pipe(takeUntil(this.destroyed$))
+		this.viewCurrentSchedule$
+			.pipe(
+				filter((v) => !_isEmpty(v)),
+				takeUntil(this.destroyed$)
+			)
 			.subscribe(() => {
+				this.store.dispatch(
+					CaseStateAction.FetchCases({ scheduleId: this.viewCurrentSchedule$.value.ScheduleId })
+				);
+			});
+		merge(this.caseEffects.createCase$, this.caseEffects.deleteCase$, this.caseEffects.updateCase$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe((act) => {
+				if (act['messageType'].includes('success') === false) return;
 				this.cancelEdit(); // Reset form
 				if (this.viewCurrentSchedule$.value)
 					this.store.dispatch(
@@ -190,7 +196,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 		this.store.dispatch(
 			CaseStateAction.CreateCase({
 				...this.caseForm.value,
-				fileId: fileForm.fileId ?? EMPTY_GUID,
+				fileId: !_isEmpty(fileForm.fileId) ? fileForm.fileId : EMPTY_GUID,
 				subjectId: this.viewCurrentSubject$.value.SubjectId,
 				scheduleId: this.viewCurrentSchedule$.value.ScheduleId,
 				correctorNames: correctorNames.split(',').map((c: string) => c.trim()),
@@ -200,11 +206,11 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 
 	updateCase() {
 		this.formCaseLoading$.next(true);
-		const { changedFile, correctorNames, fileId } = this.caseForm.value;
+		const { changedFile, correctorNames, fileForm } = this.caseForm.value;
 		this.store.dispatch(
 			CaseStateAction.UpdateCase({
 				...this.caseForm.value,
-				fileId: changedFile ? fileId : null,
+				fileId: changedFile ? fileForm.fileId : null,
 				correctorNames: correctorNames.split(',').map((c: string) => c.trim()),
 			})
 		);

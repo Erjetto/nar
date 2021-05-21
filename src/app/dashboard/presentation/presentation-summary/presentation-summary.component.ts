@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
@@ -27,6 +27,7 @@ import { DateHelper } from 'src/app/shared/utilities/date-helper';
 	selector: 'rd-presentation-summary',
 	templateUrl: './presentation-summary.component.html',
 	styleUrls: ['./presentation-summary.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PresentationSummaryComponent
 	extends DashboardContentBase

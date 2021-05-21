@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
@@ -17,6 +17,7 @@ import { sortBy as _sortBy} from 'lodash';
 	selector: 'rd-trainee-data',
 	templateUrl: './trainee-data.component.html',
 	styleUrls: ['./trainee-data.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TraineeDataComponent extends DashboardContentBase implements OnInit, OnDestroy {
   viewDateFormat = 'dd MMM yyyy';

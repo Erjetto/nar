@@ -1,7 +1,10 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'Export Periodical Attendance per Subject'">
+			<rd-card
+				[cardTitle]="'Export Periodical Attendance per Subject'"
+				[isLoading]="loadingExportView$ | async"
+			>
 				<div class="row">
 					<div class="col-auto col-form-label">Phase</div>
 					<div class="col-3">
@@ -19,6 +22,7 @@
 							[formControl]="subjectControl"
 							[clearable]="false"
 							bindLabel="Name"
+							bindValue="SubjectId"
 						></ng-select>
 					</div>
 					<div class="col-auto">

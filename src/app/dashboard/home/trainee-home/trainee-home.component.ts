@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { IAppState } from 'src/app/app.reducer';
 import { Store, select } from '@ngrx/store';
 
@@ -24,12 +24,13 @@ import {
 import { Observable } from 'rxjs';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
-import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
+import { isEmpty as _isEmpty, orderBy as _orderBy } from 'lodash';
 
 @Component({
 	selector: 'rd-trainee-home',
 	templateUrl: './trainee-home.component.html',
 	styleUrls: ['./trainee-home.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TraineeHomeComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	attendanceDateFormat = DateHelper.FULL_TIME_FORMAT;
@@ -57,14 +58,14 @@ export class TraineeHomeComponent extends DashboardContentBase implements OnInit
 		this.interviewSchedule$ = this.store.pipe(select(fromBinusianState.getmyInterviewSchedule));
 		this.schedules$ = this.store.pipe(
 			select(fromBinusianState.getMySchedules),
-			map((schedules: TraineeSchedule[]) => _sortBy(schedules, 'AttendanceDate').reverse())
+			map((schedules: TraineeSchedule[]) => _orderBy(schedules, 'AttendanceDate', 'desc'))
 		);
 
 		// Ambil semua pertanyaan dari semua presentasi
 		this.incorrectPresentationQuestions$ = this.store.pipe(
 			select(fromPresentationState.getMyPresentations),
 			map((presentations: CoreTrainingPresentation[]) =>
-				presentations	
+				presentations
 					.reduce((prev, curr) => [...prev, ...curr.Questions], [])
 					.filter((q: CoreTrainingPresentationQuestion) => q.Status !== 'correct')
 			)
@@ -81,7 +82,7 @@ export class TraineeHomeComponent extends DashboardContentBase implements OnInit
 		this.store.dispatch(
 			BinusianStateAction.FetchMySchedules({
 				binusianNumber: this.currentUser$.value.UserName,
-			})	
+			})
 		);
 		this.store.dispatch(MainStateAction.FetchAnnouncements());
 		this.store.dispatch(PresentationStateAction.FetchMyPresentations());

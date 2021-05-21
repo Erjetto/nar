@@ -129,6 +129,7 @@
 					<div class="col-4">
 						<rd-upload-input
 							placeholder="Click or drop here to upload score with excel"
+							[extensions]="'xlsx'"
 							(upload)="uploadScoreFromExcel($event)"
 						></rd-upload-input>
 					</div>

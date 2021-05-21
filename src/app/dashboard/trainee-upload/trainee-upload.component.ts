@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, merge } from 'rxjs';
@@ -28,6 +28,7 @@ import { adjustControlsInFormArray, fileFormFactory, isEmptyGuid } from 'src/app
 	selector: 'rd-trainee-upload',
 	templateUrl: './trainee-upload.component.html',
 	styleUrls: ['./trainee-upload.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TraineeUploadComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	viewDateFormat = DateHelper.TIME_DATE_FORMAT;

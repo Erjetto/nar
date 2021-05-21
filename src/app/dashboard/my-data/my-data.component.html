@@ -10,11 +10,18 @@
 				<div rdCardBadges>
 					<!-- Button hanya kalau blum di-score & bukan utk trainee -->
 					<button
-						class="btn btn-sm btn-primary mr-1"
+						class="btn btn-sm btn-primary mr-2"
 						(click)="save()"
 						[disabled]="myDataForm.invalid"
 					>
 						<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save
+					</button>
+					<button
+						class="btn btn-sm btn-secondary mr-1"
+						(click)="cancel()"
+						[disabled]="myDataForm.pristine"
+					>
+						<fa-icon [icon]="['fas', 'times']"></fa-icon> Cancel
 					</button>
 				</div>
 				<div class="row">

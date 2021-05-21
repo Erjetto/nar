@@ -18,7 +18,7 @@ import {
 import { FormBuilder, Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
-import { isEmptyGuid } from 'src/app/shared/methods';
+import { isEmptyGuid, singleUploadForm } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-modify-announcement',
@@ -34,7 +34,7 @@ export class ModifyAnnouncementComponent extends DashboardContentBase implements
 		memberType: ['ar', Validators.required],
 		title: ['', Validators.required],
 		note: ['', Validators.required],
-		fileForm: this.fb.group({ fileId: [''], fileName: [''] }),
+		fileForm: singleUploadForm(),
 		// fileId: [''],
 		// fileName: [''],
 	});

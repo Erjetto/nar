@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import {
 	ClientPhase,
 	ClientSubject,
@@ -30,6 +30,7 @@ import { RoleFlags } from 'src/app/shared/constants/role.constant';
 	selector: 'rd-correction',
 	templateUrl: './correction.component.html',
 	styleUrls: ['./correction.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CorrectionComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	startDateFormat = DateHelper.DATE_TIME_FORMAT;
