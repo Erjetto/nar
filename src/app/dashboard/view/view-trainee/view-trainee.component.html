@@ -44,29 +44,24 @@
 					</div>
 					<div class="col">
 						<div class="row justify-content-end">
-							<!-- <div class="col-auto"> -->
-							<div class="btn-group">
-								<button
-									class="btn btn-primary"
-									(click)="viewMode = 'thumbnail'"
-									[class.active]="viewMode === 'thumbnail'"
-								>
-									Thumbnail
-								</button>
-								<button
-									class="btn btn-primary"
-									(click)="viewMode = 'list'"
-									[class.active]="viewMode === 'list'"
-								>
-									List
-								</button>
-							</div>
-							<!-- </div> -->
+							<rd-toggle-button-group
+								[items]="['Thumbnail', 'List']"
+								[activeEnum]="viewMode"
+								(toggle)="viewMode = $event"
+								class="mb-2"
+							></rd-toggle-button-group>
+						</div>
+						<div class="row justify-content-end">
+							<rd-toggle-button-group
+								[items]="['All', 'Active', 'Inactive']"
+								[activeEnum]="traineeActivityFilter$ | async"
+								(toggle)="traineeActivityFilter$.next($event)"
+							></rd-toggle-button-group>
 						</div>
 					</div>
 				</div>
 				<!-- <div class="row" [ngSwitch]="viewMode"> -->
-				<div class="row" [hidden]="!(viewMode == 'thumbnail')">
+				<div class="row" [hidden]="!(viewMode == 'Thumbnail')">
 					<!-- *ngSwitchCase="'thumbnail'" -->
 					<div class="col list-thumbnail">
 						<rd-trainee-detail-on-hover
@@ -76,7 +71,7 @@
 							<a
 								class="card"
 								[ngClass]="traineeThumbnailInactiveClass(trainee)"
-								[routerLink]="[trainee.TraineeId, false]"
+								(click)="viewTraineeDetail(trainee)"
 							>
 								<p style="margin: 2px">
 									<b>{{ trainee.TraineeCode }}{{ trainee.IsVeteran ? '- V' : '' }}</b>
@@ -114,7 +109,7 @@
 						</rd-trainee-detail-on-hover>
 					</div>
 				</div>
-				<div class="row" [hidden]="!(viewMode == 'list')">
+				<div class="row" [hidden]="!(viewMode == 'List')">
 					<rd-data-table
 						[data]="filteredTrainees$ | async"
 						[selectable]="true"
@@ -122,6 +117,7 @@
 						[noDataMessage]="'No trainees...'"
 						[tableClass]="'table-striped table-hover text-center'"
 						[conditionalRowClass]="traineeRowInactiveClass"
+						(clickRow)="viewTraineeDetail($event)"
 					>
 						<rd-table-header> </rd-table-header>
 						<rd-table-column

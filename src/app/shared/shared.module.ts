@@ -29,6 +29,7 @@ import { ExternalUrlDirective } from './directives/external-url.directive';
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { DataTableModule } from './components/data-table/data-table.module';
 import { NotificationComponent } from './components/notification/notification.component';
+import { ToggleButtonGroupComponent } from './components/toggle-button-group/toggle-button-group.component';
 
 const quillModuleSettings = {
 	modules: {
@@ -59,6 +60,7 @@ const SHARED_DECLARATIONS = [
 	UploadInputComponent,
 	TraineeDetailOnHoverComponent,
 	NotificationComponent,
+	ToggleButtonGroupComponent,
 
 	ClickStopPropagationDirective,
 	ContrastTextColorDirective, // Not used yet

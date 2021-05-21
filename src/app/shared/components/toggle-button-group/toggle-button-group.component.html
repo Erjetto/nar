@@ -1,0 +1,10 @@
+<div class="btn-group">
+	<button
+		class="btn btn-primary"
+		(click)="toggleActiveEnum(enums[i])"
+		[class.active]="isActive(enums[i])"
+		*ngFor="let item of enums; let i = index"
+	>
+		{{ labels[i] }}
+	</button>
+</div>

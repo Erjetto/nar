@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { IAppState } from 'src/app/app.reducer';
 import { Store, select } from '@ngrx/store';
 
@@ -25,6 +25,7 @@ import {
 import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 import { FormControl } from '@angular/forms';
 import { isEmpty as _isEmpty } from 'lodash';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
 	selector: 'rd-view-trainee',
@@ -32,7 +33,8 @@ import { isEmpty as _isEmpty } from 'lodash';
 	styleUrls: ['./view-trainee.component.scss'],
 })
 export class ViewTraineeComponent extends DashboardContentBase implements OnInit, OnDestroy {
-	viewMode: 'thumbnail' | 'list' = 'thumbnail';
+	viewMode = 'Thumbnail';
+	traineeActivityFilter$ = new BehaviorSubject<string>('All');
 
 	phases$: Observable<ClientPhase[]>;
 	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
@@ -48,7 +50,12 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 	searchText = '';
 	searchTextControl = new FormControl('');
 
-	constructor(protected store: Store<IAppState>, private mainEffects: MainStateEffects) {
+	constructor(
+		protected store: Store<IAppState>,
+		private mainEffects: MainStateEffects,
+		private router: Router,
+		private route: ActivatedRoute
+	) {
 		super(store);
 	}
 
@@ -66,20 +73,31 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 				debounceTime(400),
 				distinctUntilChanged()
 			),
+			this.traineeActivityFilter$,
 		]).pipe(
-			map(([trainees, searchText]) =>
-				trainees.filter((t) =>
-					`${t.TraineeName} ${t.TraineeNumber} ${t.TraineeCode} ${t.Gender} ${t.Major}`
-						.toLowerCase()
-						.includes(searchText)
-				)
-			)
+			map(([trainees, searchText, activityFilter]) => {
+				let filtered = trainees;
+				const isActive = activityFilter === 'Active';
+				
+				if (activityFilter !== 'All') {
+					filtered = filtered.filter((t) => t.IsActive === isActive);
+				}
+				if(searchText !== ''){
+					filtered = filtered.filter((t) =>
+						`${t.TraineeName} ${t.TraineeNumber} ${t.TraineeCode} ${t.Gender} ${t.Major}`
+							.toLowerCase()
+							.includes(searchText)
+					);
+				}
+
+				return filtered;
+			})
 		);
 		this.activeNumber$ = this.filteredTrainees$.pipe(
-			map((trainees) => trainees.reduce((prev, curr) => (prev + (curr.IsActive ? 1 : 0)), 0))
+			map((trainees) => trainees.reduce((prev, curr) => prev + (curr.IsActive ? 1 : 0), 0))
 		);
 		this.inactiveNumber$ = this.filteredTrainees$.pipe(
-			map((trainees) => trainees.reduce((prev, curr) => (prev + (!curr.IsActive ? 1 : 0)), 0))
+			map((trainees) => trainees.reduce((prev, curr) => prev + (!curr.IsActive ? 1 : 0), 0))
 		);
 
 		//#region bind to effects
@@ -114,9 +132,9 @@ export class ViewTraineeComponent extends DashboardContentBase implements OnInit
 		);
 	}
 
-	onSelectTrainee(trainee) {}
-
-	onChangePhase(phase) {}
+	viewTraineeDetail(trainee: ClientTraineeReputation) {
+		this.router.navigate([trainee.TraineeId, false], { relativeTo: this.route });
+	}
 
 	traineeRowInactiveClass = (row: any) => ({ 'trainee-row-inactive': !row.IsActive });
 	traineeThumbnailInactiveClass = (data: any) => ({ 'trainee-inactive': !data.IsActive });
