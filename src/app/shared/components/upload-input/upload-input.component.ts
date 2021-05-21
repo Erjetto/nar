@@ -9,6 +9,8 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	HostListener,
+	OnChanges,
+	SimpleChanges,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
@@ -16,7 +18,7 @@ import { OtherService } from '../../services/new/other.service';
 import { MainStateEffects, MainStateAction } from '../../store-modules';
 import { flatten as _flatten, isEmpty as _isEmpty } from 'lodash';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { adjustControlsInFormArray, fileFormFactory } from '../../methods';
+import { adjustControlsInFormArray, fileFormFactory, numberDelimiter } from '../../methods';
 import { takeUntil } from 'rxjs/operators';
 
 /*
@@ -31,7 +33,7 @@ NOTE:
 	styleUrls: ['./upload-input.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UploadInputComponent implements OnInit {
+export class UploadInputComponent implements OnInit, OnChanges {
 	@HostBinding('class') hostClass = 'col input-group';
 
 	/**
@@ -41,9 +43,16 @@ export class UploadInputComponent implements OnInit {
 	@Input() singleFileForm: FormGroup = this.fb.group({ fileId: [''], fileName: [''] });
 	@Input() multiple = false;
 	@Input() disabled = false;
-	@Input() placeholder = '';
+	@Input() placeholder = 'Click or drop here to upload';
+	@Input() extensions = '';
+
+	// Size in bytes
+	@Input() minSize = 0;
+	@Input() maxSize = -1;
+
 	@Output() upload = new EventEmitter<AbstractControl>(); // emit filesForm atau singleFileForm
 
+	extensionList = [];
 	constructor(
 		protected store: Store<IAppState>,
 		private otherService: OtherService,
@@ -56,6 +65,12 @@ export class UploadInputComponent implements OnInit {
 		merge(this.filesForm.valueChanges, this.singleFileForm.valueChanges).subscribe(() =>
 			this.cdr.markForCheck()
 		);
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes['extensions']?.currentValue) {
+			this.extensionList = changes['extensions']?.currentValue.split('|');
+		}
 	}
 
 	get hasFile() {
@@ -86,6 +101,37 @@ export class UploadInputComponent implements OnInit {
 
 	uploadFile(files: FileList) {
 		if (files.length === 0) return;
+		let errorMsg = '';
+
+		// Checks size & extension if necessary
+		// tslint:disable-next-line: prefer-for-of
+		for (let i = 0; i < files.length; i++) {
+			if (this.minSize !== 0 && files[i].size < this.minSize) {
+				errorMsg = `${files[i].name} has size < ${numberDelimiter(this.minSize / 1024)} kB`;
+				break;
+			}
+			if (this.maxSize !== -1 && files[i].size > this.maxSize) {
+				errorMsg = `${files[i].name} has size > ${numberDelimiter(this.maxSize / 1024)} kB`;
+				break;
+			}
+
+			if (this.extensions !== '') {
+				const split = files[i].name.split('.');
+				if (split.length === 1) {
+					errorMsg = `${files[i].name} has no extension`;
+					break;
+				}
+				const fileExt = split[split.length - 1];
+				if (this.extensionList.indexOf(fileExt) === -1) {
+					errorMsg = `${files[i].name} has invalid extension.\nOnly ${this.extensions} extension is allowed`;
+					break;
+				}
+			}
+		}
+		if (errorMsg !== '') {
+			this.store.dispatch(MainStateAction.FailMessage('Uploading files', errorMsg));
+			return;
+		}
 		// this.store.dispatch(MainStateAction.UploadFile({ files: { ...files, length: files.length } }));
 		this.store.dispatch(MainStateAction.InfoMessage('Uploading files...'));
 
