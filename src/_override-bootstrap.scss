@@ -1,6 +1,5 @@
 @import './variables';
 
-//#region bootstrap
 .override-default-popover {
 	max-width: unset;
 	border-bottom-left-radius: 10px;
@@ -14,6 +13,11 @@
 	> .popover-body {
 		padding: 0;
 	}
+}
+//#region bootstrap
+textarea.form-control{
+	min-height: 33.5px;
+	height: 33.5px;
 }
 
 .table {

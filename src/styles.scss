@@ -210,6 +210,14 @@ a {
 	}
 }
 
+// Col
+$fixed-col-widths: (100px, 200px, 300px, 400px);
+@each $w in $fixed-col-widths {
+	.col-#{$w} {
+		width: #{$w} !important;
+	}
+}
+
 // Display
 .d-inline-block {
 	display: inline-block !important;
@@ -220,6 +228,8 @@ a {
 
 // Border
 // bd-0, bd-t-0, bd-r-4, etc.....
+$sides: ('b', 't', 'l', 'r');
+$side-names: ('bottom', 'top', 'left', 'right');
 @for $i from 0 through 4 {
 	.bd-#{$i} {
 		border: #{$i}px solid;
@@ -232,12 +242,15 @@ a {
 	}
 }
 
+// bd-black, bd-white, etc...
+$border-colors: ('black', 'white', 'lightgrey');
 @each $bd-color in $border-colors {
 	.bd-#{$bd-color} {
 		border-color: #{$bd-color} !important;
 	}
 }
-
+// bd-rad-4px, bd-rad-8px
+$border-radiuses: (4px, 8px, 12px);
 @each $bd-rad in $border-radiuses {
 	.bd-rad-#{$bd-rad} {
 		border-radius: #{$bd-rad};
@@ -318,16 +331,16 @@ a {
 // mh-0px - mh-600px
 @for $i from 1 through 16 {
 	.minh-#{$i*50}px {
-		min-height: #{$i * 50}px;
+		min-height: #{$i * 50}px !important;
 	}
 	.maxh-#{$i*50}px {
-		max-height: #{$i * 50}px;
+		max-height: #{$i * 50}px !important;
 	}
 	.minw-#{$i*50}px {
-		min-width: #{$i * 50}px;
+		min-width: #{$i * 50}px !important;
 	}
 	.maxw-#{$i*50}px {
-		max-width: #{$i * 50}px;
+		max-width: #{$i * 50}px !important;
 	}
 }
 .v-scroll {
@@ -427,12 +440,23 @@ a {
 }
 
 // Background colors
+// TODO: Replace bg-green & bg-red with bg-trans-success
 .bg-green {
 	background: $color-good !important;
 }
 
 .bg-red {
 	background: $color-bad !important;
+}
+
+.bg-trans-success{
+	background-color: $color-transparent-green !important;
+}
+.bg-trans-danger{
+	background-color: $color-transparent-red !important;
+}
+.bg-trans-primary{
+	background-color: $color-transparent-blue !important;
 }
 
 .bg-white {

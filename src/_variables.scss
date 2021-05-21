@@ -14,11 +14,11 @@ $text-color-dark: white;
 $active-text-color-dark: #00a9e2;
 
 // Colors
-$color-good: #6bf0cb4d; // Slight transparent green
-$color-bad: #f06b6b4d; // Slight transparent red
 
-// Borders
-$sides: ('b', 't', 'l', 'r');
-$side-names: ('bottom', 'top', 'left', 'right');
-$border-colors: ('black', 'white', 'lightgrey');
-$border-radiuses: (4px, 8px, 12px)
+$color-transparent-red: #f06b6b4d;
+$color-transparent-blue: #6ecaff4d;
+$color-transparent-green: #6bf0cb4d;
+
+$color-good: $color-transparent-green; // Slight transparent green
+$color-bad: $color-transparent-red; // Slight transparent red
+
