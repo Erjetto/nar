@@ -1,0 +1,122 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col-6">
+			<rd-card [cardTitle]="'Upload FLK'" [isLoading]="loadingFLKForm$ | async">
+				<div class="row">
+					<div class="col">
+						<div class="row mb-2">
+							<div class="col">
+								<rd-upload-input
+									placeholder="Click or drop FLK file here"
+									[disabled]="(enableSubmit$ | async) === false"
+									[singleFileForm]="uploadFLKForm"
+									extensions="zip"
+								></rd-upload-input>
+							</div>
+						</div>
+					</div>
+					<div class="col-auto">
+						<div class="row">
+							<button
+								class="btn btn-primary"
+								[disabled]="uploadFLKForm.invalid"
+								(click)="uploadFLK()"
+							>
+								Submit
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<i class="col">
+						Notes: <br />
+						<ul>
+							<li>
+								You cannot upload FLK when your submission is on-check or it has been accepted
+							</li>
+						</ul>
+					</i>
+				</div>
+			</rd-card>
+		</div>
+		<div class="col-6">
+			<rd-card [cardTitle]="'FLK Note'" [isLoading]="loadingFLKNoteForm$ | async">
+				<div class="row">
+					<div class="col">
+						<div class="row mb-2">
+							<!-- <div class="col-auto col-form-label">Note</div> -->
+							<div class="col">
+								<textarea
+									class="form-control vertical-text-area minh-100px"
+									[placeholder]="flkNotePlaceholder"
+									[formControl]="flkNoteControl"
+								></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<button
+						class="btn btn-primary"
+						(click)="updateFLKNote()"
+						[disabled]="flkNoteControl.pristine"
+					>
+						<fa-icon [icon]="['fas', 'pen']"></fa-icon> Save Changes
+					</button>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'FLK History'" [isLoading]="loadingFLKSubmissions$ | async">
+				<div class="row">
+					<i class="col">
+						Notes: <br />
+						<ul>
+							<li>
+								Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem voluptatibus
+								distinctio earum. Quisquam debitis nesciunt corrupti eos nulla accusamus laudantium
+								consequuntur voluptatibus ullam nemo! Repellendus ea eius alias blanditiis
+								voluptatibus?
+							</li>
+							<li>
+								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quia in aspernatur tenetur
+								error laboriosam minus, dolore esse perspiciatis voluptatum, numquam porro, nihil
+								quis inventore. Facilis error corrupti soluta eveniet quae.
+							</li>
+						</ul>
+					</i>
+				</div>
+				<div class="row"></div>
+				<table class="table table-sm table-hover table-striped text-center">
+					<thead>
+						<tr>
+							<th width="80px">File</th>
+							<th width="200px">Submit Date</th>
+							<th width="100px">Status</th>
+							<th width="200px">Status Date</th>
+							<th>Note</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							*ngFor="let submission of flkSubmissions$ | async"
+							[ngClass]="{
+								'bg-trans-danger': submission.Status === FLKStatus.Rejected,
+								'bg-trans-primary': submission.Status === FLKStatus.OnCheck,
+								'bg-trans-success': submission.Status === FLKStatus.Accepted
+							}"
+						>
+							<td><a [href]="submission.fileLink">Download</a></td>
+							<td>{{ submission.SavedDate | date: viewDateFormat }}</td>
+							<td>{{ FLKStatus[submission.Status] }}</td>
+							<td>{{ submission.StatusDate | date: viewDateFormat }}</td>
+							<td class="text-left">{{ submission.Note }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+</div>

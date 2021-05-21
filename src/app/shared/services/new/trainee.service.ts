@@ -8,11 +8,13 @@ import {
 	ClientPhaseSimple,
 	SchedulePerWeek,
 	ClientSpecificSchedule,
-  ClientCaseTrainee,
+	ClientCaseTrainee,
+	FLKQueue,
+	FLKNote,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { map as _map} from 'lodash';
+import { map as _map } from 'lodash';
 
 @Injectable({
 	providedIn: 'root',
@@ -94,9 +96,7 @@ export class TraineeService {
 	}
 
 	public GetTraineeRole(): Observable<string> {
-		return this.httpClient
-			.post(this.baseUrl + 'GetTraineeRole', {})
-			.pipe(map((res: any) => res.d));
+		return this.httpClient.post(this.baseUrl + 'GetTraineeRole', {}).pipe(map((res: any) => res.d));
 	}
 
 	public GetTraineeActivationStatus(): Observable<boolean> {
@@ -167,6 +167,36 @@ export class TraineeService {
 	}
 
 	public Delete(data: { binusianNumber: string }): Observable<boolean> {
-		return this.httpClient.post(this.baseUrl + 'Delete', data).pipe(map((res: any) => res.d === true));
+		return this.httpClient
+			.post(this.baseUrl + 'Delete', data)
+			.pipe(map((res: any) => res.d === true));
 	}
+
+	//#region FLK
+
+	public SubmitFLK(data: { fileId: string }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SubmitFLK', data)
+			.pipe(map((res: any) => res.d === true));
+	}
+
+	public GetMyFLKSubmissionHistory(): Observable<FLKQueue[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetMyFLKSubmissionHistory', {})
+			.pipe(map((res: any) => _map(res.d, FLKQueue.fromJson)));
+	}
+
+	public GetMyFLKNote(): Observable<FLKNote> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetMyFLKNote', {})
+			.pipe(map((res: any) => FLKNote.fromJson(res.d)));
+	}
+
+	public UpdateFLKNote(data: { note: string }): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'UpdateFLKNote', data)
+			.pipe(map((res: any) => res.d === true));
+	}
+
+	//#endregion
 }

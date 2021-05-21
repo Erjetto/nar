@@ -6,6 +6,8 @@ import {
 	ClientTraineeDailyAttendance,
 	ClientTraineeData,
 	ClientUserInRoles,
+	FLKNote,
+	FLKQueue,
 	SimpleTraineeData,
 	TraineeSchedule,
 } from '../../models';
@@ -25,8 +27,11 @@ import {
 	FetchAllTraineesInLatestPhase,
 	FetchDailyAttendance,
 	FetchDailyAttendanceSuccess,
-	FetchMyInterviewSchedule,
 	FetchMyInterviewScheduleSuccess,
+	FetchMyFLKNoteSuccess,
+	FetchMyFLKQueuesSuccess,
+	FetchMyFLKNote,
+	FetchMyFLKQueues,
 } from './binusian.action';
 import { arrayToObject } from '../../methods';
 
@@ -36,10 +41,14 @@ export interface IBinusianState {
 	mySchedules: TraineeSchedule[];
 	myInterviewSchedule: ClientInterviewSchedule[];
 	myData: ClientTraineeData;
+	myFLKQueues: FLKQueue[];
+	myFLKNote: FLKNote;
 
 	loadingDailyAttendance: boolean;
 	loadingMyData: boolean;
 	loadingMySchedules: boolean;
+	loadingMyFLKQueues: boolean;
+	loadingMyFLKNote: boolean;
 	//#endregion
 
 	traineesEntity: { [id: string]: ClientTrainee };
@@ -61,10 +70,14 @@ export const initialState: IBinusianState = {
 
 	myData: null,
 	mySchedules: [],
+	myFLKQueues: [],
+	myFLKNote: new FLKNote('','asdf'),
 
 	loadingDailyAttendance: false,
 	loadingMyData: false,
 	loadingMySchedules: false,
+	loadingMyFLKQueues: false,
+	loadingMyFLKNote: false,
 
 	traineesEntity: {},
 	allTrainees: [],
@@ -95,13 +108,13 @@ export const BinusianStateReducer = createReducer(
 		...state,
 		loadingTrainees: false,
 		allTrainees: payload,
-		traineesEntity: arrayToObject(payload, t => t.TraineeId)
+		traineesEntity: arrayToObject(payload, (t) => t.TraineeId),
 	})),
 	on(FetchTraineesSuccess, (state, { payload }) => ({
 		...state,
 		loadingTrainees: false,
 		trainees: payload,
-		traineesEntity: arrayToObject(payload, t => t.TraineeId)
+		traineesEntity: arrayToObject(payload, (t) => t.TraineeId),
 	})),
 
 	on(FetchTraineesSimpleData, (state) => ({ ...state, loadingTraineesSimpleData: true })),
@@ -142,7 +155,28 @@ export const BinusianStateReducer = createReducer(
 	on(FetchMyInterviewScheduleSuccess, (state, { payload }) => ({
 		...state,
 		myInterviewSchedule: payload,
+	})),
+
+	//#region FLK
+	on(FetchMyFLKQueues, (state) => ({
+		...state,
+		loadingMyFLKQueues: true,
+	})),
+	on(FetchMyFLKNote, (state) => ({
+		...state,
+		loadingMyFLKNote: true,
+	})),
+	on(FetchMyFLKQueuesSuccess, (state, { payload }) => ({
+		...state,
+		myFLKQueues: payload,
+		loadingMyFLKQueues: false,
+	})),
+	on(FetchMyFLKNoteSuccess, (state, { payload }) => ({
+		...state,
+		myFLKNote: payload,
+		loadingMyFLKNote: false,
 	}))
+	//#endregion
 );
 
 export const getBinusianState = createFeatureSelector<IBinusianState>(BINUSIANSTATE_REDUCER_NAME);
@@ -153,6 +187,8 @@ export const getBinusianStateBy = (fn: (_: IBinusianState) => any) =>
 export const getMyDailyAttendance = getBinusianStateBy((s) => s.myDailyAttendance);
 export const getMyData = getBinusianStateBy((s) => s.myData);
 export const getMySchedules = getBinusianStateBy((s) => s.mySchedules);
+export const getMyFLKQueues = getBinusianStateBy((s) => s.myFLKQueues);
+export const getMyFLKNote = getBinusianStateBy((s) => s.myFLKNote);
 
 export const getTrainees = getBinusianStateBy((s) => s.trainees);
 export const getAllTrainees = getBinusianStateBy((s) => s.allTrainees);
@@ -160,9 +196,7 @@ export const getTraineesEntity = getBinusianStateBy((s) => s.traineesEntity);
 export const getTraineesData = getBinusianStateBy((s) => s.traineesData);
 export const getTraineesSimpleData = getBinusianStateBy((s) => s.traineesSimpleData);
 
-export const getmyInterviewSchedule = getBinusianStateBy(
-	(s) => s.myInterviewSchedule
-);
+export const getmyInterviewSchedule = getBinusianStateBy((s) => s.myInterviewSchedule);
 
 export const isDailyAttendanceLoading = getBinusianStateBy((s) => s.loadingDailyAttendance);
 export const isTraineesSimpleDataLoading = getBinusianStateBy((s) => s.loadingTraineesSimpleData);
@@ -170,3 +204,5 @@ export const isTraineesLoading = getBinusianStateBy((s) => s.loadingTrainees);
 export const isTraineesDataLoading = getBinusianStateBy((s) => s.loadingTraineesData);
 export const isMyDataLoading = getBinusianStateBy((s) => s.loadingMyData);
 export const isMySchedulesLoading = getBinusianStateBy((s) => s.loadingMySchedules);
+export const isMyFLKQueuesLoading = getBinusianStateBy((s) => s.loadingMyFLKQueues);
+export const isMyFLKNoteLoading = getBinusianStateBy((s) => s.loadingMyFLKNote);

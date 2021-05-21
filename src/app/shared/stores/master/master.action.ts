@@ -10,6 +10,8 @@ import {
 	AttendanceType,
 	TraineeSchedule,
 	TrainerTeachingSchedule,
+	FLKQueue,
+	FLKNote,
 } from '../../models';
 
 //#region Fetch
@@ -246,17 +248,17 @@ export const CreateTrainerTeachingSchedules = createAction(
 	props<{ schedules: string[] }>()
 );
 export const CreateTraineeSchedules = createAction(
-	'[BinusianState] CreateTraineeSchedules',
+	'[MasterState] CreateTraineeSchedules',
 	props<{ schedules: string[] }>()
 );
 
 export const CreateTraineeAttendances = createAction(
-	'[BinusianState] CreateTraineeAttendances',
+	'[MasterState] CreateTraineeAttendances',
 	props<{ attendances: string[] }>()
 );
 
 export const CreateLectureSchedules = createAction(
-	'[BinusianState] CreateLectureSchedules',
+	'[MasterState] CreateLectureSchedules',
 	props<{ schedules: string[] }>()
 );
 //#endregion
@@ -289,6 +291,28 @@ export const FetchTraineeSchedulesSuccess = createAction(
 );
 export const DeleteTraineeSchedules = createAction(
 	'[MasterState] DeleteTraineeSchedules',
-	props<{ traineeScheduleIds: string[], note: string }>()
+	props<{ traineeScheduleIds: string[]; note: string }>()
 );
+//#endregion
+
+//#endregion FLK
+
+export const FetchFLKQueues = createAction('[MasterState] FetchFLKQueues');
+export const FetchFLKNotes = createAction('[MasterState] FetchFLKNotes');
+
+export const FetchFLKQueuesSuccess = createAction(
+	'[MasterState] FetchFLKQueuesSuccess',
+	props<{ payload: FLKQueue[] }>()
+);
+
+export const FetchFLKNotesSuccess = createAction(
+	'[MasterState] FetchFLKNotesSuccess',
+	props<{ payload: FLKNote[] }>()
+);
+
+export const UpdateFLKQueue = createAction(
+	'[MasterState] UpdateFLKQueue',
+	props<{ flkQueueId: string; into: number; checker: string; note: string }>()
+);
+
 //#endregion

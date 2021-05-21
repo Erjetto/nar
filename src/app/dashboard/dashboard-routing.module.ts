@@ -60,6 +60,8 @@ import { isEmpty as _isEmpty } from 'lodash';
 import { TraineeSchedulesComponent } from './trainee/trainee-schedules/trainee-schedules.component';
 import { environment } from 'src/environments/environment';
 import { ViewMyPresentationComponent } from './presentation/view-my-presentation/view-my-presentation.component';
+import { TraineeUploadFlkComponent } from './trainee-upload-flk/trainee-upload-flk.component';
+import { TraineeFlkComponent } from './trainee/trainee-flk/trainee-flk.component';
 
 const isSPVOrInCoreTraining = (store: Store<IAppState>): Observable<boolean> =>
 	store.pipe(
@@ -211,6 +213,26 @@ export const routes: Routes = [
 					// 	),
 				},
 			},
+			// {
+			// 	path: 'upload-flk',
+			// 	component: TraineeUploadFlkComponent,
+			// 	data: {
+			// 		roles: RoleFlags.Trainee,
+			// 		name: 'FLK',
+			// 		// Hanya muncul kalo SPV dan sudah ada Phase 'Core'
+			// 		// validation: (store: Store<IAppState>): Observable<boolean> =>
+			// 		// 	store.pipe(
+			// 		// 		select(fromMasterState.getPhases),
+			// 		// 		withLatestFrom(store.pipe(select(fromMainState.getCurrentUser))),
+			// 		// 		filter(values => values.every(v => !_isEmpty(v))),
+			// 		// 		map(
+			// 		// 			([phases, user]: [ClientPhase[], User]) =>
+			// 		// 				user.Role.isAstSpv ||
+			// 		// 				phases.find((p) => p.Description.includes('Core')) !== undefined
+			// 		// 		)
+			// 		// 	),
+			// 	},
+			// },
 			{
 				path: 'log',
 				data: { name: 'Log' },
@@ -418,6 +440,14 @@ export const routes: Routes = [
 						data: {
 							roles: RoleFlags.AssistantSupervisor,
 							name: 'Schedule',
+						},
+					},
+					{
+						path: 'flk',
+						component: TraineeFlkComponent,
+						data: {
+							roles: RoleFlags.AssistantSupervisor,
+							name: 'FLK Submissions',
 						},
 					},
 				],

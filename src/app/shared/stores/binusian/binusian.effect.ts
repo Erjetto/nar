@@ -191,4 +191,43 @@ export class BinusianStateEffects {
 		),
 		share()
 	);
+
+	//#region FLK
+	@Effect()
+	fetchMyFLKQueues$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.FetchMyFLKQueues),
+		switchMap((data) => this.traineeService.GetMyFLKSubmissionHistory()),
+		mergeMap((payload) => of(BinusianStateAction.FetchMyFLKQueuesSuccess({ payload }))),
+		share()
+	);
+	@Effect()
+	fetchMyFLKNote$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.FetchMyFLKNote),
+		switchMap((data) => this.traineeService.GetMyFLKNote()),
+		mergeMap((payload) => of(BinusianStateAction.FetchMyFLKNoteSuccess({ payload }))),
+		share()
+	);
+	@Effect()
+	createFLKQueue$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.CreateFLKQueue),
+		switchMap((data) => this.traineeService.SubmitFLK(data)),
+		mergeMap((res) =>
+			res
+				? of(MainStateAction.SuccessfullyMessage('uploaded FLK'))
+				: of(MainStateAction.FailMessage('uploading FLK'))
+		),
+		share()
+	);
+	@Effect()
+	updateFLKNote$: Observable<Action> = this.actions$.pipe(
+		ofType(BinusianStateAction.UpdateFLKNote),
+		switchMap((data) => this.traineeService.UpdateFLKNote(data)),
+		mergeMap((res) =>
+			res
+				? of(MainStateAction.SuccessfullyMessage('updated FLK Note'))
+				: of(MainStateAction.FailMessage('updating FLK Note'))
+		),
+		share()
+	);
+	//#endregion
 }

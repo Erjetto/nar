@@ -5,6 +5,8 @@ import {
 	ClientTrainee,
 	ClientTraineeDailyAttendance,
 	ClientTraineeData,
+	FLKNote,
+	FLKQueue,
 	SimpleTraineeData,
 	TraineeSchedule,
 } from '../../models';
@@ -96,3 +98,24 @@ export const FetchMyInterviewScheduleSuccess = createAction(
 	'[BinusianState] FetchMyInterviewScheduleSuccess',
 	props<{ payload: ClientInterviewSchedule[] }>()
 );
+
+//#region FLK
+export const FetchMyFLKQueues = createAction('[BinusianState] FetchMyFLKQueues');
+export const FetchMyFLKNote = createAction('[BinusianState] FetchMyFLKNote');
+export const FetchMyFLKQueuesSuccess = createAction(
+	'[BinusianState] FetchMyFLKQueuesSuccess',
+	props<{ payload: FLKQueue[] }>()
+);
+export const FetchMyFLKNoteSuccess = createAction(
+	'[BinusianState] FetchMyFLKNoteSuccess',
+	props<{ payload: FLKNote }>()
+);
+export const CreateFLKQueue = createAction(
+	'[BinusianState] CreateFLKQueue',
+	props<{ fileId: string }>()
+);
+export const UpdateFLKNote = createAction(
+	'[BinusianState] UpdateFLKNote',
+	props<{ note: string }>()
+);
+//#endregion

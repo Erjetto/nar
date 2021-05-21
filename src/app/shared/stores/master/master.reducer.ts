@@ -18,6 +18,8 @@ import {
 	ClientTrainee,
 	TraineeSchedule,
 	TrainerTeachingSchedule,
+	FLKQueue,
+	FLKNote,
 } from '../../models';
 import { getCurrentGeneration } from '../main/main.reducer';
 import { combineLatest, Observable, Subject } from 'rxjs';
@@ -45,6 +47,9 @@ import {
 	FetchTraineeSchedulesByDate,
 	FetchTrainerTeachingSchedules,
 	FetchTrainerTeachingSchedulesSuccess,
+	FetchFLKQueuesSuccess,
+	FetchFLKNotesSuccess,
+	FetchFLKQueues,
 } from './master.action';
 import { IAppState } from 'src/app/app.reducer';
 
@@ -83,6 +88,13 @@ export interface IMasterState {
 
 	loadingTrainerTeachingSchedules: boolean;
 	loadingTraineeTrainingSchedules: boolean;
+
+	//#region FLK
+	flkQueues: FLKQueue[];
+	flkNotes: FLKNote[];
+	loadingFLKQueues: boolean;
+	loadingFLKNotes: boolean;
+	//#endregion
 }
 
 export const initialState: IMasterState = {
@@ -123,6 +135,13 @@ export const initialState: IMasterState = {
 
 	loadingTrainerTeachingSchedules: false,
 	loadingTraineeTrainingSchedules: false,
+
+	//#region FLK
+	flkQueues: [],
+	flkNotes: [],
+	loadingFLKQueues: false,
+	loadingFLKNotes: false,
+	//#endregion
 };
 
 export const MASTERSTATE_REDUCER_NAME = 'MasterState';
@@ -253,7 +272,7 @@ export const MasterStateReducer = createReducer(
 		trainerTeachingSchedules: payload,
 		loadingTrainerTeachingSchedules: false,
 	})),
-	
+
 	on(FetchTraineeSchedulesBy, FetchTraineeSchedulesByDate, (state) => ({
 		...state,
 		loadingTraineeTrainingSchedules: true,
@@ -262,6 +281,27 @@ export const MasterStateReducer = createReducer(
 		...state,
 		traineeTrainingSchedules: payload,
 		loadingTraineeTrainingSchedules: false,
+	})),
+	//#endregion
+
+	//#region FLK
+	on(FetchFLKQueues, (state) => ({
+		...state,
+		loadingFLKQueues: true,
+	})),
+	on(FetchFLKQueuesSuccess, (state) => ({
+		...state,
+		loadingflkNotes: false,
+	})),
+	on(FetchFLKQueuesSuccess, (state, { payload }) => ({
+		...state,
+		flkQueues: payload,
+		loadingFLKQueues: false,
+	})),
+	on(FetchFLKNotesSuccess, (state, { payload }) => ({
+		...state,
+		flkNotes: payload,
+		loadingflkNotes: false,
 	}))
 	//#endregion
 );
@@ -301,7 +341,7 @@ export const isSchedulesLoading = getMasterStateBy((s) => s.loadingSchedules);
 export const isTraineeInScheduleLoading = getMasterStateBy((s) => s.loadingTraineeInSchedule);
 //#endregion
 
-//#region  Modify tab
+//#region Modify tab
 export const getTrainerTeachingSchedules = getMasterStateBy((s) => s.trainerTeachingSchedules);
 export const getTraineeTrainingSchedules = getMasterStateBy((s) => s.traineeTrainingSchedules);
 
@@ -311,6 +351,14 @@ export const isTrainerTeachingScheduleLoading = getMasterStateBy(
 export const isTraineeTrainingScheduleLoading = getMasterStateBy(
 	(s) => s.loadingTraineeTrainingSchedules
 );
+//#endregion
+
+//#region FLK
+export const getFLKQueues = getMasterStateBy((s) => s.flkQueues);
+export const getFLKNotes = getMasterStateBy((s) => s.flkNotes);
+
+export const isFLKQueuesLoading = getMasterStateBy((s) => s.loadingFLKQueues);
+export const isFLKNotesLoading = getMasterStateBy((s) => s.loadingFLKNotes);
 //#endregion
 
 //#region Extras

@@ -17,6 +17,8 @@ import {
 	SchedulePerWeek,
 	Case,
 	SimpleTraineeData,
+	FLKQueue,
+	FLKNote,
 } from '../../models';
 import { environment } from 'src/environments/environment';
 import { map as _map } from 'lodash';
@@ -556,5 +558,32 @@ export class LeaderService {
 			.post(this.baseUrl + 'DeleteUserInRoles', data)
 			.pipe(map((res: any) => res.d === true));
 	}
+	//#endregion
+
+	//#region FLK
+
+	public SetFLKQueue(data: {
+		flkQueueId: string;
+		into: number;
+		checker: string;
+		note: string;
+	}): Observable<boolean> {
+		return this.httpClient
+			.post(this.baseUrl + 'SetFLKQueue', data)
+			.pipe(map((res: any) => res.d === true));
+	}
+
+	public GetFLKQueues(): Observable<FLKQueue[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetFLKQueues', {})
+			.pipe(map((res: any) => _map(res.d, FLKQueue.fromJson)));
+	}
+
+	public GetFLKNotes(): Observable<FLKNote[]> {
+		return this.httpClient
+			.post(this.baseUrl + 'GetFLKNotes', {})
+			.pipe(map((res: any) => _map(res.d, FLKNote.fromJson)));
+	}
+
 	//#endregion
 }

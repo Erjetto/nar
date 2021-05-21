@@ -11,6 +11,7 @@ import {
 	pluck,
 	map,
 	switchMapTo,
+	tap,
 } from 'rxjs/operators';
 
 import * as MasterStateAction from 'src/app/shared/stores/master/master.action';
@@ -515,11 +516,45 @@ export class MasterStateEffects {
 	@Effect()
 	deleteTraineeSchedule$: Observable<Action> = this.actions$.pipe(
 		ofType(MasterStateAction.DeleteTraineeSchedules),
-		switchMap((data) => this.traineeAttendanceService.DeleteTraineeSchedules(data).pipe(map(res => ({res, data})))),
-		mergeMap(({res, data}) =>
+		switchMap((data) =>
+			this.traineeAttendanceService.DeleteTraineeSchedules(data).pipe(map((res) => ({ res, data })))
+		),
+		mergeMap(({ res, data }) =>
 			res.length === data.traineeScheduleIds.length
 				? of(MainStateAction.SuccessfullyMessage('deleted trainee schedule'))
-				: of(MainStateAction.FailMessage(`deleting ${data.traineeScheduleIds.length - res.length} trainee schedule`))
+				: of(
+						MainStateAction.FailMessage(
+							`deleting ${data.traineeScheduleIds.length - res.length} trainee schedule`
+						)
+				  )
+		),
+		share()
+	);
+	//#endregion
+
+	//#region FLK
+	@Effect()
+	fetchFLKQueues$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.FetchFLKQueues),
+		switchMap((data) => this.leaderService.GetFLKQueues()),
+		mergeMap((payload) => of(MasterStateAction.FetchFLKQueuesSuccess({payload}))),
+		share()
+	);
+	@Effect()
+	fetchFLKNotes$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.FetchFLKNotes),
+		switchMap((data) => this.leaderService.GetFLKNotes()),
+		mergeMap((payload) => of(MasterStateAction.FetchFLKNotesSuccess({payload}))),
+		share()
+	);
+	@Effect()
+	setFLKQueue$: Observable<Action> = this.actions$.pipe(
+		ofType(MasterStateAction.UpdateFLKQueue),
+		switchMap((data) => this.leaderService.SetFLKQueue(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('updated FLK Queue'))
+				: of(MainStateAction.FailMessage('updating FLK Queue'))
 		),
 		share()
 	);

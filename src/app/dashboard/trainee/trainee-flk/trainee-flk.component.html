@@ -1,0 +1,220 @@
+<div class="container-xl">
+	<div class="row">
+		<div class="col">
+			<rd-card [cardTitle]="'FLK Queue'" [isLoading]="loadingFLKQueue$ | async">
+				<div rdCardBadges>
+					<button class="btn btn-sm btn-primary mr-1" (click)="refreshFLKQueue()">
+						<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Refresh
+					</button>
+				</div>
+				<div class="row">
+					<div class="col text-center">
+						<rd-toggle-button-group
+							[items]="FLKStatus"
+							[itemType]="'enum'"
+							[activeEnums]="queueFilter$ | async"
+							[multiple]="true"
+							(activeEnumsChange)="queueFilter$.next($event)"
+						></rd-toggle-button-group>
+					</div>
+				</div>
+				<table class="table table-sm table-hover table-striped text-center text-middle">
+					<thead>
+						<tr>
+							<th width="90px">Trainee Code</th>
+							<th width="180px">Name</th>
+							<th>Note</th>
+							<th width="80px">File</th>
+							<th width="160px">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							*ngFor="let flk of filteredFLKQueues$ | async"
+							[ngClass]="{
+								'bg-trans-danger': flk.Status === FLKStatus.Rejected,
+								'bg-trans-primary': flk.Status === FLKStatus.OnCheck,
+								'bg-trans-success': flk.Status === FLKStatus.Accepted
+							}"
+						>
+							<td>{{ traineeDict[flk.TraineeId]?.TraineeCode }}</td>
+							<td>{{ traineeDict[flk.TraineeId]?.TraineeName }}</td>
+							<td class="text-left">{{ flkNotesPerTraineeId[flk.TraineeId] }}</td>
+							<td>
+								<a [href]="flk.fileLink">Download</a>
+							</td>
+							<ng-container [ngSwitch]="flk.Status">
+								<!-- SPV accept/reject -->
+								<td *ngSwitchDefault>
+									<ng-container [ngSwitch]="flk.CheckedBy === (currentUser$ | async)?.UserName">
+										<!-- If checker, show the buttons -->
+										<ng-container *ngSwitchCase="true">
+											<ng-template #noteTemplate>
+												<textarea
+													class="form-control"
+													[formControl]="statusNoteControl"
+													placeholder="Input note here..."
+													style="width: 300px; height: 100px"
+												></textarea>
+											</ng-template>
+											<rd-confirmable-pop-up
+												[title]="
+													'Accept submission from ' + traineeDict[flk.TraineeId]?.TraineeCode + '?'
+												"
+												[description]="noteTemplate"
+												(confirm)="setFLKQueue(flk, true)"
+												[hidden]="flk.Status === FLKStatus.Accepted"
+												class="mr-3"
+											>
+												<button class="btn btn-success" title="Accept">
+													<fa-icon [icon]="['fas', 'check']"></fa-icon>
+												</button>
+											</rd-confirmable-pop-up>
+											<rd-confirmable-pop-up
+												[title]="
+													'Reject submission from ' + traineeDict[flk.TraineeId]?.TraineeCode + '?'
+												"
+												[description]="noteTemplate"
+												(confirm)="setFLKQueue(flk, false)"
+												[canConfirm]="statusNoteControl.valid"
+												[hidden]="flk.Status === FLKStatus.Rejected"
+												class="mr-3"
+											>
+												<button class="btn btn-danger" title="Reject">
+													<fa-icon [icon]="['fas', 'times']"></fa-icon>
+												</button>
+											</rd-confirmable-pop-up>
+										</ng-container>
+										<!-- If not the checker, then show who checks -->
+										<ng-container *ngSwitchDefault>
+											Checked by: <br />
+											{{ flk.CheckedBy }}
+										</ng-container>
+									</ng-container>
+								</td>
+
+								<!-- Assign SPV to check -->
+								<td *ngSwitchCase="FLKStatus.None">
+									<ng-select
+										placeholder="Assign SPV"
+										[items]="spvUsers$ | async"
+										bindLabel="UserName"
+										bindValue="UserName"
+										[formControl]="checkerControl"
+										[clearable]="false"
+										class="mb-2"
+									></ng-select>
+									<button
+										class="btn btn-primary"
+										(click)="assignChecker(flk)"
+										[disabled]="checkerControl.invalid"
+									>
+										Assign
+									</button>
+								</td>
+							</ng-container>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+			<rd-card
+				[cardTitle]="'FLK Submissions per Trainee'"
+				[isLoading]="loadingFLKSubmissionsPerTrainee$ | async"
+				[expanded]="(currentTrainee$ | async) == null"
+				(toggleExpand)="currentTrainee$.next(null)"
+			>
+				<table class="table table-sm table-hover table-striped text-center">
+					<thead>
+						<tr>
+							<th width="90px">Trainee Code</th>
+							<th width="210px">Name</th>
+							<th>Latest Note</th>
+							<th width="80px">Checked By</th>
+							<th width="80px">Latest Status</th>
+							<th width="200px">Latest Status Date</th>
+							<th width="50px"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							*ngFor="let flk of latestFLKSubmissionsPerTrainee$ | async"
+							[ngClass]="{
+								'bg-trans-danger': flk.submission.Status === FLKStatus.Rejected,
+								'bg-trans-primary': flk.submission.Status === FLKStatus.OnCheck,
+								'bg-trans-success': flk.submission.Status === FLKStatus.Accepted
+							}"
+							(click)="currentTrainee$.next(flk.trainee)"
+						>
+							<td>{{ flk.trainee.TraineeCode }}</td>
+							<td class="text-left">{{ flk.trainee.TraineeName }}</td>
+							<td class="text-left">{{ flk.submission.Note }}</td>
+							<td>{{ flk.submission.CheckedBy }}</td>
+							<td>{{ FLKStatus[flk.submission.Status] || '-' }}</td>
+							<td>{{ flk.submission.StatusDate | date: viewDateFormat }}</td>
+							<td>
+								<a [href]="flk.submission.fileLink" *ngIf="flk.submission.hasFile">
+									<button class="btn btn-primary btn-sm">
+										<fa-icon [icon]="['fas', 'download']"></fa-icon>
+									</button>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+			<rd-card
+				[cardTitle]="'Trainee FLK Submission History'"
+				[isLoading]="loadingFLKSubmissionsPerTrainee$ | async"
+				[collapsible]="(currentTrainee$ | async) != null"
+				[expanded]="(currentTrainee$ | async) != null"
+				(toggleExpand)="currentTrainee$.next(null)"
+			>
+				<div class="row p-2" *ngIf="currentTrainee$ | async as trainee">
+					<div class="col-6">
+						<b>Note:</b>
+						<p>
+							{{ flkNotesPerTraineeId[trainee.TraineeId] }}
+						</p>
+					</div>
+					<div class="col-6 text-right">
+						<u>
+							<b>{{ trainee.codeAndName }}</b>
+						</u>
+					</div>
+				</div>
+				<table
+					class="table table-sm table-hover table-striped text-center"
+					*ngIf="currentTrainee$ | async as trainee"
+				>
+					<thead>
+						<tr>
+							<th>File</th>
+							<th width="150px">Submit Date</th>
+							<th width="150px">Status Date</th>
+							<th>Status</th>
+							<th>Checked By</th>
+							<th>Note</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							*ngFor="let flk of flkQueuePerTraineeId[trainee.TraineeId]"
+							[ngClass]="{
+								'bg-trans-danger': flk.Status === FLKStatus.Rejected,
+								'bg-trans-primary': flk.Status === FLKStatus.OnCheck,
+								'bg-trans-success': flk.Status === FLKStatus.Accepted
+							}"
+						>
+							<td><a [href]="flk.fileLink">Download</a></td>
+							<td>{{ flk.SavedDate | date: viewDateFormat }}</td>
+							<td>{{ flk.StatusDate | date: viewDateFormat }}</td>
+							<td>{{ FLKStatus[flk.Status] }}</td>
+							<td>{{ flk.CheckedBy }}</td>
+							<td>{{ flk.Note }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</rd-card>
+		</div>
+	</div>
+</div>
