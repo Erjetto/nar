@@ -4,6 +4,17 @@ import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
 import { GetDownloadLinkFromFileId, isEmptyGuid } from './methods';
 
+// NOTE: if enum is string value, then use the exact same key 
+//       for compability with ToggleButtonGroup
+export enum ExampleStringEnum{
+	One = 'One', Two = 'Two'
+}
+// NOTE: Always initialize the first number enum for number clarity
+//       the next enum will be the increment by default
+export enum ExampleNumberEnum{
+	One = 1, Two, Three = 30
+}
+
 //#region Constants, enums, system class etc
 export const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
 
@@ -26,6 +37,13 @@ export const AttendanceStatus = [
 	'College Permission',
 	'Neglects Attendance',
 ];
+
+export enum FLKStatus{
+	None = 0,
+	OnCheck = 1,
+	Accepted = 2,
+	Rejected = 3
+}
 
 export type ToastType = 'info' | 'warning' | 'success' | 'danger';
 export class Toast {
@@ -269,8 +287,8 @@ export class ClientTraineeReputation extends BaseModel {
 		public Minus = 0,
 		public Neutral = 0,
 		public Plus = 0,
-		public IsActive = 0,
-		public IsVeteran = 0,
+		public IsActive = false,
+		public IsVeteran = false,
 		public Major = '',
 		public DeactivateReason = ''
 	) {
@@ -2051,6 +2069,53 @@ export class ClientRoomTransaction extends BaseModel {
 		return Object.assign(new ClientRoom(), data, {
 			Date: DateHelper.fromCSharpDate(data.Date)
 		});
+	}
+}
+
+//#endregion
+
+//#region FLK
+export class FLKQueue extends BaseModel {
+	constructor(
+		public GenerationId = EMPTY_GUID,
+		public FLKQueueId = EMPTY_GUID,
+		public TraineeId = EMPTY_GUID,
+		public UserId = EMPTY_GUID,
+		public FileId = EMPTY_GUID,
+		public Status = FLKStatus.None,
+		public Note = '',
+		public CheckedBy = '',
+		public SavedDate: Date = null,
+		public StatusDate: Date = null,
+	) {
+		super();
+	}
+	get fileLink() {
+		return GetDownloadLinkFromFileId(this.FileId);
+	}
+	get hasFile(){
+		return this.FileId !== EMPTY_GUID;
+	}
+
+	static fromJson(data?: any): FLKQueue {
+		if (isEmpty(data)) return null;
+		return Object.assign(new FLKQueue(), data, {
+			SavedDate: DateHelper.fromCSharpDate(data?.SavedDate),
+			StatusDate: DateHelper.fromCSharpDate(data?.StatusDate)
+		});
+	}
+}
+export class FLKNote extends BaseModel {
+	constructor(
+		public GenerationId = EMPTY_GUID,
+		public TraineeId = EMPTY_GUID,
+		public Note = ''
+	){
+		super();
+	}
+	static fromJson(data?: any): FLKNote {
+		if (isEmpty(data)) return null;
+		return Object.assign(new FLKNote(), data);
 	}
 }
 

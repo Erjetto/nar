@@ -17,6 +17,7 @@ import {
 import { isString as _isString, sortBy as _sortBy } from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { getDataWithProp } from '../../methods';
 import { TableColumnComponent } from './table-column.component';
 import { TableHeaderComponent } from './table-header.component';
 
@@ -27,6 +28,12 @@ import { TableHeaderComponent } from './table-header.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataTableComponent implements AfterContentInit, OnDestroy, OnChanges {
+
+	constructor(private changeDetector: ChangeDetectorRef) {}
+
+	get tableColSpan(): number {
+		return this.columns.reduce((a, b) => a + b.colspan, 0) + (this.sortable ? 1 : 0);
+	}
 	@ContentChild(TableHeaderComponent) header: TableHeaderComponent;
 	@ContentChildren(TableColumnComponent) columnList: QueryList<TableColumnComponent>;
 
@@ -54,7 +61,7 @@ export class DataTableComponent implements AfterContentInit, OnDestroy, OnChange
 	columns: TableColumnComponent[] = [];
 	private destroyed$ = new Subject<void>();
 
-	constructor(private changeDetector: ChangeDetectorRef) {}
+	getDataWithProp = getDataWithProp; // Get helper method
 
 	// Isi rd-data-table harus dibuat dulu supaya QueryList ngga kosong
 	ngAfterContentInit(): void {
@@ -115,20 +122,6 @@ export class DataTableComponent implements AfterContentInit, OnDestroy, OnChange
 
 	ngOnDestroy(): void {
 		this.destroyed$.next();
-	}
-
-	get tableColSpan(): number {
-		return this.columns.reduce((a, b) => a + b.colspan, 0) + (this.sortable ? 1 : 0);
-	}
-
-	/**
-	 * Enables nested attribute (ex: `{a:{b:{c:{d:10}}}}`) => `b.c.d == 10`
-	 * @param data row data
-	 * @param prop ex: `attr.nestedAttr` => `data['attr']['nestedAttr']
-	 */
-	getDataWithProp(data: any, prop: string){
-		if(prop.indexOf('.') === -1) return data[prop];
-		return prop.split('.').reduce((prev, curr) => !!prev ? prev[curr] : '', data);
 	}
 
 	onCheckAllChanged(event) {
