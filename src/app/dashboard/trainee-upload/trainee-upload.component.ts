@@ -61,7 +61,6 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 		this.subjectList$ = fromMasterState
 			.getSubjectsFromEntity(this.store, this.currentViewPhase$)
 			.pipe(
-				filter((res) => !_isEmpty(res)),
 				map((subs) => [new ClientSubject('All'), ...subs]),
 				tap((res) => this.currentViewSubject$.next(res[0])) // Auto first in ng-select
 			);
@@ -69,7 +68,10 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 		this.caseList$ = this.store.pipe(
 			select(fromCaseState.getClientCaseTrainees),
 			tap((cases) => {
-				if (cases == null) return;
+				if (cases == null) {
+					adjustControlsInFormArray(this.uploadForms, 0, fileFormFactory);
+					return;
+				}
 				this.uploadForms.reset();
 
 				adjustControlsInFormArray(this.uploadForms, cases.Detail.length, fileFormFactory);
@@ -81,6 +83,7 @@ export class TraineeUploadComponent extends DashboardContentBase implements OnIn
 				);
 			})
 		);
+
 		this.store
 			.pipe(select(fromCaseState.isCasesLoading), takeUntil(this.destroyed$))
 			.subscribe(this.loadingPage$);
