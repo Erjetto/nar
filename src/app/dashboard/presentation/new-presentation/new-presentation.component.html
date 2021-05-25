@@ -53,13 +53,13 @@
 						<label class="col-form-label font-weight-bold"> {{ i + 1 }}. </label>
 					</div>
 					<div class="col">
+						<!-- Bug: quill-editor doesn't update validity on change (Fixed) -->
 						<quill-editor
 							name="answerEdit"
 							theme="bubble"
 							[formControl]="qstControl"
+							(onContentChanged)="qstControl.updateValueAndValidity()"
 						></quill-editor>
-						<!-- placeholder="Insert text to add question..." -->
-						<!-- [styles]="{ width: '100%' }" -->
 					</div>
 				</div>
 				<div class="row">
@@ -75,8 +75,9 @@
 					<div class="col">
 						<quill-editor
 							name="answerEdit"
-							formControlName="comments"
+							[formControl]="commentControl"
 							placeholder="Insert text to add question..."
+							(onContentChanged)="commentControl.updateValueAndValidity()"
 						></quill-editor>
 					</div>
 				</div>

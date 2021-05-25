@@ -126,7 +126,7 @@
 										class="row comment pre-wrap"
 										*ngFor="let comment of answer.Comments; let j = index"
 									>
-										<ng-container >
+										<ng-container>
 											<form
 												#editCommentForm="ngForm"
 												class="row py-3"
@@ -152,10 +152,10 @@
 														class="btn btn-sm btn-primary"
 														[disabled]="editCommentForm.invalid"
 													>
-													<fa-icon [icon]="['fas', 'paper-plane']"></fa-icon>
+														<fa-icon [icon]="['fas', 'paper-plane']"></fa-icon>
 													</button>
 													&nbsp;
-													<button	
+													<button
 														class="btn btn-sm btn-danger"
 														title="Cancel"
 														(click)="toggleEdit(i, j)"
@@ -164,10 +164,16 @@
 													</button>
 												</div>
 											</form>
-											<ng-container >
-												<div class="col" [hidden]="isCommentEditing(i, j)">{{ comment.Comment }} - by {{ comment.UserName }}</div>
+											<ng-container>
+												<div class="col" [hidden]="isCommentEditing(i, j)">
+													{{ comment.Comment }} - by {{ comment.UserName }}
+												</div>
 
-												<div class="p-1" *ngIf="(currentUser$ | async)?.Name === comment.UserName" [hidden]="isCommentEditing(i, j)">
+												<div
+													class="p-1"
+													*ngIf="(currentUser$ | async)?.Name === comment.UserName"
+													[hidden]="isCommentEditing(i, j)"
+												>
 													<button
 														class="btn btn-sm btn-primary"
 														title="Edit"
@@ -215,15 +221,14 @@
 				</div>
 				<div class="row mb-3">
 					<div class="col">
-						<quill-editor [formControl]="newAnswerText"></quill-editor>
+						<quill-editor
+							[formControl]="newAnswerText"
+							(onContentChanged)="newAnswerText.updateValueAndValidity()"
+						></quill-editor>
 					</div>
 				</div>
 				<div class="row justify-content-center">
-					<button
-						class="btn btn-primary"
-						[disabled]="(newAnswerText.statusChanges | async) === 'INVALID'"
-						(click)="addAnswer()"
-					>
+					<button class="btn btn-primary" [disabled]="newAnswerText.invalid" (click)="addAnswer()">
 						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Submit New Answer
 					</button>
 				</div>

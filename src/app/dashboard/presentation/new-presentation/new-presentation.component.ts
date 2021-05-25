@@ -9,7 +9,7 @@ import {
 	MasterStateAction,
 	MainStateAction,
 } from 'src/app/shared/store-modules';
-import { FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import {
 	CoreTrainingPresentation,
@@ -41,7 +41,7 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 		phaseId: [''],
 		materialName: ['', Validators.required],
 		subjectId: ['', Validators.required],
-		questions: this.fb.array([this.fb.control('')]),
+		questions: this.fb.array([this.fb.control('', Validators.required)]),
 		comments: ['', Validators.required],
 		presentationNo: [0],
 	});
@@ -106,6 +106,10 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 
 	get questionsArray() {
 		return this.presentationForm.get('questions') as FormArray;
+	}
+
+	get commentControl(){
+		return this.presentationForm.get('comments') as FormControl;
 	}
 
 	deleteQuestion(index) {
