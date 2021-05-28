@@ -1,30 +1,60 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Launch localhost",
-      "type": "firefox",
-      "request": "launch",
-      "reAttach": true,
-      "url": "http://localhost:4200",
-      "webRoot": "${workspaceFolder}"
-    },
-    {
-      "name": "Attach",
-      "type": "firefox",
-      "request": "attach",
-      "url": "http://localhost:4200",
-      "tabFilter": "*"
-    },
-    {
-      "name": "Launch WebExtension",
-      "type": "firefox",
-      "request": "launch",
-      "reAttach": true,
-      "addonPath": "${workspaceFolder}"
-    }
-  ]
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Build NAR SLC",
+			"runtimeExecutable": "npm",
+			"args": ["run", "build-nar"],
+			"skipFiles": ["<node_internals>/**"]
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Build NAR LCAS",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": ["run", "build-lcas"],
+			"skipFiles": ["<node_internals>/**"]
+		},
+		{
+			"name": "Launch localhost",
+			"type": "firefox",
+			"request": "launch",
+			"reAttach": true,
+			"url": "http://localhost:4200",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"name": "Attach",
+			"type": "firefox",
+			"request": "attach",
+			"url": "http://localhost:4200",
+			"tabFilter": "*"
+		},
+		{
+			"name": "Launch WebExtension",
+			"type": "firefox",
+			"request": "launch",
+			"reAttach": true,
+			"addonPath": "${workspaceFolder}"
+		},
+		{
+			"type": "vscode-edge-devtools.debug",
+			"request": "attach",
+			"name": "Attach to Microsoft Edge and open the Edge DevTools",
+			"url": "http://localhost:4200",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"name": "Attach to Edge",
+			"port": 4200,
+			"request": "attach",
+			"type": "pwa-msedge",
+			"webRoot": "${workspaceFolder}"
+		}
+	]
 }
