@@ -74,6 +74,7 @@ export class ModifyInterviewScheduleComponent
 	interviewMaterialsForTrainee$: Observable<InterviewMaterialDetail[]>;
 	interviewScheduleReport$: Observable<ClientInterviewReport>;
 	filteredInterviewSchedules$: Observable<ClientInterviewSchedule[]>;
+	legendCounts$: Observable<{ Rej: number; Pos: number; Acc: number }>;
 	interviewQuestions$: Observable<ClientInterviewQuestion[]>;
 	loadingInterviewScheduleReport$: Observable<boolean>;
 
@@ -114,6 +115,17 @@ export class ModifyInterviewScheduleComponent
 					: report.Schedules.filter((sch) =>
 							`${sch.MainInterviewer} ${sch.CoInterviewer}`.includes(user.UserName)
 					  )
+			)
+		);
+		this.legendCounts$ = this.filteredInterviewSchedules$.pipe(
+			map((filtered) =>
+				filtered.reduce(
+					(prev, curr) => {
+						prev[curr.Result]++;
+						return prev;
+					},
+					{ Acc: 0, Rej: 0, Pos: 0 }
+				)
 			)
 		);
 		this.interviewMaterialsForTrainee$ = combineLatest([
@@ -157,7 +169,10 @@ export class ModifyInterviewScheduleComponent
 
 		// Fetch interview material for trainee for first phase (everyone)
 		this.phases$
-			.pipe(takeUntil(this.destroyed$), filter(v => !_isEmpty(v)))
+			.pipe(
+				takeUntil(this.destroyed$),
+				filter((v) => !_isEmpty(v))
+			)
 			.subscribe((phases: ClientPhase[]) =>
 				this.store.dispatch(
 					InterviewStateAction.FetchInterviewMaterials({

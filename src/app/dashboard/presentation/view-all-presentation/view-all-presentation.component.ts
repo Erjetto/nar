@@ -55,16 +55,17 @@ export class ViewAllPresentationComponent
 
 	showScoringForm$ = new BehaviorSubject(false);
 	scoringForm = this.fb.group({
-		phaseId: ['', Validators.required],
-		subjectId: ['', Validators.required],
-		traineeId: ['', Validators.required],
+		// phaseId: ['', Validators.required],
+		// subjectId: ['', Validators.required],
+		// traineeId: ['', Validators.required],
+		// presentationNo: ['', Validators.required],
 		notes: ['', Validators.required],
-		presentationNo: ['', Validators.required],
 		status: ['', Validators.required],
 		classControl: ['', Validators.required],
 		understanding: ['', Validators.required],
 		voice: ['', Validators.required],
 	});
+	scoringData = {}
 	deleteQuestionReason = this.fb.control('');
 
 	subjectsLoading$: Observable<boolean>;
@@ -191,12 +192,12 @@ export class ViewAllPresentationComponent
 						presentationNo: res.PresentationNo,
 					})
 				);
-				this.scoringForm.patchValue({
+				this.scoringData = {
 					phaseId: res.PhaseId,
 					subjectId: res.SubjectId,
 					traineeId: res.TraineeId,
 					presentationNo: res.PresentationNo,
-				});
+				};
 			});
 
 		//#region Auto fetch
@@ -260,7 +261,10 @@ export class ViewAllPresentationComponent
 		this.loadingViewPresentation$.next(true);
 		this.store.dispatch(
 			PresentationStateAction.SaveTraineePresentation({
-				data: TraineePresentation.fromJson(this.scoringForm.value),
+				data: TraineePresentation.fromJson({
+					...this.scoringForm.value, 
+					...this.scoringData
+				}),
 			})
 		);
 	}

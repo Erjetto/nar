@@ -79,15 +79,11 @@
 						<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Refresh
 					</button>
 				</div>
-				<div class="row pb-2">
+				<div class="row pb-2" *ngIf="(legendCounts$ | async) as count">
 					<b>Legends: </b>
-					<span class="reject legend"></span> Rej ({{
-						(interviewScheduleReport$ | async)?.StatusTotal.Rej
-					}}) <span class="pos legend"></span> Pos ({{
-						(interviewScheduleReport$ | async)?.StatusTotal.Pos
-					}}) <span class="acc legend"></span> Acc ({{
-						(interviewScheduleReport$ | async)?.StatusTotal.Acc
-					}})
+					<span class="reject legend"></span> Rej ({{ count.Rej }}) 
+					<span class="pos legend"></span> Pos ({{ count.Pos }}) 
+					<span class="acc legend"></span> Acc ({{ count.Acc }})
 				</div>
 				<div class="row">
 					<table class="table table-sm table-striped table-bordered text-center">

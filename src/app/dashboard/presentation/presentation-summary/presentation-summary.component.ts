@@ -9,6 +9,7 @@ import {
 	map,
 	startWith,
 	takeUntil,
+	tap,
 } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
 import { ClientSubject, TraineePresentation } from 'src/app/shared/models';
@@ -90,7 +91,8 @@ export class PresentationSummaryComponent
 			filter(([scorings, selectedTrainee]) => !_isEmpty(selectedTrainee?.traineeCode)),
 			map(([scorings, selectedTrainee]) =>
 				scorings.filter((p) => p.traineeCode === selectedTrainee.traineeCode)
-			)
+			),
+			tap(() => this.selectedPresentation$.next(null))
 		);
 
 		this.currentSubject$
