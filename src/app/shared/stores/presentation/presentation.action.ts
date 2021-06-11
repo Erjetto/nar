@@ -5,19 +5,16 @@ export const FetchPresentationsBy = createAction(
 	'[PresentationState] FetchPresentationsBy',
 	props<{ generationId: string; subjectId?: string; traineeId?: string }>()
 );
-export const FetchPresentationStatus = createAction(
-	'[PresentationState] FetchPresentationStatus',
-	props<{ filename: string }>()
-);
+
 export const FetchPresentationScorings = createAction(
 	'[PresentationState] FetchPresentationScorings',
-	props<{ 
+	props<{
 		generationId: string;
 		phaseId?: string;
 		subjectId?: string;
 		traineeId?: string;
 		presentationNo?: number;
-	 }>()
+	}>()
 );
 export const FetchPresentationScoringsBy = createAction(
 	'[PresentationState] FetchPresentationScoringsBy',
@@ -71,6 +68,10 @@ export const SaveCoreTrainingPresentation = createAction(
 export const SaveTraineePresentation = createAction(
 	'[PresentationState] SaveTraineePresentation',
 	props<{ data: TraineePresentation }>()
+);
+
+export const ExportPresentationPhaseSummary = createAction(
+	'[PresentationState] ExportPresentationPhaseSummary'
 );
 
 /*

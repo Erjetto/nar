@@ -22,15 +22,10 @@ import {
 	CoreTrainingPresentationQuestion,
 } from 'src/app/shared/models';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
-import {
-	takeUntil,
-	filter,
-	withLatestFrom,
-	map,
-	tap,
-} from 'rxjs/operators';
+import { takeUntil, filter, withLatestFrom, map, tap } from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
+import { allValuesNotEmpty } from 'src/app/shared/methods';
 
 @Component({
 	selector: 'rd-view-all-presentation',
@@ -40,7 +35,8 @@ import { RoleFlags } from 'src/app/shared/constants/role.constant';
 })
 export class ViewAllPresentationComponent
 	extends DashboardContentBase
-	implements OnInit, OnDestroy {
+	implements OnInit, OnDestroy
+{
 	phases$: Observable<ClientPhase[]>;
 	subjects$: Observable<ClientSubject[]>;
 	presentations$: Observable<CoreTrainingPresentation[]>;
@@ -65,7 +61,7 @@ export class ViewAllPresentationComponent
 		understanding: ['', Validators.required],
 		voice: ['', Validators.required],
 	});
-	scoringData = {}
+	scoringData: { generationId; phaseId; subjectId; traineeId; presentationNo };
 	deleteQuestionReason = this.fb.control('');
 
 	subjectsLoading$: Observable<boolean>;
@@ -80,6 +76,7 @@ export class ViewAllPresentationComponent
 	constructor(
 		protected store: Store<IAppState>,
 		private mainEffects: MainStateEffects,
+		private presentationEffects: PresentationStateEffects,
 		private fb: FormBuilder
 	) {
 		super(store);
@@ -101,19 +98,11 @@ export class ViewAllPresentationComponent
 		this.presentations$ = this.store.pipe(select(fromPresentationState.getPresentations));
 
 		// Get scoring from presentationScorings
-		// Expectation: presentationScorings fetched only one from latest dispatch
+		// Expectation: presentationScorings fetched only one using REST method
 		// (see 'FetchPresentationScorings' below)
 		this.currentPresentationScoring$ = this.store.pipe(
 			select(fromPresentationState.getPresentationScorings),
-			withLatestFrom(this.currentPresentation$),
-			map(([scorings, curr]) =>
-				scorings.find(
-					(s: TraineePresentation) =>
-						s.subjectId === curr.SubjectId &&
-						s.traineeId === curr.TraineeId &&
-						s.presentationNo === curr.PresentationNo
-				)
-			),
+			map((scorings) => scorings[0]),
 			tap((s: TraineePresentation) =>
 				_isEmpty(s) ? this.scoringForm.reset() : this.scoringForm.patchValue(s)
 			)
@@ -138,7 +127,7 @@ export class ViewAllPresentationComponent
 				...new Set<string>(
 					presentations.filter((p) => p.SubjectId === sbj?.SubjectId).map((p) => p.TraineeCode)
 				),
-			])
+			].sort())
 		);
 
 		// get current trainee's presentation numbers (1,2,...)
@@ -160,6 +149,11 @@ export class ViewAllPresentationComponent
 		this.mainEffects.changeGen$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
 			this.store.dispatch(MasterStateAction.FetchPhases());
 		});
+		this.presentationEffects.updateTraineePresentation$
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => {
+				this.store.dispatch(PresentationStateAction.FetchPresentationScorings(this.scoringData));
+			});
 		//#endregion
 
 		this.currentPhase$
@@ -178,11 +172,6 @@ export class ViewAllPresentationComponent
 				withLatestFrom(this.currentGeneration$)
 			)
 			.subscribe(([res, gen]) => {
-				// this.store.dispatch(
-				// 	PresentationStateAction.FetchPresentationStatus({
-				// 		filename: res.presentationFileName,
-				// 	})
-				// );
 				this.store.dispatch(
 					PresentationStateAction.FetchPresentationScorings({
 						generationId: gen.GenerationId,
@@ -193,6 +182,7 @@ export class ViewAllPresentationComponent
 					})
 				);
 				this.scoringData = {
+					generationId: gen.GenerationId,
 					phaseId: res.PhaseId,
 					subjectId: res.SubjectId,
 					traineeId: res.TraineeId,
@@ -262,8 +252,8 @@ export class ViewAllPresentationComponent
 		this.store.dispatch(
 			PresentationStateAction.SaveTraineePresentation({
 				data: TraineePresentation.fromJson({
-					...this.scoringForm.value, 
-					...this.scoringData
+					...this.scoringForm.value,
+					...this.scoringData,
 				}),
 			})
 		);

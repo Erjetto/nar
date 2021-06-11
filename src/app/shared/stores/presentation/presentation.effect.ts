@@ -143,12 +143,14 @@ export class PresentationStateEffects {
 	);
 
 	@Effect()
-	getPresentationStatus$: Observable<Action> = this.actions$.pipe(
-		ofType(PresentationStateAction.FetchPresentationStatus),
-		switchMap((data) => this.presentationService.GetPresentationStatus(data)),
-		mergeMap((res) => of(PresentationStateAction.FetchPresentationStatusSuccess({ payload: res }))),
+	exportPresentationPhaseSummary$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.ExportPresentationPhaseSummary),
+		switchMap((data) => this.presentationService.ExportPresentationReportSummaryForPresentationPhase()),
+		mergeMap((filename) => of(MainStateAction.DownloadMemoryFile({filename}))),
 		share()
 	);
+
+	
 
 	//#region Create
 	// NOTE: Do I need to make separate effect for adding question?
@@ -188,9 +190,6 @@ export class PresentationStateEffects {
 		share()
 	);
 
-	//#endregion
-
-	//#region Create
 	@Effect()
 	createTraineePresentation$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.SaveCoreTrainingPresentation),
@@ -211,22 +210,10 @@ export class PresentationStateEffects {
 	@Effect()
 	updateTraineePresentation$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.SaveTraineePresentation),
-		switchMap((data) =>
-			this.presentationService
-				.SaveTraineePresentation(data)
-				.pipe(map((res) => ({ res, data: data.data })))
-		),
-		withLatestFrom(this.store.pipe(select(fromMainState.getCurrentGenerationId))),
-		mergeMap(([{ res, data }, generationId]) =>
+		switchMap((data) => this.presentationService.SaveTraineePresentation(data)),
+		mergeMap((res) =>
 			res === true
-				? of(
-						MainStateAction.SuccessfullyMessage('updated trainee presentation'),
-						// Auto-fetch new scoring
-						PresentationStateAction.FetchPresentationScorings({
-							generationId,
-							...data,
-						})
-				  )
+				? of(MainStateAction.SuccessfullyMessage('updated trainee presentation'))
 				: of(MainStateAction.FailMessage('updating trainee presentation'))
 		),
 		share()

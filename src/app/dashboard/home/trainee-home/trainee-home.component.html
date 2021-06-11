@@ -132,7 +132,9 @@
 												{{ schedule.Room }}
 											</ng-container>
 											<ng-container *ngSwitchDefault>
-												<a [href]="schedule.Room" rdExternalUrl>Link here</a>
+												<a [href]="schedule.Room" target="_blank" rel="noopener noreferrer">
+													Link here
+												</a>
 											</ng-container>
 										</ng-container>
 									</ng-template>

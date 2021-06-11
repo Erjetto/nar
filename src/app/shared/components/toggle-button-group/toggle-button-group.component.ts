@@ -8,8 +8,11 @@ import {
 	Output,
 	SimpleChanges,
 } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
 import { isString as _isString } from 'lodash';
 import { getDataWithProp } from '../../methods';
+
+// TODO: Implement ControlValueAccessor for easy formControl/ngModel bind
 
 @Component({
 	selector: 'rd-toggle-button-group',
@@ -20,6 +23,7 @@ import { getDataWithProp } from '../../methods';
 export class ToggleButtonGroupComponent implements OnInit, OnChanges {
 	@Input() items: any[] | any = [];
 	@Input() activeEnum: any;
+	@Input() formControl: AbstractControl;
 
 	// enum -> single object ({A=0,B=1,C=2}) => [A,B,C]
 	// objects -> array of object

@@ -79,10 +79,10 @@
 						<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Refresh
 					</button>
 				</div>
-				<div class="row pb-2" *ngIf="(legendCounts$ | async) as count">
+				<div class="row pb-2" *ngIf="legendCounts$ | async as count">
 					<b>Legends: </b>
-					<span class="reject legend"></span> Rej ({{ count.Rej }}) 
-					<span class="pos legend"></span> Pos ({{ count.Pos }}) 
+					<span class="reject legend"></span> Rej ({{ count.Rej }})
+					<span class="pos legend"></span> Pos ({{ count.Pos }})
 					<span class="acc legend"></span> Acc ({{ count.Acc }})
 				</div>
 				<div class="row">
@@ -117,7 +117,9 @@
 								<!-- Create a short link if location is link -->
 								<ng-container [ngSwitch]="isLocationLink(interview.Location)">
 									<td *ngSwitchCase="true">
-										<a [href]="interview.Location">Link here</a>
+										<a [href]="interview.Location" target="_blank" rel="noopener noreferrer">
+											Link here
+										</a>
 									</td>
 									<td *ngSwitchDefault>{{ interview.Location }}</td>
 								</ng-container>
@@ -161,7 +163,7 @@
 				[collapsible]="(currentInterviewSchedule$ | async) != null"
 				[formGroup]="interviewResultForm"
 			>
-				<div class="row mb-3" *ngIf="(currentInterviewResult$ | async); let interview">
+				<div class="row mb-3" *ngIf="currentInterviewResult$ | async; let interview">
 					<div class="col" style="flex: 0 0 200px">
 						<img [src]="interview.thumbnailLink(200)" />
 					</div>
@@ -208,9 +210,7 @@
 								<div>Tanggal Wawancara</div>
 								<small><i>Interview Date</i></small>
 							</div>
-							<div class="col">
-								: {{ interview.InterviewDate | date: interviewDateFormat }}
-							</div>
+							<div class="col">: {{ interview.InterviewDate | date: interviewDateFormat }}</div>
 						</div>
 						<div class="row">
 							<div class="col-4">
@@ -231,13 +231,8 @@
 								<div>Tempat Wawancara</div>
 								<small><i>Location</i></small>
 							</div>
-							<div
-								class="col"
-								[ngSwitch]="isLocationLink(interview.Location || '')"
-							>
-								<span *ngSwitchCase="true">
-									: <a [href]="interview.Location">Link here</a>
-								</span>
+							<div class="col" [ngSwitch]="isLocationLink(interview.Location || '')">
+								<span *ngSwitchCase="true"> : <a [href]="interview.Location">Link here</a> </span>
 								<span *ngSwitchDefault>: {{ interview.Location }}</span>
 							</div>
 						</div>
@@ -257,11 +252,13 @@
 				<div class="row mb-3">
 					<div class="col">
 						<span class="mr-3">Interview Materials:</span>
-						<a 
+						<a
 							class="mr-2 badge badge-primary"
 							*ngFor="let item of interviewMaterialsForTrainee$ | async"
-							[href]="item.downloadLink" 
-						> {{ item.MaterialName }} </a>
+							[href]="item.downloadLink"
+						>
+							{{ item.MaterialName }}
+						</a>
 					</div>
 				</div>
 				<div class="row mb-3">

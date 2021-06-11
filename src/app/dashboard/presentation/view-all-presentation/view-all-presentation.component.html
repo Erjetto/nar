@@ -35,7 +35,6 @@
 							<ng-select
 								[items]="traineesInSubject$ | async"
 								[clearable]="false"
-								[searchable]="false"
 								[ngModel]="currentTraineeCode$ | async"
 								(change)="currentTraineeCode$.next($event)"
 							></ng-select>

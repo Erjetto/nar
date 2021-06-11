@@ -19,8 +19,6 @@ import {
 	FetchPresentationsBySubjectSuccess,
 	FetchPresentationsByTraineeSuccess,
 	SetQuestionsFilter,
-	FetchPresentationStatus,
-	FetchPresentationStatusSuccess,
 	FetchPresentationScoringsBy,
 	FetchPresentationScoringsSuccess,
 	FetchMyPresentationsSuccess,
@@ -159,16 +157,6 @@ export const PresentationStateReducer = createReducer(
 		questionsFilter: data,
 	})),
 
-	on(FetchPresentationStatus, (state) => ({
-		...state,
-		presentationStatus: 'Loading...',
-	})),
-
-	on(FetchPresentationStatusSuccess, (state, { payload }) => ({
-		...state,
-		presentationStatus: payload,
-	})),
-
 	on(FetchPresentationScoringsSuccess, (state, { payload }) => ({
 		...state,
 		presentationScorings: payload,
@@ -191,7 +179,6 @@ export const getPresentationStateBy = (fn: (_: IPresentationState) => any) =>
 
 export const getPresentations = getPresentationStateBy((s) => s.presentations);
 export const getMyPresentations = getPresentationStateBy((s) => s.myPresentations);
-export const getPresentationStatus = getPresentationStateBy((s) => s.presentationStatus);
 export const getPresentationsBySubjectEntity = getPresentationStateBy(
 	(s) => s.presentationsBySubjectEntity
 );

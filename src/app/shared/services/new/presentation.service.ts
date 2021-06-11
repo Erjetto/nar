@@ -11,7 +11,7 @@ import {
 	CoreTrainingPresentationQuestionSummary,
 } from '../../models';
 import { environment } from 'src/environments/environment';
-import { map as _map} from 'lodash';
+import { map as _map } from 'lodash';
 import { DateHelper } from '../../utilities/date-helper';
 
 @Injectable({
@@ -38,25 +38,19 @@ export class PresentationService {
 			.pipe(map((res: any) => CoreTrainingPresentationQuestionSummary.fromJson(res.d)));
 	}
 
-	public GetSubjectListByPhase(data: {
-		phaseId: string;
-	}): Observable<ClientSubject[]> {
+	public GetSubjectListByPhase(data: { phaseId: string }): Observable<ClientSubject[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAllCaseBySubject', data)
 			.pipe(map((res: any) => _map(res.d, ClientSubject.fromJson)));
 	}
 
-	public GetSubjectListByCurrentPhase(data: {
-		phaseId: string;
-	}): Observable<ClientSubject[]> {
+	public GetSubjectListByCurrentPhase(data: { phaseId: string }): Observable<ClientSubject[]> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetAllCaseBySubject', data)
 			.pipe(map((res: any) => _map(res.d, ClientSubject.fromJson)));
 	}
 
-	public SaveTraineePresentation(data: {
-		data: TraineePresentation;
-	}): Observable<boolean> {
+	public SaveTraineePresentation(data: { data: TraineePresentation }): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveTraineePresentation', data)
 			.pipe(map((res: any) => res.d === true));
@@ -75,12 +69,12 @@ export class PresentationService {
 			.pipe(map((res: any) => res.d === true));
 	}
 
-  // Dictionary<int, List<TraineePresentation>>
+	// Dictionary<int, List<TraineePresentation>>
 	public GetPresentationReportDetailByShift(): Observable<any> {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationReportDetailByShift', {})
 			.pipe(map((res: any) => res.d));
-  }
+	}
 
 	public GetPresentationReportSummaryWithPhase(data: {
 		phaseId: string;
@@ -89,15 +83,18 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationReportSummaryWithPhase', data)
 			.pipe(map((res: any) => _map(res.d, TraineePresentation.fromJson)));
-  }
+	}
 
-  // Dictionary<string, int> 
-	public GetTotalCorrectedAnswerByTrainer(data: {
-		generationId: string;
-	}): Observable<any> {
+	public ExportPresentationReportSummaryForPresentationPhase(): Observable<string> {
 		return this.httpClient
-			.post(this.baseUrl + 'GetTotalCorrectedAnswerByTrainer', data)
-  }
+			.post(this.baseUrl + 'ExportPresentationReportSummaryForPresentationPhase', {})
+			.pipe(map((res: any) => res.d));
+	}
+
+	// Dictionary<string, int>
+	public GetTotalCorrectedAnswerByTrainer(data: { generationId: string }): Observable<any> {
+		return this.httpClient.post(this.baseUrl + 'GetTotalCorrectedAnswerByTrainer', data);
+	}
 
 	public FindCoreTrainingPresentationByGeneration(data: {
 		generationId: string;
@@ -123,19 +120,20 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'FindCoreTrainingPresentationByTrainee', data)
 			.pipe(map((res: any) => _map(res.d, CoreTrainingPresentation.fromJson)));
-  }
+	}
 
 	public SaveCoreTrainingPresentation(data: {
 		presentation: CoreTrainingPresentation;
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveCoreTrainingPresentation', {
-        presentation: {
-          ...data.presentation,
-          PresentationDate: DateHelper.toCSharpDate(data.presentation.PresentationDate)
-        }})
+				presentation: {
+					...data.presentation,
+					PresentationDate: DateHelper.toCSharpDate(data.presentation.PresentationDate),
+				},
+			})
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public AddCoreTrainingPresentationQuestion(data: {
 		filename: string;
@@ -144,7 +142,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'AddCoreTrainingPresentationQuestion', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public UpdateCoreTrainingPresentationItem(data: {
 		filename: string;
@@ -154,7 +152,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdateCoreTrainingPresentationItem', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public UpdateCoreTrainingPresentationItemStatus(data: {
 		filename: string;
@@ -164,7 +162,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdateCoreTrainingPresentationItemStatus', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public DeleteCoreTrainingPresentationItem(data: {
 		filename: string;
@@ -174,7 +172,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteCoreTrainingPresentationItem', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public AddCoreTrainingPresentationComment(data: {
 		filename: string;
@@ -184,7 +182,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'AddCoreTrainingPresentationComment', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public UpdateCoreTrainingPresentationComment(data: {
 		filename: string;
@@ -195,7 +193,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdateCoreTrainingPresentationComment', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public DeleteCoreTrainingPresentationComment(data: {
 		filename: string;
@@ -205,7 +203,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'DeleteCoreTrainingPresentationComment', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public AddCoreTrainingPresentationAnswer(data: {
 		filename: string;
@@ -215,7 +213,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'AddCoreTrainingPresentationAnswer', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public UpdateStatusQuestion(data: {
 		filename: string;
@@ -225,7 +223,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdateStatusQuestion', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public AcceptAnswerCTQuestion(data: {
 		filename: string;
@@ -235,7 +233,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'AcceptAnswerCTQuestion', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public UpdatePresentationComment(data: {
 		filename: string;
@@ -244,7 +242,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'UpdatePresentationComment', data)
 			.pipe(map((res: any) => res.d === true));
-  }
+	}
 
 	public GetPresentationReportDetailByDate(data: {
 		time: string;
@@ -252,7 +250,7 @@ export class PresentationService {
 		return this.httpClient
 			.post(this.baseUrl + 'GetPresentationReportDetailByDate', data)
 			.pipe(map((res: any) => _map(res.d, TraineePresentation.fromJson)));
-  }
+	}
 
 	public GetCurrentPhaseWithPresentation(): Observable<ClientPhase> {
 		return this.httpClient

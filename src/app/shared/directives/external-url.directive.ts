@@ -15,7 +15,7 @@ export class ExternalUrlDirective {
 			return;
 		}
 
-    window.open(url);
+    window.open(url, '_blank');
     
 		event.preventDefault();
 	}
