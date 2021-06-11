@@ -23,7 +23,7 @@ import {
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
-import { adjustControlsInFormArray } from 'src/app/shared/methods';
+import { adjustControlsInFormArray, allValuesNotEmpty } from 'src/app/shared/methods';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
 
 @Component({
@@ -38,6 +38,7 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 
 	phaseId = this.fb.control('');
 	caseId = this.fb.control('');
+	subjectId = this.fb.control('');
 	zeroingReasons = this.fb.array([]);
 	traineeIds = this.fb.array([]);
 	scores = this.fb.array([]);
@@ -115,23 +116,25 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 			map((u) => u.Role.is(RoleFlags.JuniorTrainer, RoleFlags.Trainer)),
 			tap((isCorrector) => {
 				if (!isCorrector) {
-					// get cases by subject
-					this.viewCurrentSubject$
+					// get cases by subject or when score is updated
+					merge(this.caseEffects.saveTraineeScores$, this.viewCurrentSubject$)
 						.pipe(
 							takeUntil(this.destroyed$),
-							filter((v) => !_isEmpty(v))
+							withLatestFrom(this.viewCurrentSubject$),
+							filter(allValuesNotEmpty)
 						)
-						.subscribe((s) =>
+						.subscribe(([_, s]) =>
 							this.store.dispatch(CaseStateAction.FetchCorrectionListBy({ subjectId: s.SubjectId }))
 						);
 				} else {
-					// get cases by phase
-					this.viewCurrentPhase$
+					// get cases by phase or when score is updated
+					merge(this.caseEffects.saveTraineeScores$, this.viewCurrentPhase$)
 						.pipe(
 							takeUntil(this.destroyed$),
-							filter((v) => !_isEmpty(v))
+							withLatestFrom(this.viewCurrentPhase$),
+							filter(allValuesNotEmpty)
 						)
-						.subscribe((p) =>
+						.subscribe(([_, p]) =>
 							this.store.dispatch(CaseStateAction.FetchCorrectionListBy({ phaseId: p.PhaseId }))
 						);
 				}
@@ -144,9 +147,9 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 				takeUntil(this.destroyed$),
 				filter((v) => !_isEmpty(v))
 			)
-			.subscribe((c) =>
+			.subscribe((c) =>{
 				this.store.dispatch(CaseStateAction.FetchCorrectionScoring({ caseId: c.CaseId }))
-			);
+			});
 
 		// Isi form traineeId
 		this.answerList$
@@ -194,9 +197,6 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 		);
 	}
 
-	initData(){
-		
-	}
 
 	showScoringForCase(c: ClientCaseTrainer) {
 		this.viewCurrentCase$.next(c);
@@ -225,7 +225,6 @@ export class CorrectionComponent extends DashboardContentBase implements OnInit,
 				zeroingReason,
 				traineeId,
 				score,
-				subjectId: this.viewCurrentSubject$.value.SubjectId,
 			})
 		);
 	}

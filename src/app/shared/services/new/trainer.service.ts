@@ -42,7 +42,6 @@ export class TrainerService {
 		caseId: string;
 		score: number;
 		zeroingReason: string;
-		subjectId: string;
 	}): Observable<boolean> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveScore', data)

@@ -96,7 +96,6 @@ export const SaveTraineeScores = createAction(
 		traineeId: string[];
 		score: number[];
 		zeroingReason: string[];
-		subjectId: string;
 	}>()
 );
 

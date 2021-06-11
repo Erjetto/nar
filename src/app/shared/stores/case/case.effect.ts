@@ -173,7 +173,6 @@ export class CaseStateEffects {
 							traineeId: t,
 							score: data.score[idx],
 							zeroingReason: data.zeroingReason[idx],
-							subjectId: data.subjectId,
 						})
 						.pipe(catchError((error) => of(false)))
 				)
