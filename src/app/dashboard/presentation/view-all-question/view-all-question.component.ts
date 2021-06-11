@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/
 import { DashboardContentBase } from '../../dashboard-content-base.component';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/app.reducer';
-import { Observable, combineLatest, merge } from 'rxjs';
+import { Observable, combineLatest, merge, BehaviorSubject } from 'rxjs';
 
 import {
 	MasterStateAction,
@@ -19,13 +19,7 @@ import {
 	ClientSubject,
 	ClientPhase,
 } from 'src/app/shared/models';
-import {
-	filter,
-	withLatestFrom,
-	takeUntil,
-	map,
-	startWith,
-} from 'rxjs/operators';
+import { filter, withLatestFrom, takeUntil, map, startWith, tap } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
 import { FormBuilder } from '@angular/forms';
 import { RoleFlags } from 'src/app/shared/constants/role.constant';
@@ -35,7 +29,7 @@ import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 	selector: 'rd-view-all-question',
 	templateUrl: './view-all-question.component.html',
 	styleUrls: ['./view-all-question.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewAllQuestionComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	viewDateFormat = 'dd MMM yyyy hh:mm a';
@@ -55,11 +49,13 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 	questionsBySubjectEntity$: Observable<{
 		[subjectId: string]: CoreTrainingPresentationQuestion[];
 	}>;
+	phases$: Observable<ClientPhase[]>;
 	subjects$: Observable<ClientSubject[]>;
+	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
 	loadingSubjects$: Observable<boolean>;
 	loadingPresentations$: Observable<boolean>;
-	loadingViewQuestions$: Observable<boolean>;
+	loadingViewQuestions$ = new BehaviorSubject<boolean>(false);
 	filteredQuestions$: Observable<CoreTrainingPresentationQuestion[]>;
 
 	constructor(
@@ -71,13 +67,27 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 	}
 
 	ngOnInit(): void {
+		this.phases$ = this.store.pipe(
+			select(fromMasterState.getPhases),
+			filter((res) => !_isEmpty(res)),
+			tap((res) => this.currentPhase$.next(res[0])) // Auto first in select
+		);
+		// get subjects by phase
+		this.subjects$ = fromMasterState.getSubjectsFromEntity(
+			this.store,
+			this.currentPhase$,
+			this.loadingViewQuestions$
+		);
+
 		this.presentations$ = this.store.pipe(select(fromPresentationState.getPresentations));
-		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
 		this.loadingSubjects$ = this.store.pipe(select(fromMasterState.isSubjectsLoading));
 		this.loadingPresentations$ = this.store.pipe(
 			select(fromPresentationState.isPresentationsLoading)
 		);
-		this.loadingViewQuestions$ = merge(this.loadingPresentations$, this.loadingSubjects$);
+		merge(this.loadingPresentations$, this.loadingSubjects$)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(this.loadingViewQuestions$);
+
 		this.questionsBySubjectEntity$ = this.store.pipe(
 			select(fromPresentationState.getQuestionsBySubject)
 		);
@@ -105,7 +115,7 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 			.pipe(
 				takeUntil(this.destroyed$),
 				withLatestFrom(this.questionsBySubjectEntity$),
-				filter(([[subId, gen], entity]) => gen != null)
+				filter(([[subId, gen], entity]) => gen != null && subId !== '')
 			)
 			.subscribe(([[subId, gen], entity]) => {
 				if (!subId) return [];
@@ -163,6 +173,12 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 				subjectId: this.filterForm.get('subjectId').value,
 			})
 		);
+	}
+
+	exportIntoExcel(){
+		// this.store.dispatch(
+		// 	PresentationStateAction.
+		// )
 	}
 
 	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}

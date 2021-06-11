@@ -12,7 +12,7 @@ import {
 	tap,
 } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
-import { ClientSubject, TraineePresentation } from 'src/app/shared/models';
+import { ClientPhase, ClientSubject, TraineePresentation } from 'src/app/shared/models';
 import {
 	fromMasterState,
 	fromPresentationState,
@@ -28,17 +28,21 @@ import { DateHelper } from 'src/app/shared/utilities/date-helper';
 	selector: 'rd-presentation-summary',
 	templateUrl: './presentation-summary.component.html',
 	styleUrls: ['./presentation-summary.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PresentationSummaryComponent
 	extends DashboardContentBase
-	implements OnInit, OnDestroy {
+	implements OnInit, OnDestroy
+{
 	viewDateFormat = DateHelper.WEEKDAY_DATE_FORMAT + ' ' + DateHelper.FULL_TIME_FORMAT;
 	filterForm = this.fb.control('');
-	currentSubject$ = new BehaviorSubject<ClientSubject>(null);
 
-  subjects$: Observable<ClientSubject[]>;
-  summaryNumbers$: Observable<{done, notYet, notPassed, passed}>;
+	phases$: Observable<ClientPhase[]>;
+	viewSubjectList$: Observable<ClientSubject[]>;
+	viewCurrentSubject$ = new BehaviorSubject<ClientSubject>(null);
+	viewCurrentPhase$ = new BehaviorSubject<ClientPhase>(null);
+
+	summaryNumbers$: Observable<{ done; notYet; notPassed; passed }>;
 	presentationScoringsSummary$: Observable<TraineePresentation[]>;
 	presentationScorings$: Observable<TraineePresentation[]>;
 	selectedTraineePresentationScorings$: Observable<TraineePresentation[]>;
@@ -46,20 +50,30 @@ export class PresentationSummaryComponent
 	selectedTraineeSummary$ = new BehaviorSubject<TraineePresentation>(null);
 	selectedPresentation$ = new BehaviorSubject<TraineePresentation>(null);
 
-  loadingPresentationSummary$ = new BehaviorSubject(false);
+	loadingPresentationSummary$ = new BehaviorSubject(false);
 
-	constructor(
-		protected store: Store<IAppState>,
-		private fb: FormBuilder
-	) {
+	constructor(protected store: Store<IAppState>, private fb: FormBuilder) {
 		super(store);
 	}
 
 	ngOnInit(): void {
-		this.subjects$ = this.store.pipe(select(fromMasterState.getSubjects));
+		this.phases$ = this.store.pipe(
+			select(fromMasterState.getPhases),
+			filter((res) => !_isEmpty(res)),
+			tap((res) => this.viewCurrentPhase$.next(res[0])) // Auto first in select
+		);
+		// get subjects by phase
+		this.viewSubjectList$ = fromMasterState.getSubjectsFromEntity(
+			this.store,
+			this.viewCurrentPhase$,
+			this.loadingPresentationSummary$
+		).pipe(
+			tap(res => this.viewCurrentSubject$.next(res[0]))
+		);
 		this.presentationScorings$ = this.store.pipe(
 			select(fromPresentationState.getPresentationScorings)
 		);
+
 		this.presentationScoringsSummary$ = combineLatest([
 			this.store.pipe(select(fromPresentationState.getPresentationScoringsSummary)),
 			this.filterForm.valueChanges.pipe(startWith(''), debounceTime(350), distinctUntilChanged()),
@@ -71,18 +85,20 @@ export class PresentationSummaryComponent
 						.includes(search)
 				)
 			)
-    );
-    this.summaryNumbers$ = this.store.pipe(
-      select(fromPresentationState.getPresentationScoringsSummary),
-      map(summary => {
-        const numbers = {done:0, notYet:0, notPassed:0, passed:0}
-        summary.forEach((p:TraineePresentation) => {
-          if(p.presentationNo > 0) numbers.done++; else numbers.notYet++;
-          if(p.isPassed) numbers.passed++; else numbers.notPassed++;
-        });
-        return numbers
-      })
-    );
+		);
+		this.summaryNumbers$ = this.store.pipe(
+			select(fromPresentationState.getPresentationScoringsSummary),
+			map((summary) => {
+				const numbers = { done: 0, notYet: 0, notPassed: 0, passed: 0 };
+				summary.forEach((p: TraineePresentation) => {
+					if (p.presentationNo > 0) numbers.done++;
+					else numbers.notYet++;
+					if (p.isPassed) numbers.passed++;
+					else numbers.notPassed++;
+				});
+				return numbers;
+			})
+		);
 
 		this.selectedTraineePresentationScorings$ = combineLatest([
 			this.presentationScorings$,
@@ -95,7 +111,7 @@ export class PresentationSummaryComponent
 			tap(() => this.selectedPresentation$.next(null))
 		);
 
-		this.currentSubject$
+		this.viewCurrentSubject$
 			.pipe(
 				takeUntil(this.destroyed$),
 				filter((v) => !_isEmpty(v))
@@ -109,9 +125,8 @@ export class PresentationSummaryComponent
 				);
 			});
 
-		this.store
+		this.phases$
 			.pipe(
-				select(fromMasterState.getPhases),
 				filter((res) => !_isEmpty(res)),
 				takeUntil(this.destroyed$)
 			)
@@ -129,5 +144,11 @@ export class PresentationSummaryComponent
 
 	selectPresentation(p: TraineePresentation) {
 		this.selectedPresentation$.next(p);
+	}
+
+	exportPresentationPhaseSummaryIntoExcel(){
+		this.store.dispatch(
+			PresentationStateAction.ExportPresentationPhaseSummary()
+		)
 	}
 }

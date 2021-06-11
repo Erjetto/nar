@@ -10,22 +10,44 @@
 				<div class="row mb-3">
 					<div class="col">
 						<ng-select
-							[items]="subjects$ | async"
+							[items]="phases$ | async"
+							[clearable]="false"
+							[searchable]="false"
+							bindLabel="Description"
+							[ngModel]="viewCurrentPhase$ | async"
+							(change)="viewCurrentPhase$.next($event)"
+							placeholder="Phase"
+						></ng-select>
+					</div>
+					<div class="col">
+						<ng-select
+							[items]="viewSubjectList$ | async"
 							[clearable]="false"
 							bindLabel="Name"
 							[searchable]="false"
 							placeholder="Subject"
 							[appendTo]="'body'"
-							[ngModel]="currentSubject$ | async"
-							(change)="currentSubject$.next($event)"
+							[ngModel]="viewCurrentSubject$ | async"
+							(change)="viewCurrentSubject$.next($event)"
 						></ng-select>
 					</div>
+				</div>
+				<div class="row mb-3">
 					<div class="col">
 						<input
 							class="form-control"
 							[formControl]="filterForm"
 							placeholder="Search by anything"
 						/>
+					</div>
+					<div class="col-auto">
+						<button
+							class="btn bg-excel"
+							[hidden]="(viewCurrentSubject$|async)?.Name != 'Presentation'"
+							(click)="exportPresentationPhaseSummaryIntoExcel()"
+						>
+							Export into Excel
+						</button>
 					</div>
 				</div>
 				<div class="row mb-3">

@@ -9,6 +9,24 @@
 			>
 				<div class="row form-group">
 					<div class="col-2">
+						<label class="col-form-label font-weight-bold"> Phase </label>
+					</div>
+					<div class="col-4">
+						<ng-select
+							[items]="phases$ | async"
+							[clearable]="false"
+							[searchable]="false"
+							bindLabel="Description"
+							placeholder="Phase"
+							[ngModel]="currentPhase$ | async"
+							(change)="currentPhase$.next($event)"
+							[ngModelOptions]="{ standalone: true }"
+						></ng-select>
+					</div>
+					<div class="col"></div>
+				</div>
+				<div class="row form-group">
+					<div class="col-2">
 						<label class="col-form-label font-weight-bold"> Subject </label>
 					</div>
 					<div class="col-4">
@@ -18,6 +36,7 @@
 							[searchable]="false"
 							bindLabel="Name"
 							bindValue="SubjectId"
+							placeholder="Subject"
 							formControlName="subjectId"
 						></ng-select>
 					</div>

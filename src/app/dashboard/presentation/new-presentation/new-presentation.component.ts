@@ -20,9 +20,10 @@ import {
 	CoreTrainingPresentationItem,
 } from 'src/app/shared/models';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, takeUntil, filter, withLatestFrom } from 'rxjs/operators';
+import { map, takeUntil, filter, withLatestFrom, tap } from 'rxjs/operators';
 import { isEmpty as _isEmpty } from 'lodash';
 import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
+import { getSubjectsFromEntity } from 'src/app/shared/stores/master/master.reducer';
 
 @Component({
 	selector: 'rd-new-presentation',
@@ -33,14 +34,15 @@ import { TryGetCoreTrainingPhase } from 'src/app/shared/methods';
 export class NewPresentationComponent extends DashboardContentBase implements OnInit, OnDestroy {
 	phases$: Observable<ClientPhase[]>;
 	subjects$: Observable<ClientSubject[]>;
+	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
 
 	loadingFormPresentation$ = new BehaviorSubject(false);
 
 	presentationForm = this.fb.group({
-		generationId: [''],
-		phaseId: [''],
+		generationId: [null],
+		phaseId: [null],
 		materialName: ['', Validators.required],
-		subjectId: ['', Validators.required],
+		subjectId: [null, Validators.required],
 		questions: this.fb.array([this.fb.control('', Validators.required)]),
 		comments: ['', Validators.required],
 		presentationNo: [0],
@@ -57,25 +59,34 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 
 	ngOnInit(): void {
 		this.phases$ = this.store.pipe(select(fromMasterState.getPhases));
-		this.subjects$ = this.store.pipe(
-			select(fromMasterState.getSubjects),
-			map((subs: ClientSubject[]) => [...subs].reverse()) // The last subject is the first in list
+		// this.subjects$ = this.store.pipe(
+		// 	select(fromMasterState.getSubjects),
+		// 	map((subs: ClientSubject[]) => [...subs].reverse()) // The last subject is the first in list
+		// );
+		this.subjects$ = getSubjectsFromEntity(
+			this.store,
+			this.currentPhase$,
+			this.loadingFormPresentation$
 		);
 
 		this.phases$
 			.pipe(
 				filter((res) => !_isEmpty(res)),
-				takeUntil(this.destroyed$),
-				withLatestFrom(this.currentGeneration$)
+				takeUntil(this.destroyed$)
 			)
-			.subscribe(([phases, gen]) => {
+			.subscribe((phases) => {
 				const corePhase = TryGetCoreTrainingPhase(phases);
+				this.currentPhase$.next(corePhase);
+			});
+
+		this.currentPhase$
+			.pipe(takeUntil(this.destroyed$), withLatestFrom(this.currentGeneration$))
+			.subscribe(([phase, gen]) =>
 				this.presentationForm.patchValue({
 					generationId: gen.GenerationId,
-					phaseId: corePhase.PhaseId,
-				});
-				this.store.dispatch(MasterStateAction.FetchSubjects({ phaseId: corePhase.PhaseId }));
-			});
+					phaseId: phase.PhaseId,
+				})
+			);
 
 		this.subjects$
 			.pipe(
@@ -108,7 +119,7 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 		return this.presentationForm.get('questions') as FormArray;
 	}
 
-	get commentControl(){
+	get commentControl() {
 		return this.presentationForm.get('comments') as FormControl;
 	}
 
@@ -125,14 +136,8 @@ export class NewPresentationComponent extends DashboardContentBase implements On
 	saveCoreTrainingPresentation() {
 		this.loadingFormPresentation$.next(true);
 
-		const {
-			generationId,
-			phaseId,
-			materialName,
-			subjectId,
-			questions,
-			comments,
-		} = this.presentationForm.value;
+		const { generationId, phaseId, materialName, subjectId, questions, comments } =
+			this.presentationForm.value;
 
 		const data = new CoreTrainingPresentation();
 		data.GenerationId = generationId;

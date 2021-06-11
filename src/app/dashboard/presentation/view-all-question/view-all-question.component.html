@@ -1,14 +1,29 @@
 <div class="container-xl">
 	<div class="row">
 		<div class="col">
-			<rd-card [cardTitle]="'View All Questions'" [isLoading]="loadingViewQuestions$ | async" [collapsible]="false">
+			<rd-card
+				[cardTitle]="'View All Questions'"
+				[isLoading]="loadingViewQuestions$ | async"
+				[collapsible]="false"
+			>
 				<div rdCardBadges>
 					<button class="btn btn-sm btn-secondary" (click)="refreshData()">
 						<fa-icon [icon]="['fas', 'undo-alt']"></fa-icon> Refresh
 					</button>
 				</div>
-				<div class="row form-group">
-					<div class="col-2">
+				<div class="row mb-3">
+					<div class="col">
+						<ng-select
+							[items]="phases$ | async"
+							[clearable]="false"
+							[searchable]="false"
+							bindLabel="Description"
+							[ngModel]="currentPhase$ | async"
+							(change)="currentPhase$.next($event)"
+							placeholder="Phase"
+						></ng-select>
+					</div>
+					<div class="col">
 						<ng-select
 							class="col"
 							[items]="subjects$ | async"
@@ -17,9 +32,20 @@
 							[clearable]="false"
 							[searchable]="false"
 							[formControl]="filterForm.get('subjectId')"
+							placeholder="Subject"
 						></ng-select>
 					</div>
-					<div class="col-2">
+					<div class="col">
+						<button
+							class="btn text-white bg-excel w-100"
+							(click)="exportIntoExcel()"
+						>
+							Export into Excel
+						</button>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-5">
 						<input
 							class="form-control"
 							placeholder="initials, content..."
@@ -27,6 +53,7 @@
 						/>
 					</div>
 					<div class="col">
+						<!-- TODO: Replace with toggle-button-group -->
 						<div class="row btn-group">
 							<button
 								class="btn btn-primary"
@@ -58,18 +85,14 @@
 							</button>
 						</div>
 					</div>
-					<div class="col-2">
-						<button class="btn text-white bg-excel w-100">Export into Excel</button>
-					</div>
 				</div>
 				<div class="row maxh-600px v-scroll">
 					<div class="col">
-						<ng-container *ngFor="let question of filteredQuestions$ | async; trackBy: trackByQuestionId">
+						<ng-container
+							*ngFor="let question of filteredQuestions$ | async; trackBy: trackByQuestionId"
+						>
 							<rd-presentation-question [presentation]="question.parent" [question]="question">
-								<div
-									class="actions"
-									*ngIf="(currentUser$ | async).Role.isAstSpv"
-								>
+								<div class="actions" *ngIf="(currentUser$ | async).Role.isAstSpv">
 									<rd-confirmable-pop-up
 										title="Delete this question?"
 										(confirm)="deleteQuestion(question)"
