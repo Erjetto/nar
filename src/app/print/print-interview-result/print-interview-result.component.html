@@ -32,9 +32,15 @@
 				<!-- <h1>Penilaian Kemampuan Calon Asisten Baru</h1>
 				<h2><i>New Assistant Candidate's Ability Assesment</i></h2>
 				<br /> -->
-				<h2><strong>Semester Ganjil Tahun 2018/2019</strong></h2>
+				<h2>
+					<strong>
+						Semester {{ idDict[currentSem$ | async] }} Tahun {{ currentYear$ | async }}
+					</strong>
+				</h2>
 				<h3>
-					<i><strong>Odd Semester Year 2018/2019</strong></i>
+					<i><strong>
+						{{ currentSem$ | async }} Semester Year {{ currentYear$ | async }}
+					</strong></i>
 				</h3>
 				<br />
 			</div>
@@ -464,12 +470,15 @@
 					<u>{{ (interviewResultData$ | async)?.CoInterviewer }}</u>
 				</div>
 			</b>
-    </div>
-    <div class="row p-3 bd-b-2" style="line-height: 18px;">
-      <div class="col text-center">
-        <small>This document was processed by an application</small> <br>
-        <small>Copyright © 2012 - Research and Development, SLC - Binus University. All rights reserved.</small>
-      </div>
-    </div>
+		</div>
+		<div class="row p-3 bd-b-2" style="line-height: 18px">
+			<div class="col text-center">
+				<small>This document was processed by an application</small> <br />
+				<small
+					>Copyright © 2012 - Research and Development, SLC - Binus University. All rights
+					reserved.</small
+				>
+			</div>
+		</div>
 	</div>
 </div>
