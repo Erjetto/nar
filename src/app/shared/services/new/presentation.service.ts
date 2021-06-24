@@ -21,21 +21,21 @@ export class PresentationService {
 	private baseUrl = environment.apiUrl + 'Presentation.svc/';
 	constructor(protected httpClient: HttpClient) {}
 
-	public GetCoreTrainingPresentationNo(data: {
-		subjectId: string;
-		traineeId: string;
-	}): Observable<CoreTrainingPresentationQuestionSummary> {
-		return this.httpClient
-			.post(this.baseUrl + 'UpdateTraineeActive', data)
-			.pipe(map((res: any) => CoreTrainingPresentationQuestionSummary.fromJson(res.d)));
-	}
+	// public GetCoreTrainingPresentationNo(data: {
+	// 	subjectId: string;
+	// 	traineeId: string;
+	// }): Observable<number> {
+	// 	return this.httpClient
+	// 		.post(this.baseUrl + 'GetCoreTrainingPresentationNo', data)
+	// 		.pipe(map((res: any) => res.d);
+	// }
 
 	public GetCoreTrainingPresentationQuestionSummary(data: {
 		generationId: string;
-	}): Observable<CoreTrainingPresentationQuestionSummary> {
+	}): Observable<string> {
 		return this.httpClient
-			.post(this.baseUrl + 'UpdateTraineeActive', data)
-			.pipe(map((res: any) => CoreTrainingPresentationQuestionSummary.fromJson(res.d)));
+			.post(this.baseUrl + 'GetCoreTrainingPresentationQuestionSummary', data)
+			.pipe(map((res: any) => res.d));
 	}
 
 	public GetSubjectListByPhase(data: { phaseId: string }): Observable<ClientSubject[]> {

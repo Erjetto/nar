@@ -73,6 +73,10 @@ export const SaveTraineePresentation = createAction(
 export const ExportPresentationPhaseSummary = createAction(
 	'[PresentationState] ExportPresentationPhaseSummary'
 );
+export const ExportAllQuestionsInGeneration = createAction(
+	'[PresentationState] ExportAllQuestionsInGeneration',
+	props<{ generationId: string }>()
+);
 
 /*
   Region for CTP questions, answers and their comments

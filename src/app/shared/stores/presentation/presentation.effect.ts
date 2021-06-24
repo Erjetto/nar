@@ -28,6 +28,14 @@ export class PresentationStateEffects {
 	) {}
 
 	@Effect()
+	getPresentationQuestionSummary$: Observable<Action> = this.actions$.pipe(
+		ofType(PresentationStateAction.ExportAllQuestionsInGeneration),
+		switchMap((data) => this.presentationService.GetCoreTrainingPresentationQuestionSummary(data)),
+		mergeMap((filename) => of(MainStateAction.DownloadMemoryFile({filename}))),
+		share()
+	);
+
+	@Effect()
 	getPresentationScoringsSummary$: Observable<Action> = this.actions$.pipe(
 		ofType(PresentationStateAction.FetchPresentationScoringsSummary),
 		switchMap((data) => this.presentationService.GetPresentationReportSummary(data)),

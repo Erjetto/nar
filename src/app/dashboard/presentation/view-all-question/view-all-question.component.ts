@@ -176,9 +176,11 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 	}
 
 	exportIntoExcel(){
-		// this.store.dispatch(
-		// 	PresentationStateAction.
-		// )
+		this.store.dispatch(
+			PresentationStateAction.ExportAllQuestionsInGeneration({
+				generationId: this.currentGeneration$.value.GenerationId
+			})
+		)
 	}
 
 	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}
