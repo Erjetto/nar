@@ -366,12 +366,25 @@
 				[isLoading]="loadingViewAttendances$ | async"
 			>
 				<div class="row mb-3">
-					<b>Legends: </b>
-					<span class="Present legend"></span> OK <span class="Late legend"></span> Late / Early
-					<span class="notDone legend"></span> Absent
-					<span class="Permission legend"></span> Permission
-					<span class="College legend"></span> College Permission
-					<span class="Neglects legend"></span> Neglects attendance
+					<div class="col-auto">
+						<b>Legends: </b>
+						<span class="Present legend"></span> OK <span class="Late legend"></span> Late / Early
+						<span class="notDone legend"></span> Absent
+						<span class="Permission legend"></span> Permission
+						<span class="College legend"></span> College Permission
+						<span class="Neglects legend"></span> Neglects attendance
+					</div>
+					<div class="col">
+						<div class="row">
+							<label class="col col-form-label text-right mr-2" for="showAll"> Show Deactivated Trainees </label>
+							<input
+								type="checkbox"
+								id="showAll"
+								class="form-control col-auto"
+								[formControl]="showDeactivatedTrainees"
+							/>
+						</div>
+					</div>
 				</div>
 				<ng-container [ngSwitch]="(currentUser$ | async)?.Role.isAstSpv">
 					<!-- With edit access -->
@@ -408,10 +421,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngIf="(attendanceReport$ | async)?.Attendances.length === 0">
+							<tr *ngIf="(filteredTraineeAttendances$ | async)?.length === 0">
 								<td class="p-3" colspan="14">No data yet</td>
 							</tr>
-							<tr *ngFor="let at of (attendanceReport$ | async)?.Attendances">
+							<tr *ngFor="let at of filteredTraineeAttendances$ | async">
 								<td class="trainee-details-hotspot">
 									<!-- [ngClass]="{ Permission: at.FulldayPermission }"  -->
 									<rd-trainee-detail-on-hover [traineeId]="at.TraineeId">

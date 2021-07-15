@@ -10,9 +10,11 @@ import {
 	ClientTraineeAttendance,
 	EvalTypes,
 	AttendanceStatus,
+	ClientTrainee,
+	SimpleTraineeData,
 } from 'src/app/shared/models';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
-import { Observable, BehaviorSubject, merge } from 'rxjs';
+import { Observable, BehaviorSubject, merge, combineLatest } from 'rxjs';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import {
@@ -25,8 +27,11 @@ import {
 	MainStateEffects,
 	NoteStateEffects,
 	AttendanceStateEffects,
+	fromBinusianState,
+	MainStateAction,
+	BinusianStateAction,
 } from 'src/app/shared/store-modules';
-import { takeUntil, map, filter } from 'rxjs/operators';
+import { takeUntil, map, filter, first, startWith, tap } from 'rxjs/operators';
 import { isEmpty as _isEmpty, sortBy as _sortBy } from 'lodash';
 
 @Component({
@@ -42,6 +47,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 
 	// currentDate = new FormControl(DateHelper.dateToInputFormat(new Date()));
 	currentDate = this.fb.control(DateHelper.dateToFormat(new Date()));
+	showDeactivatedTrainees = this.fb.control(false);
 	filterEvaluationForm = this.fb.group({
 		evalType: [null],
 		search: [''],
@@ -62,10 +68,14 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	attendanceStatus = AttendanceStatus;
 
 	todaysPresentation$: Observable<TraineePresentation[][]>;
-	attendanceReport$: Observable<ClientTraineeAttendanceReport>;
 	evaluations$: Observable<ClientEvaluation>;
 	filteredEvalNotes$: Observable<ClientEvaluationNote[]>;
 	presentationDetail$ = new BehaviorSubject<TraineePresentation>(null);
+	
+	attendanceReport$: Observable<ClientTraineeAttendanceReport>;
+	deactivatedTraineesId$: Observable<string[]>;
+	filteredTraineeAttendances$: Observable<ClientTraineeAttendance[]>;
+
 
 	loadingTodaysPresentation$: Observable<boolean>;
 	loadingAttendanceReport$: Observable<boolean>;
@@ -100,6 +110,12 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 			})
 		);
 		this.attendanceReport$ = this.store.pipe(select(fromAttendanceState.getAttendanceReport));
+		this.deactivatedTraineesId$ = this.store.pipe(
+			select(fromBinusianState.getTraineesSimpleData),
+			map((trainees : SimpleTraineeData[]) => 
+				trainees.filter(t => t.DeactivateReason != null).map(t => t.TraineeId)
+			),
+		);
 		this.evaluations$ = this.store.pipe(select(fromNoteState.getEvaluations));
 		this.filteredEvalNotes$ = this.store.pipe(select(fromNoteState.getFilteredEvaluationNotes));
 		this.loadingTodaysPresentation$ = this.store.pipe(
@@ -115,6 +131,20 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		this.loadingEvaluations$
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(this.loadingViewEvaluations$);
+
+		
+		this.filteredTraineeAttendances$ = combineLatest([
+			this.attendanceReport$.pipe(filter(v => !_isEmpty(v))),
+			this.deactivatedTraineesId$.pipe(startWith([])),
+			this.showDeactivatedTrainees.valueChanges.pipe(startWith(this.showDeactivatedTrainees.value))
+		]).pipe(
+			map(([report, deactivatedTrainees, showAll]) => 
+				showAll
+				? report.Attendances
+				: report.Attendances.filter(t => deactivatedTrainees.indexOf(t.TraineeId) === -1)
+			),
+			tap(console.log),
+		)
 		//#endregion
 
 		//#region Auto fetch
@@ -151,6 +181,13 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 			.subscribe((val) => this.store.dispatch(NoteStateAction.SetEvaluationNoteFilter(val)));
 
 		this.getAllEvaluationDataByDate(this.currentDate.value);
+		
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: BinusianStateAction.FetchTraineesSimpleData(),
+				selectorToBeChecked: fromBinusianState.getTraineesSimpleData,
+			})
+		);
 	}
 
 	get sorter() {
