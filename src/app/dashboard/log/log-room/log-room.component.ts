@@ -159,7 +159,7 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 				presentation,
 				note,
 				id: this.currentLogRoom$.value.Id,
-				room: '999',
+				room: this.logRoom.value
 			})
 		);
 		this.loadingLogRooms$.next(true);

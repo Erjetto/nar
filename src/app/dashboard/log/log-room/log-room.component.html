@@ -83,6 +83,8 @@
 										[items]="trainees$ | async"
 										bindLabel="TraineeCode"
 										formControlName="trainee"
+										appendTo="body"
+										[dropdownPosition]="'bottom'"
 									></ng-select>
 								</div>
 							</div>
@@ -128,6 +130,8 @@
 										[items]="trainees$ | async"
 										formControlName="trainee"
 										[searchFn]="searchByTraineeCodeAndName"
+										appendTo="body"
+										[dropdownPosition]="'bottom'"
 									>
 										<ng-template ng-label-tmp let-item="item">
 											<span>{{ item.codeAndName }}</span>
@@ -200,6 +204,8 @@
 										[items]="trainees$ | async"
 										bindLabel="TraineeCode"
 										formControlName="trainee"
+										appendTo="body"
+										[dropdownPosition]="'bottom'"
 									></ng-select>
 								</td>
 								<td>
@@ -219,6 +225,8 @@
 										[items]="rooms$ | async"
 										bindLabel="RoomName"
 										formControlName="room"
+										appendTo="body"
+										[dropdownPosition]="'bottom'"
 									></ng-select>
 								</td>
 								<td>
@@ -236,4 +244,5 @@
 			</rd-card>
 		</div>
 	</div>
+	<div class="row minh-200px"></div>
 </div>
