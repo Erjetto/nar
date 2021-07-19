@@ -88,7 +88,6 @@
 			<rd-card
 				[cardTitle]="isEditing ? 'Edit/View Case' : 'Insert New Case'"
 				[isLoading]="formCaseLoading$ | async"
-				*ngIf="(currentUser$ | async)?.Role.isAstSpv"
 			>
 				<!-- Expand if form has value -->
 				<div rdCardBadges *ngIf="isEditing">
@@ -166,7 +165,7 @@
 					<div
 						class="row justify-content-around mt-2"
 						[ngSwitch]="isEditing"
-						*ngIf="(currentUser$ | async)?.Role?.isAstSpv"
+						*ngIf="hasCrudAccess$ | async"
 					>
 						<ng-container *ngSwitchCase="false">
 							<button class="btn btn-primary" [disabled]="caseForm.invalid" (click)="createCase()">

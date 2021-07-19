@@ -27,6 +27,7 @@ import { isEmpty as _isEmpty } from 'lodash';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DateHelper } from 'src/app/shared/utilities/date-helper';
 import { isEmptyGuid, singleUploadForm } from 'src/app/shared/methods';
+import { RoleFlags } from 'src/app/shared/constants/role.constant';
 
 @Component({
 	selector: 'rd-manage-case',
@@ -50,6 +51,7 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 	phases$: Observable<ClientPhase[]>;
 	caseList$: Observable<Case[]>;
 
+	hasCrudAccess$: Observable<boolean>;
 	caseListLoading$: Observable<boolean>;
 	viewCaseLoading$: Observable<boolean>;
 	formCaseLoading$ = new BehaviorSubject(false);
@@ -80,6 +82,10 @@ export class ManageCaseComponent extends DashboardContentBase implements OnInit,
 
 	ngOnInit(): void {
 		//#region Bind to store
+		this.hasCrudAccess$ = this.currentUser$.pipe(
+			map((u) => u.Role.is(RoleFlags.AssistantSupervisor | RoleFlags.SubjectCoordinator)),
+			tap(canAccess => canAccess ? this.caseForm.enable() : this.caseForm.disable())
+		);
 		this.phases$ = this.store.pipe(
 			select(fromMasterState.getPhases),
 			filter((res) => !_isEmpty(res)),
