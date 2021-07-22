@@ -68,11 +68,9 @@ export class RoomService {
 			.pipe(map((res: any) => res.d + ''));
 	}
 
-	public RemoveLogPICRoomNote(data: { id: string; date: Date }): Observable<boolean> {
+	public RemoveLogPICRoomNote(data: { id: string; }): Observable<boolean> {
 		return this.httpClient
-			.post(this.baseUrl + 'RemoveLogPICRoomNote', {
-				date: DateHelper.toCSharpDate(data.date),
-			})
+			.post(this.baseUrl + 'RemoveLogPICRoomNote', data)
 			.pipe(map((res: any) => res.d === true));
 	}
 

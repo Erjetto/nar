@@ -1,18 +1,28 @@
 <div class="container-xl">
 	<div class="row">
-		<div class="col-4">
+		<div class="col-5">
 			<rd-card
 				[cardTitle]="'View Log Room'"
 				[isLoading]="loadingLogRooms$ | async"
 				[expanded]="!isEditing"
+				[collapsible]="false"
 			>
-				<div rdCardBadges *ngIf="isEditing">
-					<button class="btn btn-sm btn-primary mr-1" (click)="updateLogRoom()">
+				<div rdCardBadges [hidden]="!isEditing">
+					<button
+						class="btn btn-sm btn-primary mr-1"
+						(click)="updateLogRoom()"
+						[disabled]="logRoomPresentation.invalid || logRoomNote.invalid"
+					>
 						<fa-icon [icon]="['fas', 'pen']"></fa-icon> Update
 					</button>
 					<button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
 						<fa-icon [icon]="['fas', 'times']"></fa-icon> Close
 					</button>
+					<rd-confirmable-pop-up *ngIf="(currentLogRoom$|async)?.Id != EMPTY_GUID" (confirm)="deleteLogRoom()">
+						<button class="btn btn-sm btn-danger ml-4">
+							<fa-icon [icon]="['far', 'trash-alt']"></fa-icon> Delete
+						</button>
+					</rd-confirmable-pop-up>
 				</div>
 				<div class="row form-group">
 					<input class="form-control" type="date" [formControl]="dateControl" />
@@ -102,11 +112,11 @@
 				[collapsible]="isEditing"
 				[maxHeight]="350"
 			>
-			<div rdCardBadges [hidden]="!isEditing">
-				<button class="btn btn-sm btn-primary" (click)="addLogRoomNote()">
-					<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
-				</button>
-			</div>
+				<div rdCardBadges [hidden]="!isEditing">
+					<button class="btn btn-sm btn-primary" (click)="addLogRoomNote()">
+						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
+					</button>
+				</div>
 				<div class="row">
 					<table class="table table-sm table-striped table-hover text-center">
 						<thead>
@@ -173,11 +183,11 @@
 				[collapsible]="isEditing"
 				[maxHeight]="350"
 			>
-			<div rdCardBadges [hidden]="!isEditing">
-				<button class="btn btn-sm btn-primary" (click)="addLogRoomPresentation()">
-					<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
-				</button>
-			</div>
+				<div rdCardBadges [hidden]="!isEditing">
+					<button class="btn btn-sm btn-primary" (click)="addLogRoomPresentation()">
+						<fa-icon [icon]="['fas', 'plus']"></fa-icon> Add
+					</button>
+				</div>
 				<div class="row">
 					<table class="table table-sm table-striped table-hover text-center">
 						<thead>

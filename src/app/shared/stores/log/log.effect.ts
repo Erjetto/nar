@@ -109,5 +109,16 @@ export class LogStateEffects {
 		),
 		share()
 	);
+	@Effect()
+	deleteLogRooms$: Observable<Action> = this.actions$.pipe(
+		ofType(LogStateAction.DeleteLogRoom),
+		switchMap((data) => this.roomService.RemoveLogPICRoomNote(data)),
+		mergeMap((res) =>
+			res === true
+				? of(MainStateAction.SuccessfullyMessage('deleted the log'))
+				: of(MainStateAction.FailMessage('deleting log'))
+		),
+		share()
+	);
 	//#endregion
 }

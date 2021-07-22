@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { isEmpty as _isEmpty } from 'lodash';
+import { isEmpty as _isEmpty, merge } from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
 import { adjustControlsInFormArray, arrayToObject } from 'src/app/shared/methods';
-import { ClientTrainee, LogRoomPIC } from 'src/app/shared/models';
+import { ClientTrainee, EMPTY_GUID, LogRoomPIC } from 'src/app/shared/models';
 import {
 	LogStateAction,
 	fromLogState,
@@ -44,6 +44,8 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 
 	dateControl = this.fb.control(DateHelper.dateToFormat(new Date()));
 
+	EMPTY_GUID = EMPTY_GUID;
+
 	constructor(
 		protected store: Store<IAppState>,
 		private logEffects: LogStateEffects,
@@ -67,9 +69,16 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 		adjustControlsInFormArray(this.logRoomPresentation, 1, this.presentationFactory);
 		adjustControlsInFormArray(this.logRoomNote, 2, this.noteFactory);
 
-		this.logEffects.saveLogRooms$
+		merge(
+			this.logEffects.saveLogRooms$,
+			this.logEffects.deleteLogRooms$
+		)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(() => this.loadingLogRooms$.next(false));
+
+		this.logEffects.deleteLogRooms$	
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(this.cancelEdit);
 
 		this.dateControl.valueChanges
 			.pipe(takeUntil(this.destroyed$))
@@ -83,7 +92,6 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 				selectorToBeChecked: fromBinusianState.getAllTrainees,
 			})
 		);
-		this.loadingLogRooms$.subscribe(console.log);
 	}
 
 	get isEditing() {
@@ -130,6 +138,13 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 			}))
 		);
 	}
+	
+	deleteLogRoom(){
+		this.store.dispatch(LogStateAction.DeleteLogRoom({
+			id: this.currentLogRoom$.value.Id
+		}))
+		this.loadingLogRooms$.next(true);
+	}
 
 	updateLogRoom() {
 		const computerSeat = this.logRoomComputerSeat.value;
@@ -167,7 +182,7 @@ export class LogRoomComponent extends DashboardContentBase implements OnInit, On
 
 	getTrainee(code: string) {
 		if (_isEmpty(code)) return null;
-		// Data TraineeCode ntah kenapa ada spasi ("T162      ")
+		// Note: Data TraineeCode ntah kenapa ada spasi ("T162      ")
 		return this.traineeDict[code];
 	}
 
