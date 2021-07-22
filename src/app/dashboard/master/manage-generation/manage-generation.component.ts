@@ -65,11 +65,13 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 
 		this.currentGenTraineesFiltered$ = combineLatest([
 			this.currentGenTrainees$,
-			this.searchTextControl.valueChanges.pipe(startWith('')),
+			this.searchTextControl.valueChanges.pipe(
+				debounceTime(300),
+				distinctUntilChanged(),
+				startWith('')
+			),
 		]).pipe(
 			takeUntil(this.destroyed$),
-			debounceTime(300),
-			distinctUntilChanged(),
 			map(([trainees, search]) =>
 				trainees.filter((t) =>
 					`${t.TraineeCode} ${t.TraineeName} ${t.TraineeNumber}`.toLowerCase().includes(search)
@@ -101,8 +103,7 @@ export class ManageGenerationComponent extends DashboardContentBase implements O
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe((act) => {
 				this.store.dispatch(BinusianStateAction.FetchTraineesSimpleData());
-				if(act['messageType'].includes('success'))
-					this.deactivateReasonControl.reset();
+				if (act['messageType'].includes('success')) this.deactivateReasonControl.reset();
 			});
 
 		this.store.dispatch(

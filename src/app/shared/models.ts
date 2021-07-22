@@ -1,4 +1,4 @@
-import { RoleFlags } from './constants/role.constant';
+import { RoleFlags, RoleGroups } from './constants/role.constant';
 import { isNumber, map, isEmpty, cloneDeep, isString } from 'lodash';
 import { DateHelper } from './utilities/date-helper';
 import { environment } from 'src/environments/environment';
@@ -81,6 +81,8 @@ export class Role {
 	}
 
 	get isAstSpv() { return this.is(RoleFlags.AssistantSupervisor)}
+
+	get isSenior() { return this.is(RoleGroups.SENIOR_ROLES)}
 }
 
 export class ClientUserInRoles extends BaseModel {

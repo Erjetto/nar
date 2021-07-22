@@ -20,7 +20,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
 	private stop$ = new Subject<void>();
 	private start$ = new Subject<void>();
 	private destroyed$ = new Subject<void>();
-	counter = 100;
+	counter = 100; // in percent
 	decayTime = 5; // Auto remove in 5 seconds
 
 	constructor(private store: Store<IAppState>) {}
@@ -43,11 +43,11 @@ export class ToasterComponent implements OnInit, OnDestroy {
 				}
 			});
 
-		interval(1000 / 10) // 10 TPS
+		interval(1000 / 10) // 10 TPS => Per 0.1 detik
 			.pipe(
 				takeUntil(this.stop$),
 				repeatWhen(() => this.start$),
-				mapTo(100 / (this.decayTime * 10)), // Reduce counter according to decayTime
+				mapTo(100 / (this.decayTime * 10)), // Reduce counter based on decayTime
 				filter(() => this.timerOn) // Only when timer is On
 			)
 			.subscribe((val) => {

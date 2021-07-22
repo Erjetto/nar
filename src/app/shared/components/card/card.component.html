@@ -27,12 +27,15 @@
 	</div>
 	<!-- <div class="card__loader"> -->
 
+
+	<!-- Loading cover -->
 	<div
 		class="size-cover card__cover z-index-10"
 		[@faderAnimation]="isLoading ? 'shown' : 'hidden'"
 	></div>
 </div>
 
+<!-- Loading animation -->
 <div
 	class="click-through absolute-center"
 	[ngClass]="{ 'z-index-15': isLoading, 'z-index--1': !isLoading }"
