@@ -118,12 +118,6 @@
 						<!-- <b class="row">Insert new Evaluation</b> -->
 						<form class="row flex-grow-1" [formGroup]="insertEvaluationForm">
 							<div class="col">
-								<!-- <textarea
-									class="form-control h-100"
-									style="resize: none"
-									placeholder="Notes"
-									formControlName="notes"
-								></textarea> -->
 								<quill-editor
 									theme="bubble"
 									[classes]="'bd-1 bd-rad-8px bd-lightgrey'"
@@ -426,7 +420,6 @@
 							</tr>
 							<tr *ngFor="let at of filteredTraineeAttendances$ | async">
 								<td class="trainee-details-hotspot">
-									<!-- [ngClass]="{ Permission: at.FulldayPermission }"  -->
 									<rd-trainee-detail-on-hover [traineeId]="at.TraineeId">
 										<a
 											[routerLink]="['#View/Trainee', at.TraineeId, 'false']"
@@ -455,7 +448,7 @@
 											confirmChangeAttendance(
 												at.Secretariat.AttendanceIdIn,
 												at.TraineeCode,
-												'Secretariat'
+												'Secretariat In'
 											)
 										"
 									>
@@ -481,7 +474,7 @@
 											confirmChangeAttendance(
 												at.Secretariat.AttendanceIdOut,
 												at.TraineeCode,
-												'Secretariat'
+												'Secretariat Out'
 											)
 										"
 									>
@@ -507,7 +500,7 @@
 										[autoClose]="false"
 										[canConfirm]="changeAttendanceForm.valid"
 										(confirm)="
-											confirmChangeAttendance(at.Room.AttendanceIdIn, at.TraineeCode, 'Room')
+											confirmChangeAttendance(at.Room.AttendanceIdIn, at.TraineeCode, 'Room In')
 										"
 									>
 										{{ (at.Room.TraineeIn | date: attendanceTimeFormat) || emptyAttendanceTime }}
@@ -527,7 +520,7 @@
 										[autoClose]="false"
 										[canConfirm]="changeAttendanceForm.valid"
 										(confirm)="
-											confirmChangeAttendance(at.Room.AttendanceIdOut, at.TraineeCode, 'Room')
+											confirmChangeAttendance(at.Room.AttendanceIdOut, at.TraineeCode, 'Room Out')
 										"
 									>
 										{{ (at.Room.TraineeOut | date: attendanceTimeFormat) || emptyAttendanceTime }}
@@ -544,12 +537,12 @@
 									container="body"
 								>
 									<rd-confirmable-pop-up
-										[title]="'Change Rest In'"
+										[title]="'Change Rest Out'"
 										[description]="changeAttendanceContent"
 										[autoClose]="false"
 										[canConfirm]="changeAttendanceForm.valid"
 										(confirm)="
-											confirmChangeAttendance(at.Rest.AttendanceIdIn, at.TraineeCode, 'Rest')
+											confirmChangeAttendance(at.Rest.AttendanceIdOut, at.TraineeCode, 'Rest Out')
 										"
 									>
 										{{ (at.Rest.TraineeOut | date: attendanceTimeFormat) || emptyAttendanceTime }}
@@ -564,12 +557,12 @@
 									container="body"
 								>
 									<rd-confirmable-pop-up
-										[title]="'Change Rest Out'"
+										[title]="'Change Rest In'"
 										[description]="changeAttendanceContent"
 										[autoClose]="false"
 										[canConfirm]="changeAttendanceForm.valid"
 										(confirm)="
-											confirmChangeAttendance(at.Rest.AttendanceIdOut, at.TraineeCode, 'Rest')
+											confirmChangeAttendance(at.Rest.AttendanceIdIn, at.TraineeCode, 'Rest In')
 										"
 									>
 										{{ (at.Rest.TraineeIn | date: attendanceTimeFormat) || emptyAttendanceTime }}
@@ -638,10 +631,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngIf="(attendanceReport$ | async)?.Attendances.length === 0">
+							<tr *ngIf="(filteredTraineeAttendances$ | async)?.length === 0">
 								<td class="p-3" colspan="14">No data yet</td>
 							</tr>
-							<tr *ngFor="let at of (attendanceReport$ | async)?.Attendances">
+							<tr *ngFor="let at of filteredTraineeAttendances$ | async">
 								<td class="trainee-details-hotspot">
 									<!-- [ngClass]="{ Permission: at.FulldayPermission }"  -->
 									<rd-trainee-detail-on-hover [traineeId]="at.TraineeId">

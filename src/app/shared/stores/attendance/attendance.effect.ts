@@ -42,7 +42,10 @@ export class AttendanceStateEffects {
 	@Effect()
 	changeAttendanceStatus$: Observable<Action> = this.actions$.pipe(
 		ofType(AttendanceStateAction.ChangeTraineeAttendanceStatus),
-		switchMap((data) => this.attendanceService.ChangeTraineeAttendanceStatus(data)),
+		switchMap((data) => this.attendanceService.ChangeTraineeAttendanceStatus({
+			...data,
+			type: data.attType
+		})),
 		mergeMap((res) =>
 			res
 				? of(MainStateAction.SuccessfullyMessage('change attendance status'))

@@ -246,7 +246,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 				...this.changeAttendanceForm.value,
 				attendanceId,
 				traineeCode,
-				attType,
+				attType ,
 				attendanceDate: this.currentDate.value,
 			})
 		);
