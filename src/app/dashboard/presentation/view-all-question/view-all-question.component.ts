@@ -49,6 +49,8 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 	questionsBySubjectEntity$: Observable<{
 		[subjectId: string]: CoreTrainingPresentationQuestion[];
 	}>;
+	numOfQuestionsByStatus$: Observable<{ total; correct; wrong; unchecked; unanswered }>;
+
 	phases$: Observable<ClientPhase[]>;
 	subjects$: Observable<ClientSubject[]>;
 	currentPhase$ = new BehaviorSubject<ClientPhase>(null);
@@ -100,13 +102,41 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 				if (_isEmpty(filters.subjectId)) return []; // Must have subjectId filter
 				let arr: CoreTrainingPresentationQuestion[] = entity[filters.subjectId];
 				if (_isEmpty(arr)) return []; // If not exists yet the return []
-
-				if (!_isEmpty(filters.status)) arr = arr.filter((q) => q.Status === filters.status);
+				
+				// TEMPORARY: Status unanswered berdasarkan Answers.length
+				if (!_isEmpty(filters.status)) {
+					// if(filters.status === 'unanswered')
+					// 	arr = arr.filter((q) => q.Answers.length === 0)
+					// else 
+						arr = arr.filter((q) => q.Status === filters.status);
+				}
 
 				if (!_isEmpty(filters.search))
 					arr = arr.filter((q) => q.Question.Text.includes(filters.search));
 
 				return arr;
+			})
+		);
+
+		this.numOfQuestionsByStatus$ = combineLatest([
+			this.questionsBySubjectEntity$,
+			this.filterForm.valueChanges.pipe(startWith({})),
+		]).pipe(
+			map(([entity, filters]) => {
+				const res = { total: 0, correct: 0, wrong: 0, unchecked: 0, unanswered:0 };
+				if (_isEmpty(filters.subjectId)) return res; // Must have subjectId filter
+				
+				const arr: CoreTrainingPresentationQuestion[] = entity[filters.subjectId];
+				if (_isEmpty(arr)) return res; // If not exists
+				
+				arr.forEach((q) => {
+					// TEMPORARY: Status unanswered berdasarkan Answers.length
+					// if(q.Answers.length === 0) res.unanswered++;
+					// else 
+						res[q.Status]++;
+				});
+				res.total = res.correct + res.wrong + res.unchecked;
+				return res;
 			})
 		);
 
@@ -175,12 +205,12 @@ export class ViewAllQuestionComponent extends DashboardContentBase implements On
 		);
 	}
 
-	exportIntoExcel(){
+	exportIntoExcel() {
 		this.store.dispatch(
 			PresentationStateAction.ExportAllQuestionsInGeneration({
-				generationId: this.currentGeneration$.value.GenerationId
+				generationId: this.currentGeneration$.value.GenerationId,
 			})
-		)
+		);
 	}
 
 	deleteQuestion(qst: CoreTrainingPresentationQuestion) {}

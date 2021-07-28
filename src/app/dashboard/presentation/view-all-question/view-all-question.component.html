@@ -60,28 +60,35 @@
 								[class.active]="filterForm.get('status').value === ''"
 								(click)="filterForm.get('status').setValue('')"
 							>
-								All
+								All ({{(numOfQuestionsByStatus$ | async)?.total || 0}})
 							</button>
 							<button
 								class="btn btn-primary"
 								[class.active]="filterForm.get('status').value === 'correct'"
 								(click)="filterForm.get('status').setValue('correct')"
 							>
-								Correct
+								Correct ({{(numOfQuestionsByStatus$ | async)?.correct || 0}})
 							</button>
 							<button
 								class="btn btn-primary"
 								[class.active]="filterForm.get('status').value === 'wrong'"
 								(click)="filterForm.get('status').setValue('wrong')"
 							>
-								Wrong
+								Wrong ({{(numOfQuestionsByStatus$ | async)?.wrong || 0}})
 							</button>
 							<button
 								class="btn btn-primary"
 								[class.active]="filterForm.get('status').value === 'unchecked'"
 								(click)="filterForm.get('status').setValue('unchecked')"
 							>
-								Unchecked
+								Unchecked ({{(numOfQuestionsByStatus$ | async)?.unchecked || 0}})
+							</button>
+							<button
+								class="btn btn-primary"
+								[class.active]="filterForm.get('status').value === 'unanswered'"
+								(click)="filterForm.get('status').setValue('unanswered')"
+							>
+								Unanswered ({{(numOfQuestionsByStatus$ | async)?.unanswered || 0}})
 							</button>
 						</div>
 					</div>
