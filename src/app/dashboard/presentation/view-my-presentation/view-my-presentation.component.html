@@ -60,6 +60,18 @@
 						{{ (currentPresentation$ | async)?.Material }}
 					</div>
 				</div>
+				<div class="row mb-3" *ngIf="currentPresentationScoring$ | async as scoring">
+					<div class="col-3"><b>Status</b></div>
+					<div
+						class="col"
+						[ngClass]="{
+							'text-danger': scoring.status === 'Not Passed',
+							'text-success': scoring.status === 'Passed'
+						}"
+					>
+						<b>{{ scoring.status }}</b>
+					</div>
+				</div>
 				<div class="row mb-3">
 					<b>Questions:</b>
 				</div>

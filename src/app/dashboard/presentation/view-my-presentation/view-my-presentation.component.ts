@@ -17,6 +17,7 @@ import {
 	ClientSubject,
 	CoreTrainingPresentation,
 	ClientPhase,
+	TraineePresentation,
 } from 'src/app/shared/models';
 import { isEmpty as _isEmpty, orderBy as _orderBy } from 'lodash';
 import {
@@ -43,6 +44,7 @@ export class ViewMyPresentationComponent extends DashboardContentBase implements
 	myPresentationList$: Observable<CoreTrainingPresentation[]>;
 
 	currentPresentation$ = new BehaviorSubject<CoreTrainingPresentation>(null);
+	currentPresentationScoring$: Observable<TraineePresentation>;
 	currentPhase$: Subject<ClientPhase> = new Subject();
 
 	loadingFilterPresentation$: Observable<boolean>;
@@ -64,9 +66,9 @@ export class ViewMyPresentationComponent extends DashboardContentBase implements
 	ngOnInit(): void {
 		//#region Bind from store
 		this.phases$ = this.store.pipe(
-			select(fromMasterState.getPhases),
-			tap((res) => this.currentPhase$.next(res[0]))
+			select(fromMasterState.getPhases)
 		);
+		this.phases$.pipe(takeUntil(this.destroyed$), map(phases => phases[0])).subscribe(this.currentPhase$);
 		this.subjects$ = this.store.pipe(
 			select(fromMasterState.getSubjects),
 			tap(
@@ -93,6 +95,11 @@ export class ViewMyPresentationComponent extends DashboardContentBase implements
 			delayWhen(() => this.subjects$.pipe(filter((v) => !_isEmpty(v)))), 
 			map((presentations) => _orderBy(presentations, 'PresentationDate').reverse()),
 			tap((presentations) => this.currentPresentation$.next(presentations[0]))
+		);
+
+		this.currentPresentationScoring$ = this.store.pipe(
+			select(fromPresentationState.getPresentationScorings),
+			map((scorings) => scorings[0])
 		);
 		//#endregion
 
