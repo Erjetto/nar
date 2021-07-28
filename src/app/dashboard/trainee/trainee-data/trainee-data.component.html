@@ -104,10 +104,63 @@
 			</rd-card>
 		</div>
 	</div>
+
 	<div class="row">
 		<div class="col">
 			<rd-card
 				[cardTitle]="'Trainee Data in Table View'"
+				[expanded]="viewingTable"
+				(toggleExpand)="viewingTable = $event"
+				[isLoading]="loadingTrainees$ | async"
+			>
+				<div class="row scrollable-table first-row-sticky maxh-550px">
+					<table class="table table-sm table-striped table-hover">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>NIM</th>
+								<th>Code</th>
+								<th>ID Card</th>
+								<th>Semester</th>
+								<th>Birth Date</th>
+								<th>Gender</th>
+								<th>Bank Branch</th>
+								<th>Bank Account</th>
+								<th>Permanent Address</th>
+								<th>Current Address</th>
+								<th>Current Address Type</th>
+								<th>Phone Number</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="(trainees$ | async)?.length === 0">
+								<td class="text-center" colspan="3">No trainees...</td>
+							</tr>
+							<tr *ngFor="let trainee of trainees$ | async">
+								<td>{{ trainee.TraineeName }}</td>
+								<td>{{ trainee.TraineeNumber }}</td>
+								<td>{{ trainee.TraineeCode }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.KPTOrPassport }}</td>
+								<td>{{ trainee.Semester }}</td>
+								<td>{{ trainee.BirthDate | date: viewDateFormat }}</td>
+								<td>{{ trainee.Gender }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.BankBranch }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.BankAccount }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.PemanentAddress }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.CurrentAddress }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.CurrentAddressType }}</td>
+								<td>{{ trainee.AdditionalTraineeData?.PhoneNumberList.join('\n') }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</rd-card>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<rd-card
+				[cardTitle]="'Trainee Data in Table View (Beta)'"
 				[expanded]="viewingTable"
 				(toggleExpand)="viewingTable = $event"
 				[isLoading]="loadingTrainees$ | async"
@@ -143,11 +196,7 @@
 							[label]="'Code'"
 							[sortable]="true"
 						></rd-table-column>
-						<rd-table-column
-							prop="Email"
-							[label]="'Email'"
-							[sortable]="true"
-						></rd-table-column>
+						<rd-table-column prop="Email" [label]="'Email'" [sortable]="true"></rd-table-column>
 						<rd-table-column
 							prop="AdditionalTraineeData.KPTOrPassport"
 							[label]="'ID Card'"
