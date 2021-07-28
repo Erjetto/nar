@@ -73,7 +73,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 	presentationDetail$ = new BehaviorSubject<TraineePresentation>(null);
 	
 	attendanceReport$: Observable<ClientTraineeAttendanceReport>;
-	deactivatedTraineesId$: Observable<string[]>;
+	deactivatedTraineesIds$: Observable<string[]>;
 	filteredTraineeAttendances$: Observable<ClientTraineeAttendance[]>;
 
 
@@ -110,7 +110,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 			})
 		);
 		this.attendanceReport$ = this.store.pipe(select(fromAttendanceState.getAttendanceReport));
-		this.deactivatedTraineesId$ = this.store.pipe(
+		this.deactivatedTraineesIds$ = this.store.pipe(
 			select(fromBinusianState.getTraineesSimpleData),
 			map((trainees : SimpleTraineeData[]) => 
 				trainees.filter(t => t.DeactivateReason != null).map(t => t.TraineeId)
@@ -135,7 +135,7 @@ export class ViewEvaluationComponent extends DashboardContentBase implements OnI
 		
 		this.filteredTraineeAttendances$ = combineLatest([
 			this.attendanceReport$.pipe(filter(v => !_isEmpty(v))),
-			this.deactivatedTraineesId$.pipe(startWith([])),
+			this.deactivatedTraineesIds$.pipe(startWith([])),
 			this.showDeactivatedTrainees.valueChanges.pipe(startWith(this.showDeactivatedTrainees.value))
 		]).pipe(
 			map(([report, deactivatedTrainees, showAll]) => 

@@ -12,10 +12,13 @@ import {
 	tap,
 } from 'rxjs/operators';
 import { IAppState } from 'src/app/app.reducer';
-import { ClientPhase, ClientSubject, TraineePresentation } from 'src/app/shared/models';
+import { ClientPhase, ClientSubject, SimpleTraineeData, TraineePresentation } from 'src/app/shared/models';
 import {
+	BinusianStateAction,
+	fromBinusianState,
 	fromMasterState,
 	fromPresentationState,
+	MainStateAction,
 	MasterStateAction,
 	PresentationStateAction,
 } from 'src/app/shared/store-modules';
@@ -46,6 +49,7 @@ export class PresentationSummaryComponent
 	presentationScoringsSummary$: Observable<TraineePresentation[]>;
 	presentationScorings$: Observable<TraineePresentation[]>;
 	selectedTraineePresentationScorings$: Observable<TraineePresentation[]>;
+	deactivatedTraineesIds$: Observable<string[]>;
 
 	selectedTraineeSummary$ = new BehaviorSubject<TraineePresentation>(null);
 	selectedPresentation$ = new BehaviorSubject<TraineePresentation>(null);
@@ -73,24 +77,36 @@ export class PresentationSummaryComponent
 		this.presentationScorings$ = this.store.pipe(
 			select(fromPresentationState.getPresentationScorings)
 		);
+		this.deactivatedTraineesIds$ = this.store.pipe(
+			select(fromBinusianState.getTraineesSimpleData),
+			map((trainees : SimpleTraineeData[]) => 
+				trainees.filter(t => t.DeactivateReason != null).map(t => t.TraineeId)
+			),
+		);
 
 		this.presentationScoringsSummary$ = combineLatest([
 			this.store.pipe(select(fromPresentationState.getPresentationScoringsSummary)),
 			this.filterForm.valueChanges.pipe(startWith(''), debounceTime(350), distinctUntilChanged()),
+			this.deactivatedTraineesIds$
 		]).pipe(
-			map(([summary, search]) =>
+			map(([summary, search, inactiveTrainees]) =>
 				summary.filter((p: TraineePresentation) =>
+					inactiveTrainees.includes(p.traineeId) === false && 
 					`${p.traineeCode} ${p.traineeName} ${p.status} ${p.presentationNo} `
 						.toLowerCase()
 						.includes(search)
 				)
 			)
 		);
-		this.summaryNumbers$ = this.store.pipe(
-			select(fromPresentationState.getPresentationScoringsSummary),
-			map((summary) => {
+		this.summaryNumbers$ = combineLatest([
+			this.store.pipe(select(fromPresentationState.getPresentationScoringsSummary)),
+			this.deactivatedTraineesIds$
+		]).pipe(
+			map(([summary, traineeIds]) => {
 				const numbers = { done: 0, notYet: 0, notPassed: 0, passed: 0 };
 				summary.forEach((p: TraineePresentation) => {
+					if(traineeIds.includes(p.traineeId)) return;
+					
 					if (p.presentationNo > 0) numbers.done++;
 					else numbers.notYet++;
 					if (p.isPassed) numbers.passed++;
@@ -136,6 +152,13 @@ export class PresentationSummaryComponent
 			});
 
 		this.store.dispatch(MasterStateAction.FetchPhases());
+		
+		this.store.dispatch(
+			MainStateAction.DispatchIfEmpty({
+				action: BinusianStateAction.FetchTraineesSimpleData(),
+				selectorToBeChecked: fromBinusianState.getTraineesSimpleData,
+			})
+		);
 	}
 
 	selectTraineeSummary(p: TraineePresentation) {
