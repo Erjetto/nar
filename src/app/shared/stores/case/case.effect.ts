@@ -94,9 +94,9 @@ export class CaseStateEffects {
 		ofType(CaseStateAction.SubmitTraineeAnswer),
 		switchMap((data) => this.traineeService.SaveAnswer(data)),
 		mergeMap((res) =>
-			res
+			res.isSuccess
 				? of(MainStateAction.SuccessfullyMessage('submitted answer'))
-				: of(MainStateAction.FailMessage('submitting answer'))
+				: of(MainStateAction.FailMessage('submitting answer', res.Message))
 		),
 		share()
 	);

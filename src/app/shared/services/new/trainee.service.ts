@@ -11,6 +11,7 @@ import {
 	ClientCaseTrainee,
 	FLKQueue,
 	FLKNote,
+	SaveAnswerResult,
 } from '../../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -72,10 +73,10 @@ export class TraineeService {
 		phaseId: string;
 		caseId: string;
 		fileId: string;
-	}): Observable<TraineeSchedule[]> {
+	}): Observable<SaveAnswerResult> {
 		return this.httpClient
 			.post(this.baseUrl + 'SaveAnswer', data)
-			.pipe(map((res: any) => _map(res.d, TraineeSchedule.fromJson)));
+			.pipe(map((res: any) => SaveAnswerResult.fromJson(res.d)));
 	}
 
 	public GetSpecificTraineeSchedule(data: {

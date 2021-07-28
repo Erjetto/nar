@@ -802,7 +802,7 @@ export class CoreTrainingPresentationQuestion extends BaseModel {
 		public Answers: CoreTrainingPresentationItem[] = [],
 		public AcceptedAnswerId = EMPTY_GUID,
 		public DeadlinePassed = false,
-		public Status = 'unchecked',
+		public Status = 'unanswered',
 		public StatusBy = '',
 
 		public parent: CoreTrainingPresentation = null // Additional feature
@@ -1041,6 +1041,24 @@ export class ClientCaseTraineeDetail extends BaseModel {
 		if (isEmpty(data)) return null;
 		return Object.assign(new ClientCaseTraineeDetail(), data, {
 			Deadline: DateHelper.fromCSharpDate(data?.Deadline),
+		});
+	}
+}
+
+
+export class SaveAnswerResult extends BaseModel {
+	constructor(
+		public Message = '',
+		public isSuccess = false,
+		public SaveDate: Date = null
+	) {
+		super();
+	}
+
+	static fromJson(data?: any): SaveAnswerResult {
+		if (isEmpty(data)) return null;
+		return Object.assign(new SaveAnswerResult(), data, {
+			SaveDate: DateHelper.fromCSharpDate(data?.SaveDate),
 		});
 	}
 }
