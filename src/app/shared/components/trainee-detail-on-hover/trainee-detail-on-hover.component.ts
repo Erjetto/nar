@@ -28,11 +28,11 @@ export class TraineeDetailOnHoverComponent implements OnInit, OnDestroy, AfterVi
 	@ViewChild('pop') popOver: NgbPopover;
 	@Input() autoClose: boolean | string = 'outside';
 	@Input() traineeId = '725bea16-ad0e-eb11-abcb-d8d385fcda38';
-	@Input() numberOfComments = 7; // Jumlah comment yg dimunculkan
+	@Input() numberOfComments = 3; // Jumlah comment yg dimunculkan
 
 	destroyed$: Subject<void> = new Subject<void>();
 	traineeDetail$: Observable<ClientTraineeData>;
-	last5Notes$: Observable<ClientNote[]>;
+	lastFewNotes$: Observable<ClientNote[]>;
 	loadingViewTrainee$ = new BehaviorSubject(false);
 
 	constructor(private store: Store<IAppState>) {}
@@ -41,11 +41,11 @@ export class TraineeDetailOnHoverComponent implements OnInit, OnDestroy, AfterVi
 
 	ngAfterViewInit(): void {
 		this.traineeDetail$ = this.store.pipe(select(fromNoteState.getCurrentTraineeDetail));
-		this.last5Notes$ = this.traineeDetail$.pipe(
+		this.lastFewNotes$ = this.traineeDetail$.pipe(
 			map((detail: ClientTraineeData) =>
-        detail.Notes.length <= 5 
+        detail.Notes.length <= this.numberOfComments
         ? detail.Notes 
-        : [...detail.Notes].splice(detail.Notes.length - 5, 5)
+        : [...detail.Notes].splice(detail.Notes.length - this.numberOfComments, this.numberOfComments)
 			)
 		);
 		this.store

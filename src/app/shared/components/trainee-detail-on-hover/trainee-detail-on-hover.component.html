@@ -40,7 +40,7 @@
 							'bg-red': note.Reputation < 0,
 							'bg-green': note.Reputation > 0
 						}"
-						*ngFor="let note of last5Notes$ | async"
+						*ngFor="let note of lastFewNotes$ | async"
 					>
 						<!-- Need extra col-row due to v-list-m-6 styling 
             prevents > 1 child element -->
