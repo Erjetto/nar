@@ -7,6 +7,7 @@ import {
 	fromPresentationState,
 	fromBinusianState,
 	BinusianStateAction,
+	fromMasterState,
 } from 'src/app/shared/store-modules';
 import { FormBuilder } from '@angular/forms';
 import { DashboardContentBase } from '../../dashboard-content-base.component';
@@ -52,25 +53,28 @@ export class PresentationReportComponent extends DashboardContentBase implements
 	// percent => 0-100
 	traineeAnswerCount$: Observable<{ number; name; count; percent; isActive }[]>;
 	traineeAnswerCountFiltered$: Observable<{ number; name; count; percent; isActive }[]>;
-	trainerAnswerCount$: Observable<{ initial; count }[]>;
-	trainerAnswerCountFiltered$: Observable<{ initial; count }[]>;
+	trainerAnswerCount$: Observable<{ initial; count; percent }[]>;
+	trainerAnswerCountFiltered$: Observable<{ initial; count; percent }[]>;
 
 	dateFilterForm = this.fb.group({
 		start: [this.today],
 		end: [this.today],
 	});
 	nameFilterForm = this.fb.control('');
+	nameFilter$: Observable<string>;
 
 	constructor(protected store: Store<IAppState>, private fb: FormBuilder) {
 		super(store);
 	}
 
 	ngOnInit(): void {
+		//#region Bind from store
 		this.loadingPresentations$ = this.store.pipe(
 			select(fromPresentationState.isPresentationsLoading)
 		);
 		this.loadingTrainees$ = this.store.pipe(select(fromBinusianState.isTraineesLoading));
 		this.traineesInPhase$ = this.store.pipe(select(fromBinusianState.getTrainees));
+		this.allTrainer$ = this.store.pipe(select(fromMasterState.getUserInRoles));
 		// this.allTrainer$ = this.store.pipe(select(fromMasterState.getUserInRoles));
 
 		this.allAnswers$ = this.store.pipe(
@@ -79,6 +83,14 @@ export class PresentationReportComponent extends DashboardContentBase implements
 			map((presentations: CoreTrainingPresentation[]) =>
 				_flatten(_flatten(presentations.map((p) => p.Questions)).map((q) => q.Answers))
 			)
+		);
+		//#endregion
+		this.nameFilter$ = this.nameFilterForm.valueChanges.pipe(
+			// Kasih jeda 250 ms delay buat ketik sebelum trigger, harus uniq, lalu tolowercase
+			debounceTime(250),
+			distinctUntilChanged(),
+			map((v: string) => v.toLowerCase()),
+			startWith('')
 		);
 
 		// Filter jawaban by history date
@@ -126,13 +138,7 @@ export class PresentationReportComponent extends DashboardContentBase implements
 
 		this.traineeAnswerCountFiltered$ = combineLatest([
 			this.traineeAnswerCount$,
-			this.nameFilterForm.valueChanges.pipe(
-				// Kasih jeda 250 ms delay buat ketik sebelum trigger, harus uniq, lalu tolowercase
-				debounceTime(250),
-				distinctUntilChanged(),
-				map((v: string) => v.toLowerCase()),
-				startWith('')
-			),
+			this.nameFilter$,
 		]).pipe(
 			takeUntil(this.destroyed$),
 			map(([trainees, name]) =>
@@ -145,37 +151,47 @@ export class PresentationReportComponent extends DashboardContentBase implements
 			)
 		);
 
-		// this.trainerAnswerCount$ = this.allTrainer$
-		// 	.pipe(
-		// 		// Ubah User jadi data yg dibutuhkan
-		// 		map((users) =>
-		// 			users.reduce<{ [id: string]: { initial; count } }>(
-		// 				(acc, curr) => ({
-		// 					...acc,
-		// 					[curr.UserInRoleId]: {
-		// 						initial: curr.UserName,
-		// 						count: 0,
-		// 					},
-		// 				}),
-		// 				{}
-		// 			)
-		// 		)
-		// 	)
-		// 	// Pipe kedua supaya pipe sebelumnya ngga perlu dijalankan berkali"
-		// 	.pipe(
-		// 		withLatestFrom(this.allAnswersFiltered$),
-		// 		map(([trainers, answers]) => {
-		// 			answers.forEach((a) => trainers[a.UserId].count++);
-		// 			return trainers;
-		// 		})
-		// 	)
-		// 	// Pipe ketiga supaya ngga perlu looping answers lagi ketika ubah filter
-		// 	.pipe(
-		// 		withLatestFrom(
-		// 			this.nameFilterForm.valueChanges.pipe(delay(250), distinctUntilChanged(), startWith(''))
-		// 		),
-		// 		map(([trainers, name]) => Object.values(trainers).filter((t) => t.initial.includes(name)))
-		// 	);
+		this.trainerAnswerCount$ = combineLatest([
+			this.allTrainer$.pipe(
+				// Ubah User jadi data yg dibutuhkan
+				map((users) =>
+					users.reduce<{ initial; count }[]>(
+						(acc, curr) => [...acc, { initial: curr.UserName, count: 0 }],
+						[]
+					)
+				)
+			),
+			this.allAnswersFiltered$,
+		]).pipe(
+			map(([trainers, answers]) => {
+				// answers.forEach((a) => trainers[a.UserId].count++);
+				// 	return trainers;
+				const answerCounters: { [name: string]: number } = {};
+				answers.forEach((a) => {
+					if (!_isEmpty(a.StatusBy))
+						answerCounters[a.StatusBy] = (answerCounters[a.StatusBy] || 0) + 1;
+				});
+				const max = Math.max(...Object.values(answerCounters));
+				return trainers.map((t) => ({
+					...t,
+					count: answerCounters[t.initial] || 0,
+					percent: (((answerCounters[t.initial] || 0) / max) * 100).toFixed(0),
+				}));
+			})
+		);
+
+		this.trainerAnswerCountFiltered$ = combineLatest([
+			this.trainerAnswerCount$,
+			this.nameFilter$,
+		]).pipe(
+			map(([trainers, name]) =>
+				_orderBy(
+					Object.values(trainers).filter((t) => t.initial.toLowerCase().includes(name)),
+					'count',
+					'desc'
+				)
+			)
+		);
 
 		this.currentGeneration$
 			.pipe(

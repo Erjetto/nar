@@ -53,7 +53,11 @@
 			</rd-card>
 		</div>
 		<div class="col">
-			<rd-card [cardTitle]="'Trainer Answer Count'">
+			<rd-card
+				[cardTitle]="'Trainer Contribution'"
+				[maxHeight]="600"
+				*ngIf="(currentUser$ | async).Role.isAstSpv"
+			>
 				<table class="table table-sm table-striped text-center">
 					<thead>
 						<tr>
@@ -62,10 +66,14 @@
 						</tr>
 					</thead>
 					<tbody>
-						<!-- <tr *ngFor="let trainee of trainerAnswerCount$ | async">
-							<td>{{ trainee.initial }}</td>
-							<td>{{ trainee.count }}</td>
-						</tr> -->
+						<tr
+							[style.position]="'relative'"
+							*ngFor="let trainer of trainerAnswerCountFiltered$ | async"
+						>
+							<td>{{ trainer.initial }}</td>
+							<td>{{ trainer.count }}</td>
+							<td class="row-bar" [style.width]="trainer.percent + '%'"></td>
+						</tr>
 					</tbody>
 				</table>
 			</rd-card>
