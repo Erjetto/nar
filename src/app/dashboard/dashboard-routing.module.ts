@@ -400,24 +400,24 @@ export const routes: Routes = [
 							externalUrl: true,
 						},
 					},
-					// {
-					// 	path: 'RestAttendance.aspx',
-					// 	redirectTo: environment.apiUrl + 'RestAttendance.aspx',
-					// 	data: {
-					// 		roles: RoleFlags.Dummy | RoleFlags.Trainee,
-					// 		name: 'Rest Attendance',
-					// 		externalUrl: true,
-					// 	},
-					// },
-					// {
-					// 	path: 'Permission.aspx',
-					// 	redirectTo: environment.apiUrl + 'Permission.aspx',
-					// 	data: {
-					// 		roles: RoleFlags.Dummy | RoleFlags.Trainee,
-					// 		name: 'Permission',
-					// 		externalUrl: true,
-					// 	},
-					// },
+					{
+						path: 'RestAttendance.aspx',
+						redirectTo: environment.apiUrl + 'RestAttendance.aspx',
+						data: {
+							roles: RoleFlags.Dummy | RoleFlags.Trainee,
+							name: 'Rest Attendance',
+							externalUrl: true,
+						},
+					},
+					{
+						path: 'Permission.aspx',
+						redirectTo: environment.apiUrl + 'Permission.aspx',
+						data: {
+							roles: RoleFlags.Dummy | RoleFlags.Trainee,
+							name: 'Permission',
+							externalUrl: true,
+						},
+					},
 				],
 			},
 			{

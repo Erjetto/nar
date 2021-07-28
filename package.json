@@ -7,6 +7,8 @@
     "build": "ng build",
     "build-nar": "ng build --configuration=production-nar",
     "build-lcas": "ng build --configuration=production-lcas",
+    "build-nar-rz": "ng build --configuration=production-nar-rz",
+    "build-lcas-rz": "ng build --configuration=production-lcas-rz",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

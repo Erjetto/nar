@@ -83,7 +83,7 @@ export class ManageUserRoleComponent extends DashboardContentBase implements OnI
 				selectorToBeChecked: fromMasterState.getRoles,
 			})
     );
-    // Always get updated data?
+    
 		this.store.dispatch(MasterStateAction.FetchUserInRoles());
 	}
 
